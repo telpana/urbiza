@@ -122,7 +122,11 @@ export default function Registro() {
                 </div>
                 <div style={{ display: 'flex', gap: 10 }}>
                   <button onClick={() => setPaso(1)} style={{ all: 'unset', flex: 1, border: '1.5px solid #e0e0e0', color: '#555', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box' }}>← Atrás</button>
-                  <button onClick={() => tipoCuenta && setPaso(metodo === 'email' ? 3 : 4)} style={{ all: 'unset', flex: 2, background: tipoCuenta ? '#006D77' : '#e0e0e0', color: '#fff', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: tipoCuenta ? 'pointer' : 'default', textAlign: 'center', boxSizing: 'border-box' }}>Continuar</button>
+                  <button onClick={() => {
+                    if (!tipoCuenta) return
+                    if (metodo === 'email') setPaso(3)
+                    else setPaso(4)
+                  }} style={{ all: 'unset', flex: 2, background: tipoCuenta ? '#006D77' : '#e0e0e0', color: '#fff', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: tipoCuenta ? 'pointer' : 'default', textAlign: 'center', boxSizing: 'border-box' }}>Continuar</button>
                 </div>
               </div>
             )}
