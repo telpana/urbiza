@@ -2,41 +2,57 @@
 import { useState, useEffect, useRef } from 'react'
 
 const propiedadesMapaHome = [
-  { id: 1, precio: 285000, titulo: 'Apartamento en Piantini', zona: 'Piantini, D.N.', hab: 3, m2: 150, banos: 2, lat: 18.4890, lng: -69.9370, desc: 'Amplio apartamento en Piantini con acabados de alta calidad.' },
-  { id: 2, precio: 620000, titulo: 'Villa en Bávaro', zona: 'Bávaro, La Altagracia', hab: 4, m2: 500, banos: 3, lat: 18.6835, lng: -68.4070, desc: 'Villa con piscina privada y acceso a playa.' },
-  { id: 3, precio: 165000, titulo: 'Apartamento en Bella Vista', zona: 'Bella Vista, D.N.', hab: 2, m2: 95, banos: 2, lat: 18.4760, lng: -69.9450, desc: 'Cómodo apartamento en Bella Vista.' },
-  { id: 4, precio: 310000, titulo: 'Villa en Arroyo Hondo', zona: 'Arroyo Hondo, D.N.', hab: 4, m2: 380, banos: 3, lat: 18.5050, lng: -69.9650, desc: 'Villa en urbanización cerrada.' },
-  { id: 5, precio: 98000, titulo: 'Apartamento en Santiago', zona: 'Santiago', hab: 2, m2: 90, banos: 1, lat: 19.4517, lng: -70.6970, desc: 'Apartamento céntrico en Santiago.' },
-  { id: 6, precio: 450000, titulo: 'Villa en Cap Cana', zona: 'Cap Cana', hab: 3, m2: 320, banos: 3, lat: 18.5200, lng: -68.3700, desc: 'Villa exclusiva en Cap Cana.' },
+  { id: 1, precio: 285000, titulo: 'Apartamento en Piantini', zona: 'Piantini, D.N.', tipo: 'Apartamento', hab: 3, m2: 150, banos: 2, lat: 18.4890, lng: -69.9370, desc: 'Amplio apartamento en Piantini con acabados de alta calidad.' },
+  { id: 2, precio: 620000, titulo: 'Villa en Bávaro', zona: 'Bávaro, La Altagracia', tipo: 'Villa', hab: 4, m2: 500, banos: 3, lat: 18.6835, lng: -68.4070, desc: 'Villa con piscina privada y acceso a playa.' },
+  { id: 3, precio: 165000, titulo: 'Apartamento en Bella Vista', zona: 'Bella Vista, D.N.', tipo: 'Apartamento', hab: 2, m2: 95, banos: 2, lat: 18.4760, lng: -69.9450, desc: 'Cómodo apartamento en Bella Vista.' },
+  { id: 4, precio: 310000, titulo: 'Villa en Arroyo Hondo', zona: 'Arroyo Hondo, D.N.', tipo: 'Villa', hab: 4, m2: 380, banos: 3, lat: 18.5050, lng: -69.9650, desc: 'Villa en urbanización cerrada.' },
+  { id: 5, precio: 98000, titulo: 'Apartamento en Santiago', zona: 'Santiago', tipo: 'Apartamento', hab: 2, m2: 90, banos: 1, lat: 19.4517, lng: -70.6970, desc: 'Apartamento céntrico en Santiago.' },
+  { id: 6, precio: 450000, titulo: 'Villa en Cap Cana', zona: 'Cap Cana', tipo: 'Villa', hab: 3, m2: 320, banos: 3, lat: 18.5200, lng: -68.3700, desc: 'Villa exclusiva en Cap Cana.' },
+  { id: 7, precio: 320000, titulo: 'Oficina en Piantini', zona: 'Piantini, D.N.', tipo: 'Oficina', hab: 0, m2: 200, banos: 2, lat: 18.4920, lng: -69.9400, desc: 'Oficina moderna en edificio corporativo.' },
+  { id: 8, precio: 85000, titulo: 'Terreno en La Romana', zona: 'La Romana', tipo: 'Terreno', hab: 0, m2: 800, banos: 0, lat: 18.4274, lng: -68.9728, desc: 'Terreno ideal para construcción.' },
+  { id: 9, precio: 120000, titulo: 'Local comercial en Santiago', zona: 'Santiago', tipo: 'Local comercial', hab: 0, m2: 150, banos: 1, lat: 19.4600, lng: -70.6850, desc: 'Local comercial en zona de alto tráfico.' },
 ]
 
 function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<any>(null)
+  const markersRef = useRef<any[]>([])
+  const [filtroTipo, setFiltroTipo] = useState('Todos')
+
+  const tipos = ['Todos', 'Apartamento', 'Villa', 'Terreno', 'Oficina', 'Local comercial']
+
+  function actualizarMarkers(L: any, map: any, filtro: string) {
+    markersRef.current.forEach(m => map.removeLayer(m))
+    markersRef.current = []
+    const filtradas = filtro === 'Todos' ? propiedadesMapaHome : propiedadesMapaHome.filter(p => p.tipo === filtro)
+    filtradas.forEach(p => {
+      const icono = L.divIcon({
+        className: '',
+        html: `<svg width="22" height="30" viewBox="0 0 22 30" xmlns="http://www.w3.org/2000/svg"><path d="M11 0C4.925 0 0 4.925 0 11c0 7.667 11 19 11 19s11-11.333 11-19C22 4.925 17.075 0 11 0z" fill="#006D77" stroke="#fff" stroke-width="1.5"/><circle cx="11" cy="11" r="4.5" fill="#fff"/></svg>`,
+        iconSize: [22, 30], iconAnchor: [11, 30], popupAnchor: [0, -30],
+      })
+      const marker = L.marker([p.lat, p.lng], { icon: icono }).addTo(map).bindPopup(`
+        <div style="min-width:180px;font-family:sans-serif;">
+          <div style="font-size:11px;color:#17A6B4;font-weight:600;margin-bottom:3px;">${p.tipo.toUpperCase()}</div>
+          <div style="font-size:13px;font-weight:600;color:#006D77;margin-bottom:4px;">${p.titulo}</div>
+          <div style="font-size:16px;font-weight:700;color:#111;margin-bottom:2px;">US$ ${p.precio.toLocaleString('en-US')}</div>
+          <div style="font-size:12px;color:#555;margin-bottom:8px;">${p.hab > 0 ? p.hab + ' hab · ' : ''}${p.m2} m²${p.banos > 0 ? ' · ' + p.banos + ' baños' : ''}</div>
+          <a href="/propiedad/${p.id}" style="display:block;background:#006D77;color:#fff;padding:6px 10px;border-radius:4px;text-align:center;text-decoration:none;font-size:12px;font-weight:500;">Ver propiedad</a>
+        </div>
+      `)
+      markersRef.current.push(marker)
+    })
+  }
 
   useEffect(() => {
     if (mapInstanceRef.current || !mapRef.current) return
     const load = () => {
       const L = (window as any).L
       if (!L || !mapRef.current) return
-      const map = L.map(mapRef.current, { center: [18.7357, -70.1627], zoom: 8, zoomControl: true, attributionControl: false })
+      const map = L.map(mapRef.current, { center: [18.7357, -70.1627], zoom: 7, zoomControl: true, attributionControl: false })
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
-      propiedadesMapaHome.forEach(p => {
-        const icono = L.divIcon({
-          className: '',
-          html: `<svg width="22" height="30" viewBox="0 0 22 30" xmlns="http://www.w3.org/2000/svg"><path d="M11 0C4.925 0 0 4.925 0 11c0 7.667 11 19 11 19s11-11.333 11-19C22 4.925 17.075 0 11 0z" fill="#006D77" stroke="#fff" stroke-width="1.5"/><circle cx="11" cy="11" r="4.5" fill="#fff"/></svg>`,
-          iconSize: [22, 30], iconAnchor: [11, 30], popupAnchor: [0, -30],
-        })
-        L.marker([p.lat, p.lng], { icon: icono }).addTo(map).bindPopup(`
-          <div style="min-width:180px;font-family:sans-serif;">
-            <div style="font-size:13px;font-weight:600;color:#006D77;margin-bottom:4px;">${p.titulo}</div>
-            <div style="font-size:16px;font-weight:700;color:#111;margin-bottom:2px;">US$ ${p.precio.toLocaleString('en-US')}</div>
-            <div style="font-size:12px;color:#555;">${p.hab} hab · ${p.m2} m² · ${p.banos} baños</div>
-            <a href="/propiedad/${p.id}" style="display:block;margin-top:8px;background:#006D77;color:#fff;padding:5px 10px;border-radius:4px;text-align:center;text-decoration:none;font-size:12px;font-weight:500;">Ver propiedad</a>
-          </div>
-        `)
-      })
-      mapInstanceRef.current = map
+      actualizarMarkers(L, map, 'Todos')
+      mapInstanceRef.current = { map, L }
     }
     if ((window as any).L) { load() }
     else {
@@ -45,13 +61,31 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
       s.onload = load
       document.head.appendChild(s)
     }
-    return () => { if (mapInstanceRef.current) { mapInstanceRef.current.remove(); mapInstanceRef.current = null } }
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.map.remove()
+        mapInstanceRef.current = null
+      }
+    }
   }, [])
+
+  useEffect(() => {
+    if (!mapInstanceRef.current) return
+    const { L, map } = mapInstanceRef.current
+    actualizarMarkers(L, map, filtroTipo)
+  }, [filtroTipo])
+
+  const visibles = filtroTipo === 'Todos' ? propiedadesMapaHome.length : propiedadesMapaHome.filter(p => p.tipo === filtroTipo).length
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', flexDirection: 'column' }}>
-      <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ fontSize: 15, fontWeight: 600, color: '#111' }}>{propiedadesMapaHome.length} propiedades en República Dominicana</div>
+      <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <div style={{ fontSize: 15, fontWeight: 600, color: '#111' }}>{visibles} propiedades en República Dominicana</div>
+          <select value={filtroTipo} onChange={e => setFiltroTipo(e.target.value)} style={{ border: '1.5px solid #006D77', borderRadius: 4, padding: '6px 12px', fontSize: 13, color: '#333', outline: 'none', cursor: 'pointer', background: '#fff' }}>
+            {tipos.map(t => <option key={t}>{t}</option>)}
+          </select>
+        </div>
         <button onClick={onCerrar} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '8px 18px', borderRadius: 4, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>
           ← Volver
         </button>
@@ -78,7 +112,7 @@ function MapaMiniHome() {
       if (!L || !mapRef.current) return
       const map = L.map(mapRef.current, {
         center: [18.7357, -70.1627],
-        zoom: 7,
+        zoom: 6,
         zoomControl: false,
         attributionControl: false,
         dragging: false,
