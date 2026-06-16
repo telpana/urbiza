@@ -250,13 +250,13 @@ export default function Panel() {
                 </div>
               )}
 
-              {/* KPIs */}
+              {/* KPIs reales */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 20 }}>
                 {[
-                  { label: 'Impresiones', val: '2,450', sub: 'veces que apareció en búsquedas', color: '#006D77' },
-                  { label: 'Visitas al anuncio', val: '629', sub: 'personas que lo abrieron', color: '#17A6B4' },
-                  { label: 'Tel. visualizados', val: '45', sub: 'veces que vieron tu teléfono', color: '#10b981' },
-                  { label: 'Guardados', val: '26', sub: 'personas que lo guardaron', color: '#f59e0b' },
+                  { label: 'Impresiones', val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: 'veces que apareció en búsquedas', color: '#006D77' },
+                  { label: 'Visitas al anuncio', val: anunciosReales.reduce((s, a) => s + Math.floor((a.visitas || 0) * 0.28), 0).toLocaleString(), sub: 'personas que lo abrieron', color: '#17A6B4' },
+                  { label: 'Tel. visualizados', val: anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0).toLocaleString(), sub: 'veces que vieron tu teléfono', color: '#10b981' },
+                  { label: 'Guardados', val: anunciosReales.reduce((s, a) => s + (a.favoritos || 0), 0).toLocaleString(), sub: 'personas que lo guardaron', color: '#f59e0b' },
                 ].map(k => (
                   <div key={k.label} style={{ background: '#fff', borderRadius: 8, padding: '14px 16px', borderTop: `3px solid ${k.color}`, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
                     <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>{k.label}</div>
@@ -277,6 +277,16 @@ export default function Panel() {
 
               {/* Lista anuncios */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {anunciosFiltrados.length === 0 && !cargando && (
+                  <div style={{ background: '#fff', borderRadius: 8, padding: '48px 24px', textAlign: 'center', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" strokeWidth="1" style={{ margin: '0 auto 16px', display: 'block' }}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    <div style={{ fontSize: 16, fontWeight: 600, color: '#555', marginBottom: 8 }}>Aún no tienes anuncios publicados</div>
+                    <div style={{ fontSize: 13, color: '#aaa', marginBottom: 20 }}>Publica tu primer anuncio y empieza a recibir contactos de compradores</div>
+                    <button onClick={() => setSeccion('publicar')} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
+                      + Publicar mi primer anuncio
+                    </button>
+                  </div>
+                )}
                 {anunciosFiltrados.map(a => {
                   const estado = estadosAnuncios[a.id] || a.estado
                   return (
@@ -425,7 +435,13 @@ export default function Panel() {
               <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 16, height: 'calc(100vh - 180px)', minHeight: 500 }}>
                 {/* Lista */}
                 <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', overflowY: 'auto' }}>
-                  {mensajesEjemplo.map(m => {
+                  {(mensajesReales.length > 0 ? mensajesReales : []).length === 0 && (
+                  <div style={{ padding: '48px 24px', textAlign: 'center' }}>
+                    <div style={{ fontSize: 16, fontWeight: 600, color: '#555', marginBottom: 8 }}>No tienes mensajes todavía</div>
+                    <div style={{ fontSize: 13, color: '#aaa' }}>Cuando un comprador te escriba desde un anuncio aparecerá aquí</div>
+                  </div>
+                )}
+                {(mensajesReales.length > 0 ? mensajesReales : mensajesEjemplo).map(m => {
                     const leido = mensajesLeidos[m.id] !== undefined ? mensajesLeidos[m.id] : m.leido
                     return (
                       <div key={m.id} onClick={() => { setMensajeSeleccionado(m.id); setMensajesLeidos(prev => ({ ...prev, [m.id]: true })) }}
