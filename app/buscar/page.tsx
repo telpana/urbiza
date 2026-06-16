@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
+import { supabase } from '../../supabase'
 
 const USD_TO_DOP = 59.5
 
@@ -124,6 +125,42 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: typeof propiedad
 
 export default function Buscar() {
   const [tipo, setTipo] = useState('Todos')
+  const [propiedadesReales, setPropiedadesReales] = useState<any[]>([])
+  const [cargando, setCargando] = useState(true)
+
+  useEffect(() => {
+    const cargarPropiedades = async () => {
+      setCargando(true)
+      const { data, error } = await supabase
+        .from('propiedades')
+        .select('*, usuarios(nombre, inmobiliaria, aei_verificado, tipo, foto_url)')
+        .eq('estado', 'activo')
+        .order('destacado', { ascending: false })
+        .order('created_at', { ascending: false })
+      if (!error && data) setPropiedadesReales(data)
+      setCargando(false)
+    }
+    cargarPropiedades()
+  }, [])
+
+  // Usar propiedades reales si hay, si no usar las de ejemplo
+  const propiedadesActivas = propiedadesReales.length > 0 ? propiedadesReales.map(p => ({
+    id: p.id,
+    precio: p.precio,
+    titulo: p.titulo,
+    zona: p.zona || '',
+    hab: p.habitaciones || 0,
+    banos: p.banos || 0,
+    m2: p.m2 || 0,
+    parqueos: p.parqueos || 0,
+    tipo: p.tipo || 'Apartamento',
+    dest: p.destacado || false,
+    visitas: false,
+    bg: '#e0f5f7',
+    desc: p.descripcion || '',
+    lat: p.lat || 18.4861,
+    lng: p.lng || -69.9312,
+  })) : propiedades
   const [sugerencias, setSugerencias] = useState<string[]>([])
   const [mostrarSugerencias, setMostrarSugerencias] = useState(false)
 
@@ -193,7 +230,7 @@ export default function Buscar() {
   const tipos = ['Todos', 'Apartamento', 'Villa', 'Oficina', 'Terreno', 'Local comercial']
   const ordenes = ['Relevancia', 'Recientes', 'Baratos', 'Caros']
 
-  const filtradas = propiedades.filter(p => {
+  const filtradas = propiedadesActivas.filter((p: any) => {
     if (tipo !== 'Todos' && p.tipo !== tipo) return false
     if (precioMax && p.precio > Number(precioMax.replace(/\D/g, ''))) return false
     if (precioMin && p.precio < Number(precioMin.replace(/\D/g, ''))) return false
@@ -342,7 +379,7 @@ export default function Buscar() {
           <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <h1 style={{ fontSize: 18, fontWeight: 600, color: '#111', margin: 0 }}>
-                {filtradas.length} propiedades en República Dominicana
+                {cargando ? 'Cargando propiedades...' : `${filtradas.length} propiedades en República Dominicana`}
               </h1>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ fontSize: 13, color: '#777' }}>Ordenar:</span>
