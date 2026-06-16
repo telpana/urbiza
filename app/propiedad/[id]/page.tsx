@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
+import { supabase } from '../../../supabase'
 
 const USD_TO_DOP = 59.5
 
@@ -44,7 +45,26 @@ function MapaUbicacion({ lat, lng }: { lat: number, lng: number }) {
       s.onload = load
       document.head.appendChild(s)
     }
-    return () => { if (mapInstanceRef.current) { mapInstanceRef.current.remove(); mapInstanceRef.current = null } }
+    const enviarMensaje = async () => {
+    if (!nombreContacto || !mensaje) { setErrorContacto('El nombre y el mensaje son obligatorios'); return }
+    setEnviando(true)
+    setErrorContacto('')
+    const { error } = await supabase.from('mensajes').insert({
+      propiedad_id: null, // se conectará con el id real cuando tengamos Supabase completo
+      vendedor_id: null,
+      nombre_cliente: nombreContacto,
+      telefono_cliente: telefonoContacto || null,
+      mensaje: mensaje,
+    })
+    if (error) { setErrorContacto('Error al enviar. Inténtalo de nuevo.'); setEnviando(false); return }
+    setEnviado(true)
+    setEnviando(false)
+    setMensaje('')
+    setNombreContacto('')
+    setTelefonoContacto('')
+  }
+
+  return () => { if (mapInstanceRef.current) { mapInstanceRef.current.remove(); mapInstanceRef.current = null } }
   }, [lat, lng])
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />
@@ -54,7 +74,31 @@ export default function Propiedad({ params }: { params: { id: string } }) {
   const p = propiedades[params.id] || propiedades['1']
   const [fotoActiva, setFotoActiva] = useState(0)
   const [mensaje, setMensaje] = useState('')
+  const [nombreContacto, setNombreContacto] = useState('')
+  const [telefonoContacto, setTelefonoContacto] = useState('')
+  const [enviando, setEnviando] = useState(false)
+  const [enviado, setEnviado] = useState(false)
+  const [errorContacto, setErrorContacto] = useState('')
   const [telVisible, setTelVisible] = useState(false)
+
+  const enviarMensaje = async () => {
+    if (!nombreContacto || !mensaje) { setErrorContacto('El nombre y el mensaje son obligatorios'); return }
+    setEnviando(true)
+    setErrorContacto('')
+    const { error } = await supabase.from('mensajes').insert({
+      propiedad_id: null, // se conectará con el id real cuando tengamos Supabase completo
+      vendedor_id: null,
+      nombre_cliente: nombreContacto,
+      telefono_cliente: telefonoContacto || null,
+      mensaje: mensaje,
+    })
+    if (error) { setErrorContacto('Error al enviar. Inténtalo de nuevo.'); setEnviando(false); return }
+    setEnviado(true)
+    setEnviando(false)
+    setMensaje('')
+    setNombreContacto('')
+    setTelefonoContacto('')
+  }
 
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6' }}>

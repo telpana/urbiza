@@ -8,6 +8,8 @@ export default function Login() {
   const [verPass, setVerPass] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [recuperando, setRecuperando] = useState(false)
+  const [emailEnviado, setEmailEnviado] = useState(false)
 
   const loginConEmail = async () => {
     if (!email || !password) { setError('Introduce tu email y contraseña'); return }
@@ -16,6 +18,17 @@ export default function Login() {
     const { error: loginError } = await supabase.auth.signInWithPassword({ email, password })
     if (loginError) { setError('Email o contraseña incorrectos'); setLoading(false); return }
     window.location.href = '/panel'
+  }
+
+  const recuperarPassword = async () => {
+    if (!email) { setError('Introduce tu email para recuperar la contraseña'); return }
+    setRecuperando(true)
+    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/panel`
+    })
+    if (resetError) { setError('Error al enviar el email. Verifica que el email es correcto.'); setRecuperando(false); return }
+    setEmailEnviado(true)
+    setRecuperando(false)
   }
 
   const loginConGoogle = async () => {
@@ -80,7 +93,12 @@ export default function Login() {
             </div>
 
             <div style={{ textAlign: 'right', marginBottom: 24 }}>
-              <a href="#" style={{ fontSize: 12, color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>¿Olvidaste tu contraseña?</a>
+              {emailEnviado
+                ? <div style={{ fontSize: 12, color: '#10b981', fontWeight: 500 }}>✓ Email de recuperación enviado</div>
+                : <button onClick={recuperarPassword} style={{ all: 'unset', fontSize: 12, color: '#006D77', textDecoration: 'none', fontWeight: 500, cursor: 'pointer' }}>
+                    {recuperando ? 'Enviando...' : '¿Olvidaste tu contraseña?'}
+                  </button>
+              }
             </div>
 
             <button onClick={loginConEmail} disabled={loading} style={{ all: 'unset', width: '100%', background: loading ? '#aaa' : '#006D77', color: '#fff', padding: '13px', borderRadius: 6, fontSize: 15, fontWeight: 600, cursor: loading ? 'default' : 'pointer', textAlign: 'center', display: 'block', boxSizing: 'border-box', marginBottom: 16 }}>

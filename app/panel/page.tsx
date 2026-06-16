@@ -40,6 +40,27 @@ const planesPro = [
   { id: 'unlimited', nombre: 'Unlimited', precio: 99, features: ['Todo lo de Pro', 'Brokers ilimitados', '1 cuenta por provincia', 'Manager dedicado'] },
 ]
 
+const provinciasZonas: Record<string, string[]> = {
+  'Distrito Nacional': ['Piantini', 'Naco', 'Serrallés', 'Bella Vista', 'Arroyo Hondo', 'Los Cacicazgos', 'Gazcue', 'Ciudad Colonial', 'Evaristo Morales', 'Miramar', 'La Esperilla', 'Viejo Arroyo Hondo', 'Urbanización Real', 'Cristo Rey', 'Villa Consuelo', 'Ensanche Ozama'],
+  'Santo Domingo': ['Santo Domingo Este', 'Santo Domingo Norte', 'Santo Domingo Oeste', 'Boca Chica', 'Los Tres Brazos', 'Alma Rosa', 'Los Mina', 'San Isidro', 'Ensanche Isabelita'],
+  'La Altagracia': ['Bávaro', 'Punta Cana', 'Cap Cana', 'Cabeza de Toro', 'Los Corales', 'Uvero Alto', 'Macao', 'Cortecito', 'Higüey', 'San Rafael del Yuma'],
+  'Santiago': ['Los Jardines', 'Cerros de Gurabo', 'Reparto Conuco', 'Bella Vista', 'Villa Olga', 'Pontezuela', 'Las Colinas', 'El Dorado', 'Urbanización Tropical'],
+  'Samaná': ['Las Terrenas', 'Samaná', 'El Portillo', 'Cosón', 'Las Galeras'],
+  'Puerto Plata': ['Puerto Plata', 'Sosúa', 'Cabarete', 'Costámbar', 'Cofresí', 'Playa Dorada'],
+  'La Romana': ['La Romana', 'Casa de Campo', 'Bayahíbe', 'Dominicus'],
+  'La Vega': ['Jarabacoa', 'Constanza', 'La Vega'],
+  'San Pedro de Macorís': ['San Pedro de Macorís', 'Juan Dolio', 'Guayacanes'],
+  'San Cristóbal': ['San Cristóbal'],
+  'Peravia': ['Baní'],
+  'Espaillat': ['Moca'],
+  'Duarte': ['San Francisco de Macorís'],
+  'María Trinidad Sánchez': ['Nagua'],
+  'Azua': ['Azua'],
+  'Barahona': ['Barahona'],
+  'Monte Cristi': ['Monte Cristi'],
+  'Pedernales': ['Pedernales'],
+}
+
 const amenidades = [
   { id: 'piscina', label: 'Piscina' },
   { id: 'parqueo', label: 'Parqueo' },
@@ -72,6 +93,8 @@ export default function Panel() {
   const [pubOperacion, setPubOperacion] = useState('Venta')
   const [pubHab, setPubHab] = useState('1')
   const [pubBanos, setPubBanos] = useState('1')
+  const [pubProvincia, setPubProvincia] = useState('')
+  const [pubSector, setPubSector] = useState('')
   const [pubLoading, setPubLoading] = useState(false)
   const [pubError, setPubError] = useState('')
   const [pubExito, setPubExito] = useState(false)
@@ -86,7 +109,7 @@ export default function Panel() {
   }
 
   const publicarAnuncio = async () => {
-    if (!pubTitulo || !pubPrecio || !pubZona) { setPubError('Título, precio y zona son obligatorios'); return }
+    if (!pubTitulo || !pubPrecio || !pubProvincia || !pubSector) { setPubError('Título, precio, provincia y sector son obligatorios'); return }
     setPubLoading(true)
     setPubError('')
     const { data: { user } } = await supabase.auth.getUser()
@@ -98,7 +121,7 @@ export default function Panel() {
       precio: Number(pubPrecio.replace(/\D/g, '')),
       tipo: pubTipo,
       operacion: pubOperacion.toLowerCase(),
-      zona: pubZona,
+      zona: pubSector ? `${pubSector}, ${pubProvincia}` : pubProvincia,
       m2: pubM2 ? Number(pubM2) : null,
       habitaciones: Number(pubHab),
       banos: Number(pubBanos),
@@ -262,12 +285,30 @@ export default function Panel() {
                   ].map(f => (
                     <div key={f.label}>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{f.label}</label>
-                      {f.type === 'select'
+                      {f.label === 'SKIP_ZONA' ? null : f.type === 'select'
                         ? <select style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>{f.options!.map(o => <option key={o}>{o}</option>)}</select>
-                        : <input type="text" placeholder={f.placeholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                        : <input type="text" value={f.label === 'Título del anuncio' ? pubTitulo : f.label === 'Precio (US$)' ? pubPrecio : f.label === 'Superficie (m²)' ? pubM2 : ''} onChange={e => { if(f.label === 'Título del anuncio') setPubTitulo(e.target.value); else if(f.label === 'Precio (US$)') setPubPrecio(e.target.value); else if(f.label === 'Superficie (m²)') setPubM2(e.target.value) }} placeholder={f.placeholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                       }
                     </div>
                   ))}
+                </div>
+
+                {/* PROVINCIA Y ZONA */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Provincia *</label>
+                    <select value={pubProvincia} onChange={e => { setPubProvincia(e.target.value); setPubSector('') }} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
+                      <option value="">Selecciona provincia</option>
+                      {Object.keys(provinciasZonas).map(p => <option key={p} value={p}>{p}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Sector / Zona *</label>
+                    <select value={pubSector} onChange={e => setPubSector(e.target.value)} disabled={!pubProvincia} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: pubProvincia ? '#fff' : '#f9f9f9', color: pubProvincia ? '#333' : '#aaa' }}>
+                      <option value="">Selecciona sector</option>
+                      {pubProvincia && provinciasZonas[pubProvincia].map(z => <option key={z} value={z}>{z}</option>)}
+                    </select>
+                  </div>
                 </div>
 
                 <div style={{ marginBottom: 16 }}>
