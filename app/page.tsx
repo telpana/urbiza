@@ -229,6 +229,21 @@ export default function Home() {
   const [tipo, setTipo] = useState('Comprar')
   const [verMapa, setVerMapa] = useState(false)
   const { idioma, setIdioma, tr } = useIdioma()
+  const [queryHome, setQueryHome] = useState('')
+  const [sugHome, setSugHome] = useState<string[]>([])
+  const [mostrarSugHome, setMostrarSugHome] = useState(false)
+
+  const zonasRD = ['Piantini, Distrito Nacional', 'Naco, Distrito Nacional', 'Serrallés, Distrito Nacional', 'Bella Vista, Distrito Nacional', 'Arroyo Hondo, Distrito Nacional', 'Los Cacicazgos, Distrito Nacional', 'Gazcue, Distrito Nacional', 'Ciudad Colonial, Distrito Nacional', 'Evaristo Morales, Distrito Nacional', 'Miramar, Distrito Nacional', 'La Esperilla, Distrito Nacional', 'Urbanización Real, Distrito Nacional', 'Viejo Arroyo Hondo, Distrito Nacional', 'Los Prados, Distrito Nacional', 'Jardines del Norte, Distrito Nacional', 'Ensanche Naco, Distrito Nacional', 'Ensanche Ozama, Distrito Nacional', 'Villa Consuelo, Distrito Nacional', 'Cristo Rey, Distrito Nacional', 'Alma Rosa, Santo Domingo Este', 'Los Tres Brazos, Santo Domingo Este', 'Ensanche Isabelita, Santo Domingo Este', 'San Isidro, Santo Domingo Este', 'Los Mina, Santo Domingo Este', 'Bávaro, La Altagracia', 'Punta Cana, La Altagracia', 'Cap Cana, La Altagracia', 'Cabeza de Toro, La Altagracia', 'Los Corales, La Altagracia', 'Uvero Alto, La Altagracia', 'Macao, La Altagracia', 'Cortecito, La Altagracia', 'El Cortecito, La Altagracia', 'Higüey, La Altagracia', 'San Rafael del Yuma, La Altagracia', 'Los Jardines, Santiago', 'Cerros de Gurabo, Santiago', 'Reparto Conuco, Santiago', 'Bella Vista, Santiago', 'Villa Olga, Santiago', 'Pontezuela, Santiago', 'Urbanización Tropical, Santiago', 'Las Colinas, Santiago', 'El Dorado, Santiago', 'Las Terrenas, Samaná', 'Samaná', 'El Portillo, Samaná', 'Cosón, Samaná', 'Las Galeras, Samaná', 'Puerto Plata', 'Sosúa, Puerto Plata', 'Cabarete, Puerto Plata', 'Costámbar, Puerto Plata', 'Cofresí, Puerto Plata', 'Playa Dorada, Puerto Plata', 'La Romana', 'Casa de Campo, La Romana', 'Bayahíbe, La Romana', 'Dominicus, La Romana', 'Jarabacoa, La Vega', 'Constanza, La Vega', 'La Vega', 'San Pedro de Macorís', 'Juan Dolio, San Pedro de Macorís', 'Guayacanes, San Pedro de Macorís', 'Boca Chica, Santo Domingo', 'Andrés, Boca Chica', 'San Cristóbal', 'Baní, Peravia', 'Azua', 'Barahona', 'Monte Plata', 'Hato Mayor', 'El Seibo', 'Miches, El Seibo', 'Moca, Espaillat', 'San Francisco de Macorís, Duarte', 'Nagua, María Trinidad Sánchez', 'Monte Cristi', 'Dajabón', 'Pedernales', 'Neiba, Baoruco', 'San Juan de la Maguana']
+  const handleQueryHome = (val: string) => {
+    setQueryHome(val)
+    if (val.length >= 2) {
+      setSugHome(zonasRD.filter(z => z.toLowerCase().includes(val.toLowerCase())).slice(0, 6))
+      setMostrarSugHome(true)
+    } else {
+      setSugHome([])
+      setMostrarSugHome(false)
+    }
+  }
 
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6' }}>
@@ -283,11 +298,32 @@ export default function Home() {
                 </button>
               ))}
             </div>
-            <div style={{ display: 'flex', border: '1.5px solid #006D77', borderRadius: 4, overflow: 'hidden' }}>
+            <div style={{ display: 'flex', border: '1.5px solid #006D77', borderRadius: 4, overflow: 'visible' }}>
               <div style={{ display: 'flex', alignItems: 'center', padding: '0 12px', background: '#f9f9f9', borderRight: '1px solid #e0e0e0' }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               </div>
-              <input type="text" placeholder={tr.hero.placeholder} style={{ flex: 1, padding: '12px 14px', fontSize: 14, border: 'none', outline: 'none', color: '#222', background: '#fff' }} />
+              <div style={{ flex: 1, position: 'relative' }}>
+                <input
+                  type="text"
+                  value={queryHome}
+                  onChange={e => handleQueryHome(e.target.value)}
+                  onBlur={() => setTimeout(() => setMostrarSugHome(false), 150)}
+                  placeholder={tr.hero.placeholder}
+                  style={{ width: '100%', padding: '12px 14px', fontSize: 14, border: 'none', outline: 'none', color: '#222', background: '#fff', boxSizing: 'border-box' }}
+                />
+                {mostrarSugHome && sugHome.length > 0 && (
+                  <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #e0e0e0', borderTop: 'none', borderRadius: '0 0 6px 6px', boxShadow: '0 4px 16px rgba(0,0,0,0.12)', zIndex: 200 }}>
+                    {sugHome.map((s: string, i: number) => (
+                      <div key={i} onMouseDown={() => { setQueryHome(s); setMostrarSugHome(false) }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', fontSize: 14, color: '#333', cursor: 'pointer', borderBottom: i < sugHome.length - 1 ? '1px solid #f5f5f5' : 'none' }}
+                        onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
+                        onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        {s}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
               <select style={{ padding: '0 12px', fontSize: 13, border: 'none', borderLeft: '1px solid #e0e0e0', outline: 'none', color: '#555', background: '#f9f9f9', cursor: 'pointer' }}>
                 <option>Apartamento</option>
                 <option>Casa</option>

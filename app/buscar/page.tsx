@@ -124,6 +124,62 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: typeof propiedad
 
 export default function Buscar() {
   const [tipo, setTipo] = useState('Todos')
+  const [sugerencias, setSugerencias] = useState<string[]>([])
+  const [mostrarSugerencias, setMostrarSugerencias] = useState(false)
+
+  const zonasSugerencias = [
+    'Piantini, Distrito Nacional',
+    'Naco, Distrito Nacional',
+    'Serrallés, Distrito Nacional',
+    'Bella Vista, Distrito Nacional',
+    'Arroyo Hondo, Distrito Nacional',
+    'Evaristo Morales, Distrito Nacional',
+    'Los Cacicazgos, Distrito Nacional',
+    'Gazcue, Distrito Nacional',
+    'Ciudad Colonial, Distrito Nacional',
+    'Miramar, Distrito Nacional',
+    'La Esperilla, Distrito Nacional',
+    'Bávaro, La Altagracia',
+    'Punta Cana, La Altagracia',
+    'Cap Cana, La Altagracia',
+    'Bávaro Beach, La Altagracia',
+    'Los Corales, La Altagracia',
+    'Cabeza de Toro, La Altagracia',
+    'Los Jardines, Santiago',
+    'Cerros de Gurabo, Santiago',
+    'Reparto Conuco, Santiago',
+    'Las Terrenas, Samaná',
+    'Samaná, Samaná',
+    'Puerto Plata',
+    'La Romana',
+    'Casa de Campo, La Romana',
+    'Jarabacoa, La Vega',
+    'Constanza, La Vega',
+    'San Pedro de Macorís',
+    'Santo Domingo Este',
+    'Santo Domingo Norte',
+    'Santo Domingo Oeste',
+  ]
+
+  const handleQueryChange = (val: string) => {
+    setQuery(val)
+    if (val.length >= 2) {
+      const filtradas = zonasSugerencias.filter(z =>
+        z.toLowerCase().includes(val.toLowerCase())
+      )
+      setSugerencias(filtradas.slice(0, 6))
+      setMostrarSugerencias(true)
+    } else {
+      setSugerencias([])
+      setMostrarSugerencias(false)
+    }
+  }
+
+  const seleccionarSugerencia = (zona: string) => {
+    setQuery(zona)
+    setSugerencias([])
+    setMostrarSugerencias(false)
+  }
   const [orden, setOrden] = useState('Relevancia')
   const [precioMin, setPrecioMin] = useState('')
   const [precioMax, setPrecioMax] = useState('')
