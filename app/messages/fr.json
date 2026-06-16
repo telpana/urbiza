@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "comprar": "Acheter",
+    "alquilar": "Louer",
+    "obraNueva": "Neuf",
+    "entrar": "Connexion",
+    "publicar": "+ Publier gratuitement"
+  },
+  "hero": {
+    "titulo": "Trouvez votre prochaine propriété en République Dominicaine",
+    "subtitulo": "Le premier portail immobilier des Caraïbes",
+    "comprar": "Acheter",
+    "alquilar": "Louer",
+    "placeholder": "Ville, quartier, zone...",
+    "buscar": "Rechercher"
+  },
+  "tipos": {
+    "apartamento": "Appartement",
+    "casa": "Maison",
+    "villa": "Villa",
+    "oficina": "Bureau",
+    "terreno": "Terrain",
+    "local": "Local commercial"
+  },
+  "secciones": {
+    "mapaTitle": "Sélectionner des zones sur la carte",
+    "mapaDesc": "Recherchez plusieurs zones à la fois en les sélectionnant directement sur la carte de la République Dominicaine.",
+    "mapaLink": "Commencer à sélectionner →",
+    "publicarTitle": "Publier votre annonce",
+    "publicarDesc": "Vos 2 premières annonces sont entièrement gratuites. Appartements, maisons, villas, terrains... Tout est possible!",
+    "publicarLink": "Déposer mon annonce →"
+  },
+  "destacadas": {
+    "titulo": "Propriétés en vedette",
+    "subtitulo": "Les meilleures opportunités du marché dominicain",
+    "verTodas": "Voir toutes les propriétés →",
+    "destacado": "En vedette",
+    "masVisto": "Plus consulté",
+    "ver": "Voir la propriété"
+  },
+  "novedades": {
+    "santoDomingo": "Nouveautés à Saint-Domingue",
+    "puntaCana": "Nouveautés à Punta Cana",
+    "santiago": "Nouveautés à Santiago",
+    "verTodas": "Voir toutes les propriétés à vendre →",
+    "nuevo": "NOUVEAU"
+  },
+  "zonas": {
+    "titulo": "Où tout le monde recherche en République Dominicaine en ce moment"
+  },
+  "footer": {
+    "avisoLegal": "Mentions légales",
+    "privacidad": "Confidentialité",
+    "cookies": "Cookies",
+    "ayuda": "Aide",
+    "publicar": "Publier une annonce",
+    "planes": "Abonnements",
+    "derechos": "© 2025 urbiza.com · République Dominicaine"
+  },
+  "buscar": {
+    "titulo": "propriétés en République Dominicaine",
+    "ordenar": "Trier par :",
+    "relevancia": "Pertinence",
+    "recientes": "Récents",
+    "baratos": "Moins chers",
+    "caros": "Plus chers",
+    "tipoInmueble": "Type de bien",
+    "todos": "Tous",
+    "precio": "Prix (US$)",
+    "superficie": "Surface (m²)",
+    "habitaciones": "Chambres",
+    "banos": "Salles de bain",
+    "caracteristicas": "Caractéristiques",
+    "minimo": "Min",
+    "maximo": "Max",
+    "verMapa": "Voir sur la carte",
+    "verTelefono": "Afficher le téléphone",
+    "contactar": "Contacter",
+    "verMas": "Voir plus de propriétés"
+  }
+}

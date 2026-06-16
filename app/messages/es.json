@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "comprar": "Comprar",
+    "alquilar": "Alquilar",
+    "obraNueva": "Obra nueva",
+    "entrar": "Entrar",
+    "publicar": "+ Publicar gratis"
+  },
+  "hero": {
+    "titulo": "Encuentra tu próxima propiedad en República Dominicana",
+    "subtitulo": "El portal inmobiliario líder del Caribe",
+    "comprar": "Comprar",
+    "alquilar": "Alquilar",
+    "placeholder": "Municipio, sector, barrio...",
+    "buscar": "Buscar"
+  },
+  "tipos": {
+    "apartamento": "Apartamento",
+    "casa": "Casa",
+    "villa": "Villa",
+    "oficina": "Oficina",
+    "terreno": "Terreno",
+    "local": "Local comercial"
+  },
+  "secciones": {
+    "mapaTitle": "Seleccionar zonas en el mapa",
+    "mapaDesc": "Puedes buscar en varias zonas seleccionándolas directamente en el mapa de República Dominicana.",
+    "mapaLink": "Empezar a seleccionar zonas →",
+    "publicarTitle": "Publicar tu anuncio",
+    "publicarDesc": "Tus 2 primeros anuncios son completamente gratis. Apartamentos, casas, villas, terrenos... ¡Todo cabe!",
+    "publicarLink": "Poner tu anuncio →"
+  },
+  "destacadas": {
+    "titulo": "Propiedades destacadas",
+    "subtitulo": "Las mejores oportunidades del mercado dominicano",
+    "verTodas": "Ver todas las propiedades →",
+    "destacado": "Destacado",
+    "masVisto": "Más visto",
+    "ver": "Ver propiedad"
+  },
+  "novedades": {
+    "santoDomingo": "Novedades en Santo Domingo",
+    "puntaCana": "Novedades en Punta Cana",
+    "santiago": "Novedades en Santiago",
+    "verTodas": "Ver todas las propiedades en venta →",
+    "nuevo": "NUEVO"
+  },
+  "zonas": {
+    "titulo": "Dónde busca todo el mundo en República Dominicana ahora mismo"
+  },
+  "footer": {
+    "avisoLegal": "Aviso legal",
+    "privacidad": "Privacidad",
+    "cookies": "Cookies",
+    "ayuda": "Ayuda",
+    "publicar": "Publicar anuncio",
+    "planes": "Planes",
+    "derechos": "© 2025 urbiza.com · República Dominicana"
+  },
+  "buscar": {
+    "titulo": "propiedades en República Dominicana",
+    "ordenar": "Ordenar:",
+    "relevancia": "Relevancia",
+    "recientes": "Recientes",
+    "baratos": "Baratos",
+    "caros": "Caros",
+    "tipoInmueble": "Tipo de inmueble",
+    "todos": "Todos",
+    "precio": "Precio (US$)",
+    "superficie": "Superficie (m²)",
+    "habitaciones": "Habitaciones",
+    "banos": "Baños",
+    "caracteristicas": "Características",
+    "minimo": "Mínimo",
+    "maximo": "Máximo",
+    "verMapa": "Ver en mapa",
+    "verTelefono": "Ver teléfono",
+    "contactar": "Contactar",
+    "verMas": "Ver más propiedades"
+  }
+}

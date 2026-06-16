@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "comprar": "Buy",
+    "alquilar": "Rent",
+    "obraNueva": "New homes",
+    "entrar": "Sign in",
+    "publicar": "+ List for free"
+  },
+  "hero": {
+    "titulo": "Find your next property in the Dominican Republic",
+    "subtitulo": "The leading real estate portal in the Caribbean",
+    "comprar": "Buy",
+    "alquilar": "Rent",
+    "placeholder": "City, neighborhood, area...",
+    "buscar": "Search"
+  },
+  "tipos": {
+    "apartamento": "Apartment",
+    "casa": "House",
+    "villa": "Villa",
+    "oficina": "Office",
+    "terreno": "Land",
+    "local": "Commercial space"
+  },
+  "secciones": {
+    "mapaTitle": "Select areas on the map",
+    "mapaDesc": "Search multiple areas at once by selecting them directly on the map of the Dominican Republic.",
+    "mapaLink": "Start selecting areas →",
+    "publicarTitle": "List your property",
+    "publicarDesc": "Your first 2 listings are completely free. Apartments, houses, villas, land... Everything fits!",
+    "publicarLink": "Post your listing →"
+  },
+  "destacadas": {
+    "titulo": "Featured properties",
+    "subtitulo": "The best opportunities in the Dominican market",
+    "verTodas": "View all properties →",
+    "destacado": "Featured",
+    "masVisto": "Most viewed",
+    "ver": "View property"
+  },
+  "novedades": {
+    "santoDomingo": "New listings in Santo Domingo",
+    "puntaCana": "New listings in Punta Cana",
+    "santiago": "New listings in Santiago",
+    "verTodas": "View all properties for sale →",
+    "nuevo": "NEW"
+  },
+  "zonas": {
+    "titulo": "Where everyone is searching in the Dominican Republic right now"
+  },
+  "footer": {
+    "avisoLegal": "Legal notice",
+    "privacidad": "Privacy",
+    "cookies": "Cookies",
+    "ayuda": "Help",
+    "publicar": "Post a listing",
+    "planes": "Plans",
+    "derechos": "© 2025 urbiza.com · Dominican Republic"
+  },
+  "buscar": {
+    "titulo": "properties in the Dominican Republic",
+    "ordenar": "Sort by:",
+    "relevancia": "Relevance",
+    "recientes": "Recent",
+    "baratos": "Cheapest",
+    "caros": "Most expensive",
+    "tipoInmueble": "Property type",
+    "todos": "All",
+    "precio": "Price (US$)",
+    "superficie": "Area (m²)",
+    "habitaciones": "Bedrooms",
+    "banos": "Bathrooms",
+    "caracteristicas": "Features",
+    "minimo": "Min",
+    "maximo": "Max",
+    "verMapa": "View on map",
+    "verTelefono": "Show phone",
+    "contactar": "Contact",
+    "verMas": "View more properties"
+  }
+}

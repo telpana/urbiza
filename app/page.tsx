@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
+import { useIdioma } from '../IdiomaContext'
 
 const propiedadesMapaHome = [
   { id: 1, precio: 285000, titulo: 'Apartamento en Piantini', zona: 'Piantini, D.N.', tipo: 'Apartamento', hab: 3, m2: 150, banos: 2, lat: 18.4890, lng: -69.9370, desc: 'Amplio apartamento en Piantini con acabados de alta calidad.' },
@@ -227,6 +228,7 @@ function SeccionNovedad({ titulo, subtitulo, props }: { titulo: string, subtitul
 export default function Home() {
   const [tipo, setTipo] = useState('Comprar')
   const [verMapa, setVerMapa] = useState(false)
+  const { idioma, setIdioma, tr } = useIdioma()
 
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6' }}>
@@ -247,19 +249,31 @@ export default function Home() {
           ))}
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <a href="/login" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>Entrar</a>
-          <a href="/registro" style={{ fontSize: 13, color: '#fff', background: '#006D77', padding: '8px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>+ Publicar gratis</a>
+          <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
+            <select value={idioma} onChange={e => setIdioma(e.target.value as any)} style={{ fontSize: 13, color: '#006D77', border: 'none', background: 'transparent', cursor: 'pointer', outline: 'none', padding: '0 16px 0 0', appearance: 'none', WebkitAppearance: 'none', fontWeight: 600 }}>
+              <option value="es" style={{ color: '#333', background: '#fff' }}>ES</option>
+              <option value="en" style={{ color: '#333', background: '#fff' }}>EN</option>
+              <option value="fr" style={{ color: '#333', background: '#fff' }}>FR</option>
+            </select>
+            <svg style={{ position: 'absolute', right: 0, pointerEvents: 'none' }} width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#006D77" strokeWidth="1.5" strokeLinecap="round"/></svg>
+          </div>
+          <a href="/login" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.entrar}</a>
+          <a href="/registro" style={{ fontSize: 13, color: '#fff', background: '#006D77', padding: '8px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.publicar}</a>
         </div>
       </nav>
 
-      {/* BANNER CELESTE — imagen configurable desde panel de administración */}
-      <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 50%, #17A6B4 100%)', padding: '40px 20px 36px' }}>
+      {/* BANNER CON IMAGEN — imagen configurable desde panel de administración */}
+      <div style={{ position: 'relative', minHeight: 420, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+        {/* Imagen de fondo — se cambia desde el panel admin */}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80)', backgroundSize: 'cover', backgroundPosition: 'center' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,78,87,0.72)' }} />
+        <div style={{ position: 'relative', zIndex: 2, width: '100%', padding: '40px 20px 36px' }}>
         <div style={{ maxWidth: 720, margin: '0 auto' }}>
           <h1 style={{ color: '#fff', fontSize: 26, fontWeight: 600, marginBottom: 6, textAlign: 'center', letterSpacing: -0.5 }}>
-            Encuentra tu próxima propiedad en República Dominicana
+            {tr.hero.titulo}
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, marginBottom: 22, textAlign: 'center' }}>
-            El portal inmobiliario líder del Caribe
+            {tr.hero.subtitulo}
           </p>
           <div style={{ background: '#fff', borderRadius: 8, padding: '18px 18px', boxShadow: '0 4px 24px rgba(0,0,0,0.15)' }}>
             <div style={{ display: 'flex', gap: 0, marginBottom: 14 }}>
@@ -273,7 +287,7 @@ export default function Home() {
               <div style={{ display: 'flex', alignItems: 'center', padding: '0 12px', background: '#f9f9f9', borderRight: '1px solid #e0e0e0' }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               </div>
-              <input type="text" placeholder="Municipio, sector, barrio..." style={{ flex: 1, padding: '12px 14px', fontSize: 14, border: 'none', outline: 'none', color: '#222', background: '#fff' }} />
+              <input type="text" placeholder={tr.hero.placeholder} style={{ flex: 1, padding: '12px 14px', fontSize: 14, border: 'none', outline: 'none', color: '#222', background: '#fff' }} />
               <select style={{ padding: '0 12px', fontSize: 13, border: 'none', borderLeft: '1px solid #e0e0e0', outline: 'none', color: '#555', background: '#f9f9f9', cursor: 'pointer' }}>
                 <option>Apartamento</option>
                 <option>Casa</option>
@@ -282,9 +296,10 @@ export default function Home() {
                 <option>Terreno</option>
                 <option>Local comercial</option>
               </select>
-              <button style={{ background: '#006D77', color: '#fff', border: 'none', padding: '0 26px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Buscar</button>
+              <button style={{ background: '#006D77', color: '#fff', border: 'none', padding: '0 26px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>{tr.hero.buscar}</button>
             </div>
           </div>
+        </div>
         </div>
       </div>
 
