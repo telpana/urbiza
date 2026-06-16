@@ -99,6 +99,32 @@ export default function Panel() {
   const [pubError, setPubError] = useState('')
   const [pubExito, setPubExito] = useState(false)
   const [fotoPerfilUrl, setFotoPerfilUrl] = useState<string | null>(null)
+  const [usuario, setUsuario] = useState<any>(null)
+  const [anunciosReales, setAnunciosReales] = useState<any[]>([])
+  const [mensajesReales, setMensajesReales] = useState<any[]>([])
+  const [cargando, setCargando] = useState(true)
+
+  useEffect(() => {
+    const cargarDatos = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { window.location.href = '/login'; return }
+
+      // Cargar perfil usuario
+      const { data: perfil } = await supabase.from('usuarios').select('*').eq('id', user.id).single()
+      if (perfil) { setUsuario(perfil); if (perfil.foto_url) setFotoPerfilUrl(perfil.foto_url) }
+
+      // Cargar anuncios del usuario
+      const { data: anuncios } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
+      if (anuncios) setAnunciosReales(anuncios)
+
+      // Cargar mensajes del usuario
+      const { data: msgs } = await supabase.from('mensajes').select('*, propiedades(titulo)').eq('vendedor_id', user.id).order('created_at', { ascending: false })
+      if (msgs) setMensajesReales(msgs)
+
+      setCargando(false)
+    }
+    cargarDatos()
+  }, [])
 
   const toggleEstado = (id: number, estadoActual: string) => {
     setEstadosAnuncios(prev => ({ ...prev, [id]: estadoActual === 'activo' ? 'pausado' : 'activo' }))
@@ -136,7 +162,23 @@ export default function Panel() {
     setAmenidadesSeleccionadas([])
   }
 
-  const anunciosFiltrados = anunciosEjemplo.filter(a => filtroTipo === 'Todos' || a.tipo === filtroTipo)
+  const anunciosAMostrar = anunciosReales.length > 0 ? anunciosReales.map(a => ({
+    id: a.id,
+    titulo: a.titulo,
+    precio: a.precio,
+    zona: a.zona || '',
+    tipo: a.tipo || 'Apartamento',
+    estado: a.estado || 'activo',
+    impresiones: a.visitas || 0,
+    clics: Math.floor((a.visitas || 0) * 0.28),
+    telVistos: a.tel_vistos || 0,
+    favoritos: a.favoritos || 0,
+    destacado: a.destacado || false,
+    vence: '30 días',
+    bg: '#e0f5f7',
+  })) : anunciosEjemplo
+
+  const anunciosFiltrados = anunciosAMostrar.filter((a: any) => filtroTipo === 'Todos' || a.tipo === filtroTipo)
   const noLeidos = mensajesEjemplo.filter(m => !mensajesLeidos[m.id] && !m.leido).length
 
   return (
@@ -155,7 +197,7 @@ export default function Panel() {
             <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#004E57', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: '#83D4DB', overflow: 'hidden' }}>
               {fotoPerfilUrl ? <img src={fotoPerfilUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : 'RC'}
             </div>
-            <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: 13 }}>Rafael Castillo</span>
+            <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: 13 }}>{usuario?.nombre || 'Mi cuenta'}</span>
             <span style={{ background: tipoUsuario === 'particular' ? 'rgba(255,255,255,0.2)' : '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>
               {tipoUsuario === 'particular' ? 'PARTICULAR' : 'PROFESIONAL'}
             </span>
@@ -743,7 +785,7 @@ export default function Panel() {
 
                 {/* Cerrar sesión */}
                 <div style={{ marginTop: 32, paddingTop: 20, borderTop: '1px solid #f0f0f0' }}>
-                  <button style={{ all: 'unset', fontSize: 12, color: '#aaa', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+                  <button onClick={async () => { await supabase.auth.signOut(); window.location.href = '/' }} style={{ all: 'unset', fontSize: 12, color: '#aaa', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
                     onMouseEnter={e => e.currentTarget.style.color = '#e55'}
                     onMouseLeave={e => e.currentTarget.style.color = '#aaa'}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
