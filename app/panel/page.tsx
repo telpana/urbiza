@@ -1,5 +1,6 @@
 'use client'
 import { useState } from 'react'
+import { supabase } from '../../supabase'
 
 const menuItems = [
   { id: 'anuncios', label: 'Mis anuncios', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
@@ -62,6 +63,18 @@ export default function Panel() {
   const [respuesta, setRespuesta] = useState('')
   const [mensajesLeidos, setMensajesLeidos] = useState<Record<number, boolean>>({})
   const [amenidadesSeleccionadas, setAmenidadesSeleccionadas] = useState<string[]>([])
+  const [pubTitulo, setPubTitulo] = useState('')
+  const [pubPrecio, setPubPrecio] = useState('')
+  const [pubZona, setPubZona] = useState('')
+  const [pubM2, setPubM2] = useState('')
+  const [pubDesc, setPubDesc] = useState('')
+  const [pubTipo, setPubTipo] = useState('Apartamento')
+  const [pubOperacion, setPubOperacion] = useState('Venta')
+  const [pubHab, setPubHab] = useState('1')
+  const [pubBanos, setPubBanos] = useState('1')
+  const [pubLoading, setPubLoading] = useState(false)
+  const [pubError, setPubError] = useState('')
+  const [pubExito, setPubExito] = useState(false)
   const [fotoPerfilUrl, setFotoPerfilUrl] = useState<string | null>(null)
 
   const toggleEstado = (id: number, estadoActual: string) => {
@@ -70,6 +83,34 @@ export default function Panel() {
 
   const toggleAmenidad = (id: string) => {
     setAmenidadesSeleccionadas(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id])
+  }
+
+  const publicarAnuncio = async () => {
+    if (!pubTitulo || !pubPrecio || !pubZona) { setPubError('Título, precio y zona son obligatorios'); return }
+    setPubLoading(true)
+    setPubError('')
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { setPubError('Debes iniciar sesión para publicar'); setPubLoading(false); return }
+    const { error } = await supabase.from('propiedades').insert({
+      usuario_id: user.id,
+      titulo: pubTitulo,
+      descripcion: pubDesc,
+      precio: Number(pubPrecio.replace(/\D/g, '')),
+      tipo: pubTipo,
+      operacion: pubOperacion.toLowerCase(),
+      zona: pubZona,
+      m2: pubM2 ? Number(pubM2) : null,
+      habitaciones: Number(pubHab),
+      banos: Number(pubBanos),
+      amenidades: amenidadesSeleccionadas,
+      estado: 'activo',
+    })
+    if (error) { setPubError('Error al publicar. Inténtalo de nuevo.'); setPubLoading(false); return }
+    setPubExito(true)
+    setPubLoading(false)
+    // Resetear form
+    setPubTitulo(''); setPubPrecio(''); setPubZona(''); setPubM2(''); setPubDesc('')
+    setAmenidadesSeleccionadas([])
   }
 
   const anunciosFiltrados = anunciosEjemplo.filter(a => filtroTipo === 'Todos' || a.tipo === filtroTipo)
@@ -212,10 +253,10 @@ export default function Panel() {
                   {[
                     { label: 'Tipo de operación', type: 'select', options: ['Venta', 'Alquiler'] },
                     { label: 'Tipo de inmueble', type: 'select', options: ['Apartamento', 'Casa', 'Villa', 'Oficina', 'Terreno', 'Local comercial'] },
-                    { label: 'Título del anuncio', type: 'input', placeholder: 'Ej: Apartamento en Piantini con vista al mar' },
-                    { label: 'Precio (US$)', type: 'input', placeholder: 'Ej: 250000' },
-                    { label: 'Zona / Sector', type: 'input', placeholder: 'Ej: Piantini, Distrito Nacional' },
-                    { label: 'Superficie (m²)', type: 'input', placeholder: 'Ej: 150' },
+                    { label: 'Título del anuncio', type: 'input', value: pubTitulo, onChange: e => setPubTitulo(e.target.value), placeholder: 'Ej: Apartamento en Piantini con vista al mar' },
+                    { label: 'Precio (US$)', type: 'input', value: pubPrecio, onChange: e => setPubPrecio(e.target.value), placeholder: 'Ej: 250000' },
+                    { label: 'Zona / Sector', type: 'input', value: pubZona, onChange: e => setPubZona(e.target.value), placeholder: 'Ej: Piantini, Distrito Nacional' },
+                    { label: 'Superficie (m²)', type: 'input', value: pubM2, onChange: e => setPubM2(e.target.value), placeholder: 'Ej: 150' },
                     { label: 'Habitaciones', type: 'select', options: ['Estudio', '1', '2', '3', '4+'] },
                     { label: 'Baños', type: 'select', options: ['1', '2', '3+'] },
                   ].map(f => (
@@ -259,8 +300,12 @@ export default function Panel() {
                   </div>
                 </div>
 
+                {pubError && <div style={{ background: '#fee2e2', border: '1px solid #fca5a5', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#991b1b', marginBottom: 14 }}>{pubError}</div>}
+                {pubExito && <div style={{ background: '#e0f5f0', border: '1px solid #6ee7b7', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#065f46', marginBottom: 14 }}>✓ Anuncio publicado correctamente</div>}
                 <div style={{ display: 'flex', gap: 10 }}>
-                  <button style={{ all: 'unset', flex: 1, background: '#006D77', color: '#fff', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'center' }}>Publicar anuncio</button>
+                  <button onClick={publicarAnuncio} disabled={pubLoading} style={{ all: 'unset', flex: 1, background: pubLoading ? '#aaa' : '#006D77', color: '#fff', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: pubLoading ? 'default' : 'pointer', textAlign: 'center' }}>
+                    {pubLoading ? 'Publicando...' : 'Publicar anuncio'}
+                  </button>
                   <button style={{ all: 'unset', border: '1.5px solid #e0e0e0', color: '#555', padding: '12px 20px', borderRadius: 6, fontSize: 14, cursor: 'pointer' }}>Guardar borrador</button>
                 </div>
               </div>
