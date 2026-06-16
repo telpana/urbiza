@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { supabase } from '../../supabase'
 
 const menuItems = [
@@ -68,8 +68,6 @@ const amenidades = [
   { id: 'amueblado', label: 'Amueblado' },
   { id: 'jardin', label: 'Jardín' },
   { id: 'terraza', label: 'Terraza' },
-  { id: 'jacuzzi', label: 'Jacuzzi' },
-  { id: 'barbacoa', label: 'Barbacoa' },
 ]
 
 // Tipo de usuario: 'particular' tiene límite de 2 anuncios gratis
@@ -329,7 +327,7 @@ export default function Panel() {
                   ].map(f => (
                     <div key={f.label}>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{f.label}</label>
-                      
+                      {f.label === 'SKIP_ZONA' ? null : f.type === 'select'
                         ? <select style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>{f.options!.map(o => <option key={o}>{o}</option>)}</select>
                         : <input type="text" value={f.label === 'Título del anuncio' ? pubTitulo : f.label === 'Precio (US$)' ? pubPrecio : f.label === 'Superficie (m²)' ? pubM2 : ''} onChange={e => { if(f.label === 'Título del anuncio') setPubTitulo(e.target.value); else if(f.label === 'Precio (US$)') setPubPrecio(e.target.value); else if(f.label === 'Superficie (m²)') setPubM2(e.target.value) }} placeholder={f.placeholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                       }
