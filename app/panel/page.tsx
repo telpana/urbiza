@@ -1,0 +1,711 @@
+'use client'
+import { useState } from 'react'
+
+const menuItems = [
+  { id: 'anuncios', label: 'Mis anuncios', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
+  { id: 'publicar', label: 'Publicar anuncio', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> },
+  { id: 'mensajes', label: 'Mensajes', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
+  { id: 'estadisticas', label: 'Estadísticas', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> },
+  { id: 'destacar', label: 'Destacar anuncio', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> },
+  { id: 'plan', label: 'Mi plan', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> },
+  { id: 'perfil', label: 'Mi perfil', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
+  { id: 'cursos', label: 'Cursos AEI', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> },
+]
+
+const anunciosEjemplo = [
+  { id: 1, titulo: 'Apartamento en Piantini', precio: 285000, zona: 'Piantini, D.N.', tipo: 'Apartamento', estado: 'activo', impresiones: 1240, clics: 342, telVistos: 28, favoritos: 15, destacado: true, vence: '15 días', bg: '#e0f5f7' },
+  { id: 2, titulo: 'Villa en Arroyo Hondo', precio: 520000, zona: 'Arroyo Hondo, D.N.', tipo: 'Villa', estado: 'activo', impresiones: 890, clics: 198, telVistos: 12, favoritos: 8, destacado: false, vence: '22 días', bg: '#ddf0e8' },
+  { id: 3, titulo: 'Oficina en Naco', precio: 180000, zona: 'Naco, D.N.', tipo: 'Oficina', estado: 'pausado', impresiones: 320, clics: 89, telVistos: 5, favoritos: 3, destacado: false, vence: '8 días', bg: '#e8eaf0' },
+]
+
+const mensajesEjemplo = [
+  { id: 1, nombre: 'María Rodríguez', telefono: '+1 809 555 1234', propiedad: 'Apartamento en Piantini', propiedadId: 1, mensaje: 'Buenos días, me interesa el apartamento. ¿Está disponible para visita este fin de semana? Soy compradora seria y tengo financiamiento aprobado.', fecha: 'Hace 20 min', leido: false, avatar: 'MR' },
+  { id: 2, nombre: 'Carlos Peña', telefono: '+1 809 555 5678', propiedad: 'Villa en Arroyo Hondo', propiedadId: 2, mensaje: '¿Cuál es el precio final? ¿Acepta negociación? Estoy interesado en comprar antes de fin de mes.', fecha: 'Hace 2h', leido: false, avatar: 'CP' },
+  { id: 3, nombre: 'Ana Jiménez', telefono: null, propiedad: 'Apartamento en Piantini', propiedadId: 1, mensaje: 'Hola, me gustaría saber si el precio incluye los muebles y si tiene generador propio. Gracias.', fecha: 'Ayer', leido: true, avatar: 'AJ' },
+  { id: 4, nombre: 'Roberto Santos', telefono: '+1 809 555 9012', propiedad: 'Oficina en Naco', propiedadId: 3, mensaje: 'Somos una empresa buscando oficina para 15 personas. ¿Está disponible para alquiler?', fecha: 'Hace 2 días', leido: true, avatar: 'RS' },
+  { id: 5, nombre: 'Laura Martínez', telefono: null, propiedad: 'Villa en Arroyo Hondo', propiedadId: 2, mensaje: 'Me encanta la propiedad. ¿Tiene fotos adicionales del jardín y la piscina? ¿Cuándo podríamos hacer una visita?', fecha: 'Hace 3 días', leido: true, avatar: 'LM' },
+]
+
+const planesDestacado = [
+  { dias: 15, precio: 9.99, label: '15 días', popular: false },
+  { dias: 30, precio: 19.99, label: '30 días', popular: true },
+  { dias: 60, precio: 34.99, label: '60 días', popular: false },
+]
+
+const planesPro = [
+  { id: 'broker', nombre: 'Broker', precio: 15, features: ['Anuncios ilimitados', 'Badge PROFESIONAL', 'Estadísticas completas', 'Soporte por email'] },
+  { id: 'basic', nombre: 'Agencia Basic', precio: 29, features: ['Todo lo de Broker', 'Hasta 5 brokers', 'Panel de agencia', 'Nombre de inmobiliaria'] },
+  { id: 'pro', nombre: 'Agencia Pro', precio: 49, features: ['Todo lo de Basic', 'Hasta 10 brokers', 'Anuncios prioritarios', 'Soporte prioritario'] },
+  { id: 'unlimited', nombre: 'Unlimited', precio: 99, features: ['Todo lo de Pro', 'Brokers ilimitados', '1 cuenta por provincia', 'Manager dedicado'] },
+]
+
+const amenidades = [
+  { id: 'piscina', label: 'Piscina' },
+  { id: 'parqueo', label: 'Parqueo' },
+  { id: 'vista_mar', label: 'Vista al mar' },
+  { id: 'amueblado', label: 'Amueblado' },
+  { id: 'jardin', label: 'Jardín' },
+  { id: 'terraza', label: 'Terraza' },
+]
+
+// Tipo de usuario: 'particular' tiene límite de 2 anuncios gratis
+const tipoUsuario = 'agencia' // 'particular' | 'broker' | 'agencia' | 'unlimited' // cambiar a 'profesional' para ver panel pro
+const anunciosGratis = 2
+const anunciosUsados = 2 // para demostrar el límite
+
+export default function Panel() {
+  const [seccion, setSeccion] = useState('anuncios')
+  const [filtroTipo, setFiltroTipo] = useState('Todos')
+  const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
+  const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
+  const [mensajeSeleccionado, setMensajeSeleccionado] = useState<number | null>(1)
+  const [respuesta, setRespuesta] = useState('')
+  const [mensajesLeidos, setMensajesLeidos] = useState<Record<number, boolean>>({})
+  const [amenidadesSeleccionadas, setAmenidadesSeleccionadas] = useState<string[]>([])
+  const [fotoPerfilUrl, setFotoPerfilUrl] = useState<string | null>(null)
+
+  const toggleEstado = (id: number, estadoActual: string) => {
+    setEstadosAnuncios(prev => ({ ...prev, [id]: estadoActual === 'activo' ? 'pausado' : 'activo' }))
+  }
+
+  const toggleAmenidad = (id: string) => {
+    setAmenidadesSeleccionadas(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id])
+  }
+
+  const anunciosFiltrados = anunciosEjemplo.filter(a => filtroTipo === 'Todos' || a.tipo === filtroTipo)
+  const noLeidos = mensajesEjemplo.filter(m => !mensajesLeidos[m.id] && !m.leido).length
+
+  return (
+    <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
+
+      {/* NAV */}
+      <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', position: 'sticky', top: 0, zIndex: 100 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <a href="/" style={{ fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>
+            urbiza<span style={{ color: '#83D4DB' }}>.</span>
+          </a>
+          <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 10px', borderRadius: 10 }}>MI PANEL</span>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#004E57', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: '#83D4DB', overflow: 'hidden' }}>
+              {fotoPerfilUrl ? <img src={fotoPerfilUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : 'RC'}
+            </div>
+            <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: 13 }}>Rafael Castillo</span>
+            <span style={{ background: tipoUsuario === 'particular' ? 'rgba(255,255,255,0.2)' : '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>
+              {tipoUsuario === 'particular' ? 'PARTICULAR' : 'PROFESIONAL'}
+            </span>
+          </div>
+          <a href="/" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.5)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none' }}>← Ver web</a>
+        </div>
+      </nav>
+
+      <div style={{ display: 'flex' }}>
+
+        {/* SIDEBAR */}
+        <div style={{ width: 220, background: '#004E57', minHeight: 'calc(100vh - 54px)', padding: '20px 0', flexShrink: 0 }}>
+          {menuItems.filter(item => item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)).map(item => (
+            <button key={item.id} onClick={() => setSeccion(item.id)} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.6)', background: seccion === item.id ? 'rgba(255,255,255,0.12)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? '3px solid #83D4DB' : '3px solid transparent', boxSizing: 'border-box', position: 'relative' }}>
+              {item.icon}
+              {item.label}
+              {item.id === 'mensajes' && noLeidos > 0 && (
+                <span style={{ position: 'absolute', right: 14, background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 700, width: 18, height: 18, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{noLeidos}</span>
+              )}
+            </button>
+          ))}
+        </div>
+
+        {/* CONTENIDO */}
+        <div style={{ flex: 1, padding: '28px 32px', overflowY: 'auto' }}>
+
+          {/* MIS ANUNCIOS */}
+          {seccion === 'anuncios' && (
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+                <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111' }}>Mis anuncios</h1>
+                <button onClick={() => tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis ? setSeccion('planes') : setSeccion('publicar')} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>+ Publicar anuncio</button>
+              </div>
+
+              {/* Aviso límite particular */}
+              {tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis && (
+                <div style={{ background: '#fff8e1', border: '1.5px solid #f59e0b', borderRadius: 8, padding: '16px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: '#92400e', marginBottom: 4 }}>Has alcanzado el límite gratuito</div>
+                    <div style={{ fontSize: 13, color: '#78350f' }}>Has usado tus {anunciosGratis} anuncios gratuitos. ¿Quieres publicar más? Hazte PRO y publica anuncios ilimitados.</div>
+                  </div>
+                  <button onClick={() => setSeccion('planes')} style={{ all: 'unset', background: '#f59e0b', color: '#fff', padding: '10px 20px', borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                    Hazte PRO →
+                  </button>
+                </div>
+              )}
+
+              {/* KPIs */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 20 }}>
+                {[
+                  { label: 'Impresiones', val: '2,450', sub: 'veces que apareció en búsquedas', color: '#006D77' },
+                  { label: 'Visitas al anuncio', val: '629', sub: 'personas que lo abrieron', color: '#17A6B4' },
+                  { label: 'Tel. visualizados', val: '45', sub: 'veces que vieron tu teléfono', color: '#10b981' },
+                  { label: 'Guardados', val: '26', sub: 'personas que lo guardaron', color: '#f59e0b' },
+                ].map(k => (
+                  <div key={k.label} style={{ background: '#fff', borderRadius: 8, padding: '14px 16px', borderTop: `3px solid ${k.color}`, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
+                    <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>{k.label}</div>
+                    <div style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 2 }}>{k.val}</div>
+                    <div style={{ fontSize: 11, color: '#aaa' }}>{k.sub}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Filtro por tipo */}
+              <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+                {['Todos', 'Apartamento', 'Villa', 'Oficina', 'Terreno', 'Local comercial'].map(t => (
+                  <button key={t} onClick={() => setFiltroTipo(t)} style={{ all: 'unset', border: `1px solid ${filtroTipo === t ? '#006D77' : '#e0e0e0'}`, borderRadius: 20, padding: '5px 14px', fontSize: 12, color: filtroTipo === t ? '#006D77' : '#666', background: filtroTipo === t ? '#f0fafb' : '#fff', cursor: 'pointer', fontWeight: filtroTipo === t ? 600 : 400 }}>
+                    {t}
+                  </button>
+                ))}
+              </div>
+
+              {/* Lista anuncios */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {anunciosFiltrados.map(a => {
+                  const estado = estadosAnuncios[a.id] || a.estado
+                  return (
+                    <div key={a.id} style={{ background: '#fff', borderRadius: 8, padding: '16px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', gap: 16 }}>
+                      <div style={{ width: 90, height: 65, borderRadius: 6, background: a.bg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                        {a.destacado && <div style={{ position: 'absolute', top: 4, left: 4, background: '#006D77', color: '#fff', fontSize: 8, fontWeight: 700, padding: '1px 5px', borderRadius: 3 }}>DEST.</div>}
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                      </div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 15, fontWeight: 600, color: '#111', marginBottom: 3 }}>{a.titulo}</div>
+                        <div style={{ fontSize: 13, color: '#888', marginBottom: 6 }}>{a.zona} · {a.tipo} · US$ {a.precio.toLocaleString('en-US')}</div>
+                        <div style={{ display: 'flex', gap: 16, fontSize: 12, color: '#aaa', flexWrap: 'wrap' }}>
+                          <span>👁 {a.impresiones.toLocaleString()} impresiones</span>
+                          <span>🖱 {a.clics} visitas</span>
+                          <span>📞 {a.telVistos} tel. vistos</span>
+                          <span>❤️ {a.favoritos} guardados</span>
+                          <span>⏱ Vence en {a.vence}</span>
+                        </div>
+                      </div>
+                      <span style={{ background: estado === 'activo' ? '#e0f5f0' : '#f5f5f5', color: estado === 'activo' ? '#065f46' : '#888', fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 10, flexShrink: 0 }}>
+                        {estado === 'activo' ? '● Activo' : '○ Pausado'}
+                      </span>
+                      <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                        <button onClick={() => { setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>⭐ Destacar</button>
+                        <button style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>Editar</button>
+                        <button onClick={() => toggleEstado(a.id, estado)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>
+                          {estado === 'activo' ? 'Pausar' : 'Activar'}
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* PUBLICAR ANUNCIO */}
+          {seccion === 'publicar' && (
+            <div>
+              <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>Publicar anuncio</h1>
+              <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>Rellena los datos de tu propiedad</p>
+              <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                  {[
+                    { label: 'Tipo de operación', type: 'select', options: ['Venta', 'Alquiler'] },
+                    { label: 'Tipo de inmueble', type: 'select', options: ['Apartamento', 'Casa', 'Villa', 'Oficina', 'Terreno', 'Local comercial'] },
+                    { label: 'Título del anuncio', type: 'input', placeholder: 'Ej: Apartamento en Piantini con vista al mar' },
+                    { label: 'Precio (US$)', type: 'input', placeholder: 'Ej: 250000' },
+                    { label: 'Zona / Sector', type: 'input', placeholder: 'Ej: Piantini, Distrito Nacional' },
+                    { label: 'Superficie (m²)', type: 'input', placeholder: 'Ej: 150' },
+                    { label: 'Habitaciones', type: 'select', options: ['Estudio', '1', '2', '3', '4+'] },
+                    { label: 'Baños', type: 'select', options: ['1', '2', '3+'] },
+                  ].map(f => (
+                    <div key={f.label}>
+                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{f.label}</label>
+                      {f.type === 'select'
+                        ? <select style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>{f.options!.map(o => <option key={o}>{o}</option>)}</select>
+                        : <input type="text" placeholder={f.placeholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                      }
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Descripción</label>
+                  <textarea rows={4} placeholder="Describe tu propiedad con detalle — ubicación, acabados, amenidades, accesos..." style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'vertical', fontFamily: 'sans-serif', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                </div>
+
+                {/* AMENIDADES */}
+                <div style={{ marginBottom: 16 }}>
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 10 }}>Amenidades</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+                    {amenidades.map(a => (
+                      <div key={a.id} onClick={() => toggleAmenidad(a.id)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', border: `1.5px solid ${amenidadesSeleccionadas.includes(a.id) ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, cursor: 'pointer', background: amenidadesSeleccionadas.includes(a.id) ? '#f0fafb' : '#fff' }}>
+                        {amenidadesSeleccionadas.includes(a.id) && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
+                        <span style={{ fontSize: 13, color: amenidadesSeleccionadas.includes(a.id) ? '#006D77' : '#555', fontWeight: amenidadesSeleccionadas.includes(a.id) ? 600 : 400 }}>{a.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* FOTOS */}
+                <div style={{ marginBottom: 20 }}>
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Fotos</label>
+                  <div style={{ border: '2px dashed #e0e0e0', borderRadius: 6, padding: '32px', textAlign: 'center', cursor: 'pointer', background: '#fafafa' }}
+                    onMouseEnter={e => e.currentTarget.style.borderColor='#006D77'}
+                    onMouseLeave={e => e.currentTarget.style.borderColor='#e0e0e0'}>
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="1.5" style={{ margin: '0 auto 10px', display: 'block' }}><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <div style={{ fontSize: 14, color: '#555', marginBottom: 4 }}>Arrastra tus fotos aquí o pulsa para seleccionar</div>
+                    <div style={{ fontSize: 12, color: '#aaa' }}>JPG, PNG — máximo 10 fotos, 5MB cada una</div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: 10 }}>
+                  <button style={{ all: 'unset', flex: 1, background: '#006D77', color: '#fff', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'center' }}>Publicar anuncio</button>
+                  <button style={{ all: 'unset', border: '1.5px solid #e0e0e0', color: '#555', padding: '12px 20px', borderRadius: 6, fontSize: 14, cursor: 'pointer' }}>Guardar borrador</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* MENSAJES */}
+          {seccion === 'mensajes' && (
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+                <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111' }}>Mensajes</h1>
+                {noLeidos > 0 && <span style={{ background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 600, padding: '4px 12px', borderRadius: 10 }}>{noLeidos} no leídos</span>}
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 16, height: 'calc(100vh - 180px)', minHeight: 500 }}>
+                {/* Lista */}
+                <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', overflowY: 'auto' }}>
+                  {mensajesEjemplo.map(m => {
+                    const leido = mensajesLeidos[m.id] !== undefined ? mensajesLeidos[m.id] : m.leido
+                    return (
+                      <div key={m.id} onClick={() => { setMensajeSeleccionado(m.id); setMensajesLeidos(prev => ({ ...prev, [m.id]: true })) }}
+                        style={{ padding: '14px 16px', borderBottom: '1px solid #f5f5f5', cursor: 'pointer', background: mensajeSeleccionado === m.id ? '#f0fafb' : '#fff', borderLeft: mensajeSeleccionado === m.id ? '3px solid #006D77' : '3px solid transparent' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
+                          <div style={{ width: 36, height: 36, borderRadius: '50%', background: leido ? '#f0f0f0' : '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: leido ? '#888' : '#006D77', flexShrink: 0 }}>{m.avatar}</div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <div style={{ fontSize: 13, fontWeight: leido ? 500 : 700, color: '#111' }}>{m.nombre}</div>
+                              <div style={{ fontSize: 11, color: '#aaa' }}>{m.fecha}</div>
+                            </div>
+                            <div style={{ fontSize: 11, color: '#006D77', fontWeight: 500 }}>📍 {m.propiedad}</div>
+                          </div>
+                          {!leido && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#006D77', flexShrink: 0 }} />}
+                        </div>
+                        <div style={{ fontSize: 12, color: '#777', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingLeft: 46 }}>{m.mensaje}</div>
+                      </div>
+                    )
+                  })}
+                </div>
+
+                {/* Detalle */}
+                {mensajeSeleccionado && (() => {
+                  const m = mensajesEjemplo.find(x => x.id === mensajeSeleccionado)!
+                  const anuncio = anunciosEjemplo.find(a => a.id === m.propiedadId)
+                  return (
+                    <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
+                      {/* Header cliente */}
+                      <div style={{ padding: '16px 20px', borderBottom: '1px solid #f0f0f0' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
+                          <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#006D77' }}>{m.avatar}</div>
+                          <div>
+                            <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>{m.nombre}</div>
+                            {m.telefono
+                              ? <a href={`tel:${m.telefono}`} style={{ fontSize: 12, color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>📞 {m.telefono}</a>
+                              : <div style={{ fontSize: 12, color: '#aaa' }}>No dejó teléfono</div>
+                            }
+                          </div>
+                        </div>
+                        {/* Anuncio relacionado */}
+                        {anuncio && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#f4f5f6', borderRadius: 6, padding: '8px 12px' }}>
+                            <div style={{ width: 40, height: 30, borderRadius: 4, background: anuncio.bg, flexShrink: 0 }} />
+                            <div>
+                              <div style={{ fontSize: 12, fontWeight: 600, color: '#333' }}>{anuncio.titulo}</div>
+                              <div style={{ fontSize: 11, color: '#888' }}>US$ {anuncio.precio.toLocaleString('en-US')} · {anuncio.zona}</div>
+                            </div>
+                            <a href={`/propiedad/${anuncio.id}`} style={{ marginLeft: 'auto', fontSize: 11, color: '#006D77', textDecoration: 'none', fontWeight: 500, flexShrink: 0 }}>Ver anuncio →</a>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Mensaje */}
+                      <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
+                        <div style={{ background: '#f4f5f6', borderRadius: 8, padding: '14px 16px', maxWidth: '80%' }}>
+                          <div style={{ fontSize: 14, color: '#333', lineHeight: 1.6, marginBottom: 6 }}>{m.mensaje}</div>
+                          <div style={{ fontSize: 11, color: '#aaa' }}>{m.fecha}</div>
+                        </div>
+                      </div>
+
+                      {/* Responder */}
+                      <div style={{ padding: '16px 20px', borderTop: '1px solid #f0f0f0' }}>
+                        <textarea value={respuesta} onChange={e => setRespuesta(e.target.value)} placeholder={`Responder a ${m.nombre}...`} rows={3}
+                          style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'none', fontFamily: 'sans-serif', boxSizing: 'border-box', marginBottom: 10 }}
+                          onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                        <div style={{ display: 'flex', gap: 8 }}>
+                          <button style={{ all: 'unset', flex: 1, background: respuesta ? '#006D77' : '#e0e0e0', color: '#fff', padding: '10px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: respuesta ? 'pointer' : 'default', textAlign: 'center' }}>Enviar respuesta</button>
+                          {m.telefono && <a href={`tel:${m.telefono}`} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '10px 16px', borderRadius: 6, fontSize: 13, cursor: 'pointer' }}>📞 Llamar</a>}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })()}
+              </div>
+            </div>
+          )}
+
+          {/* ESTADÍSTICAS */}
+          {seccion === 'estadisticas' && (
+            <div>
+              <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>Estadísticas</h1>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
+                {[
+                  { label: 'Impresiones totales', val: '2,450', sub: '+18% vs mes anterior', color: '#006D77' },
+                  { label: 'Visitas a tus anuncios', val: '629', sub: '+12% vs mes anterior', color: '#17A6B4' },
+                  { label: 'Teléfonos visualizados', val: '45', sub: 'interés real en contactarte', color: '#10b981' },
+                  { label: 'Mensajes recibidos', val: '22', sub: `${noLeidos} sin leer`, color: '#f59e0b' },
+                ].map(s => (
+                  <div key={s.label} style={{ background: '#fff', borderRadius: 8, padding: '16px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderTop: `3px solid ${s.color}` }}>
+                    <div style={{ fontSize: 11, color: '#888', marginBottom: 6 }}>{s.label}</div>
+                    <div style={{ fontSize: 26, fontWeight: 700, color: '#111', marginBottom: 4 }}>{s.val}</div>
+                    <div style={{ fontSize: 11, color: '#10b981' }}>{s.sub}</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', marginBottom: 16 }}>
+                <div style={{ fontSize: 15, fontWeight: 700, color: '#111', marginBottom: 16 }}>Rendimiento por anuncio</div>
+                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                  <thead>
+                    <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                      {['Anuncio', 'Impresiones', 'Visitas', 'Tel. vistos', 'Guardados', 'Conversión'].map(h => (
+                        <th key={h} style={{ textAlign: 'left', fontSize: 12, color: '#aaa', fontWeight: 500, padding: '0 0 10px' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {anunciosEjemplo.map(a => (
+                      <tr key={a.id} style={{ borderBottom: '1px solid #f8f8f8' }}>
+                        <td style={{ padding: '10px 0', fontSize: 13, color: '#333', fontWeight: 500 }}>{a.titulo}</td>
+                        <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.impresiones.toLocaleString()}</td>
+                        <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.clics}</td>
+                        <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.telVistos}</td>
+                        <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.favoritos}</td>
+                        <td style={{ padding: '10px 0', fontSize: 13, color: '#10b981', fontWeight: 600 }}>{((a.clics / a.impresiones) * 100).toFixed(1)}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* DESTACAR */}
+          {seccion === 'destacar' && (
+            <div>
+              <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>Destacar anuncio</h1>
+              <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>Los anuncios destacados aparecen primero y tienen hasta 5x más visitas</p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
+                {planesDestacado.map(p => (
+                  <div key={p.dias} onClick={() => setPlanSeleccionado(String(p.dias))} style={{ background: '#fff', borderRadius: 8, padding: '24px 20px', textAlign: 'center', cursor: 'pointer', border: `2px solid ${planSeleccionado === String(p.dias) ? '#006D77' : '#e0e0e0'}`, position: 'relative', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
+                    {p.popular && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 12px', borderRadius: 10 }}>MÁS POPULAR</div>}
+                    <div style={{ fontSize: 32, fontWeight: 700, color: '#111', marginBottom: 4 }}>US$ {p.precio}</div>
+                    <div style={{ fontSize: 14, color: '#888', marginBottom: 16 }}>{p.label}</div>
+                    <div style={{ fontSize: 12, color: '#006D77' }}>✓ Posición prioritaria<br/>✓ Badge Destacado<br/>✓ Más visibilidad</div>
+                  </div>
+                ))}
+              </div>
+              <button style={{ all: 'unset', background: planSeleccionado ? '#006D77' : '#e0e0e0', color: '#fff', padding: '13px 32px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: planSeleccionado ? 'pointer' : 'default' }}>
+                Pagar y destacar
+              </button>
+            </div>
+          )}
+
+          {/* PLANES PRO — pantalla para particulares que llegan al límite */}
+          {seccion === 'planes' && (
+            <div>
+              <div style={{ textAlign: 'center', marginBottom: 32 }}>
+                <div style={{ fontSize: 36, marginBottom: 12 }}>🚀</div>
+                <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 8 }}>Pásate a PRO y publica sin límites</h1>
+                <p style={{ fontSize: 15, color: '#888' }}>Has usado tus 2 anuncios gratuitos. Elige el plan que mejor se adapta a ti.</p>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
+                {planesPro.map(p => (
+                  <div key={p.id} style={{ background: '#fff', borderRadius: 8, padding: '24px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', border: p.id === 'pro' ? '2px solid #006D77' : '1px solid #e0e0e0', position: 'relative' }}>
+                    {p.id === 'pro' && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 14px', borderRadius: 10, whiteSpace: 'nowrap' }}>MÁS POPULAR</div>}
+                    <div style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 4 }}>{p.nombre}</div>
+                    <div style={{ fontSize: 28, fontWeight: 700, color: '#006D77', marginBottom: 16 }}>US$ {p.precio}<span style={{ fontSize: 13, color: '#aaa', fontWeight: 400 }}>/mes</span></div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
+                      {p.features.map(f => (
+                        <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#555' }}>
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                          {f}
+                        </div>
+                      ))}
+                    </div>
+                    <button style={{ all: 'unset', width: '100%', background: '#006D77', color: '#fff', padding: '11px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box' }}>
+                      Elegir {p.nombre}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* MI EQUIPO */}
+          {seccion === 'equipo' && ['agencia', 'unlimited'].includes(tipoUsuario) && (
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
+                <div>
+                  <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 4 }}>Mi equipo</h1>
+                  <p style={{ fontSize: 14, color: '#888' }}>Gestiona los brokers de tu agencia</p>
+                </div>
+                <button style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>+ Añadir broker</button>
+              </div>
+
+              {/* Stats equipo */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 24 }}>
+                {[
+                  { label: 'Brokers activos', val: '4', color: '#006D77' },
+                  { label: 'Anuncios del equipo', val: '23', color: '#17A6B4' },
+                  { label: 'Contactos este mes', val: '87', color: '#10b981' },
+                ].map(k => (
+                  <div key={k.label} style={{ background: '#fff', borderRadius: 8, padding: '16px 20px', borderTop: `3px solid ${k.color}`, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
+                    <div style={{ fontSize: 11, color: '#888', marginBottom: 6 }}>{k.label}</div>
+                    <div style={{ fontSize: 28, fontWeight: 700, color: '#111' }}>{k.val}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Lista brokers */}
+              <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
+                {[
+                  { nombre: 'Carlos Méndez', email: 'carlos@remax.com', anuncios: 8, contactos: 32, estado: 'activo', avatar: 'CM', aei: true },
+                  { nombre: 'Ana Reyes', email: 'ana@remax.com', anuncios: 6, contactos: 24, estado: 'activo', avatar: 'AR', aei: true },
+                  { nombre: 'Luis García', email: 'luis@remax.com', anuncios: 5, contactos: 18, estado: 'activo', avatar: 'LG', aei: false },
+                  { nombre: 'María Torres', email: 'maria@remax.com', anuncios: 4, contactos: 13, estado: 'inactivo', avatar: 'MT', aei: false },
+                ].map((b, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '16px 24px', borderBottom: i < 3 ? '1px solid #f5f5f5' : 'none' }}>
+                    <div style={{ width: 42, height: 42, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#006D77', flexShrink: 0 }}>{b.avatar}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
+                        <span style={{ fontSize: 14, fontWeight: 600, color: '#111' }}>{b.nombre}</span>
+                        {b.aei && <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 700, padding: '1px 6px', borderRadius: 3 }}>AEI</span>}
+                      </div>
+                      <div style={{ fontSize: 12, color: '#888' }}>{b.email}</div>
+                    </div>
+                    <div style={{ display: 'flex', gap: 20, fontSize: 13, color: '#666' }}>
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontWeight: 700, color: '#111' }}>{b.anuncios}</div>
+                        <div style={{ fontSize: 11, color: '#aaa' }}>anuncios</div>
+                      </div>
+                      <div style={{ textAlign: 'center' }}>
+                        <div style={{ fontWeight: 700, color: '#111' }}>{b.contactos}</div>
+                        <div style={{ fontSize: 11, color: '#aaa' }}>contactos</div>
+                      </div>
+                    </div>
+                    <span style={{ background: b.estado === 'activo' ? '#e0f5f0' : '#f5f5f5', color: b.estado === 'activo' ? '#065f46' : '#888', fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 10 }}>
+                      {b.estado === 'activo' ? '● Activo' : '○ Inactivo'}
+                    </span>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <button style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>Ver anuncios</button>
+                      <button style={{ all: 'unset', border: '1px solid #e55', color: '#e55', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>Eliminar</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* MI PLAN */}
+          {seccion === 'plan' && (
+            <div>
+              <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>Mi plan</h1>
+              <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>Gestiona tu suscripción</p>
+
+              {/* Plan actual */}
+              {tipoUsuario === 'particular' ? (
+                <div>
+                  <div style={{ background: '#fff8e1', border: '1.5px solid #f59e0b', borderRadius: 8, padding: '20px 24px', marginBottom: 24 }}>
+                    <div style={{ fontSize: 13, color: '#888', marginBottom: 4 }}>Plan actual</div>
+                    <div style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Particular — Gratis</div>
+                    <div style={{ fontSize: 13, color: '#92400e' }}>Has usado {anunciosUsados} de {anunciosGratis} anuncios gratuitos</div>
+                  </div>
+                  <div style={{ background: '#fff', borderRadius: 8, padding: '28px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center' }}>
+                    <div style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 8 }}>Pásate a Profesional</div>
+                    <div style={{ fontSize: 36, fontWeight: 700, color: '#006D77', marginBottom: 4 }}>US$ 29<span style={{ fontSize: 16, fontWeight: 400, color: '#aaa' }}>/mes</span></div>
+                    <div style={{ fontSize: 13, color: '#888', marginBottom: 20 }}>Primer mes gratis con código promocional</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 300, margin: '0 auto 24px' }}>
+                      {['Anuncios ilimitados', 'Badge PROFESIONAL', 'Estadísticas completas', 'Mensajes ilimitados', 'Soporte por email'].map(f => (
+                        <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: '#444' }}>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                          {f}
+                        </div>
+                      ))}
+                    </div>
+                    <div style={{ display: 'flex', gap: 10, maxWidth: 400, margin: '0 auto' }}>
+                      <input type="text" placeholder="Código promocional (opcional)" style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 14px', fontSize: 13, outline: 'none' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                      <button style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>Suscribirse</button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  {/* Suscripción activa */}
+                  <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', marginBottom: 16 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
+                      <div>
+                        <div style={{ fontSize: 13, color: '#888', marginBottom: 4 }}>Plan actual</div>
+                        <div style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 4 }}>Profesional — US$ 29/mes</div>
+                        <div style={{ fontSize: 13, color: '#555' }}>Próxima facturación: <strong>16 de julio 2026</strong></div>
+                        <div style={{ fontSize: 12, color: '#aaa', marginTop: 2 }}>Se renovará automáticamente. Cancela cuando quieras.</div>
+                      </div>
+                      <span style={{ background: '#e0f5f0', color: '#065f46', fontSize: 12, fontWeight: 700, padding: '4px 14px', borderRadius: 10 }}>● ACTIVO</span>
+                    </div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, paddingTop: 16, borderTop: '1px solid #f0f0f0' }}>
+                      {[
+                        { label: 'Miembro desde', val: '16 junio 2026' },
+                        { label: 'Próximo cobro', val: 'US$ 29 · 16 jul' },
+                        { label: 'Método de pago', val: '•••• 4242' },
+                      ].map(d => (
+                        <div key={d.label}>
+                          <div style={{ fontSize: 11, color: '#aaa', marginBottom: 3 }}>{d.label}</div>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: '#333' }}>{d.val}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Historial de pagos */}
+                  <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', marginBottom: 16 }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 14 }}>Historial de pagos</div>
+                    {[
+                      { fecha: '16 jun 2026', monto: 'US$ 29', estado: 'Pagado', factura: '#URB-001' },
+                      { fecha: '16 may 2026', monto: 'US$ 0', estado: 'Gratis', factura: '#URB-000' },
+                    ].map((p, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '10px 0', borderBottom: i === 0 ? '1px solid #f5f5f5' : 'none' }}>
+                        <div style={{ flex: 1, fontSize: 13, color: '#333' }}>{p.fecha}</div>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: '#111' }}>{p.monto}</div>
+                        <span style={{ background: p.estado === 'Pagado' ? '#e0f5f0' : '#f0f0f0', color: p.estado === 'Pagado' ? '#065f46' : '#888', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>{p.estado}</span>
+                        <div style={{ fontSize: 12, color: '#aaa' }}>{p.factura}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Dar de baja */}
+                  <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderLeft: '3px solid #fee2e2' }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: '#333', marginBottom: 4 }}>Cancelar suscripción</div>
+                    <div style={{ fontSize: 13, color: '#888', marginBottom: 14 }}>Si cancelas ahora seguirás teniendo acceso hasta el <strong>16 de julio 2026</strong>. No se realizará ningún cobro más.</div>
+                    <button style={{ all: 'unset', border: '1.5px solid #e55', color: '#e55', padding: '8px 18px', borderRadius: 6, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>
+                      Dar de baja mi plan
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* MI PERFIL */}
+          {seccion === 'perfil' && (
+            <div>
+              <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>Mi perfil</h1>
+              <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24, paddingBottom: 20, borderBottom: '1px solid #f0f0f0' }}>
+                  <div style={{ position: 'relative' }}>
+                    <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, fontWeight: 700, color: '#006D77', overflow: 'hidden' }}>
+                      {fotoPerfilUrl ? <img src={fotoPerfilUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : 'RC'}
+                    </div>
+                    <label style={{ position: 'absolute', bottom: 0, right: 0, width: 24, height: 24, borderRadius: '50%', background: '#006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                      <input type="file" accept="image/*" style={{ display: 'none' }} onChange={e => {
+                        const file = e.target.files?.[0]
+                        if (file) {
+                          const reader = new FileReader()
+                          reader.onload = ev => setFotoPerfilUrl(ev.target?.result as string)
+                          reader.readAsDataURL(file)
+                        }
+                      }} />
+                    </label>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 6 }}>Rafael Castillo</div>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <span style={{ background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>PROFESIONAL</span>
+                      <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>✓ AEI</span>
+                    </div>
+                    <div style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>Pulsa el icono para cambiar tu foto</div>
+                  </div>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                  {[
+                    { label: 'Nombre completo', val: 'Rafael Castillo' },
+                    { label: 'Email', val: 'rafael@email.com' },
+                    { label: 'Teléfono', val: '+1 809 555 0123' },
+                    { label: 'Nombre de inmobiliaria', val: 'RE/MAX Capital RD', placeholder: 'Nombre de tu agencia (opcional)' },
+                    { label: 'Número AEI', val: 'AEI-3421' },
+                    { label: 'Provincia', val: 'Distrito Nacional' },
+                  ].map(f => (
+                    <div key={f.label}>
+                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{f.label}</label>
+                      <input defaultValue={f.val} placeholder={f.placeholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    </div>
+                  ))}
+                </div>
+                <button style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 20 }}>
+                  Guardar cambios
+                </button>
+
+                {/* Cerrar sesión */}
+                <div style={{ marginTop: 32, paddingTop: 20, borderTop: '1px solid #f0f0f0' }}>
+                  <button style={{ all: 'unset', fontSize: 12, color: '#aaa', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+                    onMouseEnter={e => e.currentTarget.style.color = '#e55'}
+                    onMouseLeave={e => e.currentTarget.style.color = '#aaa'}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    Cerrar sesión
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* CURSOS AEI */}
+          {seccion === 'cursos' && (
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 8 }}>
+                <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111' }}>Cursos AEI</h1>
+                <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 10 }}>En colaboración con AEI</span>
+              </div>
+              <p style={{ fontSize: 14, color: '#888', marginBottom: 28 }}>Formación oficial de la Asociación de Agentes y Empresas Inmobiliarias de República Dominicana</p>
+
+              {/* Banner AEI */}
+              <div style={{ background: 'linear-gradient(135deg, #1a3a5c 0%, #004E57 100%)', borderRadius: 10, padding: '28px 32px', marginBottom: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
+                <div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: 600, letterSpacing: 1, marginBottom: 8 }}>ASOCIACIÓN OFICIAL</div>
+                  <div style={{ fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 8 }}>Certifícate como agente inmobiliario profesional</div>
+                  <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>La AEI es la asociación oficial de agentes inmobiliarios de RD. Con tu certificación aparecerá el badge AEI verificado en todos tus anuncios de Urbiza.</div>
+                </div>
+                <a href="https://aei.com.do" target="_blank" rel="noopener noreferrer" style={{ all: 'unset', background: '#fff', color: '#1a3a5c', padding: '12px 24px', borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                  Visitar AEI →
+                </a>
+              </div>
+
+              <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center' }}>
+                <div style={{ fontSize: 15, color: '#555', lineHeight: 1.8, marginBottom: 20 }}>
+                  Accede a toda la oferta formativa oficial de la AEI directamente en su web.<br/>
+                  Al completar cualquier curso recibirás tu certificación y el badge AEI verificado aparecerá en todos tus anuncios de Urbiza.
+                </div>
+                <a href="https://aei.com.do" target="_blank" rel="noopener noreferrer" style={{ all: 'unset', background: '#1a3a5c', color: '#fff', padding: '13px 32px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'inline-block' }}>
+                  Ver todos los cursos en AEI →
+                </a>
+                <div style={{ fontSize: 12, color: '#aaa', marginTop: 14 }}>
+                  Serás redirigido a la web oficial de la Asociación de Agentes y Empresas Inmobiliarias de República Dominicana.
+                </div>
+              </div>
+            </div>
+          )}
+
+        </div>
+      </div>
+    </main>
+  )
+}
