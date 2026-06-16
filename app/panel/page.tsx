@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '../../supabase'
 
 const menuItems = [
@@ -68,6 +68,11 @@ const amenidades = [
   { id: 'amueblado', label: 'Amueblado' },
   { id: 'jardin', label: 'Jardín' },
   { id: 'terraza', label: 'Terraza' },
+  { id: 'jacuzzi', label: 'Jacuzzi' },
+  { id: 'barbacoa', label: 'Barbacoa' },
+  { id: 'gimnasio', label: 'Gimnasio' },
+  { id: 'seguridad', label: 'Seguridad 24h' },
+  { id: 'ascensor', label: 'Ascensor' },
 ]
 
 // Tipo de usuario: 'particular' tiene límite de 2 anuncios gratis
@@ -314,29 +319,28 @@ export default function Panel() {
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>Publicar anuncio</h1>
               <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>Rellena los datos de tu propiedad</p>
               <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
-                  {[
-                    { label: 'Tipo de operación', type: 'select', options: ['Venta', 'Alquiler'] },
-                    { label: 'Tipo de inmueble', type: 'select', options: ['Apartamento', 'Casa', 'Villa', 'Oficina', 'Terreno', 'Local comercial'] },
-                    { label: 'Título del anuncio', type: 'input', value: pubTitulo, onChange: e => setPubTitulo(e.target.value), placeholder: 'Ej: Apartamento en Piantini con vista al mar' },
-                    { label: 'Precio (US$)', type: 'input', value: pubPrecio, onChange: e => setPubPrecio(e.target.value), placeholder: 'Ej: 250000' },
-                    { label: 'Zona / Sector', type: 'input', value: pubZona, onChange: e => setPubZona(e.target.value), placeholder: 'Ej: Piantini, Distrito Nacional' },
-                    { label: 'Superficie (m²)', type: 'input', value: pubM2, onChange: e => setPubM2(e.target.value), placeholder: 'Ej: 150' },
-                    { label: 'Habitaciones', type: 'select', options: ['Estudio', '1', '2', '3', '4+'] },
-                    { label: 'Baños', type: 'select', options: ['1', '2', '3+'] },
-                  ].map(f => (
-                    <div key={f.label}>
-                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{f.label}</label>
-                      {f.label === 'SKIP_ZONA' ? null : f.type === 'select'
-                        ? <select style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>{f.options!.map(o => <option key={o}>{o}</option>)}</select>
-                        : <input type="text" value={f.label === 'Título del anuncio' ? pubTitulo : f.label === 'Precio (US$)' ? pubPrecio : f.label === 'Superficie (m²)' ? pubM2 : ''} onChange={e => { if(f.label === 'Título del anuncio') setPubTitulo(e.target.value); else if(f.label === 'Precio (US$)') setPubPrecio(e.target.value); else if(f.label === 'Superficie (m²)') setPubM2(e.target.value) }} placeholder={f.placeholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                      }
-                    </div>
-                  ))}
-                </div>
 
-                {/* PROVINCIA Y ZONA */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Tipo de operación</label>
+                    <select value={pubOperacion} onChange={e => setPubOperacion(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
+                      <option>Venta</option><option>Alquiler</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Tipo de inmueble</label>
+                    <select value={pubTipo} onChange={e => setPubTipo(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
+                      <option>Apartamento</option><option>Casa</option><option>Villa</option><option>Oficina</option><option>Terreno</option><option>Local comercial</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Título del anuncio *</label>
+                    <input type="text" value={pubTitulo} onChange={e => setPubTitulo(e.target.value)} placeholder="Ej: Apartamento en Piantini con vista al mar" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Precio (US$) *</label>
+                    <input type="text" value={pubPrecio} onChange={e => setPubPrecio(e.target.value)} placeholder="Ej: 250000" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                  </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Provincia *</label>
                     <select value={pubProvincia} onChange={e => { setPubProvincia(e.target.value); setPubSector('') }} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
@@ -349,6 +353,22 @@ export default function Panel() {
                     <select value={pubSector} onChange={e => setPubSector(e.target.value)} disabled={!pubProvincia} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: pubProvincia ? '#fff' : '#f9f9f9', color: pubProvincia ? '#333' : '#aaa' }}>
                       <option value="">Selecciona sector</option>
                       {pubProvincia && provinciasZonas[pubProvincia].map(z => <option key={z} value={z}>{z}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Superficie (m²)</label>
+                    <input type="text" value={pubM2} onChange={e => setPubM2(e.target.value)} placeholder="Ej: 150" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Habitaciones</label>
+                    <select value={pubHab} onChange={e => setPubHab(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
+                      <option value="0">Estudio</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4+</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Baños</label>
+                    <select value={pubBanos} onChange={e => setPubBanos(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
+                      <option value="1">1</option><option value="2">2</option><option value="3">3+</option>
                     </select>
                   </div>
                 </div>
