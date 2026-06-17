@@ -84,7 +84,8 @@ export default function Panel() {
   const [seccion, setSeccion] = useState('anuncios')
   const [filtroTipo, setFiltroTipo] = useState('Todos')
   const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
-  const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
+  const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
+  const [anuncioADestacar, setAnuncioADestacar] = useState<any>(null)
   const [mensajeSeleccionado, setMensajeSeleccionado] = useState<number | null>(1)
   const [respuesta, setRespuesta] = useState('')
   const [mensajesLeidos, setMensajesLeidos] = useState<Record<number, boolean>>({})
@@ -318,7 +319,7 @@ export default function Panel() {
                         {estado === 'activo' ? '● Activo' : '○ Pausado'}
                       </span>
                       <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                        <button onClick={() => { setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>⭐ Destacar</button>
+                        <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>⭐ Destacar</button>
                         <button style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>Editar</button>
                         <button onClick={() => toggleEstado(a.id, estado)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>
                           {estado === 'activo' ? 'Pausar' : 'Activar'}
@@ -597,7 +598,16 @@ export default function Panel() {
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>Destacar anuncio</h1>
               <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>Los anuncios destacados aparecen primero y tienen hasta 5x más visitas</p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
+              <p style={{ fontSize: 14, color: '#888', marginBottom: 16 }}>Los anuncios destacados aparecen primero y tienen hasta 5x más visitas</p>
+              {anuncioADestacar && (
+                <div style={{ background: '#e0f5f7', border: '1.5px solid #c5e8ea', borderRadius: 8, padding: '14px 18px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div style={{ width: 48, height: 36, borderRadius: 6, background: '#006D77', opacity: 0.3, flexShrink: 0 }} />
+                  <div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: '#111' }}>{anuncioADestacar.titulo}</div>
+                    <div style={{ fontSize: 13, color: '#888' }}>US$ {anuncioADestacar.precio?.toLocaleString('en-US')} · {anuncioADestacar.zona}</div>
+                  </div>
+                </div>
+              )}
                 {planesDestacado.map(p => (
                   <div key={p.dias} onClick={() => setPlanSeleccionado(String(p.dias))} style={{ background: '#fff', borderRadius: 8, padding: '24px 20px', textAlign: 'center', cursor: 'pointer', border: `2px solid ${planSeleccionado === String(p.dias) ? '#006D77' : '#e0e0e0'}`, position: 'relative', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
                     {p.popular && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 12px', borderRadius: 10 }}>MÁS POPULAR</div>}
