@@ -37,7 +37,7 @@ export async function POST(req: Request) {
       mode: esDestacado ? 'payment' : 'subscription',
       customer_email: email || undefined,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${baseUrl}/panel?pago=ok`,
+      success_url: `${baseUrl}/panel?pago=ok&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/panel?pago=cancelado`,
       metadata: { userId, tipo },
     }

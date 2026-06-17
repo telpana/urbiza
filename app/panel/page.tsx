@@ -137,24 +137,41 @@ export default function Panel() {
         if (params.get('pago') === 'ok') {
           setSeccion('publicar')
           if (perfil.plan === 'profesional') {
-            // Webhook ya procesó — listo
+            // Ya está activo
           } else {
-            // Webhook aún no llegó — hacer polling hasta que Supabase confirme
             setVerificandoPago(true)
+            const sessionId = params.get('session_id')
+            if (sessionId) {
+              // Verificar directamente con Stripe y actualizar Supabase sin depender del webhook
+              try {
+                const res = await fetch('/api/verificar-pago', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ sessionId }),
+                })
+                const data = await res.json()
+                if (data.ok) {
+                  setUsuario((prev: any) => ({ ...prev, plan: 'profesional' }))
+                  setVerificandoPago(false)
+                  return
+                }
+              } catch {}
+            }
+            // Fallback: polling por si el webhook ya actualizó o llegó antes
             let intentos = 0
             const pollPlan = async () => {
               const { data: act } = await supabase.from('usuarios').select('plan').eq('id', user.id).single()
               if (act?.plan === 'profesional') {
                 setUsuario((prev: any) => ({ ...prev, plan: 'profesional' }))
                 setVerificandoPago(false)
-              } else if (intentos < 12) {
+              } else if (intentos < 10) {
                 intentos++
-                setTimeout(pollPlan, 2500)
+                setTimeout(pollPlan, 2000)
               } else {
                 setVerificandoPago(false)
               }
             }
-            setTimeout(pollPlan, 2000)
+            setTimeout(pollPlan, 1500)
           }
         }
       }
