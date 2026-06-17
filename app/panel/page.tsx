@@ -140,6 +140,16 @@ export default function Panel() {
     setAmenidadesSeleccionadas(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id])
   }
 
+  const guardarPerfil = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    const nombre = (document.getElementById('perfil-nombre') as HTMLInputElement)?.value
+    const telefono = (document.getElementById('perfil-telefono') as HTMLInputElement)?.value
+    const inmobiliaria = (document.getElementById('perfil-inmobiliaria') as HTMLInputElement)?.value
+    await supabase.from('usuarios').update({ nombre, telefono, inmobiliaria }).eq('id', user.id)
+    alert('Perfil guardado correctamente')
+  }
+
   const publicarAnuncio = async () => {
     if (!pubTitulo || !pubPrecio || !pubProvincia || !pubSector) { setPubError('Título, precio, provincia y sector son obligatorios'); return }
     setPubLoading(true)
@@ -862,7 +872,7 @@ export default function Panel() {
                     </div>
                   ))}
                 </div>
-                <button style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 20 }}>
+                <button onClick={guardarPerfil} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 20 }}>Guardar cambios</button>
                   Guardar cambios
                 </button>
 
