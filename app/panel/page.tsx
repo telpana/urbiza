@@ -86,7 +86,6 @@ export default function Panel() {
   const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
   const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
   const [mensajeSeleccionado, setMensajeSeleccionado] = useState<number | null>(1)
-  const [anuncioADestacar, setAnuncioADestacar] = useState<any>(null)
   const [respuesta, setRespuesta] = useState('')
   const [mensajesLeidos, setMensajesLeidos] = useState<Record<number, boolean>>({})
   const [amenidadesSeleccionadas, setAmenidadesSeleccionadas] = useState<string[]>([])
@@ -105,6 +104,10 @@ export default function Panel() {
   const [pubError, setPubError] = useState('')
   const [pubExito, setPubExito] = useState(false)
   const [fotoPerfilUrl, setFotoPerfilUrl] = useState<string | null>(null)
+  const [perfilNombre, setPerfilNombre] = useState('')
+  const [perfilTelefono, setPerfilTelefono] = useState('')
+  const [perfilInmobiliaria, setPerfilInmobiliaria] = useState('')
+  const [perfilAei, setPerfilAei] = useState('')
   const [usuario, setUsuario] = useState<any>(null)
   const [anunciosReales, setAnunciosReales] = useState<any[]>([])
   const [mensajesReales, setMensajesReales] = useState<any[]>([])
@@ -136,14 +139,21 @@ export default function Panel() {
     setEstadosAnuncios(prev => ({ ...prev, [id]: estadoActual === 'activo' ? 'pausado' : 'activo' }))
   }
 
+  const toggleAmenidad = (id: string) => {
+    setAmenidadesSeleccionadas(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id])
+  }
+
   const guardarPerfil = async () => {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
-    await supabase.from('usuarios').update({ nombre: perfilNombre, telefono: perfilTelefono, inmobiliaria: perfilInmobiliaria, numero_aei: perfilAei }).eq('id', user.id)
-    alert('Cambios guardados correctamente')
-  }
-  const toggleAmenidad = (id: string) => {
-    setAmenidadesSeleccionadas(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id])
+    const { error } = await supabase.from('usuarios').update({
+      nombre: perfilNombre,
+      telefono: perfilTelefono,
+      inmobiliaria: perfilInmobiliaria,
+      numero_aei: perfilAei
+    }).eq('id', user.id)
+    if (!error) alert('Cambios guardados correctamente')
+    else alert('Error al guardar')
   }
 
   const publicarAnuncio = async () => {
@@ -491,9 +501,10 @@ export default function Panel() {
                 </div>
 
                 {/* Detalle */}
-                {mensajeSeleccionado && (() => {
-                  const m = mensajesReales.find((x: any) => x.id === mensajeSeleccionado) || mensajesReales[0]
-                  const anuncio = anunciosEjemplo.find(a => a.id === m.propiedadId)
+                {mensajeSeleccionado && mensajesReales.length > 0 && (() => {
+                  const m = mensajesReales.find((x: any) => x.id === mensajeSeleccionado)
+                  if (!m) return null
+                  const anuncio = anunciosReales.find((a: any) => a.id === m?.propiedad_id)
                   return (
                     <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
                       {/* Header cliente */}
@@ -854,20 +865,20 @@ export default function Panel() {
                   </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                  {[
-                    { label: 'Nombre completo', val: 'Rafael Castillo' },
-                    { label: 'Email', val: 'rafael@email.com' },
-                    { label: 'Teléfono', val: '+1 809 555 0123' },
-                    { label: 'Nombre de inmobiliaria', val: 'RE/MAX Capital RD', placeholder: 'Nombre de tu agencia (opcional)' },
-                    { label: 'Número AEI', val: 'AEI-3421' },
-                    { label: 'Provincia', val: 'Distrito Nacional' },
-                  ].map(f => (
-                    <div key={f.label}>
-                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{f.label}</label>
-                      <input defaultValue={f.val} placeholder={f.placeholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                    </div>
-                  ))}
+                  <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Nombre completo</label><input value={perfilNombre} onChange={e => setPerfilNombre(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} /></div>
+                  <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Email</label><input value={usuario?.email || ''} disabled style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box', background: '#f9f9f9', color: '#aaa' }} /></div>
+                  <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Teléfono</label><input value={perfilTelefono} onChange={e => setPerfilTelefono(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} /></div>
+                  <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Nombre de inmobiliaria</label><input value={perfilInmobiliaria} onChange={e => setPerfilInmobiliaria(e.target.value)} placeholder='Nombre de tu agencia (opcional)' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} /></div>
+                  <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Número AEI</label><input value={perfilAei} onChange={e => setPerfilAei(e.target.value)} placeholder='AEI-0000' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} /></div>
                 </div>
+
+
+
+
+
+
+
+
                 <button onClick={guardarPerfil} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 20 }}>
                   Guardar cambios
                 </button>
