@@ -824,7 +824,7 @@ export default function Panel() {
                   <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderLeft: '3px solid #fee2e2' }}>
                     <div style={{ fontSize: 14, fontWeight: 600, color: '#333', marginBottom: 4 }}>Cancelar suscripción</div>
                     <div style={{ fontSize: 13, color: '#888', marginBottom: 14 }}>Si cancelas ahora seguirás teniendo acceso hasta el <strong>16 de julio 2026</strong>. No se realizará ningún cobro más.</div>
-                    <button style={{ all: 'unset', border: '1.5px solid #e55', color: '#e55', padding: '8px 18px', borderRadius: 6, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>
+                    <button onClick={async () => { const { data: { user } } = await supabase.auth.getUser(); if (!user) return; if (!confirm('¿Seguro que quieres cancelar tu plan? Seguirás teniendo acceso hasta el final del período pagado.')) return; const res = await fetch('/api/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id }) }); const data = await res.json(); if (data.ok) alert('Plan cancelado. Seguirás activo hasta el final del período.'); else alert('Error al cancelar. Escríbenos a soporte@urbiza.com') }} style={{ all: 'unset', border: '1.5px solid #e55', color: '#e55', padding: '8px 18px', borderRadius: 6, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>
                       Dar de baja mi plan
                     </button>
                   </div>
