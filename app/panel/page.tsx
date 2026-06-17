@@ -586,7 +586,7 @@ export default function Panel() {
                     </tr>
                   </thead>
                   <tbody>
-                    {anunciosEjemplo.map(a => (
+                    {anunciosReales.length === 0 ? <tr><td colSpan={6} style={{ textAlign: 'center', padding: '24px', color: '#aaa', fontSize: 13 }}>Publica tu primer anuncio para ver las estadísticas</td></tr> : anunciosReales.map((a: any) => (
                       <tr key={a.id} style={{ borderBottom: '1px solid #f8f8f8' }}>
                         <td style={{ padding: '10px 0', fontSize: 13, color: '#333', fontWeight: 500 }}>{a.titulo}</td>
                         <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.impresiones.toLocaleString()}</td>
