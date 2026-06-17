@@ -356,7 +356,7 @@ export default function Panel() {
                   </p>
                   <div style={{ display: 'flex', gap: 10, maxWidth: 400, margin: '0 auto 16px' }}>
                     <input type="text" placeholder="Código promocional (opcional)" style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 14px', fontSize: 13, outline: 'none' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                    <button style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                    <button onClick={() => irAPago()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>
                       Activar — US$29/mes
                     </button>
                   </div>
