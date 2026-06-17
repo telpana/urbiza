@@ -84,13 +84,9 @@ export default function Panel() {
   const [seccion, setSeccion] = useState('anuncios')
   const [filtroTipo, setFiltroTipo] = useState('Todos')
   const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
-  const [anuncioADestacar, setAnuncioADestacar] = useState<any>(null)
   const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
   const [mensajeSeleccionado, setMensajeSeleccionado] = useState<number | null>(1)
-  const [perfilNombre, setPerfilNombre] = useState('')
-  const [perfilTelefono, setPerfilTelefono] = useState('')
-  const [perfilInmobiliaria, setPerfilInmobiliaria] = useState('')
-  const [perfilAei, setPerfilAei] = useState('')
+  const [anuncioADestacar, setAnuncioADestacar] = useState<any>(null)
   const [respuesta, setRespuesta] = useState('')
   const [mensajesLeidos, setMensajesLeidos] = useState<Record<number, boolean>>({})
   const [amenidadesSeleccionadas, setAmenidadesSeleccionadas] = useState<string[]>([])
@@ -121,7 +117,7 @@ export default function Panel() {
 
       // Cargar perfil usuario
       const { data: perfil } = await supabase.from('usuarios').select('*').eq('id', user.id).single()
-      if (perfil) { setUsuario(perfil); if (perfil.foto_url) setFotoPerfilUrl(perfil.foto_url); setPerfilNombre(perfil.nombre || ''); setPerfilTelefono(perfil.telefono || ''); setPerfilInmobiliaria(perfil.inmobiliaria || ''); setPerfilAei(perfil.numero_aei || '') }
+      if (perfil) { setUsuario(perfil); if (perfil.foto_url) setFotoPerfilUrl(perfil.foto_url) }
 
       // Cargar anuncios del usuario
       const { data: anuncios } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
@@ -142,16 +138,6 @@ export default function Panel() {
 
   const toggleAmenidad = (id: string) => {
     setAmenidadesSeleccionadas(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id])
-  }
-
-  const guardarPerfil = async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
-    await supabase.from('usuarios').update({ nombre: perfilNombre, telefono: perfilTelefono, inmobiliaria: perfilInmobiliaria, numero_aei: perfilAei }).eq('id', user.id)
-    alert('Perfil guardado correctamente')
-  }
-
-
   }
 
   const publicarAnuncio = async () => {
@@ -325,7 +311,7 @@ export default function Panel() {
                         {estado === 'activo' ? '● Activo' : '○ Pausado'}
                       </span>
                       <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                        <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}><svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Destacar</button>
+                        <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>⭐ Destacar</button>
                         <button style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>Editar</button>
                         <button onClick={() => toggleEstado(a.id, estado)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>
                           {estado === 'activo' ? 'Pausar' : 'Activar'}
@@ -499,9 +485,9 @@ export default function Panel() {
                 </div>
 
                 {/* Detalle */}
-                {mensajeSeleccionado && mensajesReales.length > 0 && (() => {
-                  const m = mensajesReales.find((x: any) => x.id === mensajeSeleccionado)
-                  const anuncio = anunciosReales.find((a: any) => a.id === m?.propiedad_id)
+                {mensajeSeleccionado && (() => {
+                  const m = mensajesReales.find((x: any) => x.id === mensajeSeleccionado) || mensajesReales[0]
+                  const anuncio = anunciosEjemplo.find(a => a.id === m.propiedadId)
                   return (
                     <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
                       {/* Header cliente */}
@@ -583,7 +569,7 @@ export default function Panel() {
                     </tr>
                   </thead>
                   <tbody>
-                    {anunciosReales.length === 0 ? <tr><td colSpan={6} style={{ textAlign: 'center', padding: '24px', color: '#aaa', fontSize: 13 }}>Publica tu primer anuncio para ver las estadísticas</td></tr> : anunciosReales.map((a: any) => (
+                    {anunciosEjemplo.map(a => (
                       <tr key={a.id} style={{ borderBottom: '1px solid #f8f8f8' }}>
                         <td style={{ padding: '10px 0', fontSize: 13, color: '#333', fontWeight: 500 }}>{a.titulo}</td>
                         <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.impresiones.toLocaleString()}</td>
@@ -616,7 +602,7 @@ export default function Panel() {
                 </div>
               ) : (
                 <div style={{ background: '#fff8e1', border: '1px solid #f59e0b', borderRadius: 6, padding: '10px 16px', fontSize: 13, color: '#92400e', marginBottom: 20 }}>
-                  Ve a Mis anuncios y pulsa <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Destacar en el anuncio que quieres destacar
+                  Ve a Mis anuncios y pulsa ⭐ Destacar en el anuncio que quieres destacar
                 </div>
               )}
 
@@ -862,23 +848,23 @@ export default function Panel() {
                   </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                  <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Nombre completo</label><input value={perfilNombre} onChange={e => setPerfilNombre(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} /></div>
-                  <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Email</label><input value={usuario?.email || ''} disabled style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box', background: '#f9f9f9', color: '#aaa' }} /></div>
-                  <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Teléfono</label><input value={perfilTelefono} onChange={e => setPerfilTelefono(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} /></div>
-                  <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Nombre de inmobiliaria</label><input value={perfilInmobiliaria} onChange={e => setPerfilInmobiliaria(e.target.value)} placeholder='Nombre de tu agencia (opcional)' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} /></div>
-                  <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Número AEI</label><input value={perfilAei} onChange={e => setPerfilAei(e.target.value)} placeholder='AEI-0000' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} /></div>
-
-
-
-
-
-
-
-
+                  {[
+                    { label: 'Nombre completo', val: 'Rafael Castillo' },
+                    { label: 'Email', val: 'rafael@email.com' },
+                    { label: 'Teléfono', val: '+1 809 555 0123' },
+                    { label: 'Nombre de inmobiliaria', val: 'RE/MAX Capital RD', placeholder: 'Nombre de tu agencia (opcional)' },
+                    { label: 'Número AEI', val: 'AEI-3421' },
+                    { label: 'Provincia', val: 'Distrito Nacional' },
+                  ].map(f => (
+                    <div key={f.label}>
+                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{f.label}</label>
+                      <input defaultValue={f.val} placeholder={f.placeholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    </div>
+                  ))}
                 </div>
-                <button onClick={guardarPerfil} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 20 }}>Guardar cambios</button>
-
-
+                <button style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 20 }}>
+                  Guardar cambios
+                </button>
 
                 {/* Cerrar sesión */}
                 <div style={{ marginTop: 32, paddingTop: 20, borderTop: '1px solid #f0f0f0' }}>
@@ -934,6 +920,3 @@ export default function Panel() {
     </main>
   )
 }
-
-
-
