@@ -87,6 +87,10 @@ export default function Panel() {
   const [anuncioADestacar, setAnuncioADestacar] = useState<any>(null)
   const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
   const [mensajeSeleccionado, setMensajeSeleccionado] = useState<number | null>(1)
+  const [perfilNombre, setPerfilNombre] = useState('')
+  const [perfilTelefono, setPerfilTelefono] = useState('')
+  const [perfilInmobiliaria, setPerfilInmobiliaria] = useState('')
+  const [perfilAei, setPerfilAei] = useState('')
   const [respuesta, setRespuesta] = useState('')
   const [mensajesLeidos, setMensajesLeidos] = useState<Record<number, boolean>>({})
   const [amenidadesSeleccionadas, setAmenidadesSeleccionadas] = useState<string[]>([])
@@ -117,7 +121,7 @@ export default function Panel() {
 
       // Cargar perfil usuario
       const { data: perfil } = await supabase.from('usuarios').select('*').eq('id', user.id).single()
-      if (perfil) { setUsuario(perfil); if (perfil.foto_url) setFotoPerfilUrl(perfil.foto_url) }
+      if (perfil) { setUsuario(perfil); if (perfil.foto_url) setFotoPerfilUrl(perfil.foto_url); setPerfilNombre(perfil.nombre || ''); setPerfilTelefono(perfil.telefono || ''); setPerfilInmobiliaria(perfil.inmobiliaria || ''); setPerfilAei(perfil.numero_aei || '') }
 
       // Cargar anuncios del usuario
       const { data: anuncios } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
@@ -858,18 +862,18 @@ export default function Panel() {
                   </div>
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                  {[
-                    { label: 'Nombre completo', val: 'Rafael Castillo' },
-                    { label: 'Email', val: 'rafael@email.com' },
-                    { label: 'Teléfono', val: '+1 809 555 0123' },
-                    { label: 'Nombre de inmobiliaria', val: 'RE/MAX Capital RD', placeholder: 'Nombre de tu agencia (opcional)' },
-                    { label: 'Número AEI', val: 'AEI-3421' },
-                    { label: 'Provincia', val: 'Distrito Nacional' },
-                  ].map(f => (
-                    <div key={f.label}>
-                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{f.label}</label>
-                      <input defaultValue={f.val} placeholder={f.placeholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                    </div>
+                  <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Nombre completo</label><input value={perfilNombre} onChange={e => setPerfilNombre(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} /></div>
+                  <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Email</label><input value={usuario?.email || ''} disabled style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box', background: '#f9f9f9', color: '#aaa' }} /></div>
+                  <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Teléfono</label><input value={perfilTelefono} onChange={e => setPerfilTelefono(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} /></div>
+                  <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Nombre de inmobiliaria</label><input value={perfilInmobiliaria} onChange={e => setPerfilInmobiliaria(e.target.value)} placeholder='Nombre de tu agencia (opcional)' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} /></div>
+                  <div><label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Número AEI</label><input value={perfilAei} onChange={e => setPerfilAei(e.target.value)} placeholder='AEI-0000' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} /></div>
+
+
+
+
+
+
+
                   ))}
                 </div>
                 <button onClick={guardarPerfil} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 20 }}>Guardar cambios</button>
@@ -930,5 +934,6 @@ export default function Panel() {
     </main>
   )
 }
+
 
 
