@@ -486,7 +486,7 @@ export default function Panel() {
                 {/* Detalle */}
                 {mensajeSeleccionado && (() => {
                   const m = mensajesReales.find((x: any) => x.id === mensajeSeleccionado) || mensajesReales[0]
-                  const anuncio = anunciosEjemplo.find(a => a.id === m.propiedadId)
+                  const anuncio = anunciosReales.find((a: any) => a.id === m.propiedad_id)
                   return (
                     <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
                       {/* Header cliente */}
@@ -568,7 +568,7 @@ export default function Panel() {
                     </tr>
                   </thead>
                   <tbody>
-                    {anunciosEjemplo.map(a => (
+                    {anunciosReales.length === 0 ? null : anunciosReales.map((a: any) => (
                       <tr key={a.id} style={{ borderBottom: '1px solid #f8f8f8' }}>
                         <td style={{ padding: '10px 0', fontSize: 13, color: '#333', fontWeight: 500 }}>{a.titulo}</td>
                         <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.impresiones.toLocaleString()}</td>
