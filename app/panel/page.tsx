@@ -86,7 +86,7 @@ export default function Panel() {
   const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
   const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
   const [mensajeSeleccionado, setMensajeSeleccionado] = useState<number | null>(1)
-  const [respuesta, setRespuesta] = useState('')
+  const [anuncioADestacar, setAnuncioADestacar] = useState<any>(null)
   const [mensajesLeidos, setMensajesLeidos] = useState<Record<number, boolean>>({})
   const [amenidadesSeleccionadas, setAmenidadesSeleccionadas] = useState<string[]>([])
   const [pubTitulo, setPubTitulo] = useState('')
