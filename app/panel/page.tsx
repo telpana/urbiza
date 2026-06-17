@@ -85,7 +85,7 @@ export default function Panel() {
   const [filtroTipo, setFiltroTipo] = useState('Todos')
   const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
   const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
-  const [mensajeSeleccionado, setMensajeSeleccionado] = useState<number | null>(null)
+  const [mensajeSeleccionado, setMensajeSeleccionado] = useState<number | null>(1)
   const [respuesta, setRespuesta] = useState('')
   const [mensajesLeidos, setMensajesLeidos] = useState<Record<number, boolean>>({})
   const [amenidadesSeleccionadas, setAmenidadesSeleccionadas] = useState<string[]>([])
@@ -184,7 +184,7 @@ export default function Panel() {
   }))
 
   const anunciosFiltrados = anunciosAMostrar.filter((a: any) => filtroTipo === 'Todos' || a.tipo === filtroTipo)
-  const noLeidos = mensajesReales.filter((m: any) => !mensajesLeidos[m.id] && !m.leido).length
+  const noLeidos = mensajesEjemplo.filter(m => !mensajesLeidos[m.id] && !m.leido).length
 
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
@@ -328,6 +328,24 @@ export default function Panel() {
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>Publicar anuncio</h1>
               <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>Rellena los datos de tu propiedad</p>
+
+              {/* Si es profesional sin plan pagado, mostrar pantalla de pago */}
+              {usuario?.tipo === 'profesional' && usuario?.plan !== 'profesional' ? (
+                <div style={{ background: '#fff', borderRadius: 8, padding: '48px 32px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center' }}>
+                  <div style={{ fontSize: 40, marginBottom: 16 }}>🔒</div>
+                  <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 8 }}>Activa tu suscripción para publicar</h2>
+                  <p style={{ fontSize: 14, color: '#888', marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
+                    Con el plan Profesional publicas anuncios ilimitados por solo US$29/mes. El primer mes es gratis si tienes código promocional.
+                  </p>
+                  <div style={{ display: 'flex', gap: 10, maxWidth: 400, margin: '0 auto 16px' }}>
+                    <input type="text" placeholder="Código promocional (opcional)" style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 14px', fontSize: 13, outline: 'none' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    <button style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                      Activar — US$29/mes
+                    </button>
+                  </div>
+                  <div style={{ fontSize: 12, color: '#aaa' }}>Cancela cuando quieras. Sin permanencia.</div>
+                </div>
+              ) : (
               <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
@@ -422,6 +440,7 @@ export default function Panel() {
                   <button style={{ all: 'unset', border: '1.5px solid #e0e0e0', color: '#555', padding: '12px 20px', borderRadius: 6, fontSize: 14, cursor: 'pointer' }}>Guardar borrador</button>
                 </div>
               </div>
+              )}
             </div>
           )}
 
@@ -466,8 +485,8 @@ export default function Panel() {
 
                 {/* Detalle */}
                 {mensajeSeleccionado && (() => {
-                  const m = mensajesReales.find((x: any) => x.id === mensajeSeleccionado); if (!m) return null
-                  const anuncio = anunciosReales.find((a: any) => a.id === m.propiedad_id)
+                  const m = mensajesReales.find((x: any) => x.id === mensajeSeleccionado) || mensajesReales[0]
+                  const anuncio = anunciosEjemplo.find(a => a.id === m.propiedadId)
                   return (
                     <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
                       {/* Header cliente */}
@@ -549,7 +568,7 @@ export default function Panel() {
                     </tr>
                   </thead>
                   <tbody>
-                    {anunciosReales.map(a => (
+                    {anunciosEjemplo.map(a => (
                       <tr key={a.id} style={{ borderBottom: '1px solid #f8f8f8' }}>
                         <td style={{ padding: '10px 0', fontSize: 13, color: '#333', fontWeight: 500 }}>{a.titulo}</td>
                         <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.impresiones.toLocaleString()}</td>
