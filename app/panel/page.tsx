@@ -856,7 +856,7 @@ export default function Panel() {
                     </label>
                   </div>
                   <div>
-                    <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 6 }}>Rafael Castillo</div>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 6 }}>{perfilNombre || usuario?.nombre || 'Mi perfil'}</div>
                     <div style={{ display: 'flex', gap: 8 }}>
                       <span style={{ background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>PROFESIONAL</span>
                       <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>✓ AEI</span>
