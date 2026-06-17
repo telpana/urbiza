@@ -167,13 +167,13 @@ export default function Panel() {
     setAmenidadesSeleccionadas([])
   }
 
-  const anunciosAMostrar = anunciosReales.length > 0 ? anunciosReales.map(a => ({
+  const anunciosAMostrar = anunciosReales.map(a => ({
     id: a.id,
     titulo: a.titulo,
     precio: a.precio,
     zona: a.zona || '',
     tipo: a.tipo || 'Apartamento',
-    estado: a.estado || 'activo',
+    estado: estadosAnuncios[a.id] || a.estado || 'activo',
     impresiones: a.visitas || 0,
     clics: Math.floor((a.visitas || 0) * 0.28),
     telVistos: a.tel_vistos || 0,
@@ -181,7 +181,7 @@ export default function Panel() {
     destacado: a.destacado || false,
     vence: '30 días',
     bg: '#e0f5f7',
-  })) : anunciosEjemplo
+  }))
 
   const anunciosFiltrados = anunciosAMostrar.filter((a: any) => filtroTipo === 'Todos' || a.tipo === filtroTipo)
   const noLeidos = mensajesEjemplo.filter(m => !mensajesLeidos[m.id] && !m.leido).length
@@ -280,8 +280,8 @@ export default function Panel() {
                 {anunciosFiltrados.length === 0 && !cargando && (
                   <div style={{ background: '#fff', borderRadius: 8, padding: '48px 24px', textAlign: 'center', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" strokeWidth="1" style={{ margin: '0 auto 16px', display: 'block' }}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                    <div style={{ fontSize: 16, fontWeight: 600, color: '#555', marginBottom: 8 }}>Aún no tienes anuncios publicados</div>
-                    <div style={{ fontSize: 13, color: '#aaa', marginBottom: 20 }}>Publica tu primer anuncio y empieza a recibir contactos de compradores</div>
+                    <div style={{ fontSize: 16, fontWeight: 600, color: '#555', marginBottom: 8 }}>¿A qué esperas para subir tu primer anuncio?</div>
+                    <div style={{ fontSize: 13, color: '#aaa', marginBottom: 20 }}>Miles de compradores buscan propiedades en Urbiza cada día. Publica gratis y empieza a recibir contactos hoy mismo.</div>
                     <button onClick={() => setSeccion('publicar')} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
                       + Publicar mi primer anuncio
                     </button>
@@ -435,13 +435,14 @@ export default function Panel() {
               <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 16, height: 'calc(100vh - 180px)', minHeight: 500 }}>
                 {/* Lista */}
                 <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', overflowY: 'auto' }}>
-                  {(mensajesReales.length > 0 ? mensajesReales : []).length === 0 && (
+                  {mensajesReales.length === 0 && (
                   <div style={{ padding: '48px 24px', textAlign: 'center' }}>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" strokeWidth="1" style={{ margin: '0 auto 16px', display: 'block' }}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                     <div style={{ fontSize: 16, fontWeight: 600, color: '#555', marginBottom: 8 }}>No tienes mensajes todavía</div>
                     <div style={{ fontSize: 13, color: '#aaa' }}>Cuando un comprador te escriba desde un anuncio aparecerá aquí</div>
                   </div>
                 )}
-                {(mensajesReales.length > 0 ? mensajesReales : mensajesEjemplo).map(m => {
+                {mensajesReales.map(m => {
                     const leido = mensajesLeidos[m.id] !== undefined ? mensajesLeidos[m.id] : m.leido
                     return (
                       <div key={m.id} onClick={() => { setMensajeSeleccionado(m.id); setMensajesLeidos(prev => ({ ...prev, [m.id]: true })) }}
@@ -465,7 +466,7 @@ export default function Panel() {
 
                 {/* Detalle */}
                 {mensajeSeleccionado && (() => {
-                  const m = mensajesEjemplo.find(x => x.id === mensajeSeleccionado)!
+                  const m = mensajesReales.find((x: any) => x.id === mensajeSeleccionado) || mensajesReales[0]
                   const anuncio = anunciosEjemplo.find(a => a.id === m.propiedadId)
                   return (
                     <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
@@ -525,10 +526,10 @@ export default function Panel() {
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>Estadísticas</h1>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
                 {[
-                  { label: 'Impresiones totales', val: '2,450', sub: '+18% vs mes anterior', color: '#006D77' },
-                  { label: 'Visitas a tus anuncios', val: '629', sub: '+12% vs mes anterior', color: '#17A6B4' },
-                  { label: 'Teléfonos visualizados', val: '45', sub: 'interés real en contactarte', color: '#10b981' },
-                  { label: 'Mensajes recibidos', val: '22', sub: `${noLeidos} sin leer`, color: '#f59e0b' },
+                  { label: 'Impresiones totales', val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: 'veces que apareció en búsquedas', color: '#006D77' },
+                  { label: 'Visitas a tus anuncios', val: anunciosReales.reduce((s, a) => s + Math.floor((a.visitas || 0) * 0.28), 0).toLocaleString(), sub: 'personas que lo abrieron', color: '#17A6B4' },
+                  { label: 'Teléfonos visualizados', val: anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0).toLocaleString(), sub: 'interés real en contactarte', color: '#10b981' },
+                  { label: 'Mensajes recibidos', val: mensajesReales.length.toString(), sub: `${noLeidos} sin leer`, color: '#f59e0b' },
                 ].map(s => (
                   <div key={s.label} style={{ background: '#fff', borderRadius: 8, padding: '16px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderTop: `3px solid ${s.color}` }}>
                     <div style={{ fontSize: 11, color: '#888', marginBottom: 6 }}>{s.label}</div>
