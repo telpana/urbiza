@@ -147,11 +147,11 @@ export default function Panel() {
   const guardarPerfil = async () => {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
-    const nombre = (document.getElementById('perfil-nombre') as HTMLInputElement)?.value
-    const telefono = (document.getElementById('perfil-telefono') as HTMLInputElement)?.value
-    const inmobiliaria = (document.getElementById('perfil-inmobiliaria') as HTMLInputElement)?.value
-    await supabase.from('usuarios').update({ nombre, telefono, inmobiliaria }).eq('id', user.id)
+    await supabase.from('usuarios').update({ nombre: perfilNombre, telefono: perfilTelefono, inmobiliaria: perfilInmobiliaria, numero_aei: perfilAei }).eq('id', user.id)
     alert('Perfil guardado correctamente')
+  }
+
+
   }
 
   const publicarAnuncio = async () => {
@@ -874,7 +874,7 @@ export default function Panel() {
 
 
 
-                  ))}
+
                 </div>
                 <button onClick={guardarPerfil} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 20 }}>Guardar cambios</button>
 
