@@ -76,7 +76,7 @@ const amenidades = [
 ]
 
 // Tipo de usuario: 'particular' tiene límite de 2 anuncios gratis
-const tipoUsuario = 'agencia' // 'particular' | 'broker' | 'agencia' | 'unlimited' // cambiar a 'profesional' para ver panel pro
+const tipoUsuario = 'profesional' // se sobreescribe con datos reales de Supabase
 const anunciosGratis = 2
 const anunciosUsados = 2 // para demostrar el límite
 
@@ -228,8 +228,8 @@ export default function Panel() {
               {fotoPerfilUrl ? <img src={fotoPerfilUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : (perfilNombre || usuario?.nombre || 'U').split(' ').map((n: string) => n[0]).join('').slice(0,2).toUpperCase()}
             </div>
             <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: 13 }}>{usuario?.nombre || 'Mi cuenta'}</span>
-            <span style={{ background: tipoUsuario === 'particular' ? 'rgba(255,255,255,0.2)' : '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>
-              {tipoUsuario === 'particular' ? 'PARTICULAR' : 'PROFESIONAL'}
+            <span style={{ background: usuario?.tipo === 'particular' ? 'rgba(255,255,255,0.2)' : '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>
+              {usuario?.tipo === 'particular' ? 'PARTICULAR' : 'PROFESIONAL'}
             </span>
           </div>
           <a href="/" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.5)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none' }}>← Ver web</a>
@@ -259,11 +259,11 @@ export default function Panel() {
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                 <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111' }}>Mis anuncios</h1>
-                <button onClick={() => tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis ? setSeccion('planes') : setSeccion('publicar')} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>+ Publicar anuncio</button>
+                <button onClick={() => usuario?.tipo === 'particular' && anunciosUsados >= anunciosGratis ? setSeccion('planes') : setSeccion('publicar')} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>+ Publicar anuncio</button>
               </div>
 
               {/* Aviso límite particular */}
-              {tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis && (
+              {usuario?.tipo === 'particular' && anunciosUsados >= anunciosGratis && (
                 <div style={{ background: '#fff8e1', border: '1.5px solid #f59e0b', borderRadius: 8, padding: '16px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
                   <div>
                     <div style={{ fontSize: 14, fontWeight: 700, color: '#92400e', marginBottom: 4 }}>Has alcanzado el límite gratuito</div>
@@ -760,7 +760,7 @@ export default function Panel() {
               <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>Gestiona tu suscripción</p>
 
               {/* Plan actual */}
-              {tipoUsuario === 'particular' ? (
+              {usuario?.tipo === 'particular' ? (
                 <div>
                   <div style={{ background: '#fff8e1', border: '1.5px solid #f59e0b', borderRadius: 8, padding: '20px 24px', marginBottom: 24 }}>
                     <div style={{ fontSize: 13, color: '#888', marginBottom: 4 }}>Plan actual</div>
@@ -952,6 +952,9 @@ export default function Panel() {
     </main>
   )
 }
+
+
+
 
 
 
