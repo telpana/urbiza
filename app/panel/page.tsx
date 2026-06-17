@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '../../supabase'
 
@@ -120,7 +120,7 @@ export default function Panel() {
 
       // Cargar perfil usuario
       const { data: perfil } = await supabase.from('usuarios').select('*').eq('id', user.id).single()
-      if (perfil) { setUsuario(perfil); if (perfil.foto_url) setFotoPerfilUrl(perfil.foto_url) }
+      if (perfil) { setUsuario(perfil); if (perfil.foto_url) setFotoPerfilUrl(perfil.foto_url); setPerfilNombre(perfil.nombre || ''); setPerfilTelefono(perfil.telefono || ''); setPerfilInmobiliaria(perfil.inmobiliaria || ''); setPerfilAei(perfil.numero_aei || '') }
 
       // Cargar anuncios del usuario
       const { data: anuncios } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
