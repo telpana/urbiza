@@ -327,7 +327,7 @@ export default function Panel() {
                         {estado === 'activo' ? '● Activo' : '○ Pausado'}
                       </span>
                       <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                        <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>⭐ Destacar</button>
+                        <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}><svg width="11" height="11" viewBox="0 0 24 24" fill="#006D77" style="margin-right:4px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Destacar</button>
                         <button style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>Editar</button>
                         <button onClick={() => toggleEstado(a.id, estado)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>
                           {estado === 'activo' ? 'Pausar' : 'Activar'}
@@ -619,7 +619,7 @@ export default function Panel() {
                 </div>
               ) : (
                 <div style={{ background: '#fff8e1', border: '1px solid #f59e0b', borderRadius: 6, padding: '10px 16px', fontSize: 13, color: '#92400e', marginBottom: 20 }}>
-                  Ve a Mis anuncios y pulsa ⭐ Destacar en el anuncio que quieres destacar
+                  Ve a Mis anuncios y pulsa <svg width="11" height="11" viewBox="0 0 24 24" fill="#006D77" style="margin-right:4px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Destacar en el anuncio que quieres destacar
                 </div>
               )}
 
@@ -944,3 +944,4 @@ export default function Panel() {
     </main>
   )
 }
+
