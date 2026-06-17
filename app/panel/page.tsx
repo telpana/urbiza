@@ -85,7 +85,7 @@ export default function Panel() {
   const [filtroTipo, setFiltroTipo] = useState('Todos')
   const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
   const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
-  const [mensajeSeleccionado, setMensajeSeleccionado] = useState<number | null>(1)
+  const [mensajeSeleccionado, setMensajeSeleccionado] = useState<any>(null)
   const [respuesta, setRespuesta] = useState('')
   const [mensajesLeidos, setMensajesLeidos] = useState<Record<number, boolean>>({})
   const [amenidadesSeleccionadas, setAmenidadesSeleccionadas] = useState<string[]>([])
@@ -184,7 +184,7 @@ export default function Panel() {
   }))
 
   const anunciosFiltrados = anunciosAMostrar.filter((a: any) => filtroTipo === 'Todos' || a.tipo === filtroTipo)
-  const noLeidos = mensajesEjemplo.filter(m => !mensajesLeidos[m.id] && !m.leido).length
+  const noLeidos = mensajesReales.filter((m: any) => !mensajesLeidos[m.id] && !m.leido).length
 
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
