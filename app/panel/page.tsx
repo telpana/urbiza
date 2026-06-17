@@ -873,8 +873,8 @@ export default function Panel() {
                   ))}
                 </div>
                 <button onClick={guardarPerfil} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 20 }}>Guardar cambios</button>
-                  Guardar cambios
-                </button>
+
+
 
                 {/* Cerrar sesión */}
                 <div style={{ marginTop: 32, paddingTop: 20, borderTop: '1px solid #f0f0f0' }}>
