@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '../../supabase'
 
@@ -192,7 +192,7 @@ export default function Panel() {
   }))
 
   const anunciosFiltrados = anunciosAMostrar.filter((a: any) => filtroTipo === 'Todos' || a.tipo === filtroTipo)
-  const noLeidos = mensajesEjemplo.filter(m => !mensajesLeidos[m.id] && !m.leido).length
+  const noLeidos = mensajesReales.filter((m: any) => !mensajesLeidos[m.id] && !m.leido).length
 
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
@@ -490,11 +490,11 @@ export default function Panel() {
                     )
                   })}
                 </div>
+                {mensajeSeleccionado && mensajesReales.length > 0 && (() => {
+                  const m = mensajesReales.find((x: any) => x.id === mensajeSeleccionado)
+                  if (!m) return null
+                  const anuncio = anunciosReales.find((a: any) => a.id === m.propiedad_id)
 
-                {/* Detalle */}
-                {mensajeSeleccionado && (() => {
-                  const m = mensajesReales.find((x: any) => x.id === mensajeSeleccionado) || mensajesReales[0]
-                  const anuncio = anunciosEjemplo.find(a => a.id === m.propiedadId)
                   return (
                     <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
                       {/* Header cliente */}
@@ -608,7 +608,7 @@ export default function Panel() {
                 ))}
               </div>
               <button style={{ all: 'unset', background: planSeleccionado ? '#006D77' : '#e0e0e0', color: '#fff', padding: '13px 32px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: planSeleccionado ? 'pointer' : 'default' }}>
-                Pagar y destacar
+              <button onClick={async () => { if (!planSeleccionado) return; const { data: { user } } = await supabase.auth.getUser(); const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user?.id, email: user?.email, tipo: planSeleccionado }) }); const data = await res.json(); if (data.url) window.location.href = data.url }} style={{ all: 'unset', background: planSeleccionado ? '#006D77' : '#e0e0e0', color: '#fff', padding: '13px 32px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: planSeleccionado ? 'pointer' : 'default' }}>Pagar y destacar</button>
               </button>
             </div>
           )}
@@ -737,7 +737,7 @@ export default function Panel() {
                     </div>
                     <div style={{ display: 'flex', gap: 10, maxWidth: 400, margin: '0 auto' }}>
                       <input type="text" placeholder="Código promocional (opcional)" style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 14px', fontSize: 13, outline: 'none' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                      <button onClick={() => irAPago()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>Suscribirse � US$29/mes</button>
+                      <button onClick={() => irAPago()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>Suscribirse � US$29/mes</button>
                     </div>
                   </div>
                 </div>
@@ -901,6 +901,7 @@ export default function Panel() {
     </main>
   )
 }
+
 
 
 
