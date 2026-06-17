@@ -136,6 +136,12 @@ export default function Panel() {
     setEstadosAnuncios(prev => ({ ...prev, [id]: estadoActual === 'activo' ? 'pausado' : 'activo' }))
   }
 
+  const guardarPerfil = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    await supabase.from('usuarios').update({ nombre: perfilNombre, telefono: perfilTelefono, inmobiliaria: perfilInmobiliaria, numero_aei: perfilAei }).eq('id', user.id)
+    alert('Cambios guardados correctamente')
+  }
   const toggleAmenidad = (id: string) => {
     setAmenidadesSeleccionadas(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id])
   }
