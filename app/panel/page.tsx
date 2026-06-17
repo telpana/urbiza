@@ -185,7 +185,7 @@ export default function Panel() {
   }))
 
   const anunciosFiltrados = anunciosAMostrar.filter((a: any) => filtroTipo === 'Todos' || a.tipo === filtroTipo)
-  const noLeidos = mensajesEjemplo.filter(m => !mensajesLeidos[m.id] && !m.leido).length
+  const noLeidos = mensajesReales.filter((m: any) => !mensajesLeidos[m.id] && !m.leido).length
 
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
@@ -485,9 +485,9 @@ export default function Panel() {
                 </div>
 
                 {/* Detalle */}
-                {mensajeSeleccionado && (() => {
-                  const m = mensajesReales.find((x: any) => x.id === mensajeSeleccionado) || mensajesReales[0]
-                  const anuncio = anunciosEjemplo.find(a => a.id === m.propiedadId)
+                {mensajeSeleccionado && mensajesReales.length > 0 && (() => {
+                  const m = mensajesReales.find((x: any) => x.id === mensajeSeleccionado)
+                  const anuncio = anunciosReales.find((a: any) => a.id === m?.propiedad_id)
                   return (
                     <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
                       {/* Header cliente */}
@@ -920,4 +920,5 @@ export default function Panel() {
     </main>
   )
 }
+
 
