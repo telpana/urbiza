@@ -152,7 +152,7 @@ export default function Panel() {
       inmobiliaria: perfilInmobiliaria,
       numero_aei: perfilAei
     }).eq('id', user.id)
-    if (!error) alert('Cambios guardados correctamente')
+    if (!error) { setUsuario((prev: any) => ({ ...prev, nombre: perfilNombre, telefono: perfilTelefono, inmobiliaria: perfilInmobiliaria, numero_aei: perfilAei })); alert('Cambios guardados correctamente') }
     else alert('Error al guardar')
   }
 
