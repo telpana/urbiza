@@ -227,6 +227,7 @@ function SeccionNovedad({ titulo, subtitulo, props }: { titulo: string, subtitul
 
 export default function Home() {
   const [tipo, setTipo] = useState('Comprar')
+  const [tipoInmueble, setTipoInmueble] = useState('')
   const [verMapa, setVerMapa] = useState(false)
   const { idioma, setIdioma, tr } = useIdioma()
   const [queryHome, setQueryHome] = useState('')
@@ -255,11 +256,14 @@ export default function Home() {
           <a href="/" style={{ fontSize: 28, fontWeight: 700, color: '#006D77', letterSpacing: -2, marginRight: 32, textDecoration: 'none' }}>
             urbiza<span style={{ color: '#17A6B4' }}>.</span>
           </a>
-          {['Comprar', 'Alquilar', 'Obra nueva'].map((item) => (
-            <a key={item} href="#" style={{ padding: '0 14px', height: 60, display: 'flex', alignItems: 'center', fontSize: 14, color: '#555', textDecoration: 'none', borderBottom: '2.5px solid transparent' }}
+          {[
+            { label: 'Comprar', href: '/buscar?operacion=venta' },
+            { label: 'Alquilar', href: '/buscar?operacion=alquiler' },
+          ].map((item) => (
+            <a key={item.label} href={item.href} style={{ padding: '0 14px', height: 60, display: 'flex', alignItems: 'center', fontSize: 14, color: '#555', textDecoration: 'none', borderBottom: '2.5px solid transparent' }}
               onMouseEnter={e => { e.currentTarget.style.color = '#006D77'; e.currentTarget.style.borderBottomColor = '#006D77' }}
               onMouseLeave={e => { e.currentTarget.style.color = '#555'; e.currentTarget.style.borderBottomColor = 'transparent' }}>
-              {item}
+              {item.label}
             </a>
           ))}
         </div>
@@ -314,7 +318,7 @@ export default function Home() {
                 {mostrarSugHome && sugHome.length > 0 && (
                   <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #e0e0e0', borderTop: 'none', borderRadius: '0 0 6px 6px', boxShadow: '0 4px 16px rgba(0,0,0,0.12)', zIndex: 200 }}>
                     {sugHome.map((s: string, i: number) => (
-                      <div key={i} onMouseDown={() => { setQueryHome(s); setMostrarSugHome(false) }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', fontSize: 14, color: '#333', cursor: 'pointer', borderBottom: i < sugHome.length - 1 ? '1px solid #f5f5f5' : 'none' }}
+                      <div key={i} onMouseDown={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); p.set('zona', s); window.location.href = `/buscar?${p.toString()}` }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', fontSize: 14, color: '#333', cursor: 'pointer', borderBottom: i < sugHome.length - 1 ? '1px solid #f5f5f5' : 'none' }}
                         onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
                         onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
@@ -324,15 +328,16 @@ export default function Home() {
                   </div>
                 )}
               </div>
-              <select style={{ padding: '0 12px', fontSize: 13, border: 'none', borderLeft: '1px solid #e0e0e0', outline: 'none', color: '#555', background: '#f9f9f9', cursor: 'pointer' }}>
-                <option>Apartamento</option>
-                <option>Casa</option>
-                <option>Villa</option>
-                <option>Oficina</option>
-                <option>Terreno</option>
-                <option>Local comercial</option>
+              <select value={tipoInmueble} onChange={e => setTipoInmueble(e.target.value)} style={{ padding: '0 12px', fontSize: 13, border: 'none', borderLeft: '1px solid #e0e0e0', outline: 'none', color: '#555', background: '#f9f9f9', cursor: 'pointer' }}>
+                <option value="">Todos los tipos</option>
+                <option value="Apartamento">Apartamento</option>
+                <option value="Casa">Casa</option>
+                <option value="Villa">Villa</option>
+                <option value="Oficina">Oficina</option>
+                <option value="Terreno">Terreno</option>
+                <option value="Local comercial">Local comercial</option>
               </select>
-              <button style={{ background: '#006D77', color: '#fff', border: 'none', padding: '0 26px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>{tr.hero.buscar}</button>
+              <button onClick={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); if (queryHome) p.set('zona', queryHome); if (tipoInmueble) p.set('tipo', tipoInmueble); window.location.href = `/buscar?${p.toString()}` }} style={{ background: '#006D77', color: '#fff', border: 'none', padding: '0 26px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>{tr.hero.buscar}</button>
             </div>
           </div>
         </div>
@@ -430,7 +435,7 @@ export default function Home() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0 }}>
             {zonas.map((z) => (
               <div key={z.nombre + z.tipo} style={{ padding: '10px 0', borderBottom: '1px solid #f5f5f5' }}>
-                <a href="/buscar" style={{ display: 'block', fontSize: 14, color: '#006D77', fontWeight: 500, textDecoration: 'none', marginBottom: 3 }}>{z.nombre}</a>
+                <a href={`/buscar?zona=${encodeURIComponent(z.nombre)}`} style={{ display: 'block', fontSize: 14, color: '#006D77', fontWeight: 500, textDecoration: 'none', marginBottom: 3 }}>{z.nombre}</a>
                 <div style={{ fontSize: 12, color: '#888' }}>{z.tipo}</div>
               </div>
             ))}

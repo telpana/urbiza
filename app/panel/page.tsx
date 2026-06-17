@@ -33,12 +33,6 @@ const planesDestacado = [
   { dias: 60, precio: 34.99, label: '60 días', popular: false },
 ]
 
-const planesPro = [
-  { id: 'broker', nombre: 'Broker', precio: 15, features: ['Anuncios ilimitados', 'Badge PROFESIONAL', 'Estadísticas completas', 'Soporte por email'] },
-  { id: 'basic', nombre: 'Agencia Basic', precio: 29, features: ['Todo lo de Broker', 'Hasta 5 brokers', 'Panel de agencia', 'Nombre de inmobiliaria'] },
-  { id: 'pro', nombre: 'Agencia Pro', precio: 49, features: ['Todo lo de Basic', 'Hasta 10 brokers', 'Anuncios prioritarios', 'Soporte prioritario'] },
-  { id: 'unlimited', nombre: 'Unlimited', precio: 99, features: ['Todo lo de Pro', 'Brokers ilimitados', '1 cuenta por provincia', 'Manager dedicado'] },
-]
 
 const provinciasZonas: Record<string, string[]> = {
   'Distrito Nacional': ['Piantini', 'Naco', 'Serrallés', 'Bella Vista', 'Arroyo Hondo', 'Los Cacicazgos', 'Gazcue', 'Ciudad Colonial', 'Evaristo Morales', 'Miramar', 'La Esperilla', 'Viejo Arroyo Hondo', 'Urbanización Real', 'Cristo Rey', 'Villa Consuelo', 'Ensanche Ozama'],
@@ -75,23 +69,32 @@ const amenidades = [
   { id: 'ascensor', label: 'Ascensor' },
 ]
 
-// Tipo de usuario: 'particular' tiene límite de 2 anuncios gratis
-const tipoUsuario = 'agencia' // 'particular' | 'broker' | 'agencia' | 'unlimited' // cambiar a 'profesional' para ver panel pro
-const anunciosGratis = 2
-const anunciosUsados = 2 // para demostrar el límite
+function getAvatar(nombre: string) {
+  return (nombre || '?').split(' ').map((n: string) => n[0] || '').join('').slice(0, 2).toUpperCase()
+}
+function formatFecha(iso: string) {
+  if (!iso) return ''
+  const diff = Date.now() - new Date(iso).getTime()
+  const mins = Math.floor(diff / 60000)
+  if (mins < 60) return `Hace ${mins} min`
+  const hours = Math.floor(mins / 60)
+  if (hours < 24) return `Hace ${hours}h`
+  const days = Math.floor(hours / 24)
+  if (days === 1) return 'Ayer'
+  return `Hace ${days} días`
+}
 
 export default function Panel() {
   const [seccion, setSeccion] = useState('anuncios')
   const [filtroTipo, setFiltroTipo] = useState('Todos')
   const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
   const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
-  const [mensajeSeleccionado, setMensajeSeleccionado] = useState<number | null>(1)
+  const [mensajeSeleccionado, setMensajeSeleccionado] = useState<number | null>(null)
   const [anuncioADestacar, setAnuncioADestacar] = useState<any>(null)
   const [mensajesLeidos, setMensajesLeidos] = useState<Record<number, boolean>>({})
   const [amenidadesSeleccionadas, setAmenidadesSeleccionadas] = useState<string[]>([])
   const [pubTitulo, setPubTitulo] = useState('')
   const [pubPrecio, setPubPrecio] = useState('')
-  const [pubZona, setPubZona] = useState('')
   const [pubM2, setPubM2] = useState('')
   const [pubDesc, setPubDesc] = useState('')
   const [pubTipo, setPubTipo] = useState('Apartamento')
@@ -112,6 +115,8 @@ export default function Panel() {
   const [anunciosReales, setAnunciosReales] = useState<any[]>([])
   const [mensajesReales, setMensajesReales] = useState<any[]>([])
   const [cargando, setCargando] = useState(true)
+  const [respuesta, setRespuesta] = useState('')
+  const [verificandoPago, setVerificandoPago] = useState(false)
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -120,7 +125,39 @@ export default function Panel() {
 
       // Cargar perfil usuario
       const { data: perfil } = await supabase.from('usuarios').select('*').eq('id', user.id).single()
-      if (perfil) { setUsuario(perfil); if (perfil.foto_url) setFotoPerfilUrl(perfil.foto_url); setPerfilNombre(perfil.nombre || ''); setPerfilTelefono(perfil.telefono || ''); setPerfilInmobiliaria(perfil.inmobiliaria || ''); setPerfilAei(perfil.numero_aei || '') }
+      if (perfil) {
+        setUsuario(perfil)
+        if (perfil.foto_url) setFotoPerfilUrl(perfil.foto_url)
+        setPerfilNombre(perfil.nombre || '')
+        setPerfilTelefono(perfil.telefono || '')
+        setPerfilInmobiliaria(perfil.inmobiliaria || '')
+        setPerfilAei(perfil.numero_aei || '')
+
+        const params = new URLSearchParams(window.location.search)
+        if (params.get('pago') === 'ok') {
+          setSeccion('publicar')
+          if (perfil.plan === 'profesional') {
+            // Webhook ya procesó — listo
+          } else {
+            // Webhook aún no llegó — hacer polling hasta que Supabase confirme
+            setVerificandoPago(true)
+            let intentos = 0
+            const pollPlan = async () => {
+              const { data: act } = await supabase.from('usuarios').select('plan').eq('id', user.id).single()
+              if (act?.plan === 'profesional') {
+                setUsuario((prev: any) => ({ ...prev, plan: 'profesional' }))
+                setVerificandoPago(false)
+              } else if (intentos < 12) {
+                intentos++
+                setTimeout(pollPlan, 2500)
+              } else {
+                setVerificandoPago(false)
+              }
+            }
+            setTimeout(pollPlan, 2000)
+          }
+        }
+      }
 
       // Cargar anuncios del usuario
       const { data: anuncios } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
@@ -180,7 +217,8 @@ export default function Panel() {
     setPubExito(true)
     setPubLoading(false)
     // Resetear form
-    setPubTitulo(''); setPubPrecio(''); setPubZona(''); setPubM2(''); setPubDesc('')
+    setPubTitulo(''); setPubPrecio(''); setPubM2(''); setPubDesc('')
+    setPubProvincia(''); setPubSector(''); setPubHab('1'); setPubBanos('1')
     setAmenidadesSeleccionadas([])
   }
 
@@ -201,7 +239,10 @@ export default function Panel() {
   }))
 
   const anunciosFiltrados = anunciosAMostrar.filter((a: any) => filtroTipo === 'Todos' || a.tipo === filtroTipo)
-  const noLeidos = mensajesReales.filter((m: any) => !mensajesLeidos[m.id] && !m.leido).length
+  const noLeidos = mensajesReales.filter((m: any) => !mensajesLeidos[m.id]).length
+  const tipoUsuario: string = usuario?.tipo || 'particular'
+  const anunciosGratis = 2
+  const anunciosUsados = anunciosReales.length
 
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
@@ -346,21 +387,36 @@ export default function Panel() {
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>Publicar anuncio</h1>
               <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>Rellena los datos de tu propiedad</p>
 
-              {/* Si es profesional sin plan pagado, mostrar pantalla de pago */}
+              {/* Si es profesional sin plan pagado, mostrar pantalla de pago o verificando */}
               {usuario?.tipo === 'profesional' && usuario?.plan !== 'profesional' ? (
                 <div style={{ background: '#fff', borderRadius: 8, padding: '48px 32px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center' }}>
-                  <div style={{ fontSize: 40, marginBottom: 16 }}>🔒</div>
+                  {verificandoPago ? (
+                    <>
+                      <style>{`@keyframes urbiza-spin { to { transform: rotate(360deg); } }`}</style>
+                      <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'center' }}>
+                        <svg style={{ animation: 'urbiza-spin 1s linear infinite' }} width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><circle cx="12" cy="12" r="10" strokeDasharray="32" strokeDashoffset="10"/></svg>
+                      </div>
+                      <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 8 }}>Verificando tu pago...</h2>
+                      <p style={{ fontSize: 14, color: '#888' }}>Esto solo toma unos segundos</p>
+                    </>
+                  ) : (
+                  <>
+                  <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'center' }}>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  </div>
                   <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 8 }}>Activa tu suscripción para publicar</h2>
                   <p style={{ fontSize: 14, color: '#888', marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
-                    Con el plan Profesional publicas anuncios ilimitados por solo US$29/mes. El primer mes es gratis si tienes código promocional.
+                    Con el plan Profesional publicas anuncios ilimitados por solo US$9.99/mes. El primer mes es gratis si tienes código promocional.
                   </p>
                   <div style={{ display: 'flex', gap: 10, maxWidth: 400, margin: '0 auto 16px' }}>
                     <input type="text" placeholder="Código promocional (opcional)" style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 14px', fontSize: 13, outline: 'none' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                    <button style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                      Activar — US$29/mes
-                    </button>
+                    <a href="/pago/profesional" style={{ background: '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
+                      Activar — US$9.99/mes
+                    </a>
                   </div>
                   <div style={{ fontSize: 12, color: '#aaa' }}>Cancela cuando quieras. Sin permanencia.</div>
+                  </>
+                  )}
                 </div>
               ) : (
               <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
@@ -420,7 +476,7 @@ export default function Panel() {
 
                 <div style={{ marginBottom: 16 }}>
                   <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Descripción</label>
-                  <textarea rows={4} placeholder="Describe tu propiedad con detalle — ubicación, acabados, amenidades, accesos..." style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'vertical', fontFamily: 'sans-serif', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                  <textarea rows={4} value={pubDesc} onChange={e => setPubDesc(e.target.value)} placeholder="Describe tu propiedad con detalle — ubicación, acabados, amenidades, accesos..." style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'vertical', fontFamily: 'sans-serif', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                 </div>
 
                 {/* AMENIDADES */}
@@ -479,18 +535,18 @@ export default function Panel() {
                   </div>
                 )}
                 {mensajesReales.map(m => {
-                    const leido = mensajesLeidos[m.id] !== undefined ? mensajesLeidos[m.id] : m.leido
+                    const leido = mensajesLeidos[m.id] !== undefined ? mensajesLeidos[m.id] : false
                     return (
                       <div key={m.id} onClick={() => { setMensajeSeleccionado(m.id); setMensajesLeidos(prev => ({ ...prev, [m.id]: true })) }}
                         style={{ padding: '14px 16px', borderBottom: '1px solid #f5f5f5', cursor: 'pointer', background: mensajeSeleccionado === m.id ? '#f0fafb' : '#fff', borderLeft: mensajeSeleccionado === m.id ? '3px solid #006D77' : '3px solid transparent' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                          <div style={{ width: 36, height: 36, borderRadius: '50%', background: leido ? '#f0f0f0' : '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: leido ? '#888' : '#006D77', flexShrink: 0 }}>{m.avatar}</div>
+                          <div style={{ width: 36, height: 36, borderRadius: '50%', background: leido ? '#f0f0f0' : '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: leido ? '#888' : '#006D77', flexShrink: 0 }}>{getAvatar(m.nombre_cliente)}</div>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                              <div style={{ fontSize: 13, fontWeight: leido ? 500 : 700, color: '#111' }}>{m.nombre}</div>
-                              <div style={{ fontSize: 11, color: '#aaa' }}>{m.fecha}</div>
+                              <div style={{ fontSize: 13, fontWeight: leido ? 500 : 700, color: '#111' }}>{m.nombre_cliente}</div>
+                              <div style={{ fontSize: 11, color: '#aaa' }}>{formatFecha(m.created_at)}</div>
                             </div>
-                            <div style={{ fontSize: 11, color: '#006D77', fontWeight: 500 }}>📍 {m.propiedad}</div>
+                            <div style={{ fontSize: 11, color: '#006D77', fontWeight: 500 }}>📍 {m.propiedades?.titulo}</div>
                           </div>
                           {!leido && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#006D77', flexShrink: 0 }} />}
                         </div>
@@ -504,17 +560,17 @@ export default function Panel() {
                 {mensajeSeleccionado && mensajesReales.length > 0 && (() => {
                   const m = mensajesReales.find((x: any) => x.id === mensajeSeleccionado)
                   if (!m) return null
-                  const anuncio = anunciosReales.find((a: any) => a.id === m?.propiedad_id)
+                  const anuncio = anunciosAMostrar.find((a: any) => a.id === m?.propiedad_id)
                   return (
                     <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
                       {/* Header cliente */}
                       <div style={{ padding: '16px 20px', borderBottom: '1px solid #f0f0f0' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                          <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#006D77' }}>{m.avatar}</div>
+                          <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#006D77' }}>{getAvatar(m.nombre_cliente)}</div>
                           <div>
-                            <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>{m.nombre}</div>
-                            {m.telefono
-                              ? <a href={`tel:${m.telefono}`} style={{ fontSize: 12, color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>📞 {m.telefono}</a>
+                            <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>{m.nombre_cliente}</div>
+                            {m.telefono_cliente
+                              ? <a href={`tel:${m.telefono_cliente}`} style={{ fontSize: 12, color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>📞 {m.telefono_cliente}</a>
                               : <div style={{ fontSize: 12, color: '#aaa' }}>No dejó teléfono</div>
                             }
                           </div>
@@ -536,18 +592,18 @@ export default function Panel() {
                       <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
                         <div style={{ background: '#f4f5f6', borderRadius: 8, padding: '14px 16px', maxWidth: '80%' }}>
                           <div style={{ fontSize: 14, color: '#333', lineHeight: 1.6, marginBottom: 6 }}>{m.mensaje}</div>
-                          <div style={{ fontSize: 11, color: '#aaa' }}>{m.fecha}</div>
+                          <div style={{ fontSize: 11, color: '#aaa' }}>{formatFecha(m.created_at)}</div>
                         </div>
                       </div>
 
                       {/* Responder */}
                       <div style={{ padding: '16px 20px', borderTop: '1px solid #f0f0f0' }}>
-                        <textarea value={respuesta} onChange={e => setRespuesta(e.target.value)} placeholder={`Responder a ${m.nombre}...`} rows={3}
+                        <textarea value={respuesta} onChange={e => setRespuesta(e.target.value)} placeholder={`Responder a ${m.nombre_cliente}...`} rows={3}
                           style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'none', fontFamily: 'sans-serif', boxSizing: 'border-box', marginBottom: 10 }}
                           onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                         <div style={{ display: 'flex', gap: 8 }}>
                           <button style={{ all: 'unset', flex: 1, background: respuesta ? '#006D77' : '#e0e0e0', color: '#fff', padding: '10px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: respuesta ? 'pointer' : 'default', textAlign: 'center' }}>Enviar respuesta</button>
-                          {m.telefono && <a href={`tel:${m.telefono}`} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '10px 16px', borderRadius: 6, fontSize: 13, cursor: 'pointer' }}>📞 Llamar</a>}
+                          {m.telefono_cliente && <a href={`tel:${m.telefono_cliente}`} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '10px 16px', borderRadius: 6, fontSize: 13, cursor: 'pointer' }}>📞 Llamar</a>}
                         </div>
                       </div>
                     </div>
@@ -586,7 +642,7 @@ export default function Panel() {
                     </tr>
                   </thead>
                   <tbody>
-                    {anunciosReales.length === 0 ? <tr><td colSpan={6} style={{ textAlign: 'center', padding: '24px', color: '#aaa', fontSize: 13 }}>Publica tu primer anuncio para ver las estadísticas</td></tr> : anunciosReales.map((a: any) => (
+                    {anunciosAMostrar.length === 0 ? <tr><td colSpan={6} style={{ textAlign: 'center', padding: '24px', color: '#aaa', fontSize: 13 }}>Publica tu primer anuncio para ver las estadísticas</td></tr> : anunciosAMostrar.map((a: any) => (
                       <tr key={a.id} style={{ borderBottom: '1px solid #f8f8f8' }}>
                         <td style={{ padding: '10px 0', fontSize: 13, color: '#333', fontWeight: 500 }}>{a.titulo}</td>
                         <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.impresiones.toLocaleString()}</td>
@@ -651,31 +707,26 @@ export default function Panel() {
 
           {/* PLANES PRO — pantalla para particulares que llegan al límite */}
           {seccion === 'planes' && (
-            <div>
-              <div style={{ textAlign: 'center', marginBottom: 32 }}>
-                <div style={{ fontSize: 36, marginBottom: 12 }}>🚀</div>
-                <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 8 }}>Pásate a PRO y publica sin límites</h1>
-                <p style={{ fontSize: 15, color: '#888' }}>Has usado tus 2 anuncios gratuitos. Elige el plan que mejor se adapta a ti.</p>
-              </div>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
-                {planesPro.map(p => (
-                  <div key={p.id} style={{ background: '#fff', borderRadius: 8, padding: '24px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', border: p.id === 'pro' ? '2px solid #006D77' : '1px solid #e0e0e0', position: 'relative' }}>
-                    {p.id === 'pro' && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 14px', borderRadius: 10, whiteSpace: 'nowrap' }}>MÁS POPULAR</div>}
-                    <div style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 4 }}>{p.nombre}</div>
-                    <div style={{ fontSize: 28, fontWeight: 700, color: '#006D77', marginBottom: 16 }}>US$ {p.precio}<span style={{ fontSize: 13, color: '#aaa', fontWeight: 400 }}>/mes</span></div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
-                      {p.features.map(f => (
-                        <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#555' }}>
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                          {f}
-                        </div>
-                      ))}
+            <div style={{ maxWidth: 480, margin: '0 auto', textAlign: 'center' }}>
+              <div style={{ fontSize: 48, marginBottom: 16 }}>🚀</div>
+              <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 8 }}>Pásate a PRO y publica sin límites</h1>
+              <p style={{ fontSize: 15, color: '#888', marginBottom: 32 }}>Has usado tus {anunciosGratis} anuncios gratuitos.</p>
+              <div style={{ background: '#fff', borderRadius: 10, padding: '32px 28px', boxShadow: '0 2px 16px rgba(0,109,119,0.12)', border: '2px solid #006D77', position: 'relative' }}>
+                <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 16px', borderRadius: 10, whiteSpace: 'nowrap' }}>PLAN PROFESIONAL</div>
+                <div style={{ fontSize: 42, fontWeight: 700, color: '#006D77', marginBottom: 4 }}>US$ 9.99<span style={{ fontSize: 18, fontWeight: 400, color: '#aaa' }}>/mes</span></div>
+                <div style={{ fontSize: 13, color: '#888', marginBottom: 24 }}>Cancela cuando quieras · Sin permanencia</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 28, textAlign: 'left' }}>
+                  {['Anuncios ilimitados', 'Badge PROFESIONAL visible en tus anuncios', 'Estadísticas completas', 'Mensajes ilimitados de compradores', 'Soporte por email prioritario'].map(f => (
+                    <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: '#444' }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      {f}
                     </div>
-                    <button style={{ all: 'unset', width: '100%', background: '#006D77', color: '#fff', padding: '11px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box' }}>
-                      Elegir {p.nombre}
-                    </button>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                <a href="/pago/profesional" style={{ display: 'block', background: '#006D77', color: '#fff', padding: '14px', borderRadius: 6, fontSize: 15, fontWeight: 700, cursor: 'pointer', textDecoration: 'none' }}>
+                  Activar plan PRO — US$9.99/mes
+                </a>
+                <div style={{ fontSize: 12, color: '#aaa', marginTop: 12 }}>Primer mes gratis con código promocional</div>
               </div>
             </div>
           )}
@@ -761,7 +812,7 @@ export default function Panel() {
                   </div>
                   <div style={{ background: '#fff', borderRadius: 8, padding: '28px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center' }}>
                     <div style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 8 }}>Pásate a Profesional</div>
-                    <div style={{ fontSize: 36, fontWeight: 700, color: '#006D77', marginBottom: 4 }}>US$ 29<span style={{ fontSize: 16, fontWeight: 400, color: '#aaa' }}>/mes</span></div>
+                    <div style={{ fontSize: 36, fontWeight: 700, color: '#006D77', marginBottom: 4 }}>US$ 9.99<span style={{ fontSize: 16, fontWeight: 400, color: '#aaa' }}>/mes</span></div>
                     <div style={{ fontSize: 13, color: '#888', marginBottom: 20 }}>Primer mes gratis con código promocional</div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 300, margin: '0 auto 24px' }}>
                       {['Anuncios ilimitados', 'Badge PROFESIONAL', 'Estadísticas completas', 'Mensajes ilimitados', 'Soporte por email'].map(f => (
@@ -773,7 +824,7 @@ export default function Panel() {
                     </div>
                     <div style={{ display: 'flex', gap: 10, maxWidth: 400, margin: '0 auto' }}>
                       <input type="text" placeholder="Código promocional (opcional)" style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 14px', fontSize: 13, outline: 'none' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                      <button style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>Suscribirse</button>
+                      <a href="/pago/profesional" style={{ background: '#006D77', color: '#fff', padding: '10px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>Suscribirse</a>
                     </div>
                   </div>
                 </div>
@@ -784,7 +835,7 @@ export default function Panel() {
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
                       <div>
                         <div style={{ fontSize: 13, color: '#888', marginBottom: 4 }}>Plan actual</div>
-                        <div style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 4 }}>Profesional — US$ 29/mes</div>
+                        <div style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 4 }}>Profesional — US$ 9.99/mes</div>
                         <div style={{ fontSize: 13, color: '#555' }}>Próxima facturación: <strong>16 de julio 2026</strong></div>
                         <div style={{ fontSize: 12, color: '#aaa', marginTop: 2 }}>Se renovará automáticamente. Cancela cuando quieras.</div>
                       </div>
@@ -793,7 +844,7 @@ export default function Panel() {
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, paddingTop: 16, borderTop: '1px solid #f0f0f0' }}>
                       {[
                         { label: 'Miembro desde', val: '16 junio 2026' },
-                        { label: 'Próximo cobro', val: 'US$ 29 · 16 jul' },
+                        { label: 'Próximo cobro', val: 'US$ 9.99 · 16 jul' },
                         { label: 'Método de pago', val: '•••• 4242' },
                       ].map(d => (
                         <div key={d.label}>
@@ -808,7 +859,7 @@ export default function Panel() {
                   <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', marginBottom: 16 }}>
                     <div style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 14 }}>Historial de pagos</div>
                     {[
-                      { fecha: '16 jun 2026', monto: 'US$ 29', estado: 'Pagado', factura: '#URB-001' },
+                      { fecha: '16 jun 2026', monto: 'US$ 9.99', estado: 'Pagado', factura: '#URB-001' },
                       { fecha: '16 may 2026', monto: 'US$ 0', estado: 'Gratis', factura: '#URB-000' },
                     ].map((p, i) => (
                       <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '10px 0', borderBottom: i === 0 ? '1px solid #f5f5f5' : 'none' }}>
@@ -858,8 +909,8 @@ export default function Panel() {
                   <div>
                     <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 6 }}>{perfilNombre || usuario?.nombre || 'Mi perfil'}</div>
                     <div style={{ display: 'flex', gap: 8 }}>
-                      <span style={{ background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>PROFESIONAL</span>
-                      <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>✓ AEI</span>
+                      {tipoUsuario === 'profesional' && <span style={{ background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>PROFESIONAL</span>}
+                      {perfilAei && <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>✓ AEI</span>}
                     </div>
                     <div style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>Pulsa el icono para cambiar tu foto</div>
                   </div>

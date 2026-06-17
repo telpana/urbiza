@@ -1,5 +1,6 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../supabase'
 
 const USD_TO_DOP = 59.5
@@ -8,15 +9,15 @@ function formatDOP(usd: number) {
   return 'RD$ ' + (usd * USD_TO_DOP).toLocaleString('es-DO', { maximumFractionDigits: 0 })
 }
 
-const propiedades = [
-  { id: 1, precio: 285000, titulo: 'Apartamento en Piantini', zona: 'Piantini, Distrito Nacional', hab: 3, banos: 2, m2: 150, parqueos: 2, tipo: 'Apartamento', dest: true, visitas: false, bg: '#e0f5f7', lat: 18.4890, lng: -69.9370, desc: 'Amplio apartamento en el corazón de Piantini con acabados de alta calidad, pisos de mármol importado y vista panorámica.' },
-  { id: 2, precio: 620000, titulo: 'Villa en Bávaro', zona: 'Bávaro, La Altagracia', hab: 4, banos: 3, m2: 500, parqueos: 3, tipo: 'Villa', dest: true, visitas: false, bg: '#ddf0e8', lat: 18.6835, lng: -68.4070, desc: 'Espectacular villa con piscina privada, jardín tropical y acceso a playa privada.' },
-  { id: 3, precio: 165000, titulo: 'Apartamento en Bella Vista', zona: 'Bella Vista, Distrito Nacional', hab: 2, banos: 2, m2: 95, parqueos: 1, tipo: 'Apartamento', dest: false, visitas: true, bg: '#f0ebe0', lat: 18.4760, lng: -69.9450, desc: 'Cómodo apartamento en Bella Vista con buenas comunicaciones.' },
-  { id: 4, precio: 410000, titulo: 'Oficina en Naco', zona: 'Naco, Distrito Nacional', hab: 0, banos: 2, m2: 180, parqueos: 3, tipo: 'Oficina', dest: false, visitas: true, bg: '#e8eaf0', lat: 18.4950, lng: -69.9450, desc: 'Moderna oficina en edificio corporativo con lobby, seguridad 24h.' },
-  { id: 5, precio: 310000, titulo: 'Villa en Arroyo Hondo', zona: 'Arroyo Hondo, Distrito Nacional', hab: 4, banos: 3, m2: 380, parqueos: 2, tipo: 'Villa', dest: false, visitas: true, bg: '#e8f0e0', lat: 18.5050, lng: -69.9650, desc: 'Villa en urbanización cerrada con seguridad privada y piscina comunitaria.' },
-  { id: 6, precio: 98000, titulo: 'Apartamento en Santiago', zona: 'Reparto Conuco, Santiago', hab: 2, banos: 1, m2: 90, parqueos: 1, tipo: 'Apartamento', dest: false, visitas: false, bg: '#f0e8f0', lat: 19.4517, lng: -70.6970, desc: 'Apartamento céntrico en Santiago con excelente acceso a transporte.' },
-  { id: 7, precio: 195000, titulo: 'Apartamento en Naco', zona: 'Naco, Distrito Nacional', hab: 2, banos: 2, m2: 110, parqueos: 1, tipo: 'Apartamento', dest: false, visitas: false, bg: '#e0f5f7', lat: 18.4930, lng: -69.9480, desc: 'Apartamento moderno en Naco con terraza y área de lavandería.' },
-  { id: 8, precio: 450000, titulo: 'Villa en Cap Cana', zona: 'Cap Cana, La Altagracia', hab: 3, banos: 3, m2: 320, parqueos: 2, tipo: 'Villa', dest: false, visitas: false, bg: '#ddf0e8', lat: 18.5200, lng: -68.3700, desc: 'Exclusiva villa en Cap Cana con acceso a campo de golf y marina.' },
+const propiedadesEjemplo = [
+  { id: 1, precio: 285000, titulo: 'Apartamento en Piantini', zona: 'Piantini, Distrito Nacional', hab: 3, banos: 2, m2: 150, parqueos: 2, tipo: 'Apartamento', operacion: 'venta', dest: true, visitas: false, bg: '#e0f5f7', lat: 18.4890, lng: -69.9370, desc: 'Amplio apartamento en el corazón de Piantini con acabados de alta calidad, pisos de mármol importado y vista panorámica.' },
+  { id: 2, precio: 620000, titulo: 'Villa en Bávaro', zona: 'Bávaro, La Altagracia', hab: 4, banos: 3, m2: 500, parqueos: 3, tipo: 'Villa', operacion: 'venta', dest: true, visitas: false, bg: '#ddf0e8', lat: 18.6835, lng: -68.4070, desc: 'Espectacular villa con piscina privada, jardín tropical y acceso a playa privada.' },
+  { id: 3, precio: 1800, titulo: 'Apartamento en Bella Vista', zona: 'Bella Vista, Distrito Nacional', hab: 2, banos: 2, m2: 95, parqueos: 1, tipo: 'Apartamento', operacion: 'alquiler', dest: false, visitas: true, bg: '#f0ebe0', lat: 18.4760, lng: -69.9450, desc: 'Cómodo apartamento en alquiler en Bella Vista con buenas comunicaciones.' },
+  { id: 4, precio: 2500, titulo: 'Oficina en Naco', zona: 'Naco, Distrito Nacional', hab: 0, banos: 2, m2: 180, parqueos: 3, tipo: 'Oficina', operacion: 'alquiler', dest: false, visitas: true, bg: '#e8eaf0', lat: 18.4950, lng: -69.9450, desc: 'Moderna oficina en alquiler en edificio corporativo con lobby, seguridad 24h.' },
+  { id: 5, precio: 310000, titulo: 'Villa en Arroyo Hondo', zona: 'Arroyo Hondo, Distrito Nacional', hab: 4, banos: 3, m2: 380, parqueos: 2, tipo: 'Villa', operacion: 'venta', dest: false, visitas: true, bg: '#e8f0e0', lat: 18.5050, lng: -69.9650, desc: 'Villa en urbanización cerrada con seguridad privada y piscina comunitaria.' },
+  { id: 6, precio: 1200, titulo: 'Apartamento en Santiago', zona: 'Reparto Conuco, Santiago', hab: 2, banos: 1, m2: 90, parqueos: 1, tipo: 'Apartamento', operacion: 'alquiler', dest: false, visitas: false, bg: '#f0e8f0', lat: 19.4517, lng: -70.6970, desc: 'Apartamento en alquiler en Santiago con excelente acceso a transporte.' },
+  { id: 7, precio: 195000, titulo: 'Apartamento en Naco', zona: 'Naco, Distrito Nacional', hab: 2, banos: 2, m2: 110, parqueos: 1, tipo: 'Apartamento', operacion: 'venta', dest: false, visitas: false, bg: '#e0f5f7', lat: 18.4930, lng: -69.9480, desc: 'Apartamento moderno en Naco con terraza y área de lavandería.' },
+  { id: 8, precio: 450000, titulo: 'Villa en Cap Cana', zona: 'Cap Cana, La Altagracia', hab: 3, banos: 3, m2: 320, parqueos: 2, tipo: 'Villa', operacion: 'venta', dest: false, visitas: false, bg: '#ddf0e8', lat: 18.5200, lng: -68.3700, desc: 'Exclusiva villa en Cap Cana con acceso a campo de golf y marina.' },
 ]
 
 // Mapa mini limpio — solo muestra el mapa sin zonas seleccionadas
@@ -123,27 +124,59 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: typeof propiedad
   )
 }
 
-export default function Buscar() {
-  const [tipo, setTipo] = useState('Todos')
+const zonasSugerencias = [
+  'Piantini, Distrito Nacional', 'Naco, Distrito Nacional', 'Serrallés, Distrito Nacional',
+  'Bella Vista, Distrito Nacional', 'Arroyo Hondo, Distrito Nacional', 'Evaristo Morales, Distrito Nacional',
+  'Los Cacicazgos, Distrito Nacional', 'Gazcue, Distrito Nacional', 'Ciudad Colonial, Distrito Nacional',
+  'Miramar, Distrito Nacional', 'La Esperilla, Distrito Nacional', 'Bávaro, La Altagracia',
+  'Punta Cana, La Altagracia', 'Cap Cana, La Altagracia', 'Los Corales, La Altagracia',
+  'Cabeza de Toro, La Altagracia', 'Los Jardines, Santiago', 'Cerros de Gurabo, Santiago',
+  'Reparto Conuco, Santiago', 'Las Terrenas, Samaná', 'Samaná', 'Puerto Plata', 'La Romana',
+  'Casa de Campo, La Romana', 'Jarabacoa, La Vega', 'Constanza, La Vega',
+  'San Pedro de Macorís', 'Santo Domingo Este', 'Santo Domingo Norte', 'Santo Domingo Oeste',
+]
+
+function BuscarContent() {
+  const searchParams = useSearchParams()
+  const operacionParam = searchParams.get('operacion') || ''
+  const zonaParam = searchParams.get('zona') || ''
+  const tipoParam = searchParams.get('tipo') || ''
+
+  const [tipo, setTipo] = useState(tipoParam || 'Todos')
+  const [operacion, setOperacion] = useState(operacionParam)
+  const [query, setQuery] = useState(zonaParam)
+  const [orden, setOrden] = useState('Relevancia')
+  const [precioMin, setPrecioMin] = useState('')
+  const [precioMax, setPrecioMax] = useState('')
+  const [m2Min, setM2Min] = useState('')
+  const [m2Max, setM2Max] = useState('')
+  const [habMin, setHabMin] = useState(0)
+  const [banosMin, setBanosMin] = useState(0)
+  const [sugerencias, setSugerencias] = useState<string[]>([])
+  const [mostrarSugerencias, setMostrarSugerencias] = useState(false)
   const [propiedadesReales, setPropiedadesReales] = useState<any[]>([])
   const [cargando, setCargando] = useState(true)
+  const [verMapa, setVerMapa] = useState(false)
 
   useEffect(() => {
-    const cargarPropiedades = async () => {
+    const cargar = async () => {
       setCargando(true)
-      const { data, error } = await supabase
+      let q = supabase
         .from('propiedades')
-        .select('*, usuarios(nombre, inmobiliaria, aei_verificado, tipo, foto_url)')
+        .select('*, usuarios(nombre, inmobiliaria, tipo, foto_url)')
         .eq('estado', 'activo')
+      if (operacionParam) q = q.eq('operacion', operacionParam)
+      if (tipoParam) q = q.eq('tipo', tipoParam)
+      if (zonaParam) q = q.ilike('zona', `%${zonaParam}%`)
+      const { data, error } = await q
         .order('destacado', { ascending: false })
         .order('created_at', { ascending: false })
       if (!error && data) setPropiedadesReales(data)
       setCargando(false)
     }
-    cargarPropiedades()
+    cargar()
   }, [])
 
-  // Usar propiedades reales si hay, si no usar las de ejemplo
   const propiedadesActivas = propiedadesReales.length > 0 ? propiedadesReales.map(p => ({
     id: p.id,
     precio: p.precio,
@@ -152,85 +185,22 @@ export default function Buscar() {
     hab: p.habitaciones || 0,
     banos: p.banos || 0,
     m2: p.m2 || 0,
-    parqueos: p.parqueos || 0,
+    parqueos: 0,
     tipo: p.tipo || 'Apartamento',
+    operacion: p.operacion || 'venta',
     dest: p.destacado || false,
     visitas: false,
     bg: '#e0f5f7',
     desc: p.descripcion || '',
-    lat: p.lat || 18.4861,
-    lng: p.lng || -69.9312,
-  })) : propiedades
-  const [sugerencias, setSugerencias] = useState<string[]>([])
-  const [mostrarSugerencias, setMostrarSugerencias] = useState(false)
-
-  const zonasSugerencias = [
-    'Piantini, Distrito Nacional',
-    'Naco, Distrito Nacional',
-    'Serrallés, Distrito Nacional',
-    'Bella Vista, Distrito Nacional',
-    'Arroyo Hondo, Distrito Nacional',
-    'Evaristo Morales, Distrito Nacional',
-    'Los Cacicazgos, Distrito Nacional',
-    'Gazcue, Distrito Nacional',
-    'Ciudad Colonial, Distrito Nacional',
-    'Miramar, Distrito Nacional',
-    'La Esperilla, Distrito Nacional',
-    'Bávaro, La Altagracia',
-    'Punta Cana, La Altagracia',
-    'Cap Cana, La Altagracia',
-    'Bávaro Beach, La Altagracia',
-    'Los Corales, La Altagracia',
-    'Cabeza de Toro, La Altagracia',
-    'Los Jardines, Santiago',
-    'Cerros de Gurabo, Santiago',
-    'Reparto Conuco, Santiago',
-    'Las Terrenas, Samaná',
-    'Samaná, Samaná',
-    'Puerto Plata',
-    'La Romana',
-    'Casa de Campo, La Romana',
-    'Jarabacoa, La Vega',
-    'Constanza, La Vega',
-    'San Pedro de Macorís',
-    'Santo Domingo Este',
-    'Santo Domingo Norte',
-    'Santo Domingo Oeste',
-  ]
-
-  const handleQueryChange = (val: string) => {
-    setQuery(val)
-    if (val.length >= 2) {
-      const filtradas = zonasSugerencias.filter(z =>
-        z.toLowerCase().includes(val.toLowerCase())
-      )
-      setSugerencias(filtradas.slice(0, 6))
-      setMostrarSugerencias(true)
-    } else {
-      setSugerencias([])
-      setMostrarSugerencias(false)
-    }
-  }
-
-  const seleccionarSugerencia = (zona: string) => {
-    setQuery(zona)
-    setSugerencias([])
-    setMostrarSugerencias(false)
-  }
-  const [orden, setOrden] = useState('Relevancia')
-  const [precioMin, setPrecioMin] = useState('')
-  const [precioMax, setPrecioMax] = useState('')
-  const [m2Min, setM2Min] = useState('')
-  const [m2Max, setM2Max] = useState('')
-  const [habMin, setHabMin] = useState(0)
-  const [banosMin, setBanosMin] = useState(0)
-  const [query, setQuery] = useState('')
-  const [verMapa, setVerMapa] = useState(false)
+    lat: 18.4861,
+    lng: -69.9312,
+  })) : propiedadesEjemplo
 
   const tipos = ['Todos', 'Apartamento', 'Villa', 'Oficina', 'Terreno', 'Local comercial']
   const ordenes = ['Relevancia', 'Recientes', 'Baratos', 'Caros']
 
   const filtradas = propiedadesActivas.filter((p: any) => {
+    if (operacion && p.operacion !== operacion) return false
     if (tipo !== 'Todos' && p.tipo !== tipo) return false
     if (precioMax && p.precio > Number(precioMax.replace(/\D/g, ''))) return false
     if (precioMin && p.precio < Number(precioMin.replace(/\D/g, ''))) return false
@@ -247,6 +217,21 @@ export default function Buscar() {
     return 0
   })
 
+  const handleQueryChange = (val: string) => {
+    setQuery(val)
+    if (val.length >= 2) {
+      setSugerencias(zonasSugerencias.filter(z => z.toLowerCase().includes(val.toLowerCase())).slice(0, 6))
+      setMostrarSugerencias(true)
+    } else {
+      setSugerencias([])
+      setMostrarSugerencias(false)
+    }
+  }
+
+  const tituloOperacion = operacion === 'alquiler' ? 'en alquiler' : 'en venta'
+  const tituloZona = query ? `en ${query.split(',')[0].trim()}` : 'en República Dominicana'
+  const tituloPagina = `Propiedades ${tituloOperacion} ${tituloZona}`
+
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
 
@@ -259,8 +244,11 @@ export default function Buscar() {
           <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', marginRight: 28 }}>
             urbiza<span style={{ color: '#83D4DB' }}>.</span>
           </a>
-          {['Comprar', 'Alquilar', 'Obra nueva'].map(item => (
-            <a key={item} href="#" style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>{item}</a>
+          {[
+            { label: 'Comprar', href: '/buscar?operacion=venta' },
+            { label: 'Alquilar', href: '/buscar?operacion=alquiler' },
+          ].map(item => (
+            <a key={item.label} href={item.href} style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: operacion === (item.label === 'Alquilar' ? 'alquiler' : 'venta') ? '#fff' : 'rgba(255,255,255,0.7)', textDecoration: 'none', borderBottom: operacion === (item.label === 'Alquilar' ? 'alquiler' : 'venta') ? '2px solid #83D4DB' : '2px solid transparent' }}>{item.label}</a>
           ))}
         </div>
         <div style={{ flex: 1, maxWidth: 380, margin: '0 20px' }}>
@@ -282,9 +270,10 @@ export default function Buscar() {
       <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '8px 20px', fontSize: 12, color: '#aaa', display: 'flex', alignItems: 'center', gap: 6 }}>
         <a href="/" style={{ color: '#006D77', textDecoration: 'none' }}>Urbiza</a>
         <span>›</span>
-        <a href="#" style={{ color: '#006D77', textDecoration: 'none' }}>República Dominicana</a>
+        <a href="/buscar" style={{ color: '#006D77', textDecoration: 'none' }}>República Dominicana</a>
+        {query && <><span>›</span><span style={{ color: '#444' }}>{query.split(',')[0].trim()}</span></>}
         <span>›</span>
-        <span style={{ color: '#444' }}>Comprar</span>
+        <span style={{ color: '#444' }}>{operacion === 'alquiler' ? 'Alquiler' : 'Venta'}</span>
         <span style={{ color: '#ccc', marginLeft: 8 }}>·</span>
         <span style={{ color: '#444', marginLeft: 8, fontWeight: 500 }}>{filtradas.length} propiedades</span>
       </div>
@@ -305,6 +294,18 @@ export default function Buscar() {
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
                 Ver en mapa
               </button>
+            </div>
+          </div>
+
+          {/* FILTRO OPERACION */}
+          <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>Operación</div>
+            <div style={{ display: 'flex', gap: 0, background: '#f4f5f6', borderRadius: 6, padding: 3 }}>
+              {[{ val: '', label: 'Todas' }, { val: 'venta', label: 'Venta' }, { val: 'alquiler', label: 'Alquiler' }].map(op => (
+                <button key={op.val} onClick={() => setOperacion(op.val)} style={{ all: 'unset', flex: 1, padding: '6px 0', textAlign: 'center', fontSize: 12, fontWeight: operacion === op.val ? 700 : 400, color: operacion === op.val ? '#fff' : '#555', background: operacion === op.val ? '#006D77' : 'transparent', borderRadius: 4, cursor: 'pointer' }}>
+                  {op.label}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -379,7 +380,7 @@ export default function Buscar() {
           <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <h1 style={{ fontSize: 18, fontWeight: 600, color: '#111', margin: 0 }}>
-                {cargando ? 'Cargando propiedades...' : `${filtradas.length} propiedades en República Dominicana`}
+                {cargando ? 'Cargando propiedades...' : `${filtradas.length} ${tituloPagina}`}
               </h1>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ fontSize: 13, color: '#777' }}>Ordenar:</span>
@@ -459,5 +460,20 @@ export default function Buscar() {
         </div>
       </div>
     </main>
+  )
+}
+
+export default function Buscar() {
+  return (
+    <Suspense fallback={
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', fontFamily: 'sans-serif', background: '#f4f5f6' }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 24, fontWeight: 700, color: '#006D77', marginBottom: 8 }}>urbiza<span style={{ color: '#17A6B4' }}>.</span></div>
+          <div style={{ fontSize: 14, color: '#888' }}>Cargando propiedades...</div>
+        </div>
+      </div>
+    }>
+      <BuscarContent />
+    </Suspense>
   )
 }

@@ -100,8 +100,8 @@ export default function Propiedad({ params }: { params: { id: string } }) {
           <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', marginRight: 28 }}>
             urbiza<span style={{ color: '#83D4DB' }}>.</span>
           </a>
-          {['Comprar', 'Alquilar', 'Obra nueva'].map(item => (
-            <a key={item} href="#" style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>{item}</a>
+          {[{ label: 'Comprar', href: '/buscar?operacion=venta' }, { label: 'Alquilar', href: '/buscar?operacion=alquiler' }].map(item => (
+            <a key={item.label} href={item.href} style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>{item.label}</a>
           ))}
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
