@@ -140,6 +140,14 @@ export default function Panel() {
   }
 
   const toggleAmenidad = (id: string) => {
+  const irAPago = async (codigoPromo?: string) => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { window.location.href = '/login'; return }
+    const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id, email: user.email, tipo: 'profesional', codigoPromo }) })
+    const data = await res.json()
+    if (data.url) window.location.href = data.url
+    else alert('Error al procesar el pago')
+  }
     setAmenidadesSeleccionadas(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id])
   }
 
