@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 import { useState, useEffect } from 'react'
 import { supabase } from '../../supabase'
 
@@ -84,8 +84,7 @@ export default function Panel() {
   const [seccion, setSeccion] = useState('anuncios')
   const [filtroTipo, setFiltroTipo] = useState('Todos')
   const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
-  const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
-  const [anuncioADestacar, setAnuncioADestacar] = useState<any>(null)
+  const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
   const [mensajeSeleccionado, setMensajeSeleccionado] = useState<number | null>(1)
   const [respuesta, setRespuesta] = useState('')
   const [mensajesLeidos, setMensajesLeidos] = useState<Record<number, boolean>>({})
@@ -140,14 +139,6 @@ export default function Panel() {
     setAmenidadesSeleccionadas(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id])
   }
 
-  const irAPago = async (codigoPromo?: string) => {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { window.location.href = '/login'; return }
-    const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id, email: user.email, codigoPromo }) })
-    const data = await res.json()
-    if (data.url) window.location.href = data.url
-  }
-
   const publicarAnuncio = async () => {
     if (!pubTitulo || !pubPrecio || !pubProvincia || !pubSector) { setPubError('Título, precio, provincia y sector son obligatorios'); return }
     setPubLoading(true)
@@ -193,7 +184,7 @@ export default function Panel() {
   }))
 
   const anunciosFiltrados = anunciosAMostrar.filter((a: any) => filtroTipo === 'Todos' || a.tipo === filtroTipo)
-  const noLeidos = mensajesReales.filter((m: any) => !mensajesLeidos[m.id] && !m.leido).length
+  const noLeidos = mensajesEjemplo.filter(m => !mensajesLeidos[m.id] && !m.leido).length
 
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
@@ -491,11 +482,11 @@ export default function Panel() {
                     )
                   })}
                 </div>
-                {mensajeSeleccionado && mensajesReales.length > 0 && (() => {
-                  const m = mensajesReales.find((x: any) => x.id === mensajeSeleccionado)
-                  if (!m) return null
-                  const anuncio = anunciosReales.find((a: any) => a.id === m.propiedad_id)
 
+                {/* Detalle */}
+                {mensajeSeleccionado && (() => {
+                  const m = mensajesReales.find((x: any) => x.id === mensajeSeleccionado) || mensajesReales[0]
+                  const anuncio = anunciosEjemplo.find(a => a.id === m.propiedadId)
                   return (
                     <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column' }}>
                       {/* Header cliente */}
@@ -597,9 +588,10 @@ export default function Panel() {
           {seccion === 'destacar' && (
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>Destacar anuncio</h1>
-              <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>Los anuncios destacados aparecen primero y tienen hasta 5x más visitas</p>
               <p style={{ fontSize: 14, color: '#888', marginBottom: 16 }}>Los anuncios destacados aparecen primero y tienen hasta 5x más visitas</p>
-              {anuncioADestacar && (
+
+              {/* Anuncio seleccionado */}
+              {anuncioADestacar ? (
                 <div style={{ background: '#e0f5f7', border: '1.5px solid #c5e8ea', borderRadius: 8, padding: '14px 18px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 12 }}>
                   <div style={{ width: 48, height: 36, borderRadius: 6, background: '#006D77', opacity: 0.3, flexShrink: 0 }} />
                   <div>
@@ -607,7 +599,13 @@ export default function Panel() {
                     <div style={{ fontSize: 13, color: '#888' }}>US$ {anuncioADestacar.precio?.toLocaleString('en-US')} · {anuncioADestacar.zona}</div>
                   </div>
                 </div>
+              ) : (
+                <div style={{ background: '#fff8e1', border: '1px solid #f59e0b', borderRadius: 6, padding: '10px 16px', fontSize: 13, color: '#92400e', marginBottom: 20 }}>
+                  Ve a Mis anuncios y pulsa ⭐ Destacar en el anuncio que quieres destacar
+                </div>
               )}
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
                 {planesDestacado.map(p => (
                   <div key={p.dias} onClick={() => setPlanSeleccionado(String(p.dias))} style={{ background: '#fff', borderRadius: 8, padding: '24px 20px', textAlign: 'center', cursor: 'pointer', border: `2px solid ${planSeleccionado === String(p.dias) ? '#006D77' : '#e0e0e0'}`, position: 'relative', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
                     {p.popular && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 12px', borderRadius: 10 }}>MÁS POPULAR</div>}
@@ -617,8 +615,18 @@ export default function Panel() {
                   </div>
                 ))}
               </div>
-              <button style={{ all: 'unset', background: planSeleccionado ? '#006D77' : '#e0e0e0', color: '#fff', padding: '13px 32px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: planSeleccionado ? 'pointer' : 'default' }}>
-              <button onClick={async () => { if (!planSeleccionado) return; const { data: { user } } = await supabase.auth.getUser(); const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user?.id, email: user?.email, tipo: planSeleccionado }) }); const data = await res.json(); if (data.url) window.location.href = data.url }} style={{ all: 'unset', background: planSeleccionado ? '#006D77' : '#e0e0e0', color: '#fff', padding: '13px 32px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: planSeleccionado ? 'pointer' : 'default' }}>Pagar y destacar</button>
+              <button onClick={async () => {
+                if (!planSeleccionado || !anuncioADestacar) return
+                const { data: { user } } = await supabase.auth.getUser()
+                const res = await fetch('/api/checkout', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ userId: user?.id, email: user?.email, tipo: planSeleccionado })
+                })
+                const data = await res.json()
+                if (data.url) window.location.href = data.url
+              }} style={{ all: 'unset', background: planSeleccionado && anuncioADestacar ? '#006D77' : '#e0e0e0', color: '#fff', padding: '13px 32px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: planSeleccionado && anuncioADestacar ? 'pointer' : 'default' }}>
+                Pagar y destacar
               </button>
             </div>
           )}
@@ -747,7 +755,7 @@ export default function Panel() {
                     </div>
                     <div style={{ display: 'flex', gap: 10, maxWidth: 400, margin: '0 auto' }}>
                       <input type="text" placeholder="Código promocional (opcional)" style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 14px', fontSize: 13, outline: 'none' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                      <button onClick={() => irAPago()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>Suscribirse � US$29/mes</button>
+                      <button style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>Suscribirse</button>
                     </div>
                   </div>
                 </div>
@@ -911,8 +919,3 @@ export default function Panel() {
     </main>
   )
 }
-
-
-
-
-
