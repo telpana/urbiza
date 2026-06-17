@@ -45,26 +45,8 @@ function MapaUbicacion({ lat, lng }: { lat: number, lng: number }) {
       s.onload = load
       document.head.appendChild(s)
     }
-    const enviarMensaje = async () => {
-    if (!nombreContacto || !mensaje) { setErrorContacto('El nombre y el mensaje son obligatorios'); return }
-    setEnviando(true)
-    setErrorContacto('')
-    const { error } = await supabase.from('mensajes').insert({
-      propiedad_id: null, // se conectará con el id real cuando tengamos Supabase completo
-      vendedor_id: null,
-      nombre_cliente: nombreContacto,
-      telefono_cliente: telefonoContacto || null,
-      mensaje: mensaje,
-    })
-    if (error) { setErrorContacto('Error al enviar. Inténtalo de nuevo.'); setEnviando(false); return }
-    setEnviado(true)
-    setEnviando(false)
-    setMensaje('')
-    setNombreContacto('')
-    setTelefonoContacto('')
-  }
 
-  return () => { if (mapInstanceRef.current) { mapInstanceRef.current.remove(); mapInstanceRef.current = null } }
+    return () => { if (mapInstanceRef.current) { mapInstanceRef.current.remove(); mapInstanceRef.current = null } }
   }, [lat, lng])
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />
@@ -80,14 +62,23 @@ export default function Propiedad({ params }: { params: { id: string } }) {
   const [enviado, setEnviado] = useState(false)
   const [errorContacto, setErrorContacto] = useState('')
   const [telVisible, setTelVisible] = useState(false)
+  const [vendedorId, setVendedorId] = useState<string | null>(null)
+
+  useEffect(() => {
+    const cargar = async () => {
+      const { data } = await supabase.from('propiedades').select('usuario_id').eq('id', params.id).single()
+      if (data) setVendedorId(data.usuario_id)
+    }
+    cargar()
+  }, [params.id])
 
   const enviarMensaje = async () => {
     if (!nombreContacto || !mensaje) { setErrorContacto('El nombre y el mensaje son obligatorios'); return }
     setEnviando(true)
     setErrorContacto('')
     const { error } = await supabase.from('mensajes').insert({
-      propiedad_id: null, // se conectará con el id real cuando tengamos Supabase completo
-      vendedor_id: null,
+      propiedad_id: params.id,
+      vendedor_id: vendedorId,
       nombre_cliente: nombreContacto,
       telefono_cliente: telefonoContacto || null,
       mensaje: mensaje,
@@ -288,8 +279,8 @@ export default function Propiedad({ params }: { params: { id: string } }) {
                 <div style={{ marginBottom: 10 }}>
                   <textarea value={mensaje} onChange={e => setMensaje(e.target.value)} rows={3} placeholder={`Hola ${p.agente.nombre.split(' ')[0]}, me interesa esta propiedad...`} style={{ width: '100%', border: '1px solid #ddd', borderRadius: 5, padding: '10px', fontSize: 13, color: '#333', resize: 'none', fontFamily: 'sans-serif', outline: 'none', boxSizing: 'border-box' }} />
                 </div>
-                <button style={{ all: 'unset', width: '100%', background: '#17A6B4', color: '#fff', padding: '11px', borderRadius: 5, fontSize: 13, fontWeight: 600, cursor: 'pointer', textAlign: 'center', display: 'block', boxSizing: 'border-box' }}>
-                  Enviar mensaje
+                <button onClick={enviarMensaje} disabled={enviando} style={{ all: 'unset', width: '100%', background: enviando ? '#aaa' : '#17A6B4', color: '#fff', padding: '11px', borderRadius: 5, fontSize: 13, fontWeight: 600, cursor: enviando ? 'default' : 'pointer', textAlign: 'center', display: 'block', boxSizing: 'border-box' }}>
+                  {enviando ? 'Enviando...' : 'Enviar mensaje'}
                 </button>
               </div>
             </div>

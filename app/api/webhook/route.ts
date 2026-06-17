@@ -3,12 +3,12 @@ import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
+  apiVersion: '2026-05-27.dahlia',
 })
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
 export async function POST(req: Request) {
@@ -27,20 +27,28 @@ export async function POST(req: Request) {
     const userId = session.metadata?.userId
     const subscriptionId = session.subscription as string
 
+    console.log('[webhook] checkout.session.completed', { userId, subscriptionId, metadata: session.metadata })
+
     if (userId && subscriptionId) {
-      await supabase.from('usuarios').update({
+      const { error } = await supabase.from('usuarios').update({
         plan: 'profesional',
         stripe_subscription_id: subscriptionId,
         plan_activo_hasta: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
       }).eq('id', userId)
+      if (error) console.error('[webhook] error actualizando plan:', error)
+      else console.log('[webhook] plan actualizado a profesional para usuario', userId)
+    } else {
+      console.warn('[webhook] falta userId o subscriptionId', { userId, subscriptionId })
     }
   }
 
   if (event.type === 'customer.subscription.deleted') {
     const subscription = event.data.object as Stripe.Subscription
-    await supabase.from('usuarios')
+    console.log('[webhook] subscription.deleted', subscription.id)
+    const { error } = await supabase.from('usuarios')
       .update({ plan: 'gratis', stripe_subscription_id: null })
       .eq('stripe_subscription_id', subscription.id)
+    if (error) console.error('[webhook] error cancelando plan:', error)
   }
 
   return NextResponse.json({ ok: true })

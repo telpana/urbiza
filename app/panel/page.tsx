@@ -1,12 +1,12 @@
 ﻿'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../../supabase'
 
 const menuItems = [
   { id: 'anuncios', label: 'Mis anuncios', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
   { id: 'publicar', label: 'Publicar anuncio', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg> },
   { id: 'mensajes', label: 'Mensajes', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
-  { id: 'estadisticas', label: 'Estadísticas', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> },
+  { id: 'estadisticas', label: 'EstadÃ­sticas', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> },
   { id: 'destacar', label: 'Destacar anuncio', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> },
   { id: 'plan', label: 'Mi plan', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> },
   { id: 'perfil', label: 'Mi perfil', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
@@ -14,47 +14,47 @@ const menuItems = [
 ]
 
 const anunciosEjemplo = [
-  { id: 1, titulo: 'Apartamento en Piantini', precio: 285000, zona: 'Piantini, D.N.', tipo: 'Apartamento', estado: 'activo', impresiones: 1240, clics: 342, telVistos: 28, favoritos: 15, destacado: true, vence: '15 días', bg: '#e0f5f7' },
-  { id: 2, titulo: 'Villa en Arroyo Hondo', precio: 520000, zona: 'Arroyo Hondo, D.N.', tipo: 'Villa', estado: 'activo', impresiones: 890, clics: 198, telVistos: 12, favoritos: 8, destacado: false, vence: '22 días', bg: '#ddf0e8' },
-  { id: 3, titulo: 'Oficina en Naco', precio: 180000, zona: 'Naco, D.N.', tipo: 'Oficina', estado: 'pausado', impresiones: 320, clics: 89, telVistos: 5, favoritos: 3, destacado: false, vence: '8 días', bg: '#e8eaf0' },
+  { id: 1, titulo: 'Apartamento en Piantini', precio: 285000, zona: 'Piantini, D.N.', tipo: 'Apartamento', estado: 'activo', impresiones: 1240, clics: 342, telVistos: 28, favoritos: 15, destacado: true, vence: '15 dÃ­as', bg: '#e0f5f7' },
+  { id: 2, titulo: 'Villa en Arroyo Hondo', precio: 520000, zona: 'Arroyo Hondo, D.N.', tipo: 'Villa', estado: 'activo', impresiones: 890, clics: 198, telVistos: 12, favoritos: 8, destacado: false, vence: '22 dÃ­as', bg: '#ddf0e8' },
+  { id: 3, titulo: 'Oficina en Naco', precio: 180000, zona: 'Naco, D.N.', tipo: 'Oficina', estado: 'pausado', impresiones: 320, clics: 89, telVistos: 5, favoritos: 3, destacado: false, vence: '8 dÃ­as', bg: '#e8eaf0' },
 ]
 
 const mensajesEjemplo = [
-  { id: 1, nombre: 'María Rodríguez', telefono: '+1 809 555 1234', propiedad: 'Apartamento en Piantini', propiedadId: 1, mensaje: 'Buenos días, me interesa el apartamento. ¿Está disponible para visita este fin de semana? Soy compradora seria y tengo financiamiento aprobado.', fecha: 'Hace 20 min', leido: false, avatar: 'MR' },
-  { id: 2, nombre: 'Carlos Peña', telefono: '+1 809 555 5678', propiedad: 'Villa en Arroyo Hondo', propiedadId: 2, mensaje: '¿Cuál es el precio final? ¿Acepta negociación? Estoy interesado en comprar antes de fin de mes.', fecha: 'Hace 2h', leido: false, avatar: 'CP' },
-  { id: 3, nombre: 'Ana Jiménez', telefono: null, propiedad: 'Apartamento en Piantini', propiedadId: 1, mensaje: 'Hola, me gustaría saber si el precio incluye los muebles y si tiene generador propio. Gracias.', fecha: 'Ayer', leido: true, avatar: 'AJ' },
-  { id: 4, nombre: 'Roberto Santos', telefono: '+1 809 555 9012', propiedad: 'Oficina en Naco', propiedadId: 3, mensaje: 'Somos una empresa buscando oficina para 15 personas. ¿Está disponible para alquiler?', fecha: 'Hace 2 días', leido: true, avatar: 'RS' },
-  { id: 5, nombre: 'Laura Martínez', telefono: null, propiedad: 'Villa en Arroyo Hondo', propiedadId: 2, mensaje: 'Me encanta la propiedad. ¿Tiene fotos adicionales del jardín y la piscina? ¿Cuándo podríamos hacer una visita?', fecha: 'Hace 3 días', leido: true, avatar: 'LM' },
+  { id: 1, nombre: 'MarÃ­a RodrÃ­guez', telefono: '+1 809 555 1234', propiedad: 'Apartamento en Piantini', propiedadId: 1, mensaje: 'Buenos dÃ­as, me interesa el apartamento. Â¿EstÃ¡ disponible para visita este fin de semana? Soy compradora seria y tengo financiamiento aprobado.', fecha: 'Hace 20 min', leido: false, avatar: 'MR' },
+  { id: 2, nombre: 'Carlos PeÃ±a', telefono: '+1 809 555 5678', propiedad: 'Villa en Arroyo Hondo', propiedadId: 2, mensaje: 'Â¿CuÃ¡l es el precio final? Â¿Acepta negociaciÃ³n? Estoy interesado en comprar antes de fin de mes.', fecha: 'Hace 2h', leido: false, avatar: 'CP' },
+  { id: 3, nombre: 'Ana JimÃ©nez', telefono: null, propiedad: 'Apartamento en Piantini', propiedadId: 1, mensaje: 'Hola, me gustarÃ­a saber si el precio incluye los muebles y si tiene generador propio. Gracias.', fecha: 'Ayer', leido: true, avatar: 'AJ' },
+  { id: 4, nombre: 'Roberto Santos', telefono: '+1 809 555 9012', propiedad: 'Oficina en Naco', propiedadId: 3, mensaje: 'Somos una empresa buscando oficina para 15 personas. Â¿EstÃ¡ disponible para alquiler?', fecha: 'Hace 2 dÃ­as', leido: true, avatar: 'RS' },
+  { id: 5, nombre: 'Laura MartÃ­nez', telefono: null, propiedad: 'Villa en Arroyo Hondo', propiedadId: 2, mensaje: 'Me encanta la propiedad. Â¿Tiene fotos adicionales del jardÃ­n y la piscina? Â¿CuÃ¡ndo podrÃ­amos hacer una visita?', fecha: 'Hace 3 dÃ­as', leido: true, avatar: 'LM' },
 ]
 
 const planesDestacado = [
-  { dias: 15, precio: 9.99, label: '15 días', popular: false },
-  { dias: 30, precio: 19.99, label: '30 días', popular: true },
-  { dias: 60, precio: 34.99, label: '60 días', popular: false },
+  { dias: 15, precio: 9.99, label: '15 dÃ­as', popular: false },
+  { dias: 30, precio: 19.99, label: '30 dÃ­as', popular: true },
+  { dias: 60, precio: 34.99, label: '60 dÃ­as', popular: false },
 ]
 
 const planesPro = [
-  { id: 'broker', nombre: 'Broker', precio: 15, features: ['Anuncios ilimitados', 'Badge PROFESIONAL', 'Estadísticas completas', 'Soporte por email'] },
+  { id: 'broker', nombre: 'Broker', precio: 15, features: ['Anuncios ilimitados', 'Badge PROFESIONAL', 'EstadÃ­sticas completas', 'Soporte por email'] },
   { id: 'basic', nombre: 'Agencia Basic', precio: 29, features: ['Todo lo de Broker', 'Hasta 5 brokers', 'Panel de agencia', 'Nombre de inmobiliaria'] },
   { id: 'pro', nombre: 'Agencia Pro', precio: 49, features: ['Todo lo de Basic', 'Hasta 10 brokers', 'Anuncios prioritarios', 'Soporte prioritario'] },
   { id: 'unlimited', nombre: 'Unlimited', precio: 99, features: ['Todo lo de Pro', 'Brokers ilimitados', '1 cuenta por provincia', 'Manager dedicado'] },
 ]
 
 const provinciasZonas: Record<string, string[]> = {
-  'Distrito Nacional': ['Piantini', 'Naco', 'Serrallés', 'Bella Vista', 'Arroyo Hondo', 'Los Cacicazgos', 'Gazcue', 'Ciudad Colonial', 'Evaristo Morales', 'Miramar', 'La Esperilla', 'Viejo Arroyo Hondo', 'Urbanización Real', 'Cristo Rey', 'Villa Consuelo', 'Ensanche Ozama'],
+  'Distrito Nacional': ['Piantini', 'Naco', 'SerrallÃ©s', 'Bella Vista', 'Arroyo Hondo', 'Los Cacicazgos', 'Gazcue', 'Ciudad Colonial', 'Evaristo Morales', 'Miramar', 'La Esperilla', 'Viejo Arroyo Hondo', 'UrbanizaciÃ³n Real', 'Cristo Rey', 'Villa Consuelo', 'Ensanche Ozama'],
   'Santo Domingo': ['Santo Domingo Este', 'Santo Domingo Norte', 'Santo Domingo Oeste', 'Boca Chica', 'Los Tres Brazos', 'Alma Rosa', 'Los Mina', 'San Isidro', 'Ensanche Isabelita'],
-  'La Altagracia': ['Bávaro', 'Punta Cana', 'Cap Cana', 'Cabeza de Toro', 'Los Corales', 'Uvero Alto', 'Macao', 'Cortecito', 'Higüey', 'San Rafael del Yuma'],
-  'Santiago': ['Los Jardines', 'Cerros de Gurabo', 'Reparto Conuco', 'Bella Vista', 'Villa Olga', 'Pontezuela', 'Las Colinas', 'El Dorado', 'Urbanización Tropical'],
-  'Samaná': ['Las Terrenas', 'Samaná', 'El Portillo', 'Cosón', 'Las Galeras'],
-  'Puerto Plata': ['Puerto Plata', 'Sosúa', 'Cabarete', 'Costámbar', 'Cofresí', 'Playa Dorada'],
-  'La Romana': ['La Romana', 'Casa de Campo', 'Bayahíbe', 'Dominicus'],
+  'La Altagracia': ['BÃ¡varo', 'Punta Cana', 'Cap Cana', 'Cabeza de Toro', 'Los Corales', 'Uvero Alto', 'Macao', 'Cortecito', 'HigÃ¼ey', 'San Rafael del Yuma'],
+  'Santiago': ['Los Jardines', 'Cerros de Gurabo', 'Reparto Conuco', 'Bella Vista', 'Villa Olga', 'Pontezuela', 'Las Colinas', 'El Dorado', 'UrbanizaciÃ³n Tropical'],
+  'SamanÃ¡': ['Las Terrenas', 'SamanÃ¡', 'El Portillo', 'CosÃ³n', 'Las Galeras'],
+  'Puerto Plata': ['Puerto Plata', 'SosÃºa', 'Cabarete', 'CostÃ¡mbar', 'CofresÃ­', 'Playa Dorada'],
+  'La Romana': ['La Romana', 'Casa de Campo', 'BayahÃ­be', 'Dominicus'],
   'La Vega': ['Jarabacoa', 'Constanza', 'La Vega'],
-  'San Pedro de Macorís': ['San Pedro de Macorís', 'Juan Dolio', 'Guayacanes'],
-  'San Cristóbal': ['San Cristóbal'],
-  'Peravia': ['Baní'],
+  'San Pedro de MacorÃ­s': ['San Pedro de MacorÃ­s', 'Juan Dolio', 'Guayacanes'],
+  'San CristÃ³bal': ['San CristÃ³bal'],
+  'Peravia': ['BanÃ­'],
   'Espaillat': ['Moca'],
-  'Duarte': ['San Francisco de Macorís'],
-  'María Trinidad Sánchez': ['Nagua'],
+  'Duarte': ['San Francisco de MacorÃ­s'],
+  'MarÃ­a Trinidad SÃ¡nchez': ['Nagua'],
   'Azua': ['Azua'],
   'Barahona': ['Barahona'],
   'Monte Cristi': ['Monte Cristi'],
@@ -66,7 +66,7 @@ const amenidades = [
   { id: 'parqueo', label: 'Parqueo' },
   { id: 'vista_mar', label: 'Vista al mar' },
   { id: 'amueblado', label: 'Amueblado' },
-  { id: 'jardin', label: 'Jardín' },
+  { id: 'jardin', label: 'JardÃ­n' },
   { id: 'terraza', label: 'Terraza' },
   { id: 'jacuzzi', label: 'Jacuzzi' },
   { id: 'barbacoa', label: 'Barbacoa' },
@@ -75,23 +75,36 @@ const amenidades = [
   { id: 'ascensor', label: 'Ascensor' },
 ]
 
-// Tipo de usuario: 'particular' tiene límite de 2 anuncios gratis
-const tipoUsuario = 'profesional' // se sobreescribe con datos reales de Supabase
 const anunciosGratis = 2
-const anunciosUsados = 2 // para demostrar el límite
+
+function getAvatar(nombre: string) {
+  return (nombre || '?').split(' ').map((n: string) => n[0] || '').join('').slice(0, 2).toUpperCase()
+}
+
+function formatFecha(iso: string) {
+  if (!iso) return ''
+  const diff = Date.now() - new Date(iso).getTime()
+  const mins = Math.floor(diff / 60000)
+  if (mins < 60) return `Hace ${mins} min`
+  const hours = Math.floor(mins / 60)
+  if (hours < 24) return `Hace ${hours}h`
+  const days = Math.floor(hours / 24)
+  if (days === 1) return 'Ayer'
+  return `Hace ${days} dÃ­as`
+}
 
 export default function Panel() {
   const [seccion, setSeccion] = useState('anuncios')
   const [filtroTipo, setFiltroTipo] = useState('Todos')
   const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
   const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
-  const [mensajeSeleccionado, setMensajeSeleccionado] = useState<number | null>(1)
-  const [anuncioADestacar, setAnuncioADestacar] = useState<any>(null)
+  const [mensajeSeleccionado, setMensajeSeleccionado] = useState<string | null>(null)
+  const [respuesta, setRespuesta] = useState('')
   const [mensajesLeidos, setMensajesLeidos] = useState<Record<number, boolean>>({})
   const [amenidadesSeleccionadas, setAmenidadesSeleccionadas] = useState<string[]>([])
   const [pubTitulo, setPubTitulo] = useState('')
   const [pubPrecio, setPubPrecio] = useState('')
-  const [pubZona, setPubZona] = useState('')
+
   const [pubM2, setPubM2] = useState('')
   const [pubDesc, setPubDesc] = useState('')
   const [pubTipo, setPubTipo] = useState('Apartamento')
@@ -112,42 +125,51 @@ export default function Panel() {
   const [anunciosReales, setAnunciosReales] = useState<any[]>([])
   const [mensajesReales, setMensajesReales] = useState<any[]>([])
   const [cargando, setCargando] = useState(true)
+  const [verificandoPago, setVerificandoPago] = useState(false)
+  const [anuncioADestacar, setAnuncioADestacar] = useState<any>(null)
+
+  const tipoUsuario: string = usuario?.tipo || 'particular'
+  const anunciosUsados = anunciosReales.length
+
+  const cargarDatos = useCallback(async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { window.location.href = '/login'; return }
+
+    const { data: perfil } = await supabase.from('usuarios').select('*').eq('id', user.id).single()
+    if (perfil) { setUsuario(perfil); if (perfil.foto_url) setFotoPerfilUrl(perfil.foto_url) }
+
+    const { data: anuncios } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
+    if (anuncios) setAnunciosReales(anuncios)
+
+    const { data: msgs } = await supabase.from('mensajes').select('*, propiedades(titulo)').eq('vendedor_id', user.id).order('created_at', { ascending: false })
+    if (msgs) setMensajesReales(msgs)
+
+    setCargando(false)
+    return perfil
+  }, [])
 
   useEffect(() => {
-    const cargarDatos = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) { window.location.href = '/login'; return }
-
-      // Cargar perfil usuario
-      const { data: perfil } = await supabase.from('usuarios').select('*').eq('id', user.id).single()
-      if (perfil) { setUsuario(perfil); if (perfil.foto_url) setFotoPerfilUrl(perfil.foto_url); setPerfilNombre(perfil.nombre || ''); setPerfilTelefono(perfil.telefono || ''); setPerfilInmobiliaria(perfil.inmobiliaria || ''); setPerfilAei(perfil.numero_aei || '') }
-
-      // Cargar anuncios del usuario
-      const { data: anuncios } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
-      if (anuncios) setAnunciosReales(anuncios)
-
-      // Cargar mensajes del usuario
-      const { data: msgs } = await supabase.from('mensajes').select('*, propiedades(titulo)').eq('vendedor_id', user.id).order('created_at', { ascending: false })
-      if (msgs) setMensajesReales(msgs)
-
-      setCargando(false)
+    const pago = new URLSearchParams(window.location.search).get('pago')
+    if (pago === 'ok') {
+      setVerificandoPago(true)
+      cargarDatos().then(async (perfil) => {
+        if (perfil?.plan !== 'profesional') {
+          await new Promise(r => setTimeout(r, 3000))
+          await cargarDatos()
+        }
+        setVerificandoPago(false)
+        window.history.replaceState({}, '', '/panel')
+      })
+    } else {
+      cargarDatos()
     }
-    cargarDatos()
-  }, [])
+  }, [cargarDatos])
 
   const toggleEstado = (id: number, estadoActual: string) => {
     setEstadosAnuncios(prev => ({ ...prev, [id]: estadoActual === 'activo' ? 'pausado' : 'activo' }))
   }
 
   const toggleAmenidad = (id: string) => {
-  const irAPago = async (codigoPromo?: string) => {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { window.location.href = '/login'; return }
-    const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id, email: user.email, tipo: 'profesional', codigoPromo }) })
-    const data = await res.json()
-    if (data.url) window.location.href = data.url
-    else alert('Error al procesar el pago')
-  }
     setAmenidadesSeleccionadas(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id])
   }
 
@@ -160,16 +182,16 @@ export default function Panel() {
       inmobiliaria: perfilInmobiliaria,
       numero_aei: perfilAei
     }).eq('id', user.id)
-    if (!error) { setUsuario((prev: any) => ({ ...prev, nombre: perfilNombre, telefono: perfilTelefono, inmobiliaria: perfilInmobiliaria, numero_aei: perfilAei })); alert('Cambios guardados correctamente') }
+    if (!error) alert('Cambios guardados correctamente')
     else alert('Error al guardar')
   }
 
   const publicarAnuncio = async () => {
-    if (!pubTitulo || !pubPrecio || !pubProvincia || !pubSector) { setPubError('Título, precio, provincia y sector son obligatorios'); return }
+    if (!pubTitulo || !pubPrecio || !pubProvincia || !pubSector) { setPubError('TÃ­tulo, precio, provincia y sector son obligatorios'); return }
     setPubLoading(true)
     setPubError('')
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { setPubError('Debes iniciar sesión para publicar'); setPubLoading(false); return }
+    if (!user) { setPubError('Debes iniciar sesiÃ³n para publicar'); setPubLoading(false); return }
     const { error } = await supabase.from('propiedades').insert({
       usuario_id: user.id,
       titulo: pubTitulo,
@@ -184,11 +206,12 @@ export default function Panel() {
       amenidades: amenidadesSeleccionadas,
       estado: 'activo',
     })
-    if (error) { setPubError('Error al publicar. Inténtalo de nuevo.'); setPubLoading(false); return }
+    if (error) { setPubError('Error al publicar. IntÃ©ntalo de nuevo.'); setPubLoading(false); return }
     setPubExito(true)
     setPubLoading(false)
     // Resetear form
-    setPubTitulo(''); setPubPrecio(''); setPubZona(''); setPubM2(''); setPubDesc('')
+    setPubTitulo(''); setPubPrecio(''); setPubM2(''); setPubDesc('')
+    setPubProvincia(''); setPubSector(''); setPubHab('1'); setPubBanos('1')
     setAmenidadesSeleccionadas([])
   }
 
@@ -204,7 +227,7 @@ export default function Panel() {
     telVistos: a.tel_vistos || 0,
     favoritos: a.favoritos || 0,
     destacado: a.destacado || false,
-    vence: '30 días',
+    vence: '30 dÃ­as',
     bg: '#e0f5f7',
   }))
 
@@ -225,22 +248,30 @@ export default function Panel() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#004E57', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: '#83D4DB', overflow: 'hidden' }}>
-              {fotoPerfilUrl ? <img src={fotoPerfilUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : (perfilNombre || usuario?.nombre || 'U').split(' ').map((n: string) => n[0]).join('').slice(0,2).toUpperCase()}
+              {fotoPerfilUrl ? <img src={fotoPerfilUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : 'RC'}
             </div>
             <span style={{ color: 'rgba(255,255,255,0.8)', fontSize: 13 }}>{usuario?.nombre || 'Mi cuenta'}</span>
-            <span style={{ background: usuario?.tipo === 'particular' ? 'rgba(255,255,255,0.2)' : '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>
-              {usuario?.tipo === 'particular' ? 'PARTICULAR' : 'PROFESIONAL'}
+            <span style={{ background: tipoUsuario === 'particular' ? 'rgba(255,255,255,0.2)' : '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>
+              {tipoUsuario === 'particular' ? 'PARTICULAR' : 'PROFESIONAL'}
             </span>
           </div>
-          <a href="/" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.5)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none' }}>← Ver web</a>
+          <a href="/" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.5)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none' }}>â† Ver web</a>
         </div>
       </nav>
+
+      {verificandoPago && (
+        <div style={{ background: '#e0f5f0', borderBottom: '1px solid #6ee7b7', padding: '12px 24px', display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: '#065f46' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ animation: 'spin 1s linear infinite' }}><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+          Verificando tu pago con Stripe... Esto puede tardar unos segundos.
+          <style>{`@keyframes spin { from { transform: rotate(0deg) } to { transform: rotate(360deg) } }`}</style>
+        </div>
+      )}
 
       <div style={{ display: 'flex' }}>
 
         {/* SIDEBAR */}
         <div style={{ width: 220, background: '#004E57', minHeight: 'calc(100vh - 54px)', padding: '20px 0', flexShrink: 0 }}>
-          {menuItems.filter(item => item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)).map(item => (
+          {menuItems.filter(item => item.id !== 'equipo' || tipoUsuario === 'profesional').map(item => (
             <button key={item.id} onClick={() => setSeccion(item.id)} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.6)', background: seccion === item.id ? 'rgba(255,255,255,0.12)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? '3px solid #83D4DB' : '3px solid transparent', boxSizing: 'border-box', position: 'relative' }}>
               {item.icon}
               {item.label}
@@ -259,18 +290,18 @@ export default function Panel() {
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                 <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111' }}>Mis anuncios</h1>
-                <button onClick={() => usuario?.tipo === 'particular' && anunciosUsados >= anunciosGratis ? setSeccion('planes') : setSeccion('publicar')} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>+ Publicar anuncio</button>
+                <button onClick={() => tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis ? setSeccion('planes') : setSeccion('publicar')} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>+ Publicar anuncio</button>
               </div>
 
-              {/* Aviso límite particular */}
-              {usuario?.tipo === 'particular' && anunciosUsados >= anunciosGratis && (
+              {/* Aviso lÃ­mite particular */}
+              {tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis && (
                 <div style={{ background: '#fff8e1', border: '1.5px solid #f59e0b', borderRadius: 8, padding: '16px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
                   <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: '#92400e', marginBottom: 4 }}>Has alcanzado el límite gratuito</div>
-                    <div style={{ fontSize: 13, color: '#78350f' }}>Has usado tus {anunciosGratis} anuncios gratuitos. ¿Quieres publicar más? Hazte PRO y publica anuncios ilimitados.</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: '#92400e', marginBottom: 4 }}>Has alcanzado el lÃ­mite gratuito</div>
+                    <div style={{ fontSize: 13, color: '#78350f' }}>Has usado tus {anunciosGratis} anuncios gratuitos. Â¿Quieres publicar mÃ¡s? Hazte PRO y publica anuncios ilimitados.</div>
                   </div>
                   <button onClick={() => setSeccion('planes')} style={{ all: 'unset', background: '#f59e0b', color: '#fff', padding: '10px 20px', borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                    Hazte PRO →
+                    Hazte PRO â†’
                   </button>
                 </div>
               )}
@@ -278,9 +309,9 @@ export default function Panel() {
               {/* KPIs reales */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 20 }}>
                 {[
-                  { label: 'Impresiones', val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: 'veces que apareció en búsquedas', color: '#006D77' },
+                  { label: 'Impresiones', val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: 'veces que apareciÃ³ en bÃºsquedas', color: '#006D77' },
                   { label: 'Visitas al anuncio', val: anunciosReales.reduce((s, a) => s + Math.floor((a.visitas || 0) * 0.28), 0).toLocaleString(), sub: 'personas que lo abrieron', color: '#17A6B4' },
-                  { label: 'Tel. visualizados', val: anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0).toLocaleString(), sub: 'veces que vieron tu teléfono', color: '#10b981' },
+                  { label: 'Tel. visualizados', val: anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0).toLocaleString(), sub: 'veces que vieron tu telÃ©fono', color: '#10b981' },
                   { label: 'Guardados', val: anunciosReales.reduce((s, a) => s + (a.favoritos || 0), 0).toLocaleString(), sub: 'personas que lo guardaron', color: '#f59e0b' },
                 ].map(k => (
                   <div key={k.label} style={{ background: '#fff', borderRadius: 8, padding: '14px 16px', borderTop: `3px solid ${k.color}`, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
@@ -305,8 +336,8 @@ export default function Panel() {
                 {anunciosFiltrados.length === 0 && !cargando && (
                   <div style={{ background: '#fff', borderRadius: 8, padding: '48px 24px', textAlign: 'center', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" strokeWidth="1" style={{ margin: '0 auto 16px', display: 'block' }}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                    <div style={{ fontSize: 16, fontWeight: 600, color: '#555', marginBottom: 8 }}>¿A qué esperas para subir tu primer anuncio?</div>
-                    <div style={{ fontSize: 13, color: '#aaa', marginBottom: 20 }}>Miles de compradores buscan propiedades en Urbiza cada día. Publica gratis y empieza a recibir contactos hoy mismo.</div>
+                    <div style={{ fontSize: 16, fontWeight: 600, color: '#555', marginBottom: 8 }}>Â¿A quÃ© esperas para subir tu primer anuncio?</div>
+                    <div style={{ fontSize: 13, color: '#aaa', marginBottom: 20 }}>Miles de compradores buscan propiedades en Urbiza cada dÃ­a. Publica gratis y empieza a recibir contactos hoy mismo.</div>
                     <button onClick={() => setSeccion('publicar')} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
                       + Publicar mi primer anuncio
                     </button>
@@ -322,20 +353,20 @@ export default function Panel() {
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: 15, fontWeight: 600, color: '#111', marginBottom: 3 }}>{a.titulo}</div>
-                        <div style={{ fontSize: 13, color: '#888', marginBottom: 6 }}>{a.zona} · {a.tipo} · US$ {a.precio.toLocaleString('en-US')}</div>
+                        <div style={{ fontSize: 13, color: '#888', marginBottom: 6 }}>{a.zona} Â· {a.tipo} Â· US$ {a.precio.toLocaleString('en-US')}</div>
                         <div style={{ display: 'flex', gap: 16, fontSize: 12, color: '#aaa', flexWrap: 'wrap' }}>
-                          <span>👁 {a.impresiones.toLocaleString()} impresiones</span>
-                          <span>🖱 {a.clics} visitas</span>
-                          <span>📞 {a.telVistos} tel. vistos</span>
-                          <span>❤️ {a.favoritos} guardados</span>
-                          <span>⏱ Vence en {a.vence}</span>
+                          <span>ðŸ‘ {a.impresiones.toLocaleString()} impresiones</span>
+                          <span>ðŸ–± {a.clics} visitas</span>
+                          <span>ðŸ“ž {a.telVistos} tel. vistos</span>
+                          <span>â¤ï¸ {a.favoritos} guardados</span>
+                          <span>â± Vence en {a.vence}</span>
                         </div>
                       </div>
                       <span style={{ background: estado === 'activo' ? '#e0f5f0' : '#f5f5f5', color: estado === 'activo' ? '#065f46' : '#888', fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 10, flexShrink: 0 }}>
-                        {estado === 'activo' ? '● Activo' : '○ Pausado'}
+                        {estado === 'activo' ? 'â— Activo' : 'â—‹ Pausado'}
                       </span>
                       <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                        <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>⭐ Destacar</button>
+                        <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>â­ Destacar</button>
                         <button style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>Editar</button>
                         <button onClick={() => toggleEstado(a.id, estado)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>
                           {estado === 'activo' ? 'Pausar' : 'Activar'}
@@ -357,16 +388,16 @@ export default function Panel() {
               {/* Si es profesional sin plan pagado, mostrar pantalla de pago */}
               {usuario?.tipo === 'profesional' && usuario?.plan !== 'profesional' ? (
                 <div style={{ background: '#fff', borderRadius: 8, padding: '48px 32px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center' }}>
-                  <div style={{ fontSize: 40, marginBottom: 16 }}>🔒</div>
-                  <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 8 }}>Activa tu suscripción para publicar</h2>
+                  <div style={{ fontSize: 40, marginBottom: 16 }}>ðŸ”’</div>
+                  <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 8 }}>Activa tu suscripciÃ³n para publicar</h2>
                   <p style={{ fontSize: 14, color: '#888', marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
-                    Con el plan Profesional publicas anuncios ilimitados por solo US$29/mes. El primer mes es gratis si tienes código promocional.
+                    Con el plan Profesional publicas anuncios ilimitados por solo US$29/mes. El primer mes es gratis si tienes cÃ³digo promocional.
                   </p>
                   <div style={{ display: 'flex', gap: 10, maxWidth: 400, margin: '0 auto 16px' }}>
-                    <input type="text" placeholder="Código promocional (opcional)" style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 14px', fontSize: 13, outline: 'none' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                    <button onClick={() => irAPago()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>
-                      Activar — US$29/mes
-                    </button>
+                    <input type="text" placeholder="CÃ³digo promocional (opcional)" style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 14px', fontSize: 13, outline: 'none' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    <a href="/pago/profesional" style={{ display: 'inline-block', background: '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', textDecoration: 'none' }}>
+                      Activar â€” US$29/mes
+                    </a>
                   </div>
                   <div style={{ fontSize: 12, color: '#aaa' }}>Cancela cuando quieras. Sin permanencia.</div>
                 </div>
@@ -375,7 +406,7 @@ export default function Panel() {
 
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Tipo de operación</label>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Tipo de operaciÃ³n</label>
                     <select value={pubOperacion} onChange={e => setPubOperacion(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
                       <option>Venta</option><option>Alquiler</option>
                     </select>
@@ -387,7 +418,7 @@ export default function Panel() {
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Título del anuncio *</label>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>TÃ­tulo del anuncio *</label>
                     <input type="text" value={pubTitulo} onChange={e => setPubTitulo(e.target.value)} placeholder="Ej: Apartamento en Piantini con vista al mar" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
                   <div>
@@ -409,7 +440,7 @@ export default function Panel() {
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Superficie (m²)</label>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Superficie (mÂ²)</label>
                     <input type="text" value={pubM2} onChange={e => setPubM2(e.target.value)} placeholder="Ej: 150" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
                   <div>
@@ -419,7 +450,7 @@ export default function Panel() {
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Baños</label>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>BaÃ±os</label>
                     <select value={pubBanos} onChange={e => setPubBanos(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
                       <option value="1">1</option><option value="2">2</option><option value="3">3+</option>
                     </select>
@@ -427,8 +458,8 @@ export default function Panel() {
                 </div>
 
                 <div style={{ marginBottom: 16 }}>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Descripción</label>
-                  <textarea rows={4} placeholder="Describe tu propiedad con detalle — ubicación, acabados, amenidades, accesos..." style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'vertical', fontFamily: 'sans-serif', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>DescripciÃ³n</label>
+                  <textarea rows={4} value={pubDesc} onChange={e => setPubDesc(e.target.value)} placeholder="Describe tu propiedad con detalle â€” ubicaciÃ³n, acabados, amenidades, accesos..." style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'vertical', fontFamily: 'sans-serif', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                 </div>
 
                 {/* AMENIDADES */}
@@ -451,13 +482,13 @@ export default function Panel() {
                     onMouseEnter={e => e.currentTarget.style.borderColor='#006D77'}
                     onMouseLeave={e => e.currentTarget.style.borderColor='#e0e0e0'}>
                     <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="1.5" style={{ margin: '0 auto 10px', display: 'block' }}><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    <div style={{ fontSize: 14, color: '#555', marginBottom: 4 }}>Arrastra tus fotos aquí o pulsa para seleccionar</div>
-                    <div style={{ fontSize: 12, color: '#aaa' }}>JPG, PNG — máximo 10 fotos, 5MB cada una</div>
+                    <div style={{ fontSize: 14, color: '#555', marginBottom: 4 }}>Arrastra tus fotos aquÃ­ o pulsa para seleccionar</div>
+                    <div style={{ fontSize: 12, color: '#aaa' }}>JPG, PNG â€” mÃ¡ximo 10 fotos, 5MB cada una</div>
                   </div>
                 </div>
 
                 {pubError && <div style={{ background: '#fee2e2', border: '1px solid #fca5a5', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#991b1b', marginBottom: 14 }}>{pubError}</div>}
-                {pubExito && <div style={{ background: '#e0f5f0', border: '1px solid #6ee7b7', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#065f46', marginBottom: 14 }}>✓ Anuncio publicado correctamente</div>}
+                {pubExito && <div style={{ background: '#e0f5f0', border: '1px solid #6ee7b7', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#065f46', marginBottom: 14 }}>âœ“ Anuncio publicado correctamente</div>}
                 <div style={{ display: 'flex', gap: 10 }}>
                   <button onClick={publicarAnuncio} disabled={pubLoading} style={{ all: 'unset', flex: 1, background: pubLoading ? '#aaa' : '#006D77', color: '#fff', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: pubLoading ? 'default' : 'pointer', textAlign: 'center' }}>
                     {pubLoading ? 'Publicando...' : 'Publicar anuncio'}
@@ -474,7 +505,7 @@ export default function Panel() {
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                 <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111' }}>Mensajes</h1>
-                {noLeidos > 0 && <span style={{ background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 600, padding: '4px 12px', borderRadius: 10 }}>{noLeidos} no leídos</span>}
+                {noLeidos > 0 && <span style={{ background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 600, padding: '4px 12px', borderRadius: 10 }}>{noLeidos} no leÃ­dos</span>}
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 16, height: 'calc(100vh - 180px)', minHeight: 500 }}>
                 {/* Lista */}
@@ -482,23 +513,23 @@ export default function Panel() {
                   {mensajesReales.length === 0 && (
                   <div style={{ padding: '48px 24px', textAlign: 'center' }}>
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" strokeWidth="1" style={{ margin: '0 auto 16px', display: 'block' }}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                    <div style={{ fontSize: 16, fontWeight: 600, color: '#555', marginBottom: 8 }}>No tienes mensajes todavía</div>
-                    <div style={{ fontSize: 13, color: '#aaa' }}>Cuando un comprador te escriba desde un anuncio aparecerá aquí</div>
+                    <div style={{ fontSize: 16, fontWeight: 600, color: '#555', marginBottom: 8 }}>No tienes mensajes todavÃ­a</div>
+                    <div style={{ fontSize: 13, color: '#aaa' }}>Cuando un comprador te escriba desde un anuncio aparecerÃ¡ aquÃ­</div>
                   </div>
                 )}
                 {mensajesReales.map(m => {
-                    const leido = mensajesLeidos[m.id] !== undefined ? mensajesLeidos[m.id] : m.leido
+                    const leido = mensajesLeidos[m.id] !== undefined ? mensajesLeidos[m.id] : !!m.leido
                     return (
                       <div key={m.id} onClick={() => { setMensajeSeleccionado(m.id); setMensajesLeidos(prev => ({ ...prev, [m.id]: true })) }}
                         style={{ padding: '14px 16px', borderBottom: '1px solid #f5f5f5', cursor: 'pointer', background: mensajeSeleccionado === m.id ? '#f0fafb' : '#fff', borderLeft: mensajeSeleccionado === m.id ? '3px solid #006D77' : '3px solid transparent' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                          <div style={{ width: 36, height: 36, borderRadius: '50%', background: leido ? '#f0f0f0' : '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: leido ? '#888' : '#006D77', flexShrink: 0 }}>{m.avatar}</div>
+                          <div style={{ width: 36, height: 36, borderRadius: '50%', background: leido ? '#f0f0f0' : '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: leido ? '#888' : '#006D77', flexShrink: 0 }}>{getAvatar(m.nombre_cliente)}</div>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                              <div style={{ fontSize: 13, fontWeight: leido ? 500 : 700, color: '#111' }}>{m.nombre}</div>
-                              <div style={{ fontSize: 11, color: '#aaa' }}>{m.fecha}</div>
+                              <div style={{ fontSize: 13, fontWeight: leido ? 500 : 700, color: '#111' }}>{m.nombre_cliente}</div>
+                              <div style={{ fontSize: 11, color: '#aaa' }}>{formatFecha(m.created_at)}</div>
                             </div>
-                            <div style={{ fontSize: 11, color: '#006D77', fontWeight: 500 }}>📍 {m.propiedad}</div>
+                            <div style={{ fontSize: 11, color: '#006D77', fontWeight: 500 }}>ðŸ“ {m.propiedades?.titulo}</div>
                           </div>
                           {!leido && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#006D77', flexShrink: 0 }} />}
                         </div>
@@ -518,24 +549,24 @@ export default function Panel() {
                       {/* Header cliente */}
                       <div style={{ padding: '16px 20px', borderBottom: '1px solid #f0f0f0' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                          <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#006D77' }}>{m.avatar}</div>
+                          <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#006D77' }}>{getAvatar(m.nombre_cliente)}</div>
                           <div>
-                            <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>{m.nombre}</div>
-                            {m.telefono
-                              ? <a href={`tel:${m.telefono}`} style={{ fontSize: 12, color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>📞 {m.telefono}</a>
-                              : <div style={{ fontSize: 12, color: '#aaa' }}>No dejó teléfono</div>
+                            <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>{m.nombre_cliente}</div>
+                            {m.telefono_cliente
+                              ? <a href={`tel:${m.telefono_cliente}`} style={{ fontSize: 12, color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>ðŸ“ž {m.telefono_cliente}</a>
+                              : <div style={{ fontSize: 12, color: '#aaa' }}>No dejÃ³ telÃ©fono</div>
                             }
                           </div>
                         </div>
                         {/* Anuncio relacionado */}
                         {anuncio && (
                           <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#f4f5f6', borderRadius: 6, padding: '8px 12px' }}>
-                            <div style={{ width: 40, height: 30, borderRadius: 4, background: anuncio.bg, flexShrink: 0 }} />
+                            <div style={{ width: 40, height: 30, borderRadius: 4, background: anuncio.bg || '#e0f5f7', flexShrink: 0 }} />
                             <div>
                               <div style={{ fontSize: 12, fontWeight: 600, color: '#333' }}>{anuncio.titulo}</div>
-                              <div style={{ fontSize: 11, color: '#888' }}>US$ {anuncio.precio.toLocaleString('en-US')} · {anuncio.zona}</div>
+                              <div style={{ fontSize: 11, color: '#888' }}>US$ {anuncio.precio.toLocaleString('en-US')} Â· {anuncio.zona}</div>
                             </div>
-                            <a href={`/propiedad/${anuncio.id}`} style={{ marginLeft: 'auto', fontSize: 11, color: '#006D77', textDecoration: 'none', fontWeight: 500, flexShrink: 0 }}>Ver anuncio →</a>
+                            <a href={`/propiedad/${anuncio.id}`} style={{ marginLeft: 'auto', fontSize: 11, color: '#006D77', textDecoration: 'none', fontWeight: 500, flexShrink: 0 }}>Ver anuncio â†’</a>
                           </div>
                         )}
                       </div>
@@ -544,18 +575,18 @@ export default function Panel() {
                       <div style={{ flex: 1, padding: '20px', overflowY: 'auto' }}>
                         <div style={{ background: '#f4f5f6', borderRadius: 8, padding: '14px 16px', maxWidth: '80%' }}>
                           <div style={{ fontSize: 14, color: '#333', lineHeight: 1.6, marginBottom: 6 }}>{m.mensaje}</div>
-                          <div style={{ fontSize: 11, color: '#aaa' }}>{m.fecha}</div>
+                          <div style={{ fontSize: 11, color: '#aaa' }}>{formatFecha(m.created_at)}</div>
                         </div>
                       </div>
 
                       {/* Responder */}
                       <div style={{ padding: '16px 20px', borderTop: '1px solid #f0f0f0' }}>
-                        <textarea value={respuesta} onChange={e => setRespuesta(e.target.value)} placeholder={`Responder a ${m.nombre}...`} rows={3}
+                        <textarea value={respuesta} onChange={e => setRespuesta(e.target.value)} placeholder={`Responder a ${m.nombre_cliente}...`} rows={3}
                           style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'none', fontFamily: 'sans-serif', boxSizing: 'border-box', marginBottom: 10 }}
                           onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                         <div style={{ display: 'flex', gap: 8 }}>
                           <button style={{ all: 'unset', flex: 1, background: respuesta ? '#006D77' : '#e0e0e0', color: '#fff', padding: '10px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: respuesta ? 'pointer' : 'default', textAlign: 'center' }}>Enviar respuesta</button>
-                          {m.telefono && <a href={`tel:${m.telefono}`} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '10px 16px', borderRadius: 6, fontSize: 13, cursor: 'pointer' }}>📞 Llamar</a>}
+                          {m.telefono_cliente && <a href={`tel:${m.telefono_cliente}`} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '10px 16px', borderRadius: 6, fontSize: 13, cursor: 'pointer' }}>ðŸ“ž Llamar</a>}
                         </div>
                       </div>
                     </div>
@@ -565,15 +596,15 @@ export default function Panel() {
             </div>
           )}
 
-          {/* ESTADÍSTICAS */}
+          {/* ESTADÃSTICAS */}
           {seccion === 'estadisticas' && (
             <div>
-              <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>Estadísticas</h1>
+              <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>EstadÃ­sticas</h1>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
                 {[
-                  { label: 'Impresiones totales', val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: 'veces que apareció en búsquedas', color: '#006D77' },
+                  { label: 'Impresiones totales', val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: 'veces que apareciÃ³ en bÃºsquedas', color: '#006D77' },
                   { label: 'Visitas a tus anuncios', val: anunciosReales.reduce((s, a) => s + Math.floor((a.visitas || 0) * 0.28), 0).toLocaleString(), sub: 'personas que lo abrieron', color: '#17A6B4' },
-                  { label: 'Teléfonos visualizados', val: anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0).toLocaleString(), sub: 'interés real en contactarte', color: '#10b981' },
+                  { label: 'TelÃ©fonos visualizados', val: anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0).toLocaleString(), sub: 'interÃ©s real en contactarte', color: '#10b981' },
                   { label: 'Mensajes recibidos', val: mensajesReales.length.toString(), sub: `${noLeidos} sin leer`, color: '#f59e0b' },
                 ].map(s => (
                   <div key={s.label} style={{ background: '#fff', borderRadius: 8, padding: '16px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderTop: `3px solid ${s.color}` }}>
@@ -588,13 +619,13 @@ export default function Panel() {
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                      {['Anuncio', 'Impresiones', 'Visitas', 'Tel. vistos', 'Guardados', 'Conversión'].map(h => (
+                      {['Anuncio', 'Impresiones', 'Visitas', 'Tel. vistos', 'Guardados', 'ConversiÃ³n'].map(h => (
                         <th key={h} style={{ textAlign: 'left', fontSize: 12, color: '#aaa', fontWeight: 500, padding: '0 0 10px' }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {anunciosReales.length === 0 ? <tr><td colSpan={6} style={{ textAlign: 'center', padding: '24px', color: '#aaa', fontSize: 13 }}>Publica tu primer anuncio para ver las estadísticas</td></tr> : anunciosReales.map((a: any) => (
+                    {anunciosEjemplo.map(a => (
                       <tr key={a.id} style={{ borderBottom: '1px solid #f8f8f8' }}>
                         <td style={{ padding: '10px 0', fontSize: 13, color: '#333', fontWeight: 500 }}>{a.titulo}</td>
                         <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.impresiones.toLocaleString()}</td>
@@ -614,7 +645,7 @@ export default function Panel() {
           {seccion === 'destacar' && (
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>Destacar anuncio</h1>
-              <p style={{ fontSize: 14, color: '#888', marginBottom: 16 }}>Los anuncios destacados aparecen primero y tienen hasta 5x más visitas</p>
+              <p style={{ fontSize: 14, color: '#888', marginBottom: 16 }}>Los anuncios destacados aparecen primero y tienen hasta 5x mÃ¡s visitas</p>
 
               {/* Anuncio seleccionado */}
               {anuncioADestacar ? (
@@ -622,22 +653,22 @@ export default function Panel() {
                   <div style={{ width: 48, height: 36, borderRadius: 6, background: '#006D77', opacity: 0.3, flexShrink: 0 }} />
                   <div>
                     <div style={{ fontSize: 14, fontWeight: 600, color: '#111' }}>{anuncioADestacar.titulo}</div>
-                    <div style={{ fontSize: 13, color: '#888' }}>US$ {anuncioADestacar.precio?.toLocaleString('en-US')} · {anuncioADestacar.zona}</div>
+                    <div style={{ fontSize: 13, color: '#888' }}>US$ {anuncioADestacar.precio?.toLocaleString('en-US')} Â· {anuncioADestacar.zona}</div>
                   </div>
                 </div>
               ) : (
                 <div style={{ background: '#fff8e1', border: '1px solid #f59e0b', borderRadius: 6, padding: '10px 16px', fontSize: 13, color: '#92400e', marginBottom: 20 }}>
-                  Ve a Mis anuncios y pulsa ⭐ Destacar en el anuncio que quieres destacar
+                  Ve a Mis anuncios y pulsa â­ Destacar en el anuncio que quieres destacar
                 </div>
               )}
 
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
                 {planesDestacado.map(p => (
                   <div key={p.dias} onClick={() => setPlanSeleccionado(String(p.dias))} style={{ background: '#fff', borderRadius: 8, padding: '24px 20px', textAlign: 'center', cursor: 'pointer', border: `2px solid ${planSeleccionado === String(p.dias) ? '#006D77' : '#e0e0e0'}`, position: 'relative', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
-                    {p.popular && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 12px', borderRadius: 10 }}>MÁS POPULAR</div>}
+                    {p.popular && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 12px', borderRadius: 10 }}>MÃS POPULAR</div>}
                     <div style={{ fontSize: 32, fontWeight: 700, color: '#111', marginBottom: 4 }}>US$ {p.precio}</div>
                     <div style={{ fontSize: 14, color: '#888', marginBottom: 16 }}>{p.label}</div>
-                    <div style={{ fontSize: 12, color: '#006D77' }}>✓ Posición prioritaria<br/>✓ Badge Destacado<br/>✓ Más visibilidad</div>
+                    <div style={{ fontSize: 12, color: '#006D77' }}>âœ“ PosiciÃ³n prioritaria<br/>âœ“ Badge Destacado<br/>âœ“ MÃ¡s visibilidad</div>
                   </div>
                 ))}
               </div>
@@ -657,18 +688,18 @@ export default function Panel() {
             </div>
           )}
 
-          {/* PLANES PRO — pantalla para particulares que llegan al límite */}
+          {/* PLANES PRO â€” pantalla para particulares que llegan al lÃ­mite */}
           {seccion === 'planes' && (
             <div>
               <div style={{ textAlign: 'center', marginBottom: 32 }}>
-                <div style={{ fontSize: 36, marginBottom: 12 }}>🚀</div>
-                <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 8 }}>Pásate a PRO y publica sin límites</h1>
+                <div style={{ fontSize: 36, marginBottom: 12 }}>ðŸš€</div>
+                <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 8 }}>PÃ¡sate a PRO y publica sin lÃ­mites</h1>
                 <p style={{ fontSize: 15, color: '#888' }}>Has usado tus 2 anuncios gratuitos. Elige el plan que mejor se adapta a ti.</p>
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16 }}>
                 {planesPro.map(p => (
                   <div key={p.id} style={{ background: '#fff', borderRadius: 8, padding: '24px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', border: p.id === 'pro' ? '2px solid #006D77' : '1px solid #e0e0e0', position: 'relative' }}>
-                    {p.id === 'pro' && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 14px', borderRadius: 10, whiteSpace: 'nowrap' }}>MÁS POPULAR</div>}
+                    {p.id === 'pro' && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 14px', borderRadius: 10, whiteSpace: 'nowrap' }}>MÃS POPULAR</div>}
                     <div style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 4 }}>{p.nombre}</div>
                     <div style={{ fontSize: 28, fontWeight: 700, color: '#006D77', marginBottom: 16 }}>US$ {p.precio}<span style={{ fontSize: 13, color: '#aaa', fontWeight: 400 }}>/mes</span></div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 20 }}>
@@ -689,14 +720,14 @@ export default function Panel() {
           )}
 
           {/* MI EQUIPO */}
-          {seccion === 'equipo' && ['agencia', 'unlimited'].includes(tipoUsuario) && (
+          {seccion === 'equipo' && tipoUsuario === 'profesional' && (
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                 <div>
                   <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 4 }}>Mi equipo</h1>
                   <p style={{ fontSize: 14, color: '#888' }}>Gestiona los brokers de tu agencia</p>
                 </div>
-                <button style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>+ Añadir broker</button>
+                <button style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>+ AÃ±adir broker</button>
               </div>
 
               {/* Stats equipo */}
@@ -716,10 +747,10 @@ export default function Panel() {
               {/* Lista brokers */}
               <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
                 {[
-                  { nombre: 'Carlos Méndez', email: 'carlos@remax.com', anuncios: 8, contactos: 32, estado: 'activo', avatar: 'CM', aei: true },
+                  { nombre: 'Carlos MÃ©ndez', email: 'carlos@remax.com', anuncios: 8, contactos: 32, estado: 'activo', avatar: 'CM', aei: true },
                   { nombre: 'Ana Reyes', email: 'ana@remax.com', anuncios: 6, contactos: 24, estado: 'activo', avatar: 'AR', aei: true },
-                  { nombre: 'Luis García', email: 'luis@remax.com', anuncios: 5, contactos: 18, estado: 'activo', avatar: 'LG', aei: false },
-                  { nombre: 'María Torres', email: 'maria@remax.com', anuncios: 4, contactos: 13, estado: 'inactivo', avatar: 'MT', aei: false },
+                  { nombre: 'Luis GarcÃ­a', email: 'luis@remax.com', anuncios: 5, contactos: 18, estado: 'activo', avatar: 'LG', aei: false },
+                  { nombre: 'MarÃ­a Torres', email: 'maria@remax.com', anuncios: 4, contactos: 13, estado: 'inactivo', avatar: 'MT', aei: false },
                 ].map((b, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '16px 24px', borderBottom: i < 3 ? '1px solid #f5f5f5' : 'none' }}>
                     <div style={{ width: 42, height: 42, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#006D77', flexShrink: 0 }}>{b.avatar}</div>
@@ -741,7 +772,7 @@ export default function Panel() {
                       </div>
                     </div>
                     <span style={{ background: b.estado === 'activo' ? '#e0f5f0' : '#f5f5f5', color: b.estado === 'activo' ? '#065f46' : '#888', fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 10 }}>
-                      {b.estado === 'activo' ? '● Activo' : '○ Inactivo'}
+                      {b.estado === 'activo' ? 'â— Activo' : 'â—‹ Inactivo'}
                     </span>
                     <div style={{ display: 'flex', gap: 8 }}>
                       <button style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>Ver anuncios</button>
@@ -757,22 +788,22 @@ export default function Panel() {
           {seccion === 'plan' && (
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>Mi plan</h1>
-              <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>Gestiona tu suscripción</p>
+              <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>Gestiona tu suscripciÃ³n</p>
 
               {/* Plan actual */}
-              {usuario?.tipo === 'particular' ? (
+              {tipoUsuario === 'particular' ? (
                 <div>
                   <div style={{ background: '#fff8e1', border: '1.5px solid #f59e0b', borderRadius: 8, padding: '20px 24px', marginBottom: 24 }}>
                     <div style={{ fontSize: 13, color: '#888', marginBottom: 4 }}>Plan actual</div>
-                    <div style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Particular — Gratis</div>
+                    <div style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Particular â€” Gratis</div>
                     <div style={{ fontSize: 13, color: '#92400e' }}>Has usado {anunciosUsados} de {anunciosGratis} anuncios gratuitos</div>
                   </div>
                   <div style={{ background: '#fff', borderRadius: 8, padding: '28px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center' }}>
-                    <div style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 8 }}>Pásate a Profesional</div>
+                    <div style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 8 }}>PÃ¡sate a Profesional</div>
                     <div style={{ fontSize: 36, fontWeight: 700, color: '#006D77', marginBottom: 4 }}>US$ 29<span style={{ fontSize: 16, fontWeight: 400, color: '#aaa' }}>/mes</span></div>
-                    <div style={{ fontSize: 13, color: '#888', marginBottom: 20 }}>Primer mes gratis con código promocional</div>
+                    <div style={{ fontSize: 13, color: '#888', marginBottom: 20 }}>Primer mes gratis con cÃ³digo promocional</div>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: 300, margin: '0 auto 24px' }}>
-                      {['Anuncios ilimitados', 'Badge PROFESIONAL', 'Estadísticas completas', 'Mensajes ilimitados', 'Soporte por email'].map(f => (
+                      {['Anuncios ilimitados', 'Badge PROFESIONAL', 'EstadÃ­sticas completas', 'Mensajes ilimitados', 'Soporte por email'].map(f => (
                         <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: '#444' }}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                           {f}
@@ -780,29 +811,29 @@ export default function Panel() {
                       ))}
                     </div>
                     <div style={{ display: 'flex', gap: 10, maxWidth: 400, margin: '0 auto' }}>
-                      <input type="text" placeholder="Código promocional (opcional)" style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 14px', fontSize: 13, outline: 'none' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                      <input type="text" placeholder="CÃ³digo promocional (opcional)" style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 14px', fontSize: 13, outline: 'none' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                       <button style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>Suscribirse</button>
                     </div>
                   </div>
                 </div>
               ) : (
                 <div>
-                  {/* Suscripción activa */}
+                  {/* SuscripciÃ³n activa */}
                   <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', marginBottom: 16 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
                       <div>
                         <div style={{ fontSize: 13, color: '#888', marginBottom: 4 }}>Plan actual</div>
-                        <div style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 4 }}>Profesional — US$ 29/mes</div>
-                        <div style={{ fontSize: 13, color: '#555' }}>Próxima facturación: <strong>16 de julio 2026</strong></div>
-                        <div style={{ fontSize: 12, color: '#aaa', marginTop: 2 }}>Se renovará automáticamente. Cancela cuando quieras.</div>
+                        <div style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 4 }}>Profesional â€” US$ 29/mes</div>
+                        <div style={{ fontSize: 13, color: '#555' }}>PrÃ³xima facturaciÃ³n: <strong>16 de julio 2026</strong></div>
+                        <div style={{ fontSize: 12, color: '#aaa', marginTop: 2 }}>Se renovarÃ¡ automÃ¡ticamente. Cancela cuando quieras.</div>
                       </div>
-                      <span style={{ background: '#e0f5f0', color: '#065f46', fontSize: 12, fontWeight: 700, padding: '4px 14px', borderRadius: 10 }}>● ACTIVO</span>
+                      <span style={{ background: '#e0f5f0', color: '#065f46', fontSize: 12, fontWeight: 700, padding: '4px 14px', borderRadius: 10 }}>â— ACTIVO</span>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, paddingTop: 16, borderTop: '1px solid #f0f0f0' }}>
                       {[
                         { label: 'Miembro desde', val: '16 junio 2026' },
-                        { label: 'Próximo cobro', val: 'US$ 29 · 16 jul' },
-                        { label: 'Método de pago', val: '•••• 4242' },
+                        { label: 'PrÃ³ximo cobro', val: 'US$ 29 Â· 16 jul' },
+                        { label: 'MÃ©todo de pago', val: 'â€¢â€¢â€¢â€¢ 4242' },
                       ].map(d => (
                         <div key={d.label}>
                           <div style={{ fontSize: 11, color: '#aaa', marginBottom: 3 }}>{d.label}</div>
@@ -830,9 +861,9 @@ export default function Panel() {
 
                   {/* Dar de baja */}
                   <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderLeft: '3px solid #fee2e2' }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#333', marginBottom: 4 }}>Cancelar suscripción</div>
-                    <div style={{ fontSize: 13, color: '#888', marginBottom: 14 }}>Si cancelas ahora seguirás teniendo acceso hasta el <strong>16 de julio 2026</strong>. No se realizará ningún cobro más.</div>
-                    <button onClick={async () => { const { data: { user } } = await supabase.auth.getUser(); if (!user) return; if (!confirm('¿Seguro que quieres cancelar tu plan? Seguirás teniendo acceso hasta el final del período pagado.')) return; const res = await fetch('/api/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id }) }); const data = await res.json(); if (data.ok) alert('Plan cancelado. Seguirás activo hasta el final del período.'); else alert('Error al cancelar. Escríbenos a soporte@urbiza.com') }} style={{ all: 'unset', border: '1.5px solid #e55', color: '#e55', padding: '8px 18px', borderRadius: 6, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: '#333', marginBottom: 4 }}>Cancelar suscripciÃ³n</div>
+                    <div style={{ fontSize: 13, color: '#888', marginBottom: 14 }}>Si cancelas ahora seguirÃ¡s teniendo acceso hasta el <strong>16 de julio 2026</strong>. No se realizarÃ¡ ningÃºn cobro mÃ¡s.</div>
+                    <button style={{ all: 'unset', border: '1.5px solid #e55', color: '#e55', padding: '8px 18px', borderRadius: 6, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>
                       Dar de baja mi plan
                     </button>
                   </div>
@@ -849,7 +880,7 @@ export default function Panel() {
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24, paddingBottom: 20, borderBottom: '1px solid #f0f0f0' }}>
                   <div style={{ position: 'relative' }}>
                     <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, fontWeight: 700, color: '#006D77', overflow: 'hidden' }}>
-                      {fotoPerfilUrl ? <img src={fotoPerfilUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : (perfilNombre || usuario?.nombre || 'U').split(' ').map((n: string) => n[0]).join('').slice(0,2).toUpperCase()}
+                      {fotoPerfilUrl ? <img src={fotoPerfilUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : 'RC'}
                     </div>
                     <label style={{ position: 'absolute', bottom: 0, right: 0, width: 24, height: 24, borderRadius: '50%', background: '#006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
@@ -864,10 +895,10 @@ export default function Panel() {
                     </label>
                   </div>
                   <div>
-                    <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 6 }}>{perfilNombre || usuario?.nombre || 'Mi perfil'}</div>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 6 }}>Rafael Castillo</div>
                     <div style={{ display: 'flex', gap: 8 }}>
                       <span style={{ background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>PROFESIONAL</span>
-                      <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>✓ AEI</span>
+                      <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>âœ“ AEI</span>
                     </div>
                     <div style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>Pulsa el icono para cambiar tu foto</div>
                   </div>
@@ -882,7 +913,7 @@ export default function Panel() {
                     <input value={usuario?.email || ''} disabled style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box', background: '#f9f9f9', color: '#aaa' }} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Teléfono</label>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>TelÃ©fono</label>
                     <input value={perfilTelefono} onChange={e => setPerfilTelefono(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
                   <div>
@@ -890,7 +921,7 @@ export default function Panel() {
                     <input value={perfilInmobiliaria} onChange={e => setPerfilInmobiliaria(e.target.value)} placeholder='Nombre de tu agencia (opcional)' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Número AEI</label>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>NÃºmero AEI</label>
                     <input value={perfilAei} onChange={e => setPerfilAei(e.target.value)} placeholder='AEI-0000' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
                 </div>
@@ -898,13 +929,13 @@ export default function Panel() {
                   Guardar cambios
                 </button>
 
-                {/* Cerrar sesión */}
+                {/* Cerrar sesiÃ³n */}
                 <div style={{ marginTop: 32, paddingTop: 20, borderTop: '1px solid #f0f0f0' }}>
                   <button onClick={async () => { await supabase.auth.signOut(); window.location.href = '/' }} style={{ all: 'unset', fontSize: 12, color: '#aaa', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
                     onMouseEnter={e => e.currentTarget.style.color = '#e55'}
                     onMouseLeave={e => e.currentTarget.style.color = '#aaa'}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                    Cerrar sesión
+                    Cerrar sesiÃ³n
                   </button>
                 </div>
               </div>
@@ -916,32 +947,32 @@ export default function Panel() {
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 8 }}>
                 <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111' }}>Cursos AEI</h1>
-                <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 10 }}>En colaboración con AEI</span>
+                <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 10 }}>En colaboraciÃ³n con AEI</span>
               </div>
-              <p style={{ fontSize: 14, color: '#888', marginBottom: 28 }}>Formación oficial de la Asociación de Agentes y Empresas Inmobiliarias de República Dominicana</p>
+              <p style={{ fontSize: 14, color: '#888', marginBottom: 28 }}>FormaciÃ³n oficial de la AsociaciÃ³n de Agentes y Empresas Inmobiliarias de RepÃºblica Dominicana</p>
 
               {/* Banner AEI */}
               <div style={{ background: 'linear-gradient(135deg, #1a3a5c 0%, #004E57 100%)', borderRadius: 10, padding: '28px 32px', marginBottom: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
                 <div>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: 600, letterSpacing: 1, marginBottom: 8 }}>ASOCIACIÓN OFICIAL</div>
-                  <div style={{ fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 8 }}>Certifícate como agente inmobiliario profesional</div>
-                  <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>La AEI es la asociación oficial de agentes inmobiliarios de RD. Con tu certificación aparecerá el badge AEI verificado en todos tus anuncios de Urbiza.</div>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: 600, letterSpacing: 1, marginBottom: 8 }}>ASOCIACIÃ“N OFICIAL</div>
+                  <div style={{ fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 8 }}>CertifÃ­cate como agente inmobiliario profesional</div>
+                  <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>La AEI es la asociaciÃ³n oficial de agentes inmobiliarios de RD. Con tu certificaciÃ³n aparecerÃ¡ el badge AEI verificado en todos tus anuncios de Urbiza.</div>
                 </div>
                 <a href="https://aei.com.do" target="_blank" rel="noopener noreferrer" style={{ all: 'unset', background: '#fff', color: '#1a3a5c', padding: '12px 24px', borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                  Visitar AEI →
+                  Visitar AEI â†’
                 </a>
               </div>
 
               <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center' }}>
                 <div style={{ fontSize: 15, color: '#555', lineHeight: 1.8, marginBottom: 20 }}>
                   Accede a toda la oferta formativa oficial de la AEI directamente en su web.<br/>
-                  Al completar cualquier curso recibirás tu certificación y el badge AEI verificado aparecerá en todos tus anuncios de Urbiza.
+                  Al completar cualquier curso recibirÃ¡s tu certificaciÃ³n y el badge AEI verificado aparecerÃ¡ en todos tus anuncios de Urbiza.
                 </div>
                 <a href="https://aei.com.do" target="_blank" rel="noopener noreferrer" style={{ all: 'unset', background: '#1a3a5c', color: '#fff', padding: '13px 32px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'inline-block' }}>
-                  Ver todos los cursos en AEI →
+                  Ver todos los cursos en AEI â†’
                 </a>
                 <div style={{ fontSize: 12, color: '#aaa', marginTop: 14 }}>
-                  Serás redirigido a la web oficial de la Asociación de Agentes y Empresas Inmobiliarias de República Dominicana.
+                  SerÃ¡s redirigido a la web oficial de la AsociaciÃ³n de Agentes y Empresas Inmobiliarias de RepÃºblica Dominicana.
                 </div>
               </div>
             </div>
@@ -952,9 +983,4 @@ export default function Panel() {
     </main>
   )
 }
-
-
-
-
-
 
