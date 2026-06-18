@@ -381,6 +381,17 @@ export default function Panel() {
         {/* CONTENIDO */}
         <div style={{ flex: 1, padding: '28px 32px', overflowY: 'auto' }}>
 
+          {/* AVISO TELÉFONO FALTANTE */}
+          {!perfilTelefono && seccion !== 'perfil' && (
+            <div style={{ background: '#fff8e1', border: '1px solid #ffe082', borderRadius: 8, padding: '12px 18px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ fontSize: 18 }}>⚠️</span>
+                <span style={{ fontSize: 13, color: '#6d4c00' }}>Añade tu teléfono en el perfil para que los compradores puedan contactarte cuando publiques un anuncio.</span>
+              </div>
+              <button onClick={() => setSeccion('perfil')} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '7px 16px', borderRadius: 5, fontSize: 12, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>Ir al perfil</button>
+            </div>
+          )}
+
           {/* MIS ANUNCIOS */}
           {seccion === 'anuncios' && (
             <div>
@@ -1043,8 +1054,9 @@ export default function Panel() {
                     <input value={usuario?.email || ''} disabled style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box', background: '#f9f9f9', color: '#aaa' }} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Teléfono</label>
-                    <input value={perfilTelefono} onChange={e => setPerfilTelefono(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Teléfono <span style={{ color: '#e53e3e' }}>*</span></label>
+                    <input value={perfilTelefono} onChange={e => setPerfilTelefono(e.target.value)} placeholder="+1 809 000 0000" style={{ width: '100%', border: `1.5px solid ${!perfilTelefono ? '#e53e3e' : '#e0e0e0'}`, borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor= perfilTelefono ? '#e0e0e0' : '#e53e3e'} />
+                    {!perfilTelefono && <div style={{ fontSize: 11, color: '#e53e3e', marginTop: 4 }}>Necesario para que los compradores puedan contactarte</div>}
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Nombre de inmobiliaria</label>
