@@ -256,13 +256,13 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   const precio = propiedad.precio || 0
   const m2 = propiedad.m2 || 0
 
+  const tipoSinHab = ['Edificio', 'Terreno'].includes(propiedad.tipo)
   const caracteristicas = [
-    propiedad.habitaciones > 0 && { label: 'Habitaciones', val: propiedad.habitaciones, icon: 'bed' },
-    propiedad.banos > 0 && { label: 'Baños', val: propiedad.banos, icon: 'bath' },
+    !tipoSinHab && propiedad.habitaciones > 0 && { label: 'Habitaciones', val: propiedad.habitaciones, icon: 'bed' },
+    !tipoSinHab && propiedad.banos > 0 && { label: 'Baños', val: propiedad.banos, icon: 'bath' },
     m2 > 0 && { label: 'Superficie', val: m2 + ' m²', icon: 'area' },
     propiedad.parqueos > 0 && { label: 'Parqueos', val: propiedad.parqueos, icon: 'park' },
-    propiedad.planta && { label: 'Planta', val: propiedad.planta, icon: 'floor' },
-    propiedad.anio_construccion && { label: 'Año construcción', val: propiedad.anio_construccion, icon: 'year' },
+    !tipoSinHab && propiedad.planta && { label: 'Planta', val: propiedad.planta, icon: 'floor' },
   ].filter(Boolean) as { label: string, val: any, icon: string }[]
 
   const iconosCar: Record<string, JSX.Element> = {

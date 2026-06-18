@@ -307,7 +307,7 @@ export default function Panel() {
 
   const handleFotos = (files: FileList | null) => {
     if (!files) return
-    const nuevas = Array.from(files).slice(0, 10 - pubFotos.length)
+    const nuevas = Array.from(files).slice(0, 20 - pubFotos.length)
     setPubFotos(prev => [...prev, ...nuevas])
     nuevas.forEach(f => {
       const reader = new FileReader()
@@ -367,8 +367,7 @@ export default function Panel() {
       banos: Number(pubBanos),
       amenidades: amenidadesSeleccionadas,
       parqueos: pubParqueos ? Number(pubParqueos) : null,
-      planta: pubPlanta || null,
-      anio_construccion: pubAnio ? Number(pubAnio) : null,
+      planta: ['Edificio', 'Terreno'].includes(pubTipo) ? null : (pubPlanta || null),
       fotos: fotosUrls.length > 0 ? fotosUrls : null,
       estado: 'activo',
     })
@@ -634,34 +633,39 @@ export default function Panel() {
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Superficie (m²)</label>
                     <input type="text" value={pubM2} onChange={e => setPubM2(e.target.value)} placeholder="Ej: 150" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Habitaciones</label>
-                    <select value={pubHab} onChange={e => setPubHab(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
-                      <option value="0">Estudio</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4+</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Baños</label>
-                    <select value={pubBanos} onChange={e => setPubBanos(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
-                      <option value="1">1</option><option value="2">2</option><option value="3">3+</option>
-                    </select>
-                  </div>
+                  {!['Edificio', 'Terreno'].includes(pubTipo) && (
+                    <div>
+                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Habitaciones</label>
+                      <select value={pubHab} onChange={e => setPubHab(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
+                        <option value="0">Estudio</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4+</option>
+                      </select>
+                    </div>
+                  )}
                 </div>
 
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 16 }}>
-                  <div>
+                {['Edificio', 'Terreno'].includes(pubTipo) ? (
+                  <div style={{ marginBottom: 16, maxWidth: '33%' }}>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Parqueos <span style={{ color: '#aaa', fontWeight: 400 }}>(opcional)</span></label>
                     <input type="number" min="0" value={pubParqueos} onChange={e => setPubParqueos(e.target.value)} placeholder="Ej: 2" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Nº de planta <span style={{ color: '#aaa', fontWeight: 400 }}>(opcional)</span></label>
-                    <input type="text" value={pubPlanta} onChange={e => setPubPlanta(e.target.value)} placeholder="Ej: 4ª planta" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                ) : (
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 16 }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Baños</label>
+                      <select value={pubBanos} onChange={e => setPubBanos(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
+                        <option value="1">1</option><option value="2">2</option><option value="3">3+</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Parqueos <span style={{ color: '#aaa', fontWeight: 400 }}>(opcional)</span></label>
+                      <input type="number" min="0" value={pubParqueos} onChange={e => setPubParqueos(e.target.value)} placeholder="Ej: 2" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Nº de planta <span style={{ color: '#aaa', fontWeight: 400 }}>(opcional)</span></label>
+                      <input type="text" value={pubPlanta} onChange={e => setPubPlanta(e.target.value)} placeholder="Ej: 4ª planta" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    </div>
                   </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Año de construcción <span style={{ color: '#aaa', fontWeight: 400 }}>(opcional)</span></label>
-                    <input type="number" min="1900" max="2030" value={pubAnio} onChange={e => setPubAnio(e.target.value)} placeholder="Ej: 2020" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                  </div>
-                </div>
+                )}
 
                 <div style={{ marginBottom: 16 }}>
                   <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Descripción</label>
