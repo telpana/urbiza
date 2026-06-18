@@ -91,6 +91,14 @@ function MapaMini({ zona }: { zona: string }) {
         scrollWheelZoom: false,
       })
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
+      if (zona) {
+        const icono = L.divIcon({
+          className: '',
+          html: `<svg width="22" height="30" viewBox="0 0 22 30" xmlns="http://www.w3.org/2000/svg"><path d="M11 0C4.925 0 0 4.925 0 11c0 7.667 11 19 11 19s11-11.333 11-19C22 4.925 17.075 0 11 0z" fill="#006D77" stroke="#fff" stroke-width="1.5"/><circle cx="11" cy="11" r="4.5" fill="#fff"/></svg>`,
+          iconSize: [22, 30], iconAnchor: [11, 30],
+        })
+        L.marker(center, { icon: icono }).addTo(map)
+      }
       mapInstanceRef.current = map
     }
     if ((window as any).L) { load() }
@@ -150,7 +158,7 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: typeof propiedad
       })
       if (marcadores.length > 0) {
         const grupo = L.featureGroup(marcadores)
-        map.fitBounds(grupo.getBounds().pad(0.25))
+        map.fitBounds(grupo.getBounds().pad(0.3), { maxZoom: 14 })
       }
       mapInstanceRef.current = map
     }
