@@ -197,6 +197,7 @@ export default function Panel() {
   const [usuario, setUsuario] = useState<any>(null)
   const [anunciosReales, setAnunciosReales] = useState<any[]>([])
   const [mensajesReales, setMensajesReales] = useState<any[]>([])
+  const [bloqueadosSet, setBloqueadosSet] = useState<Set<string>>(new Set())
   const [cargando, setCargando] = useState(true)
   const [respuesta, setRespuesta] = useState('')
   const [verificandoPago, setVerificandoPago] = useState(false)
@@ -293,6 +294,8 @@ export default function Panel() {
       // Cargar mensajes del usuario
       const { data: msgs } = await supabase.from('mensajes').select('*, propiedades(titulo)').eq('vendedor_id', user.id).order('created_at', { ascending: false })
       if (msgs) setMensajesReales(msgs)
+      const { data: bqs } = await supabase.from('bloqueados').select('bloqueado_id').eq('bloqueador_id', user.id)
+      if (bqs) setBloqueadosSet(new Set(bqs.map((b: any) => b.bloqueado_id)))
 
       setCargando(false)
     }
@@ -334,6 +337,27 @@ export default function Panel() {
     }).eq('id', user.id)
     if (!error) { setUsuario((prev: any) => ({ ...prev, nombre: perfilNombre, telefono: perfilTelefono, inmobiliaria: perfilInmobiliaria, numero_aei: perfilAei })); alert('Cambios guardados correctamente') }
     else alert('Error al guardar')
+  }
+
+  const eliminarMensaje = async (id: string) => {
+    if (!confirm('¿Eliminar esta conversación definitivamente?')) return
+    await supabase.from('mensajes').delete().eq('id', id)
+    setMensajesReales(prev => prev.filter(m => m.id !== id))
+    if (mensajeSeleccionado === id) setMensajeSeleccionado(null)
+  }
+
+  const toggleBloqueo = async (remitenteId: string) => {
+    if (!remitenteId) return
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    if (bloqueadosSet.has(remitenteId)) {
+      await supabase.from('bloqueados').delete().eq('bloqueador_id', user.id).eq('bloqueado_id', remitenteId)
+      setBloqueadosSet(prev => { const s = new Set(prev); s.delete(remitenteId); return s })
+    } else {
+      if (!confirm('¿Bloquear a este contacto? No podrá enviarte más mensajes.')) return
+      await supabase.from('bloqueados').insert({ bloqueador_id: user.id, bloqueado_id: remitenteId })
+      setBloqueadosSet(prev => new Set([...prev, remitenteId]))
+    }
   }
 
   const handleEditar = (a: any) => {
@@ -786,13 +810,16 @@ export default function Panel() {
                     const leido = mensajesLeidos[m.id] !== undefined ? mensajesLeidos[m.id] : false
                     return (
                       <div key={m.id} onClick={() => { setMensajeSeleccionado(m.id); setMensajesLeidos(prev => ({ ...prev, [m.id]: true })) }}
-                        style={{ padding: '14px 16px', borderBottom: '1px solid #f5f5f5', cursor: 'pointer', background: mensajeSeleccionado === m.id ? '#f0fafb' : '#fff', borderLeft: mensajeSeleccionado === m.id ? '3px solid #006D77' : '3px solid transparent' }}>
+                        style={{ padding: '14px 16px', borderBottom: '1px solid #f5f5f5', cursor: 'pointer', background: mensajeSeleccionado === m.id ? '#f0fafb' : '#fff', borderLeft: mensajeSeleccionado === m.id ? '3px solid #006D77' : '3px solid transparent', position: 'relative' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
                           <div style={{ width: 36, height: 36, borderRadius: '50%', background: leido ? '#f0f0f0' : '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: leido ? '#888' : '#006D77', flexShrink: 0 }}>{getAvatar(m.nombre_cliente)}</div>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                               <div style={{ fontSize: 13, fontWeight: leido ? 500 : 700, color: '#111' }}>{m.nombre_cliente}</div>
-                              <div style={{ fontSize: 11, color: '#aaa' }}>{formatFecha(m.created_at)}</div>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                <div style={{ fontSize: 11, color: '#aaa' }}>{formatFecha(m.created_at)}</div>
+                                <button onClick={e => { e.stopPropagation(); eliminarMensaje(m.id) }} title="Eliminar" style={{ all: 'unset', color: '#ccc', fontSize: 14, cursor: 'pointer', lineHeight: 1, padding: '0 2px' }} onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.color='#e55'} onMouseLeave={e => (e.currentTarget as HTMLButtonElement).style.color='#ccc'}>🗑</button>
+                              </div>
                             </div>
                             <div style={{ fontSize: 11, color: '#006D77', fontWeight: 500 }}>📍 {m.propiedades?.titulo}</div>
                           </div>
@@ -814,13 +841,24 @@ export default function Panel() {
                       {/* Header cliente */}
                       <div style={{ padding: '16px 20px', borderBottom: '1px solid #f0f0f0' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 10 }}>
-                          <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#006D77' }}>{getAvatar(m.nombre_cliente)}</div>
-                          <div>
-                            <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>{m.nombre_cliente}</div>
+                          <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#006D77', flexShrink: 0 }}>{getAvatar(m.nombre_cliente)}</div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                              <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>{m.nombre_cliente}</div>
+                              {m.remitente_id && bloqueadosSet.has(m.remitente_id) && <span style={{ fontSize: 11, background: '#fee2e2', color: '#dc2626', padding: '2px 8px', borderRadius: 10, fontWeight: 600 }}>Bloqueado</span>}
+                            </div>
                             {m.telefono_cliente
                               ? <a href={`tel:${m.telefono_cliente}`} style={{ fontSize: 12, color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>📞 {m.telefono_cliente}</a>
                               : <div style={{ fontSize: 12, color: '#aaa' }}>No dejó teléfono</div>
                             }
+                          </div>
+                          <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                            {m.remitente_id && (
+                              <button onClick={() => toggleBloqueo(m.remitente_id)} style={{ all: 'unset', border: `1px solid ${bloqueadosSet.has(m.remitente_id) ? '#e0e0e0' : '#fca5a5'}`, color: bloqueadosSet.has(m.remitente_id) ? '#555' : '#dc2626', padding: '5px 10px', borderRadius: 4, fontSize: 12, cursor: 'pointer', fontWeight: 500 }}>
+                                {bloqueadosSet.has(m.remitente_id) ? 'Desbloquear' : 'Bloquear'}
+                              </button>
+                            )}
+                            <button onClick={() => eliminarMensaje(m.id)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#888', padding: '5px 10px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>Eliminar</button>
                           </div>
                         </div>
                         {/* Anuncio relacionado */}

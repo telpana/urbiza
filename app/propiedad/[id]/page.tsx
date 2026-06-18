@@ -216,6 +216,8 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
     if (!sesionActiva) { window.location.href = `/login?next=/propiedad/${id}`; return }
     if (userId === propiedad?.usuario_id) { setErrorContacto('No puedes enviarte mensajes a ti mismo'); return }
     if (!nombreContacto || !mensaje) { setErrorContacto('El nombre y el mensaje son obligatorios'); return }
+    const { data: bloq } = await supabase.from('bloqueados').select('id').eq('bloqueador_id', propiedad?.usuario_id).eq('bloqueado_id', userId).maybeSingle()
+    if (bloq) { setErrorContacto('No es posible enviar el mensaje'); setEnviando(false); return }
     setEnviando(true)
     setErrorContacto('')
     const { error } = await supabase.from('mensajes').insert({
