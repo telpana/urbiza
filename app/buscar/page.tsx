@@ -22,6 +22,7 @@ const propiedadesEjemplo = [
 
 // Mapa mini limpio — solo muestra el mapa sin zonas seleccionadas
 const ZONAS_COORDS: Record<string, [number, number]> = {
+  // Distrito Nacional
   'piantini': [18.4890, -69.9370], 'naco': [18.4950, -69.9450], 'bella vista': [18.4760, -69.9450],
   'arroyo hondo': [18.5050, -69.9650], 'serralles': [18.4850, -69.9500], 'gazcue': [18.4720, -69.9300],
   'evaristo morales': [18.4870, -69.9420], 'la esperilla': [18.4780, -69.9330], 'miramar': [18.4800, -69.9200],
@@ -29,19 +30,39 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'los prados': [18.5000, -69.9550], 'fernandez': [18.5020, -69.9460], 'reparto paraiso': [18.4600, -69.9650],
   'distrito nacional': [18.4861, -69.9312], 'santo domingo este': [18.4900, -69.8600], 'santo domingo norte': [18.5500, -69.9500],
   'santo domingo oeste': [18.4800, -70.0200], 'santo domingo': [18.4861, -69.9312],
+  'boca chica': [18.4490, -69.6080],
+  // La Altagracia
   'punta cana': [18.5674, -68.3634], 'downtown punta cana': [18.638436, -68.391718], 'bavaro': [18.6820, -68.4780], 'cap cana': [18.5100, -68.4400],
   'los corales': [18.6600, -68.4500], 'cabeza de toro': [18.7100, -68.4600], 'uvero alto': [18.7800, -68.3800],
+  'macao': [18.7536, -68.5625], 'cortecito': [18.7080, -68.4220], 'el cortecito': [18.7080, -68.4220],
+  'higuey': [18.6142, -68.7073], 'san rafael del yuma': [18.3570, -68.5720], 'boca de yuma': [18.3230, -68.6210],
   'la altagracia': [18.5654, -68.4500],
+  // Santiago
   'santiago': [19.4517, -70.6970], 'los jardines': [19.4600, -70.7100], 'cerros de gurabo': [19.4700, -70.6500],
   'reparto conuco': [19.4400, -70.6900], 'villa progreso': [19.4550, -70.6600],
-  'las terrenas': [19.3100, -69.5200], 'puerto plata': [19.7950, -70.6910], 'sosua': [19.7600, -70.5200],
-  'cabarete': [19.7700, -70.4100], 'costambar': [19.7900, -70.7200],
+  // Puerto Plata
+  'puerto plata': [19.7950, -70.6910], 'sosua': [19.7600, -70.5200], 'cabarete': [19.7700, -70.4100],
+  'costambar': [19.7900, -70.7200], 'cofresí': [19.8100, -70.7500], 'playa dorada': [19.8100, -70.6800],
+  'luperon': [19.8977, -70.9480], 'villa isabela': [19.8400, -71.0700], 'la isabela': [19.8400, -71.0700],
+  // Samaná
+  'las terrenas': [19.3100, -69.5200], 'samana': [19.2060, -69.3360], 'las galeras': [19.2320, -69.2200],
+  'el portillo': [19.3300, -69.4800], 'coson': [19.3400, -69.4500], 'sanchez': [19.2317, -69.6088],
+  // La Romana
   'la romana': [18.4273, -68.9728], 'casa de campo': [18.4080, -68.9130],
-  'jarabacoa': [19.1130, -70.6380], 'constanza': [18.9090, -70.7490],
-  'samana': [19.2060, -69.3360], 'las galeras': [19.2320, -69.2200],
-  'san pedro de macoris': [18.4530, -69.3090], 'bani': [18.2790, -70.3310],
-  'boca chica': [18.4490, -69.6080], 'juan dolio': [18.4400, -69.5300],
-  'azua': [18.4530, -70.7350], 'moca': [19.3960, -70.5150], 'nagua': [19.3730, -69.8470],
+  'bayahibe': [18.3650, -68.8280], 'dominicus': [18.3600, -68.8600],
+  // La Vega
+  'jarabacoa': [19.1130, -70.6380], 'constanza': [18.9090, -70.7490], 'la vega': [19.2211, -70.5286],
+  // San Pedro de Macorís
+  'san pedro de macoris': [18.4530, -69.3090], 'juan dolio': [18.4400, -69.5300], 'guayacanes': [18.4350, -69.5700],
+  // María Trinidad Sánchez
+  'nagua': [19.3730, -69.8470], 'rio san juan': [19.6310, -70.0760],
+  // Otros
+  'bani': [18.2790, -70.3310], 'azua': [18.4530, -70.7350], 'moca': [19.3960, -70.5150],
+  'san cristobal': [18.4153, -70.1062], 'san francisco de macoris': [19.3011, -70.2527],
+  'monte cristi': [19.8674, -71.6500], 'barahona': [18.2090, -71.0990], 'pedernales': [18.0380, -71.7430],
+  'bonao': [18.9415, -70.4081], 'hato mayor': [18.7600, -69.2545], 'el seibo': [18.7656, -69.0367],
+  'miches': [18.9803, -69.0424], 'sabana de la mar': [19.0563, -69.3870],
+  'mao': [19.5543, -71.0763], 'dajabon': [19.5492, -71.7082],
 }
 
 function normalize(s: string) {
@@ -198,15 +219,41 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: typeof propiedad
 }
 
 const zonasSugerencias = [
+  // Distrito Nacional
   'Piantini, Distrito Nacional', 'Naco, Distrito Nacional', 'Serrallés, Distrito Nacional',
   'Bella Vista, Distrito Nacional', 'Arroyo Hondo, Distrito Nacional', 'Evaristo Morales, Distrito Nacional',
   'Los Cacicazgos, Distrito Nacional', 'Gazcue, Distrito Nacional', 'Ciudad Colonial, Distrito Nacional',
-  'Miramar, Distrito Nacional', 'La Esperilla, Distrito Nacional', 'Bávaro, La Altagracia',
-  'Punta Cana, La Altagracia', 'Downtown Punta Cana, La Altagracia', 'Cap Cana, La Altagracia', 'Los Corales, La Altagracia',
-  'Cabeza de Toro, La Altagracia', 'Los Jardines, Santiago', 'Cerros de Gurabo, Santiago',
-  'Reparto Conuco, Santiago', 'Las Terrenas, Samaná', 'Samaná', 'Puerto Plata', 'La Romana',
-  'Casa de Campo, La Romana', 'Jarabacoa, La Vega', 'Constanza, La Vega',
-  'San Pedro de Macorís', 'Santo Domingo Este', 'Santo Domingo Norte', 'Santo Domingo Oeste',
+  'Miramar, Distrito Nacional', 'La Esperilla, Distrito Nacional',
+  'Santo Domingo Este', 'Santo Domingo Norte', 'Santo Domingo Oeste', 'Boca Chica, Santo Domingo',
+  // La Altagracia
+  'Bávaro, La Altagracia', 'Punta Cana, La Altagracia', 'Downtown Punta Cana, La Altagracia',
+  'Cap Cana, La Altagracia', 'Los Corales, La Altagracia', 'Cabeza de Toro, La Altagracia',
+  'Uvero Alto, La Altagracia', 'Macao, La Altagracia', 'Cortecito, La Altagracia',
+  'Higüey, La Altagracia', 'San Rafael del Yuma, La Altagracia', 'Boca de Yuma, La Altagracia',
+  // Santiago
+  'Los Jardines, Santiago', 'Cerros de Gurabo, Santiago', 'Reparto Conuco, Santiago',
+  'Bella Vista, Santiago', 'Villa Olga, Santiago',
+  // Puerto Plata
+  'Puerto Plata', 'Sosúa, Puerto Plata', 'Cabarete, Puerto Plata', 'Costámbar, Puerto Plata',
+  'Cofresí, Puerto Plata', 'Playa Dorada, Puerto Plata', 'Luperón, Puerto Plata',
+  'Villa Isabela, Puerto Plata', 'La Isabela, Puerto Plata',
+  // Samaná
+  'Las Terrenas, Samaná', 'Samaná', 'Las Galeras, Samaná', 'Sánchez, Samaná',
+  'El Portillo, Samaná', 'Cosón, Samaná',
+  // La Romana
+  'La Romana', 'Casa de Campo, La Romana', 'Bayahibe, La Romana', 'Dominicus, La Romana',
+  // La Vega
+  'Jarabacoa, La Vega', 'Constanza, La Vega', 'La Vega',
+  // San Pedro / Macorís
+  'San Pedro de Macorís', 'Juan Dolio, San Pedro de Macorís', 'Guayacanes, San Pedro de Macorís',
+  // María Trinidad Sánchez
+  'Nagua, María Trinidad Sánchez', 'Río San Juan, María Trinidad Sánchez',
+  // El Seibo / Hato Mayor
+  'Miches, El Seibo', 'El Seibo', 'Hato Mayor', 'Sabana de la Mar, Hato Mayor',
+  // Otras provincias
+  'San Cristóbal', 'Baní, Peravia', 'Azua', 'Barahona', 'Pedernales',
+  'Moca, Espaillat', 'San Francisco de Macorís, Duarte', 'Bonao, Monseñor Nouel',
+  'Monte Cristi', 'Dajabón', 'Mao, Valverde',
 ]
 
 function BuscarContent() {
