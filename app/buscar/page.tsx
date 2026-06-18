@@ -51,7 +51,8 @@ function normalize(s: string) {
 function getLatLngFromZona(zona: string): [number, number] {
   if (!zona) return [18.4861, -69.9312]
   const z = normalize(zona)
-  for (const [key, coords] of Object.entries(ZONAS_COORDS)) {
+  const sorted = Object.entries(ZONAS_COORDS).sort((a, b) => b[0].length - a[0].length)
+  for (const [key, coords] of sorted) {
     if (z.includes(normalize(key))) return coords
   }
   return [18.4861, -69.9312]
@@ -60,7 +61,8 @@ function getLatLngFromZona(zona: string): [number, number] {
 function getZonaCoords(zona: string): { center: [number, number], zoom: number } {
   if (!zona) return { center: [18.735, -70.165], zoom: 8 }
   const z = normalize(zona)
-  for (const [key, coords] of Object.entries(ZONAS_COORDS)) {
+  const sorted = Object.entries(ZONAS_COORDS).sort((a, b) => b[0].length - a[0].length)
+  for (const [key, coords] of sorted) {
     if (z.includes(normalize(key))) return { center: coords, zoom: 13 }
   }
   return { center: [18.735, -70.165], zoom: 8 }
