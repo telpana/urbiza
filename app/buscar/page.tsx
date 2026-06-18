@@ -594,7 +594,7 @@ function BuscarContent() {
                     </div>
                     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                       <button onClick={e => e.stopPropagation()} style={{ all: 'unset', border: '1px solid #e0e0e0', borderRadius: 4, padding: '6px 10px', cursor: 'pointer', color: '#ccc', fontSize: 16, lineHeight: 1 }}>♡</button>
-                      <button onClick={e => e.stopPropagation()} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '7px 16px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Ver teléfono</button>
+                      <button onClick={e => { e.stopPropagation(); window.location.href = `/propiedad/${p.id}` }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '7px 16px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Ver teléfono</button>
                       <button onClick={e => { e.stopPropagation(); window.location.href = `/propiedad/${p.id}` }} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '7px 18px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Contactar</button>
                     </div>
                   </div>
