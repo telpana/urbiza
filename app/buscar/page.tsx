@@ -396,12 +396,12 @@ function BuscarContent() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {filtradas.map(p => (
-              <div key={p.id} style={{ display: 'flex', background: '#fff', borderBottom: '8px solid #f4f5f6', cursor: 'pointer', minHeight: 220 }}
+              <div key={p.id} style={{ display: 'flex', background: '#fff', borderBottom: '8px solid #f4f5f6', borderLeft: p.dest ? '4px solid #006D77' : 'none', cursor: 'pointer', minHeight: 220, boxShadow: p.dest ? '0 2px 12px rgba(0,109,119,0.10)' : 'none' }}
                 onMouseEnter={e => (e.currentTarget.style.background = '#fafefe')}
                 onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
-                <div style={{ width: 300, minWidth: 300, background: p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {p.dest && <div style={{ position: 'absolute', top: 10, left: 10, background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 600, padding: '3px 10px', borderRadius: 3 }}>Destacado</div>}
-                  {p.visitas && !p.dest && <div style={{ position: 'absolute', top: 10, left: 10, background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 600, padding: '3px 10px', borderRadius: 3 }}>Más visto</div>}
+                <div style={{ width: 300, minWidth: 300, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {p.dest && <div style={{ position: 'absolute', top: 10, left: 10, background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 3, display: 'flex', alignItems: 'center', gap: 4 }}>⭐ DESTACADO</div>}
+                  {p.visitas && !p.dest && <div style={{ position: 'absolute', top: 10, left: 10, background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 600, padding: '3px 10px', borderRadius: 3 }}>🔥 Más visto</div>}
                   <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.2">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                     <polyline points="9 22 9 12 15 12 15 22"/>
@@ -413,10 +413,13 @@ function BuscarContent() {
                 </div>
                 <div style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0 }}>
                   <div>
-                    <div style={{ fontSize: 15, fontWeight: 600, color: '#006D77', marginBottom: 8 }}>{p.titulo}</div>
+                    <div style={{ fontSize: 15, fontWeight: 600, color: '#006D77', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                      {p.titulo}
+                      {p.dest && <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 3 }}>DESTACADO</span>}
+                    </div>
                     <div style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 2 }}>
                       US$ {p.precio.toLocaleString('en-US')}
-                      <span style={{ fontSize: 13, color: '#aaa', fontWeight: 400, marginLeft: 10 }}>US$ {Math.round(p.precio / p.m2).toLocaleString('en-US')}/m²</span>
+                      {p.m2 > 0 && <span style={{ fontSize: 13, color: '#aaa', fontWeight: 400, marginLeft: 10 }}>US$ {Math.round(p.precio / p.m2).toLocaleString('en-US')}/m²</span>}
                     </div>
                     <div style={{ fontSize: 12, color: '#aaa', marginBottom: 12 }}>{formatDOP(p.precio)}</div>
                     <div style={{ fontSize: 13, color: '#444', marginBottom: 12 }}>
