@@ -350,8 +350,8 @@ function BuscarContent() {
     if (amenidadesFiltro.length > 0 && !amenidadesFiltro.every(a => p.amenidades.includes(a))) return false
     return true
   }).sort((a, b) => {
-    // Destacadas siempre primero sin importar el orden seleccionado
-    if (b.dest !== a.dest) return (b.dest ? 1 : 0) - (a.dest ? 1 : 0)
+    // Destacadas solo tienen prioridad en Relevancia
+    if (orden === 'Relevancia' && b.dest !== a.dest) return (b.dest ? 1 : 0) - (a.dest ? 1 : 0)
     if (orden === 'Baratos') return a.precio - b.precio
     if (orden === 'Caros') return b.precio - a.precio
     return 0
