@@ -363,7 +363,7 @@ export default function Home() {
                 placeholder={tr.hero.placeholder}
                 style={{ flex: 1, padding: '12px 14px', fontSize: 14, border: 'none', outline: 'none', color: '#222', background: '#fff', boxSizing: 'border-box', minWidth: 0 }}
               />
-              <select value={tipoInmueble} onChange={e => setTipoInmueble(e.target.value)} style={{ padding: '0 12px', fontSize: 13, border: 'none', borderLeft: '1px solid #e0e0e0', outline: 'none', color: '#555', background: '#f9f9f9', cursor: 'pointer' }}>
+              <select value={tipoInmueble} onChange={e => setTipoInmueble(e.target.value)} style={{ padding: '0 30px 0 12px', fontSize: 13, border: 'none', borderLeft: '1px solid #e0e0e0', outline: 'none', color: '#555', background: `#f9f9f9 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23888' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") no-repeat right 10px center`, appearance: 'none', WebkitAppearance: 'none', cursor: 'pointer' }}>
                 <option value="Apartamento">Apartamento</option>
                 <option value="Casa">Casa</option>
                 <option value="Villa">Villa</option>
