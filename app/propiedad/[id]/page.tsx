@@ -157,6 +157,8 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
   const [guardado, setGuardado] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
+  const [nombreUsuario, setNombreUsuario] = useState('')
+  const [telefonoUsuario, setTelefonoUsuario] = useState('')
 
   useEffect(() => {
     fetch('/api/visita', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ propiedadId: id }) })
@@ -167,8 +169,10 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
       if (!data.user) return
       setSesionActiva(true)
       setUserId(data.user.id)
-      const { data: usr } = await supabase.from('usuarios').select('plan').eq('id', data.user.id).single()
+      const { data: usr } = await supabase.from('usuarios').select('plan, nombre, telefono').eq('id', data.user.id).single()
       if (usr?.plan) setPlanUsuario(usr.plan)
+      if (usr?.nombre) { setNombreUsuario(usr.nombre); setNombreContacto(usr.nombre) }
+      if (usr?.telefono) { setTelefonoUsuario(usr.telefono); setTelefonoContacto(usr.telefono) }
       const { data: fav } = await supabase.from('favoritos').select('id').eq('usuario_id', data.user.id).eq('propiedad_id', id).maybeSingle()
       if (fav) setGuardado(true)
     })
@@ -209,12 +213,15 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   }
 
   const enviarMensaje = async () => {
+    if (!sesionActiva) { window.location.href = `/login?next=/propiedad/${id}`; return }
+    if (userId === propiedad?.usuario_id) { setErrorContacto('No puedes enviarte mensajes a ti mismo'); return }
     if (!nombreContacto || !mensaje) { setErrorContacto('El nombre y el mensaje son obligatorios'); return }
     setEnviando(true)
     setErrorContacto('')
     const { error } = await supabase.from('mensajes').insert({
       propiedad_id: id,
       vendedor_id: propiedad?.usuario_id,
+      remitente_id: userId,
       nombre_cliente: nombreContacto,
       telefono_cliente: telefonoContacto || null,
       mensaje,
@@ -223,8 +230,6 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
     setEnviado(true)
     setEnviando(false)
     setMensaje('')
-    setNombreContacto('')
-    setTelefonoContacto('')
   }
 
   if (cargando) return (
@@ -433,7 +438,17 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                 {/* FORMULARIO DE CONTACTO */}
                 <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: 14 }}>
                   <div style={{ fontSize: 12, fontWeight: 600, color: '#888', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>Enviar mensaje</div>
-                  {enviado ? (
+                  {!sesionActiva ? (
+                    <div style={{ background: '#f9f9f9', border: '1px solid #e8e8e8', borderRadius: 6, padding: '16px', textAlign: 'center' }}>
+                      <div style={{ fontSize: 13, color: '#555', marginBottom: 12 }}>Inicia sesión para enviar mensajes al anunciante</div>
+                      <a href={`/login?next=/propiedad/${id}`} style={{ display: 'inline-block', background: '#17A6B4', color: '#fff', padding: '9px 22px', borderRadius: 5, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>Iniciar sesión</a>
+                      <div style={{ marginTop: 10, fontSize: 12, color: '#aaa' }}>¿No tienes cuenta? <a href="/registro" style={{ color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>Regístrate gratis</a></div>
+                    </div>
+                  ) : userId === propiedad?.usuario_id ? (
+                    <div style={{ background: '#fff8e1', border: '1px solid #ffe082', borderRadius: 6, padding: '12px', textAlign: 'center', fontSize: 13, color: '#7a6000' }}>
+                      Este es tu propio anuncio
+                    </div>
+                  ) : enviado ? (
                     <div style={{ background: '#e0f5f7', border: '1px solid #c5e8ea', borderRadius: 6, padding: '14px', textAlign: 'center', fontSize: 13, color: '#004E57', fontWeight: 500 }}>
                       ✓ Mensaje enviado correctamente
                     </div>
