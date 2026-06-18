@@ -228,7 +228,7 @@ function SeccionNovedad({ titulo, subtitulo, props }: { titulo: string, subtitul
 
 export default function Home() {
   const [tipo, setTipo] = useState('Comprar')
-  const [tipoInmueble, setTipoInmueble] = useState('')
+  const [tipoInmueble, setTipoInmueble] = useState('Apartamento')
   const [verMapa, setVerMapa] = useState(false)
   const { idioma, setIdioma, tr } = useIdioma()
   const [queryHome, setQueryHome] = useState('')
@@ -364,13 +364,13 @@ export default function Home() {
                 style={{ flex: 1, padding: '12px 14px', fontSize: 14, border: 'none', outline: 'none', color: '#222', background: '#fff', boxSizing: 'border-box', minWidth: 0 }}
               />
               <select value={tipoInmueble} onChange={e => setTipoInmueble(e.target.value)} style={{ padding: '0 12px', fontSize: 13, border: 'none', borderLeft: '1px solid #e0e0e0', outline: 'none', color: '#555', background: '#f9f9f9', cursor: 'pointer' }}>
-                <option value="">Todos los tipos</option>
                 <option value="Apartamento">Apartamento</option>
                 <option value="Casa">Casa</option>
                 <option value="Villa">Villa</option>
                 <option value="Oficina">Oficina</option>
                 <option value="Terreno">Terreno</option>
                 <option value="Local comercial">Local comercial</option>
+                <option value="Edificio">Edificio</option>
               </select>
               <button onClick={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); if (queryHome) p.set('zona', queryHome); if (tipoInmueble) p.set('tipo', tipoInmueble); window.location.href = `/buscar?${p.toString()}` }} style={{ background: '#006D77', color: '#fff', border: 'none', padding: '0 26px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>{tr.hero.buscar}</button>
             </div>

@@ -281,6 +281,7 @@ function BuscarContent() {
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
   const [amenidadesFiltro, setAmenidadesFiltro] = useState<string[]>([])
   const [soloAei, setSoloAei] = useState(false)
+  const [pisosMin, setPisosMin] = useState(0)
   const [favoritosSet, setFavoritosSet] = useState<Set<string>>(new Set())
   const [userId, setUserId] = useState<string | null>(null)
 
@@ -352,7 +353,7 @@ function BuscarContent() {
     created_at: p.created_at || '',
   })) : propiedadesEjemplo
 
-  const tipos = ['Todos', 'Apartamento', 'Villa', 'Oficina', 'Terreno', 'Local comercial']
+  const tipos = ['Todos', 'Apartamento', 'Casa', 'Villa', 'Edificio', 'Oficina', 'Terreno', 'Local comercial']
   const ordenes = ['Relevancia', 'Recientes', 'Baratos', 'Caros']
 
   const filtradas = propiedadesActivas.filter((p: any) => {
@@ -520,29 +521,33 @@ function BuscarContent() {
             </div>
           </div>
 
-          {/* FILTRO HABITACIONES */}
-          <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>Habitaciones</div>
-            <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-              {[0, 1, 2, 3, 4].map(h => (
-                <button key={h} onClick={() => setHabMin(h)} style={{ all: 'unset', border: `1px solid ${habMin === h ? '#006D77' : '#ddd'}`, borderRadius: 4, padding: '6px 10px', fontSize: 12, cursor: 'pointer', color: habMin === h ? '#006D77' : '#666', background: habMin === h ? '#f0fafb' : '#fff' }}>
-                  {h === 0 ? '0 (estudio)' : h === 4 ? '4+' : h}
-                </button>
-              ))}
+          {/* FILTRO HABITACIONES — oculto para Edificio y Terreno */}
+          {tipo !== 'Edificio' && tipo !== 'Terreno' && (
+            <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>Habitaciones</div>
+              <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+                {[0, 1, 2, 3, 4].map(h => (
+                  <button key={h} onClick={() => setHabMin(h)} style={{ all: 'unset', border: `1px solid ${habMin === h ? '#006D77' : '#ddd'}`, borderRadius: 4, padding: '6px 10px', fontSize: 12, cursor: 'pointer', color: habMin === h ? '#006D77' : '#666', background: habMin === h ? '#f0fafb' : '#fff' }}>
+                    {h === 0 ? '0 (estudio)' : h === 4 ? '4+' : h}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* FILTRO BAÑOS */}
-          <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>Baños</div>
-            <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-              {[1, 2, 3].map(b => (
-                <button key={b} onClick={() => setBanosMin(b === banosMin ? 0 : b)} style={{ all: 'unset', border: `1px solid ${banosMin === b ? '#006D77' : '#ddd'}`, borderRadius: 4, padding: '6px 12px', fontSize: 12, cursor: 'pointer', color: banosMin === b ? '#006D77' : '#666', background: banosMin === b ? '#f0fafb' : '#fff' }}>
-                  {b === 3 ? '3+' : b}
-                </button>
-              ))}
+          {/* FILTRO BAÑOS — oculto para Edificio y Terreno */}
+          {tipo !== 'Edificio' && tipo !== 'Terreno' && (
+            <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>Baños</div>
+              <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+                {[1, 2, 3].map(b => (
+                  <button key={b} onClick={() => setBanosMin(b === banosMin ? 0 : b)} style={{ all: 'unset', border: `1px solid ${banosMin === b ? '#006D77' : '#ddd'}`, borderRadius: 4, padding: '6px 12px', fontSize: 12, cursor: 'pointer', color: banosMin === b ? '#006D77' : '#666', background: banosMin === b ? '#f0fafb' : '#fff' }}>
+                    {b === 3 ? '3+' : b}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* FILTRO CARACTERÍSTICAS */}
           <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
@@ -573,6 +578,20 @@ function BuscarContent() {
               ))}
             </div>
           </div>
+
+          {/* FILTRO EDIFICIO */}
+          {tipo === 'Edificio' && (
+            <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>Número de pisos mínimo</div>
+              <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+                {[0, 3, 5, 8, 12].map(p => (
+                  <button key={p} onClick={() => setPisosMin(p)} style={{ all: 'unset', border: `1px solid ${pisosMin === p ? '#006D77' : '#ddd'}`, borderRadius: 4, padding: '6px 10px', fontSize: 12, cursor: 'pointer', color: pisosMin === p ? '#006D77' : '#666', background: pisosMin === p ? '#f0fafb' : '#fff' }}>
+                    {p === 0 ? 'Cualquiera' : `${p}+`}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* FILTRO AEI */}
           <div style={{ paddingBottom: 14 }}>

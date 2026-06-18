@@ -501,7 +501,7 @@ export default function Panel() {
 
               {/* Filtro por tipo */}
               <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
-                {['Todos', 'Apartamento', 'Villa', 'Oficina', 'Terreno', 'Local comercial'].map(t => (
+                {['Todos', 'Apartamento', 'Casa', 'Villa', 'Edificio', 'Oficina', 'Terreno', 'Local comercial'].map(t => (
                   <button key={t} onClick={() => setFiltroTipo(t)} style={{ all: 'unset', border: `1px solid ${filtroTipo === t ? '#006D77' : '#e0e0e0'}`, borderRadius: 20, padding: '5px 14px', fontSize: 12, color: filtroTipo === t ? '#006D77' : '#666', background: filtroTipo === t ? '#f0fafb' : '#fff', cursor: 'pointer', fontWeight: filtroTipo === t ? 600 : 400 }}>
                     {t}
                   </button>
@@ -605,7 +605,7 @@ export default function Panel() {
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Tipo de inmueble</label>
                     <select value={pubTipo} onChange={e => setPubTipo(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
-                      <option>Apartamento</option><option>Casa</option><option>Villa</option><option>Oficina</option><option>Terreno</option><option>Local comercial</option>
+                      <option>Apartamento</option><option>Casa</option><option>Villa</option><option>Edificio</option><option>Oficina</option><option>Terreno</option><option>Local comercial</option>
                     </select>
                   </div>
                   <div>
