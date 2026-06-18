@@ -177,11 +177,13 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   const toggleGuardado = async () => {
     if (!userId) { window.location.href = '/login'; return }
     if (guardado) {
-      await supabase.from('favoritos').delete().eq('usuario_id', userId).eq('propiedad_id', id)
       setGuardado(false)
+      const { error } = await supabase.from('favoritos').delete().eq('usuario_id', userId).eq('propiedad_id', id)
+      if (error) { console.error('favoritos delete:', error); setGuardado(true) }
     } else {
-      await supabase.from('favoritos').insert({ usuario_id: userId, propiedad_id: id })
       setGuardado(true)
+      const { error } = await supabase.from('favoritos').insert({ usuario_id: userId, propiedad_id: id })
+      if (error) { console.error('favoritos insert:', error); setGuardado(false) }
     }
   }
 

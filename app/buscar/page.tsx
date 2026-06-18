@@ -300,11 +300,13 @@ function BuscarContent() {
     e.stopPropagation()
     if (!userId) { window.location.href = '/login'; return }
     if (favoritosSet.has(propId)) {
-      await supabase.from('favoritos').delete().eq('usuario_id', userId).eq('propiedad_id', propId)
       setFavoritosSet(prev => { const s = new Set(prev); s.delete(propId); return s })
+      const { error } = await supabase.from('favoritos').delete().eq('usuario_id', userId).eq('propiedad_id', propId)
+      if (error) { console.error('favoritos delete:', error); setFavoritosSet(prev => new Set(prev).add(propId)) }
     } else {
-      await supabase.from('favoritos').insert({ usuario_id: userId, propiedad_id: propId })
       setFavoritosSet(prev => new Set(prev).add(propId))
+      const { error } = await supabase.from('favoritos').insert({ usuario_id: userId, propiedad_id: propId })
+      if (error) { console.error('favoritos insert:', error); setFavoritosSet(prev => { const s = new Set(prev); s.delete(propId); return s }) }
     }
   }
 
