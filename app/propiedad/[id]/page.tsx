@@ -80,6 +80,38 @@ function MapaUbicacion({ zona }: { zona: string }) {
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />
 }
 
+function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolean }) {
+  const [activa, setActiva] = useState(0)
+  if (fotos.length === 0) {
+    return (
+      <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden', marginBottom: 16 }}>
+        <div style={{ height: 380, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+          {destacado && <div style={{ position: 'absolute', top: 12, left: 12, background: '#006D77', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 12px', borderRadius: 3 }}>⭐ DESTACADO</div>}
+          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="0.8" opacity="0.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+      </div>
+    )
+  }
+  return (
+    <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden', marginBottom: 16 }}>
+      <div style={{ height: 420, position: 'relative', background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        {destacado && <div style={{ position: 'absolute', top: 12, left: 12, zIndex: 2, background: '#006D77', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 12px', borderRadius: 3 }}>⭐ DESTACADO</div>}
+        <img src={fotos[activa]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <div style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 11, padding: '4px 10px', borderRadius: 20 }}>{activa + 1} / {fotos.length}</div>
+        {activa > 0 && <button onClick={() => setActiva(a => a - 1)} style={{ all: 'unset', position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.9)', width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 20, color: '#333' }}>‹</button>}
+        {activa < fotos.length - 1 && <button onClick={() => setActiva(a => a + 1)} style={{ all: 'unset', position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.9)', width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 20, color: '#333' }}>›</button>}
+      </div>
+      {fotos.length > 1 && (
+        <div style={{ display: 'flex', gap: 6, padding: '10px 12px', background: '#f9f9f9', overflowX: 'auto' }}>
+          {fotos.map((src, i) => (
+            <img key={i} src={src} onClick={() => setActiva(i)} style={{ width: 72, height: 52, objectFit: 'cover', borderRadius: 4, flexShrink: 0, cursor: 'pointer', border: activa === i ? '2px solid #006D77' : '2px solid transparent' }} />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function Propiedad({ params }: { params: { id: string } }) {
   const [propiedad, setPropiedad] = useState<any>(null)
   const [cargando, setCargando] = useState(true)
@@ -158,6 +190,7 @@ export default function Propiedad({ params }: { params: { id: string } }) {
 
   const v = propiedad.usuarios || {}
   const amenidadesArray: string[] = Array.isArray(propiedad.amenidades) ? propiedad.amenidades : []
+  const fotos: string[] = Array.isArray(propiedad.fotos) ? propiedad.fotos : []
   const esProfesional = v.plan === 'profesional'
   const tituloVendedor = v.inmobiliaria || v.nombre || 'Propietario'
   const telVendedor = v.telefono || ''
@@ -221,18 +254,8 @@ export default function Propiedad({ params }: { params: { id: string } }) {
           {/* COLUMNA IZQUIERDA */}
           <div>
 
-            {/* GALERÍA — placeholder hasta tener imágenes reales */}
-            <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden', marginBottom: 16 }}>
-              <div style={{ height: 380, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                {propiedad.destacado && (
-                  <div style={{ position: 'absolute', top: 12, left: 12, background: '#006D77', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 12px', borderRadius: 3 }}>⭐ DESTACADO</div>
-                )}
-                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="0.8" opacity="0.2">
-                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                  <polyline points="9 22 9 12 15 12 15 22"/>
-                </svg>
-              </div>
-            </div>
+            {/* GALERÍA */}
+            <GaleriaFotos fotos={fotos} destacado={propiedad.destacado} />
 
             {/* TÍTULO Y PRECIO */}
             <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>

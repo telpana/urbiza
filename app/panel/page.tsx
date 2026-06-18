@@ -93,6 +93,8 @@ export default function Panel() {
   const [anuncioADestacar, setAnuncioADestacar] = useState<any>(null)
   const [mensajesLeidos, setMensajesLeidos] = useState<Record<number, boolean>>({})
   const [amenidadesSeleccionadas, setAmenidadesSeleccionadas] = useState<string[]>([])
+  const [pubFotos, setPubFotos] = useState<File[]>([])
+  const [pubFotosPrev, setPubFotosPrev] = useState<string[]>([])
   const [pubTitulo, setPubTitulo] = useState('')
   const [pubPrecio, setPubPrecio] = useState('')
   const [pubM2, setPubM2] = useState('')
@@ -227,6 +229,22 @@ export default function Panel() {
     setAmenidadesSeleccionadas(prev => prev.includes(id) ? prev.filter(a => a !== id) : [...prev, id])
   }
 
+  const handleFotos = (files: FileList | null) => {
+    if (!files) return
+    const nuevas = Array.from(files).slice(0, 10 - pubFotos.length)
+    setPubFotos(prev => [...prev, ...nuevas])
+    nuevas.forEach(f => {
+      const reader = new FileReader()
+      reader.onload = e => setPubFotosPrev(prev => [...prev, e.target?.result as string])
+      reader.readAsDataURL(f)
+    })
+  }
+
+  const quitarFoto = (idx: number) => {
+    setPubFotos(prev => prev.filter((_, i) => i !== idx))
+    setPubFotosPrev(prev => prev.filter((_, i) => i !== idx))
+  }
+
   const guardarPerfil = async () => {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
@@ -246,6 +264,19 @@ export default function Panel() {
     setPubError('')
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setPubError('Debes iniciar sesión para publicar'); setPubLoading(false); return }
+
+    // Subir fotos a Supabase Storage
+    const fotosUrls: string[] = []
+    for (const foto of pubFotos) {
+      const ext = foto.name.split('.').pop()
+      const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      const { data: uploadData, error: uploadErr } = await supabase.storage.from('propiedades').upload(path, foto, { upsert: true })
+      if (!uploadErr && uploadData) {
+        const { data: urlData } = supabase.storage.from('propiedades').getPublicUrl(uploadData.path)
+        fotosUrls.push(urlData.publicUrl)
+      }
+    }
+
     const { error } = await supabase.from('propiedades').insert({
       usuario_id: user.id,
       titulo: pubTitulo,
@@ -261,6 +292,7 @@ export default function Panel() {
       parqueos: pubParqueos ? Number(pubParqueos) : null,
       planta: pubPlanta || null,
       anio_construccion: pubAnio ? Number(pubAnio) : null,
+      fotos: fotosUrls.length > 0 ? fotosUrls : null,
       estado: 'activo',
     })
     if (error) { setPubError('Error al publicar. Inténtalo de nuevo.'); setPubLoading(false); return }
@@ -271,6 +303,8 @@ export default function Panel() {
     setPubLoading(false)
     setPubTitulo(''); setPubPrecio(''); setPubM2(''); setPubDesc('')
     setPubProvincia(''); setPubSector(''); setPubHab('1'); setPubBanos('1')
+    setPubParqueos(''); setPubPlanta(''); setPubAnio('')
+    setPubFotos([]); setPubFotosPrev([])
     setAmenidadesSeleccionadas([])
     // Ir a Mis anuncios automáticamente
     setTimeout(() => { setSeccion('anuncios'); setPubExito(false) }, 1200)
@@ -561,14 +595,26 @@ export default function Panel() {
 
                 {/* FOTOS */}
                 <div style={{ marginBottom: 20 }}>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Fotos</label>
-                  <div style={{ border: '2px dashed #e0e0e0', borderRadius: 6, padding: '32px', textAlign: 'center', cursor: 'pointer', background: '#fafafa' }}
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Fotos <span style={{ color: '#aaa', fontWeight: 400 }}>(hasta 10)</span></label>
+                  <label style={{ display: 'block', border: '2px dashed #e0e0e0', borderRadius: 6, padding: '24px', textAlign: 'center', cursor: 'pointer', background: '#fafafa' }}
                     onMouseEnter={e => e.currentTarget.style.borderColor='#006D77'}
                     onMouseLeave={e => e.currentTarget.style.borderColor='#e0e0e0'}>
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="1.5" style={{ margin: '0 auto 10px', display: 'block' }}><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    <div style={{ fontSize: 14, color: '#555', marginBottom: 4 }}>Arrastra tus fotos aquí o pulsa para seleccionar</div>
-                    <div style={{ fontSize: 12, color: '#aaa' }}>JPG, PNG — máximo 10 fotos, 5MB cada una</div>
-                  </div>
+                    <input type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={e => handleFotos(e.target.files)} />
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="1.5" style={{ margin: '0 auto 8px', display: 'block' }}><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <div style={{ fontSize: 13, color: '#555', marginBottom: 2 }}>Pulsa para seleccionar fotos</div>
+                    <div style={{ fontSize: 11, color: '#aaa' }}>JPG, PNG — máximo 10 fotos, 5MB cada una</div>
+                  </label>
+                  {pubFotosPrev.length > 0 && (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8, marginTop: 12 }}>
+                      {pubFotosPrev.map((src, i) => (
+                        <div key={i} style={{ position: 'relative', aspectRatio: '4/3', borderRadius: 6, overflow: 'hidden', background: '#e8e8e8' }}>
+                          <img src={src} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <button onClick={() => quitarFoto(i)} style={{ all: 'unset', position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', color: '#fff', width: 20, height: 20, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 12, lineHeight: 1 }}>×</button>
+                          {i === 0 && <div style={{ position: 'absolute', bottom: 4, left: 4, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>PORTADA</div>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {pubError && <div style={{ background: '#fee2e2', border: '1px solid #fca5a5', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#991b1b', marginBottom: 14 }}>{pubError}</div>}
