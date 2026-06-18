@@ -336,6 +336,7 @@ export default function Panel() {
 
   const publicarAnuncio = async () => {
     if (!pubTitulo || !pubPrecio || !pubProvincia || !pubSector) { setPubError('Título, precio, provincia y sector son obligatorios'); return }
+    if (pubFotos.length === 0) { setPubError('Debes subir al menos una foto del inmueble'); return }
     setPubLoading(true)
     setPubError('')
     const { data: { user } } = await supabase.auth.getUser()

@@ -456,7 +456,11 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
               <button onClick={toggleGuardado} style={{ all: 'unset', flex: 1, border: `1px solid ${guardado ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, padding: '10px', fontSize: 12, color: guardado ? '#006D77' : '#555', cursor: 'pointer', textAlign: 'center', background: guardado ? '#e0f5f7' : '#fff', fontWeight: guardado ? 600 : 400 }}>
                 {guardado ? '♥ Guardado' : '♡ Guardar'}
               </button>
-              <button style={{ all: 'unset', flex: 1, border: '1px solid #e0e0e0', borderRadius: 6, padding: '10px', fontSize: 12, color: '#555', cursor: 'pointer', textAlign: 'center', background: '#fff' }}>↗ Compartir</button>
+              <button onClick={async () => {
+                const url = window.location.href.split('?')[0]
+                if (navigator.share) { navigator.share({ title: propiedad?.titulo || 'Propiedad en Urbiza', url }) }
+                else { await navigator.clipboard.writeText(url); alert('Enlace copiado al portapapeles') }
+              }} style={{ all: 'unset', flex: 1, border: '1px solid #e0e0e0', borderRadius: 6, padding: '10px', fontSize: 12, color: '#555', cursor: 'pointer', textAlign: 'center', background: '#fff' }}>↗ Compartir</button>
             </div>
           </div>
         </div>
