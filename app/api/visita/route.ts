@@ -11,30 +11,16 @@ export async function POST(req: Request) {
     const { propiedadId } = await req.json()
     if (!propiedadId) return NextResponse.json({ error: 'Falta propiedadId' }, { status: 400 })
 
-    const { data, error: selectError } = await supabase
-      .from('propiedades')
-      .select('visitas')
-      .eq('id', propiedadId)
-      .single()
+    const { error } = await supabase.rpc('increment_visitas', { prop_id: propiedadId })
 
-    if (selectError) {
-      console.error('[visita] select error:', selectError)
-      return NextResponse.json({ error: selectError.message }, { status: 500 })
+    if (error) {
+      console.error('[visita] rpc error:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    const { error: updateError } = await supabase
-      .from('propiedades')
-      .update({ visitas: (data?.visitas || 0) + 1 })
-      .eq('id', propiedadId)
-
-    if (updateError) {
-      console.error('[visita] update error:', updateError)
-      return NextResponse.json({ error: updateError.message }, { status: 500 })
-    }
-
-    return NextResponse.json({ ok: true, visitas: (data?.visitas || 0) + 1 })
+    return NextResponse.json({ ok: true })
   } catch (error: any) {
-    console.error('[visita] catch error:', error)
+    console.error('[visita] catch:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 }
