@@ -444,10 +444,10 @@ function BuscarContent() {
       </div>
 
       {/* BODY */}
-      <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', minHeight: 'calc(100vh - 90px)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', height: 'calc(100vh - 90px)', overflow: 'hidden' }}>
 
         {/* SIDEBAR */}
-        <div style={{ background: '#fff', borderRight: '1px solid #e8e8e8', padding: '14px', overflowY: 'auto' }}>
+        <div style={{ background: '#fff', borderRight: '1px solid #e8e8e8', padding: '14px', overflowY: 'auto', isolation: 'isolate' }}>
 
           {/* MAPA MINI LIMPIO */}
           <div style={{ border: '1px solid #e0e0e0', borderRadius: 6, overflow: 'hidden', marginBottom: 14 }}>
@@ -565,7 +565,7 @@ function BuscarContent() {
         </div>
 
         {/* RESULTADOS */}
-        <div>
+        <div style={{ overflowY: 'auto' }}>
           <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <h1 style={{ fontSize: 18, fontWeight: 600, color: '#111', margin: 0 }}>
