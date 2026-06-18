@@ -101,6 +101,9 @@ export default function Panel() {
   const [pubOperacion, setPubOperacion] = useState('Venta')
   const [pubHab, setPubHab] = useState('1')
   const [pubBanos, setPubBanos] = useState('1')
+  const [pubParqueos, setPubParqueos] = useState('')
+  const [pubPlanta, setPubPlanta] = useState('')
+  const [pubAnio, setPubAnio] = useState('')
   const [pubProvincia, setPubProvincia] = useState('')
   const [pubSector, setPubSector] = useState('')
   const [pubLoading, setPubLoading] = useState(false)
@@ -255,6 +258,9 @@ export default function Panel() {
       habitaciones: Number(pubHab),
       banos: Number(pubBanos),
       amenidades: amenidadesSeleccionadas,
+      parqueos: pubParqueos ? Number(pubParqueos) : null,
+      planta: pubPlanta || null,
+      anio_construccion: pubAnio ? Number(pubAnio) : null,
       estado: 'activo',
     })
     if (error) { setPubError('Error al publicar. Inténtalo de nuevo.'); setPubLoading(false); return }
@@ -517,6 +523,21 @@ export default function Panel() {
                     <select value={pubBanos} onChange={e => setPubBanos(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
                       <option value="1">1</option><option value="2">2</option><option value="3">3+</option>
                     </select>
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 16 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Parqueos <span style={{ color: '#aaa', fontWeight: 400 }}>(opcional)</span></label>
+                    <input type="number" min="0" value={pubParqueos} onChange={e => setPubParqueos(e.target.value)} placeholder="Ej: 2" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Nº de planta <span style={{ color: '#aaa', fontWeight: 400 }}>(opcional)</span></label>
+                    <input type="text" value={pubPlanta} onChange={e => setPubPlanta(e.target.value)} placeholder="Ej: 4ª planta" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Año de construcción <span style={{ color: '#aaa', fontWeight: 400 }}>(opcional)</span></label>
+                    <input type="number" min="1900" max="2030" value={pubAnio} onChange={e => setPubAnio(e.target.value)} placeholder="Ej: 2020" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
                 </div>
 
