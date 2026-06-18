@@ -20,7 +20,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'evaristo morales': [18.4870, -69.9420], 'la esperilla': [18.4780, -69.9330],
   'ciudad colonial': [18.4740, -69.8880], 'distrito nacional': [18.4861, -69.9312],
   'santo domingo': [18.4861, -69.9312], 'santo domingo este': [18.4900, -69.8600],
-  'punta cana': [18.573523, -68.367514], 'downtown punta cana': [18.638436, -68.391718],
+  'punta cana': [18.5674, -68.3634], 'downtown punta cana': [18.638436, -68.391718],
   'bavaro': [18.6820, -68.4780], 'cap cana': [18.5100, -68.4400],
   'la altagracia': [18.5654, -68.4500], 'los corales': [18.6600, -68.4500],
   'santiago': [19.4517, -70.6970], 'las terrenas': [19.3100, -69.5200],
