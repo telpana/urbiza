@@ -354,9 +354,8 @@ function BuscarContent() {
     if (orden === 'Relevancia' && b.dest !== a.dest) return (b.dest ? 1 : 0) - (a.dest ? 1 : 0)
     if (orden === 'Baratos') return a.precio - b.precio
     if (orden === 'Caros') return b.precio - a.precio
-    if (orden === 'Recientes') return b.created_at.localeCompare(a.created_at)
-    // Relevancia sin destacados: más recientes primero
-    return b.created_at.localeCompare(a.created_at)
+    if (orden === 'Recientes') return (b.created_at || '').localeCompare(a.created_at || '')
+    return (b.created_at || '').localeCompare(a.created_at || '')
   })
 
   const handleQueryChange = (val: string) => {
