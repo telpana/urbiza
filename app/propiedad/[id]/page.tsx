@@ -25,7 +25,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'la altagracia': [18.5654, -68.4500], 'los corales': [18.6600, -68.4500],
   'santiago': [19.4517, -70.6970], 'las terrenas': [19.3100, -69.5200],
   'puerto plata': [19.7950, -70.6910], 'sosua': [19.7600, -70.5200],
-  'la romana': [18.4273, -68.9728], 'jarabacoa': [19.1130, -70.6380],
+  'la romana': [18.4273, -68.9728], 'casa de campo': [18.4080, -68.9130], 'jarabacoa': [19.1130, -70.6380],
   'samana': [19.2060, -69.3360], 'san pedro de macoris': [18.4530, -69.3090],
   'boca chica': [18.4490, -69.6080], 'juan dolio': [18.4400, -69.5300],
 }

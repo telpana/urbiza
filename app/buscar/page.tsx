@@ -36,7 +36,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'reparto conuco': [19.4400, -70.6900], 'villa progreso': [19.4550, -70.6600],
   'las terrenas': [19.3100, -69.5200], 'puerto plata': [19.7950, -70.6910], 'sosua': [19.7600, -70.5200],
   'cabarete': [19.7700, -70.4100], 'costambar': [19.7900, -70.7200],
-  'la romana': [18.4273, -68.9728], 'casa de campo': [18.4000, -68.9700],
+  'la romana': [18.4273, -68.9728], 'casa de campo': [18.4080, -68.9130],
   'jarabacoa': [19.1130, -70.6380], 'constanza': [18.9090, -70.7490],
   'samana': [19.2060, -69.3360], 'las galeras': [19.2320, -69.2200],
   'san pedro de macoris': [18.4530, -69.3090], 'bani': [18.2790, -70.3310],
