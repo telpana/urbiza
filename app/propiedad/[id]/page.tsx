@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useRef, use } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../../supabase'
 
 const USD_TO_DOP = 59.5
@@ -142,6 +143,7 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
 
 export default function Propiedad({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
+  const searchParams = useSearchParams()
   const [propiedad, setPropiedad] = useState<any>(null)
   const [cargando, setCargando] = useState(true)
   const [mensaje, setMensaje] = useState('')
@@ -150,7 +152,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   const [enviando, setEnviando] = useState(false)
   const [enviado, setEnviado] = useState(false)
   const [errorContacto, setErrorContacto] = useState('')
-  const [telVisible, setTelVisible] = useState(false)
+  const [telVisible, setTelVisible] = useState(searchParams.get('tel') === '1')
   const [sesionActiva, setSesionActiva] = useState(false)
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
 
@@ -395,16 +397,18 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
 
               <div style={{ padding: '16px 18px' }}>
                 {/* TELÉFONO */}
-                {telVendedor && !telVisible && (
+                {!telVisible && (
                   <button onClick={handleVerTelefono} style={{ all: 'unset', width: '100%', background: '#006D77', color: '#fff', padding: '11px', borderRadius: 5, fontSize: 13, fontWeight: 600, cursor: 'pointer', textAlign: 'center', display: 'block', marginBottom: 14, boxSizing: 'border-box' }}>
-                    📞 Ver teléfono
+                    Ver teléfono
                   </button>
                 )}
-                {telVendedor && telVisible && (
+                {telVisible && (
                   <div style={{ background: '#e0f5f7', border: '1px solid #b2dde2', borderRadius: 5, padding: '12px 14px', marginBottom: 14, textAlign: 'center' }}>
                     <div style={{ fontSize: 11, color: '#555', marginBottom: 4 }}>Teléfono de contacto</div>
-                    <a href={`tel:${telVendedor}`} style={{ fontSize: 20, fontWeight: 700, color: '#006D77', textDecoration: 'none', display: 'block' }}>{telVendedor}</a>
-                    <a href={`https://wa.me/${telVendedor.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: '#25D366', fontWeight: 600, textDecoration: 'none', marginTop: 6, display: 'inline-block' }}>💬 WhatsApp</a>
+                    {telVendedor
+                      ? <a href={`tel:${telVendedor}`} style={{ fontSize: 20, fontWeight: 700, color: '#006D77', textDecoration: 'none', display: 'block' }}>{telVendedor}</a>
+                      : <span style={{ fontSize: 13, color: '#888' }}>El propietario no ha publicado su teléfono</span>
+                    }
                   </div>
                 )}
 
