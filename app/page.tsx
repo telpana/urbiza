@@ -239,6 +239,7 @@ export default function Home() {
   const [slideIdx, setSlideIdx] = useState(0)
   const [sesionActiva, setSesionActiva] = useState(false)
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
+  const [idiomaOpen, setIdiomaOpen] = useState(false)
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -293,21 +294,32 @@ export default function Home() {
             { label: 'Comprar', href: '/buscar?operacion=venta' },
             { label: 'Alquilar', href: '/buscar?operacion=alquiler' },
           ].map((item) => (
-            <a key={item.label} href={item.href} style={{ padding: '0 14px', height: 60, display: 'flex', alignItems: 'center', fontSize: 14, color: '#555', textDecoration: 'none', borderBottom: '2.5px solid transparent' }}
-              onMouseEnter={e => { e.currentTarget.style.color = '#006D77'; e.currentTarget.style.borderBottomColor = '#006D77' }}
-              onMouseLeave={e => { e.currentTarget.style.color = '#555'; e.currentTarget.style.borderBottomColor = 'transparent' }}>
+            <a key={item.label} href={item.href} style={{ padding: '0 14px', alignSelf: 'stretch', display: 'flex', alignItems: 'center', fontSize: 14, color: '#555', textDecoration: 'none', boxShadow: 'inset 0 -2.5px 0 transparent' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#006D77'; e.currentTarget.style.boxShadow = 'inset 0 -2.5px 0 #006D77' }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#555'; e.currentTarget.style.boxShadow = 'inset 0 -2.5px 0 transparent' }}>
               {item.label}
             </a>
           ))}
         </div>
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
-            <select value={idioma} onChange={e => setIdioma(e.target.value as any)} style={{ fontSize: 13, color: '#006D77', border: 'none', background: 'transparent', cursor: 'pointer', outline: 'none', padding: '0 16px 0 0', appearance: 'none', WebkitAppearance: 'none', fontWeight: 600 }}>
-              <option value="es" style={{ color: '#333', background: '#fff' }}>ES</option>
-              <option value="en" style={{ color: '#333', background: '#fff' }}>EN</option>
-              <option value="fr" style={{ color: '#333', background: '#fff' }}>FR</option>
-            </select>
-            <svg style={{ position: 'absolute', right: 0, pointerEvents: 'none' }} width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#006D77" strokeWidth="1.5" strokeLinecap="round"/></svg>
+          <div style={{ position: 'relative' }} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setIdiomaOpen(false) }}>
+            <button onClick={() => setIdiomaOpen(!idiomaOpen)} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 600, color: '#555', cursor: 'pointer', padding: '5px 8px', borderRadius: 4 }}
+              onMouseEnter={e => e.currentTarget.style.color = '#006D77'}
+              onMouseLeave={e => e.currentTarget.style.color = '#555'}>
+              {idioma.toUpperCase()}
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
+            </button>
+            {idiomaOpen && (
+              <div style={{ position: 'absolute', top: 'calc(100% + 6px)', right: 0, background: '#fff', border: '1px solid #e8e8e8', borderRadius: 6, boxShadow: '0 4px 16px rgba(0,0,0,0.10)', overflow: 'hidden', zIndex: 200, minWidth: 64 }}>
+                {(['es', 'en', 'fr'] as const).map(l => (
+                  <button key={l} onClick={() => { setIdioma(l); setIdiomaOpen(false) }} style={{ all: 'unset', display: 'block', width: '100%', padding: '9px 16px', fontSize: 13, fontWeight: idioma === l ? 700 : 400, color: idioma === l ? '#006D77' : '#444', cursor: 'pointer', textAlign: 'left', boxSizing: 'border-box' }}
+                    onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                    {l.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           {sesionActiva
             ? <a href="/panel" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 600 }}>Mi cuenta</a>
@@ -338,32 +350,19 @@ export default function Home() {
                 </button>
               ))}
             </div>
-            <div style={{ display: 'flex', border: '1.5px solid #006D77', borderRadius: 4, overflow: 'visible' }}>
+            <div style={{ position: 'relative' }}>
+            <div style={{ display: 'flex', border: '1.5px solid #006D77', borderRadius: 4, overflow: 'hidden' }}>
               <div style={{ display: 'flex', alignItems: 'center', padding: '0 12px', background: '#f9f9f9', borderRight: '1px solid #e0e0e0' }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               </div>
-              <div style={{ flex: 1, position: 'relative' }}>
-                <input
-                  type="text"
-                  value={queryHome}
-                  onChange={e => handleQueryHome(e.target.value)}
-                  onBlur={() => setTimeout(() => setMostrarSugHome(false), 150)}
-                  placeholder={tr.hero.placeholder}
-                  style={{ width: '100%', padding: '12px 14px', fontSize: 14, border: 'none', outline: 'none', color: '#222', background: '#fff', boxSizing: 'border-box' }}
-                />
-                {mostrarSugHome && sugHome.length > 0 && (
-                  <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #e0e0e0', borderTop: 'none', borderRadius: '0 0 6px 6px', boxShadow: '0 4px 16px rgba(0,0,0,0.12)', zIndex: 200 }}>
-                    {sugHome.map((s: string, i: number) => (
-                      <div key={i} onMouseDown={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); p.set('zona', s); window.location.href = `/buscar?${p.toString()}` }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', fontSize: 14, color: '#333', cursor: 'pointer', borderBottom: i < sugHome.length - 1 ? '1px solid #f5f5f5' : 'none' }}
-                        onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
-                        onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                        {s}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <input
+                type="text"
+                value={queryHome}
+                onChange={e => handleQueryHome(e.target.value)}
+                onBlur={() => setTimeout(() => setMostrarSugHome(false), 150)}
+                placeholder={tr.hero.placeholder}
+                style={{ flex: 1, padding: '12px 14px', fontSize: 14, border: 'none', outline: 'none', color: '#222', background: '#fff', boxSizing: 'border-box', minWidth: 0 }}
+              />
               <select value={tipoInmueble} onChange={e => setTipoInmueble(e.target.value)} style={{ padding: '0 12px', fontSize: 13, border: 'none', borderLeft: '1px solid #e0e0e0', outline: 'none', color: '#555', background: '#f9f9f9', cursor: 'pointer' }}>
                 <option value="">Todos los tipos</option>
                 <option value="Apartamento">Apartamento</option>
@@ -375,6 +374,18 @@ export default function Home() {
               </select>
               <button onClick={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); if (queryHome) p.set('zona', queryHome); if (tipoInmueble) p.set('tipo', tipoInmueble); window.location.href = `/buscar?${p.toString()}` }} style={{ background: '#006D77', color: '#fff', border: 'none', padding: '0 26px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>{tr.hero.buscar}</button>
             </div>
+            {mostrarSugHome && sugHome.length > 0 && (
+              <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #e0e0e0', borderTop: 'none', borderRadius: '0 0 6px 6px', boxShadow: '0 4px 16px rgba(0,0,0,0.12)', zIndex: 200 }}>
+                {sugHome.map((s: string, i: number) => (
+                  <div key={i} onMouseDown={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); p.set('zona', s); window.location.href = `/buscar?${p.toString()}` }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', fontSize: 14, color: '#333', cursor: 'pointer', borderBottom: i < sugHome.length - 1 ? '1px solid #f5f5f5' : 'none' }}
+                    onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
+                    onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                    {s}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
         </div>
