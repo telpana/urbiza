@@ -48,24 +48,34 @@ function normalize(s: string) {
   return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 }
 
-function getLatLngFromZona(zona: string): [number, number] {
-  if (!zona) return [18.4861, -69.9312]
-  const z = normalize(zona)
+function matchZona(zona: string): [number, number] | null {
+  if (!zona) return null
+  // Intenta primero el sector (antes de la coma), luego la zona completa
+  const partes = zona.split(',').map(p => normalize(p.trim()))
+  for (const parte of partes) {
+    const exact = ZONAS_COORDS[parte as keyof typeof ZONAS_COORDS]
+    if (exact) return exact
+  }
+  // Fallback: substring por longitud descendente
   const sorted = Object.entries(ZONAS_COORDS).sort((a, b) => b[0].length - a[0].length)
+  const z = normalize(zona)
+  for (const [key, coords] of sorted) {
+    if (partes[0] && partes[0].includes(normalize(key))) return coords
+  }
   for (const [key, coords] of sorted) {
     if (z.includes(normalize(key))) return coords
   }
-  return [18.4861, -69.9312]
+  return null
+}
+
+function getLatLngFromZona(zona: string): [number, number] {
+  return matchZona(zona) ?? [18.4861, -69.9312]
 }
 
 function getZonaCoords(zona: string): { center: [number, number], zoom: number } {
   if (!zona) return { center: [18.735, -70.165], zoom: 8 }
-  const z = normalize(zona)
-  const sorted = Object.entries(ZONAS_COORDS).sort((a, b) => b[0].length - a[0].length)
-  for (const [key, coords] of sorted) {
-    if (z.includes(normalize(key))) return { center: coords, zoom: 13 }
-  }
-  return { center: [18.735, -70.165], zoom: 8 }
+  const coords = matchZona(zona)
+  return coords ? { center: coords, zoom: 13 } : { center: [18.735, -70.165], zoom: 8 }
 }
 
 function MapaMini({ zona }: { zona: string }) {

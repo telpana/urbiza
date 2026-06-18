@@ -34,8 +34,19 @@ function normalize(s: string) {
   return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 }
 function getLatLng(zona: string): [number, number] {
-  const z = normalize(zona || '')
+  if (!zona) return [18.4861, -69.9312]
+  const partes = zona.split(',').map(p => normalize(p.trim()))
+  for (const parte of partes) {
+    const exact = ZONAS_COORDS[parte as keyof typeof ZONAS_COORDS]
+    if (exact) return exact
+  }
   const sorted = Object.entries(ZONAS_COORDS).sort((a, b) => b[0].length - a[0].length)
+  if (partes[0]) {
+    for (const [key, coords] of sorted) {
+      if (partes[0].includes(normalize(key))) return coords
+    }
+  }
+  const z = normalize(zona)
   for (const [key, coords] of sorted) {
     if (z.includes(normalize(key))) return coords
   }
