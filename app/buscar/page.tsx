@@ -472,6 +472,7 @@ function BuscarContent() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {filtradas.map(p => (
               <div key={p.id} style={{ display: 'flex', background: '#fff', borderBottom: '8px solid #f4f5f6', borderLeft: p.dest ? '4px solid #006D77' : 'none', cursor: 'pointer', minHeight: 220, boxShadow: p.dest ? '0 2px 12px rgba(0,109,119,0.10)' : 'none' }}
+                onClick={() => window.location.href = `/propiedad/${p.id}`}
                 onMouseEnter={e => (e.currentTarget.style.background = '#fafefe')}
                 onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
                 <div style={{ width: 300, minWidth: 300, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -511,9 +512,9 @@ function BuscarContent() {
                       <span style={{ color: '#006D77', fontSize: 12 }}>{p.zona}</span>
                     </div>
                     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                      <button style={{ all: 'unset', border: '1px solid #e0e0e0', borderRadius: 4, padding: '6px 10px', cursor: 'pointer', color: '#ccc', fontSize: 16, lineHeight: 1 }}>♡</button>
-                      <button style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '7px 16px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Ver teléfono</button>
-                      <button style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '7px 18px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Contactar</button>
+                      <button onClick={e => e.stopPropagation()} style={{ all: 'unset', border: '1px solid #e0e0e0', borderRadius: 4, padding: '6px 10px', cursor: 'pointer', color: '#ccc', fontSize: 16, lineHeight: 1 }}>♡</button>
+                      <button onClick={e => e.stopPropagation()} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '7px 16px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Ver teléfono</button>
+                      <button onClick={e => { e.stopPropagation(); window.location.href = `/propiedad/${p.id}` }} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '7px 18px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Contactar</button>
                     </div>
                   </div>
                 </div>
