@@ -15,17 +15,18 @@ const PRECIOS: Record<string, string> = {
 export async function POST(req: Request) {
   try {
     const contentType = req.headers.get('content-type') || ''
-    let userId: string, email: string, tipo: string, codigoPromo: string | undefined
+    let userId: string, email: string, tipo: string, codigoPromo: string | undefined, propiedadId: string | undefined
 
     if (contentType.includes('application/json')) {
       const body = await req.json();
-      ({ userId, email, tipo, codigoPromo } = body)
+      ({ userId, email, tipo, codigoPromo, propiedadId } = body)
     } else {
       const form = await req.formData()
       userId = form.get('userId') as string
       email = form.get('email') as string
       tipo = form.get('tipo') as string
       codigoPromo = form.get('codigoPromo') as string || undefined
+      propiedadId = form.get('propiedadId') as string || undefined
     }
 
     const priceId = PRECIOS[tipo || 'profesional']
@@ -37,9 +38,9 @@ export async function POST(req: Request) {
       mode: esDestacado ? 'payment' : 'subscription',
       customer_email: email || undefined,
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${baseUrl}/panel?pago=ok&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${baseUrl}/panel?pago=ok&session_id={CHECKOUT_SESSION_ID}&tipo=${tipo || 'profesional'}`,
       cancel_url: `${baseUrl}/panel?pago=cancelado`,
-      metadata: { userId, tipo },
+      metadata: { userId, tipo, ...(propiedadId ? { propiedadId } : {}) },
     }
 
     if (codigoPromo && !esDestacado) {

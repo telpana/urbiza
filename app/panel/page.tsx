@@ -135,43 +135,63 @@ export default function Panel() {
 
         const params = new URLSearchParams(window.location.search)
         if (params.get('pago') === 'ok') {
-          setSeccion('publicar')
-          if (perfil.plan === 'profesional') {
-            // Ya está activo
-          } else {
-            setVerificandoPago(true)
-            const sessionId = params.get('session_id')
+          const sessionId = params.get('session_id')
+          const tipoParam = params.get('tipo') || 'profesional'
+          const esDestacado = ['15', '30', '60'].includes(tipoParam)
+
+          if (esDestacado) {
+            // Pago de destacar — verificar y recargar anuncios
+            setSeccion('anuncios')
             if (sessionId) {
-              // Verificar directamente con Stripe y actualizar Supabase sin depender del webhook
               try {
-                const res = await fetch('/api/verificar-pago', {
+                await fetch('/api/verificar-pago', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ sessionId }),
                 })
-                const data = await res.json()
-                if (data.ok) {
-                  setUsuario((prev: any) => ({ ...prev, plan: 'profesional' }))
-                  setVerificandoPago(false)
-                  return
-                }
               } catch {}
             }
-            // Fallback: polling por si el webhook ya actualizó o llegó antes
-            let intentos = 0
-            const pollPlan = async () => {
-              const { data: act } = await supabase.from('usuarios').select('plan').eq('id', user.id).single()
-              if (act?.plan === 'profesional') {
-                setUsuario((prev: any) => ({ ...prev, plan: 'profesional' }))
-                setVerificandoPago(false)
-              } else if (intentos < 10) {
-                intentos++
-                setTimeout(pollPlan, 2000)
-              } else {
-                setVerificandoPago(false)
+            // Recargar anuncios para mostrar el badge destacado
+            const { data: anunciosAct } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
+            if (anunciosAct) setAnunciosReales(anunciosAct)
+          } else {
+            // Pago de plan profesional
+            setSeccion('publicar')
+            if (perfil.plan === 'profesional') {
+              // Ya activo
+            } else {
+              setVerificandoPago(true)
+              if (sessionId) {
+                try {
+                  const res = await fetch('/api/verificar-pago', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sessionId }),
+                  })
+                  const data = await res.json()
+                  if (data.ok) {
+                    setUsuario((prev: any) => ({ ...prev, plan: 'profesional' }))
+                    setVerificandoPago(false)
+                    return
+                  }
+                } catch {}
               }
+              // Fallback polling
+              let intentos = 0
+              const pollPlan = async () => {
+                const { data: act } = await supabase.from('usuarios').select('plan').eq('id', user.id).single()
+                if (act?.plan === 'profesional') {
+                  setUsuario((prev: any) => ({ ...prev, plan: 'profesional' }))
+                  setVerificandoPago(false)
+                } else if (intentos < 10) {
+                  intentos++
+                  setTimeout(pollPlan, 2000)
+                } else {
+                  setVerificandoPago(false)
+                }
+              }
+              setTimeout(pollPlan, 1500)
             }
-            setTimeout(pollPlan, 1500)
           }
         }
       }
@@ -236,10 +256,11 @@ export default function Panel() {
     if (anunciosActualizados) setAnunciosReales(anunciosActualizados)
     setPubExito(true)
     setPubLoading(false)
-    // Resetear form
     setPubTitulo(''); setPubPrecio(''); setPubM2(''); setPubDesc('')
     setPubProvincia(''); setPubSector(''); setPubHab('1'); setPubBanos('1')
     setAmenidadesSeleccionadas([])
+    // Ir a Mis anuncios automáticamente
+    setTimeout(() => { setSeccion('anuncios'); setPubExito(false) }, 1200)
   }
 
   const anunciosAMostrar = anunciosReales.map(a => ({
@@ -381,7 +402,6 @@ export default function Panel() {
                           <span>🖱 {a.clics} visitas</span>
                           <span>📞 {a.telVistos} tel. vistos</span>
                           <span>❤️ {a.favoritos} guardados</span>
-                          <span>⏱ Vence en {a.vence}</span>
                         </div>
                       </div>
                       <span style={{ background: estado === 'activo' ? '#e0f5f0' : '#f5f5f5', color: estado === 'activo' ? '#065f46' : '#888', fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 10, flexShrink: 0 }}>
@@ -715,7 +735,7 @@ export default function Panel() {
                 const res = await fetch('/api/checkout', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ userId: user?.id, email: user?.email, tipo: planSeleccionado })
+                  body: JSON.stringify({ userId: user?.id, email: user?.email, tipo: planSeleccionado, propiedadId: String(anuncioADestacar.id) })
                 })
                 const data = await res.json()
                 if (data.url) window.location.href = data.url

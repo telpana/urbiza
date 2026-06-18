@@ -211,9 +211,10 @@ function BuscarContent() {
     if (query && !p.titulo.toLowerCase().includes(query.toLowerCase()) && !p.zona.toLowerCase().includes(query.toLowerCase())) return false
     return true
   }).sort((a, b) => {
+    // Destacadas siempre primero sin importar el orden seleccionado
+    if (b.dest !== a.dest) return (b.dest ? 1 : 0) - (a.dest ? 1 : 0)
     if (orden === 'Baratos') return a.precio - b.precio
     if (orden === 'Caros') return b.precio - a.precio
-    if (orden === 'Relevancia') return (b.dest ? 2 : b.visitas ? 1 : 0) - (a.dest ? 2 : a.visitas ? 1 : 0)
     return 0
   })
 

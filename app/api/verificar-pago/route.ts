@@ -23,20 +23,36 @@ export async function POST(req: Request) {
     }
 
     const userId = session.metadata?.userId
+    const tipo = session.metadata?.tipo || 'profesional'
+    const propiedadId = session.metadata?.propiedadId
+
     if (!userId) return NextResponse.json({ error: 'Sin userId en metadata' }, { status: 400 })
 
-    const { error } = await supabase.from('usuarios').update({
-      plan: 'profesional',
-      stripe_subscription_id: session.subscription as string || null,
-      plan_activo_hasta: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-    }).eq('id', userId)
-
-    if (error) {
-      console.error('[verificar-pago] error Supabase:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (['15', '30', '60'].includes(tipo) && propiedadId) {
+      // Pago de destacado — marcar la propiedad como destacada
+      const dias = Number(tipo)
+      const { error } = await supabase.from('propiedades').update({
+        destacado: true,
+        destacado_hasta: new Date(Date.now() + dias * 24 * 60 * 60 * 1000).toISOString(),
+      }).eq('id', propiedadId)
+      if (error) {
+        console.error('[verificar-pago] error destacado:', error)
+        return NextResponse.json({ error: error.message }, { status: 500 })
+      }
+      return NextResponse.json({ ok: true, tipo: 'destacar' })
+    } else {
+      // Pago de plan profesional
+      const { error } = await supabase.from('usuarios').update({
+        plan: 'profesional',
+        stripe_subscription_id: session.subscription as string || null,
+        plan_activo_hasta: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      }).eq('id', userId)
+      if (error) {
+        console.error('[verificar-pago] error plan:', error)
+        return NextResponse.json({ error: error.message }, { status: 500 })
+      }
+      return NextResponse.json({ ok: true, tipo: 'profesional' })
     }
-
-    return NextResponse.json({ ok: true })
   } catch (error: any) {
     console.error('[verificar-pago] error:', error)
     return NextResponse.json({ error: error.message }, { status: 500 })
