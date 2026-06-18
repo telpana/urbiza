@@ -1,6 +1,7 @@
 'use client'
 import { useState, useEffect, useRef } from 'react'
 import { useIdioma } from '../IdiomaContext'
+import { supabase } from '../supabase'
 
 const propiedadesMapaHome = [
   { id: 1, precio: 285000, titulo: 'Apartamento en Piantini', zona: 'Piantini, D.N.', tipo: 'Apartamento', hab: 3, m2: 150, banos: 2, lat: 18.4890, lng: -69.9370, desc: 'Amplio apartamento en Piantini con acabados de alta calidad.' },
@@ -233,6 +234,27 @@ export default function Home() {
   const [queryHome, setQueryHome] = useState('')
   const [sugHome, setSugHome] = useState<string[]>([])
   const [mostrarSugHome, setMostrarSugHome] = useState(false)
+  const [destReales, setDestReales] = useState<any[]>([])
+  const [masVistasReales, setMasVistasReales] = useState<any[]>([])
+  const [slideIdx, setSlideIdx] = useState(0)
+
+  useEffect(() => {
+    const cargar = async () => {
+      const { data: dest } = await supabase.from('propiedades')
+        .select('id,titulo,precio,zona,habitaciones,m2,operacion').eq('destacado', true).eq('estado', 'activo').limit(12)
+      if (dest && dest.length > 0) setDestReales(dest)
+      const { data: vistas } = await supabase.from('propiedades')
+        .select('id,titulo,precio,zona,habitaciones,m2,operacion').eq('estado', 'activo').order('visitas', { ascending: false }).limit(3)
+      if (vistas && vistas.length > 0) setMasVistasReales(vistas)
+    }
+    cargar()
+  }, [])
+
+  useEffect(() => {
+    if (destReales.length <= 3) return
+    const t = setInterval(() => setSlideIdx(i => (i + 3) % destReales.length), 5000)
+    return () => clearInterval(t)
+  }, [destReales.length])
 
   const zonasRD = ['Piantini, Distrito Nacional', 'Naco, Distrito Nacional', 'Serrallés, Distrito Nacional', 'Bella Vista, Distrito Nacional', 'Arroyo Hondo, Distrito Nacional', 'Los Cacicazgos, Distrito Nacional', 'Gazcue, Distrito Nacional', 'Ciudad Colonial, Distrito Nacional', 'Evaristo Morales, Distrito Nacional', 'Miramar, Distrito Nacional', 'La Esperilla, Distrito Nacional', 'Urbanización Real, Distrito Nacional', 'Viejo Arroyo Hondo, Distrito Nacional', 'Los Prados, Distrito Nacional', 'Jardines del Norte, Distrito Nacional', 'Ensanche Naco, Distrito Nacional', 'Ensanche Ozama, Distrito Nacional', 'Villa Consuelo, Distrito Nacional', 'Cristo Rey, Distrito Nacional', 'Alma Rosa, Santo Domingo Este', 'Los Tres Brazos, Santo Domingo Este', 'Ensanche Isabelita, Santo Domingo Este', 'San Isidro, Santo Domingo Este', 'Los Mina, Santo Domingo Este', 'Bávaro, La Altagracia', 'Punta Cana, La Altagracia', 'Cap Cana, La Altagracia', 'Cabeza de Toro, La Altagracia', 'Los Corales, La Altagracia', 'Uvero Alto, La Altagracia', 'Macao, La Altagracia', 'Cortecito, La Altagracia', 'El Cortecito, La Altagracia', 'Higüey, La Altagracia', 'San Rafael del Yuma, La Altagracia', 'Los Jardines, Santiago', 'Cerros de Gurabo, Santiago', 'Reparto Conuco, Santiago', 'Bella Vista, Santiago', 'Villa Olga, Santiago', 'Pontezuela, Santiago', 'Urbanización Tropical, Santiago', 'Las Colinas, Santiago', 'El Dorado, Santiago', 'Las Terrenas, Samaná', 'Samaná', 'El Portillo, Samaná', 'Cosón, Samaná', 'Las Galeras, Samaná', 'Puerto Plata', 'Sosúa, Puerto Plata', 'Cabarete, Puerto Plata', 'Costámbar, Puerto Plata', 'Cofresí, Puerto Plata', 'Playa Dorada, Puerto Plata', 'La Romana', 'Casa de Campo, La Romana', 'Bayahíbe, La Romana', 'Dominicus, La Romana', 'Jarabacoa, La Vega', 'Constanza, La Vega', 'La Vega', 'San Pedro de Macorís', 'Juan Dolio, San Pedro de Macorís', 'Guayacanes, San Pedro de Macorís', 'Boca Chica, Santo Domingo', 'Andrés, Boca Chica', 'San Cristóbal', 'Baní, Peravia', 'Azua', 'Barahona', 'Monte Plata', 'Hato Mayor', 'El Seibo', 'Miches, El Seibo', 'Moca, Espaillat', 'San Francisco de Macorís, Duarte', 'Nagua, María Trinidad Sánchez', 'Monte Cristi', 'Dajabón', 'Pedernales', 'Neiba, Baoruco', 'San Juan de la Maguana']
   const handleQueryHome = (val: string) => {
@@ -384,42 +406,89 @@ export default function Home() {
       {/* PROPIEDADES DESTACADAS */}
       <div style={{ background: '#f4f5f6' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '36px 20px 0' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
-            <div>
-              <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Propiedades destacadas</h2>
-              <a href="/buscar" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades →</a>
-            </div>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
-            {propiedadesDestacadas.map((p) => (
-              <div key={p.title} style={{ background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: p.tipo === 'pagado' ? '2px solid #006D77' : '1px solid #ebebeb' }}
-                onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
-                onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
-                <div style={{ height: 180, background: p.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                  {p.tipo === 'pagado' && (
-                    <div style={{ position: 'absolute', top: 8, left: 8, background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 600, padding: '3px 8px', borderRadius: 3 }}>Destacado</div>
-                  )}
-                  {p.tipo === 'visitas' && (
-                    <div style={{ position: 'absolute', top: 8, left: 8, background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 600, padding: '3px 8px', borderRadius: 3 }}>Más visto</div>
-                  )}
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                  </svg>
-                  <div style={{ position: 'absolute', bottom: 10, right: 10, display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.92)', padding: '3px 9px', borderRadius: 20, fontSize: 11, color: '#006D77', border: '1px solid #c5e8ea' }}>
-                    <svg width="9" height="9" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                    {p.loc}
+          {/* Destacadas rotando */}
+          {(() => {
+            const bgs = ['#e0f5f7','#ddf0e8','#e8eaf0','#f0ebe0','#e8f0e0','#f0e8f0']
+            const src = destReales.length > 0 ? destReales : propiedadesDestacadas.filter(p => p.tipo === 'pagado').map((p,i) => ({ id: i, titulo: p.title, precio: p.price, zona: p.loc, habitaciones: null, m2: null }))
+            const total = src.length
+            const visibles = total > 0 ? [src[slideIdx % total], src[(slideIdx+1) % total], src[(slideIdx+2) % total]].filter(Boolean) : []
+            return (
+              <div style={{ marginBottom: 32 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
+                  <div>
+                    <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Propiedades destacadas</h2>
+                    <a href="/buscar" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades →</a>
                   </div>
+                  {total > 3 && (
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      {Array.from({ length: Math.ceil(total / 3) }).map((_, i) => (
+                        <div key={i} onClick={() => setSlideIdx(i * 3)} style={{ width: 8, height: 8, borderRadius: '50%', background: Math.floor(slideIdx / 3) === i ? '#006D77' : '#ccc', cursor: 'pointer' }} />
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <div style={{ padding: '14px 16px' }}>
-                  <div style={{ fontSize: 19, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {p.price.toLocaleString('en-US')}</div>
-                  <div style={{ fontSize: 11, color: '#aaa', marginBottom: 7 }}>{formatDOP(p.price)}</div>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 3 }}>{p.title}</div>
-                  <div style={{ fontSize: 12, color: '#888' }}>{p.feats}</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+                  {visibles.map((p: any, i: number) => (
+                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '2px solid #006D77', display: 'block' }}
+                      onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
+                      onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
+                      <div style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                        <div style={{ position: 'absolute', top: 8, left: 8, background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 600, padding: '3px 8px', borderRadius: 3 }}>⭐ Destacado</div>
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        <div style={{ position: 'absolute', bottom: 10, right: 10, display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.92)', padding: '3px 9px', borderRadius: 20, fontSize: 11, color: '#006D77', border: '1px solid #c5e8ea' }}>
+                          <svg width="9" height="9" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                          {(p.zona || p.loc || '').split(',')[0]}
+                        </div>
+                      </div>
+                      <div style={{ padding: '14px 16px' }}>
+                        <div style={{ fontSize: 19, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio ?? p.price ?? 0).toLocaleString('en-US')}</div>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 3 }}>{p.titulo ?? p.title}</div>
+                        <div style={{ fontSize: 12, color: '#888' }}>{[p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ') || p.feats || ''}</div>
+                      </div>
+                    </a>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
+            )
+          })()}
+
+          {/* Más vistos */}
+          {(() => {
+            const bgs = ['#f0ebe0','#e8f0e0','#f0e8f0']
+            const src = masVistasReales.length > 0 ? masVistasReales : propiedadesDestacadas.filter(p => p.tipo === 'visitas').map((p,i) => ({ id: i, titulo: p.title, precio: p.price, zona: p.loc, habitaciones: null, m2: null }))
+            if (src.length === 0) return null
+            return (
+              <div style={{ marginBottom: 32 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
+                  <div>
+                    <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Más vistos</h2>
+                    <a href="/buscar" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades →</a>
+                  </div>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+                  {src.slice(0,3).map((p: any, i: number) => (
+                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '1px solid #ebebeb', display: 'block' }}
+                      onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
+                      onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
+                      <div style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                        <div style={{ position: 'absolute', top: 8, left: 8, background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 600, padding: '3px 8px', borderRadius: 3 }}>🔥 Más visto</div>
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        <div style={{ position: 'absolute', bottom: 10, right: 10, display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.92)', padding: '3px 9px', borderRadius: 20, fontSize: 11, color: '#006D77', border: '1px solid #c5e8ea' }}>
+                          <svg width="9" height="9" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                          {(p.zona || p.loc || '').split(',')[0]}
+                        </div>
+                      </div>
+                      <div style={{ padding: '14px 16px' }}>
+                        <div style={{ fontSize: 19, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio ?? p.price ?? 0).toLocaleString('en-US')}</div>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 3 }}>{p.titulo ?? p.title}</div>
+                        <div style={{ fontSize: 12, color: '#888' }}>{[p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ') || p.feats || ''}</div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )
+          })()}
         </div>
 
         {/* NOVEDADES POR ZONA */}
