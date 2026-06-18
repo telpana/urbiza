@@ -302,7 +302,6 @@ function BuscarContent() {
       if (tipoParam) q = q.eq('tipo', tipoParam)
       if (zonaParam) q = q.ilike('zona', `%${zonaParam}%`)
       const { data, error } = await q
-        .order('destacado', { ascending: false })
         .order('created_at', { ascending: false })
       if (!error && data) setPropiedadesReales(data)
       setCargando(false)
@@ -331,6 +330,7 @@ function BuscarContent() {
     aei: !!(p.usuarios?.numero_aei),
     fotos: Array.isArray(p.fotos) ? p.fotos : [],
     vendedor: p.usuarios || {},
+    created_at: p.created_at || '',
   })) : propiedadesEjemplo
 
   const tipos = ['Todos', 'Apartamento', 'Villa', 'Oficina', 'Terreno', 'Local comercial']
@@ -354,7 +354,9 @@ function BuscarContent() {
     if (orden === 'Relevancia' && b.dest !== a.dest) return (b.dest ? 1 : 0) - (a.dest ? 1 : 0)
     if (orden === 'Baratos') return a.precio - b.precio
     if (orden === 'Caros') return b.precio - a.precio
-    return 0
+    if (orden === 'Recientes') return b.created_at.localeCompare(a.created_at)
+    // Relevancia sin destacados: más recientes primero
+    return b.created_at.localeCompare(a.created_at)
   })
 
   const handleQueryChange = (val: string) => {
