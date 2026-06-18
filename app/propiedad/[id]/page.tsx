@@ -394,43 +394,39 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
               </div>
 
               <div style={{ padding: '16px 18px' }}>
-                {telVendedor && (
+                {/* TELÉFONO */}
+                {telVendedor && !telVisible && (
                   <button onClick={handleVerTelefono} style={{ all: 'unset', width: '100%', background: '#006D77', color: '#fff', padding: '11px', borderRadius: 5, fontSize: 13, fontWeight: 600, cursor: 'pointer', textAlign: 'center', display: 'block', marginBottom: 14, boxSizing: 'border-box' }}>
-                    {telVisible ? telVendedor : 'Ver teléfono'}
+                    📞 Ver teléfono
                   </button>
                 )}
-
-                {enviado ? (
-                  <div style={{ background: '#e0f5f7', border: '1px solid #c5e8ea', borderRadius: 6, padding: '14px', textAlign: 'center', fontSize: 13, color: '#004E57', fontWeight: 500 }}>
-                    ✓ Mensaje enviado correctamente
+                {telVendedor && telVisible && (
+                  <div style={{ background: '#e0f5f7', border: '1px solid #b2dde2', borderRadius: 5, padding: '12px 14px', marginBottom: 14, textAlign: 'center' }}>
+                    <div style={{ fontSize: 11, color: '#555', marginBottom: 4 }}>Teléfono de contacto</div>
+                    <a href={`tel:${telVendedor}`} style={{ fontSize: 20, fontWeight: 700, color: '#006D77', textDecoration: 'none', display: 'block' }}>{telVendedor}</a>
+                    <a href={`https://wa.me/${telVendedor.replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: '#25D366', fontWeight: 600, textDecoration: 'none', marginTop: 6, display: 'inline-block' }}>💬 WhatsApp</a>
                   </div>
-                ) : (
-                  <>
-                    <input
-                      value={nombreContacto}
-                      onChange={e => setNombreContacto(e.target.value)}
-                      placeholder="Tu nombre *"
-                      style={{ width: '100%', border: '1px solid #ddd', borderRadius: 5, padding: '9px 10px', fontSize: 13, color: '#333', outline: 'none', boxSizing: 'border-box', marginBottom: 8, fontFamily: 'sans-serif' }}
-                    />
-                    <input
-                      value={telefonoContacto}
-                      onChange={e => setTelefonoContacto(e.target.value)}
-                      placeholder="Tu teléfono (opcional)"
-                      style={{ width: '100%', border: '1px solid #ddd', borderRadius: 5, padding: '9px 10px', fontSize: 13, color: '#333', outline: 'none', boxSizing: 'border-box', marginBottom: 8, fontFamily: 'sans-serif' }}
-                    />
-                    <textarea
-                      value={mensaje}
-                      onChange={e => setMensaje(e.target.value)}
-                      rows={3}
-                      placeholder={`Hola, me interesa esta propiedad...`}
-                      style={{ width: '100%', border: '1px solid #ddd', borderRadius: 5, padding: '10px', fontSize: 13, color: '#333', resize: 'none', fontFamily: 'sans-serif', outline: 'none', boxSizing: 'border-box', marginBottom: 8 }}
-                    />
-                    {errorContacto && <div style={{ fontSize: 12, color: '#e53e3e', marginBottom: 8 }}>{errorContacto}</div>}
-                    <button onClick={enviarMensaje} disabled={enviando} style={{ all: 'unset', width: '100%', background: enviando ? '#aaa' : '#17A6B4', color: '#fff', padding: '11px', borderRadius: 5, fontSize: 13, fontWeight: 600, cursor: enviando ? 'default' : 'pointer', textAlign: 'center', display: 'block', boxSizing: 'border-box' }}>
-                      {enviando ? 'Enviando...' : 'Enviar mensaje'}
-                    </button>
-                  </>
                 )}
+
+                {/* FORMULARIO DE CONTACTO */}
+                <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: 14 }}>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: '#888', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>Enviar mensaje</div>
+                  {enviado ? (
+                    <div style={{ background: '#e0f5f7', border: '1px solid #c5e8ea', borderRadius: 6, padding: '14px', textAlign: 'center', fontSize: 13, color: '#004E57', fontWeight: 500 }}>
+                      ✓ Mensaje enviado correctamente
+                    </div>
+                  ) : (
+                    <>
+                      <input value={nombreContacto} onChange={e => setNombreContacto(e.target.value)} placeholder="Tu nombre *" style={{ width: '100%', border: '1px solid #ddd', borderRadius: 5, padding: '9px 10px', fontSize: 13, color: '#333', outline: 'none', boxSizing: 'border-box', marginBottom: 8, fontFamily: 'sans-serif' }} />
+                      <input value={telefonoContacto} onChange={e => setTelefonoContacto(e.target.value)} placeholder="Tu teléfono (opcional)" style={{ width: '100%', border: '1px solid #ddd', borderRadius: 5, padding: '9px 10px', fontSize: 13, color: '#333', outline: 'none', boxSizing: 'border-box', marginBottom: 8, fontFamily: 'sans-serif' }} />
+                      <textarea value={mensaje} onChange={e => setMensaje(e.target.value)} rows={3} placeholder="Hola, me interesa esta propiedad..." style={{ width: '100%', border: '1px solid #ddd', borderRadius: 5, padding: '10px', fontSize: 13, color: '#333', resize: 'none', fontFamily: 'sans-serif', outline: 'none', boxSizing: 'border-box', marginBottom: 8 }} />
+                      {errorContacto && <div style={{ fontSize: 12, color: '#e53e3e', marginBottom: 8 }}>{errorContacto}</div>}
+                      <button onClick={enviarMensaje} disabled={enviando} style={{ all: 'unset', width: '100%', background: enviando ? '#aaa' : '#17A6B4', color: '#fff', padding: '11px', borderRadius: 5, fontSize: 13, fontWeight: 600, cursor: enviando ? 'default' : 'pointer', textAlign: 'center', display: 'block', boxSizing: 'border-box' }}>
+                        {enviando ? 'Enviando...' : 'Enviar mensaje'}
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
 
