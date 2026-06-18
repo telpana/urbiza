@@ -187,6 +187,8 @@ export default function Panel() {
   const [pubLoading, setPubLoading] = useState(false)
   const [pubError, setPubError] = useState('')
   const [pubExito, setPubExito] = useState(false)
+  const [anuncioEditando, setAnuncioEditando] = useState<any>(null)
+  const [fotosExistentes, setFotosExistentes] = useState<string[]>([])
   const [fotoPerfilUrl, setFotoPerfilUrl] = useState<string | null>(null)
   const [perfilNombre, setPerfilNombre] = useState('')
   const [perfilTelefono, setPerfilTelefono] = useState('')
@@ -334,28 +336,61 @@ export default function Panel() {
     else alert('Error al guardar')
   }
 
+  const handleEditar = (a: any) => {
+    const raw = anunciosReales.find(r => r.id === a.id)
+    if (!raw) return
+    const zona = raw.zona || ''
+    const partes = zona.split(',').map((p: string) => p.trim())
+    const sector = partes[0] || ''
+    const provincia = partes.slice(1).join(', ') || ''
+    setAnuncioEditando(raw)
+    setFotosExistentes(Array.isArray(raw.fotos) ? raw.fotos : [])
+    setPubFotos([]); setPubFotosPrev([])
+    setPubTitulo(raw.titulo || '')
+    setPubPrecio(String(raw.precio || ''))
+    setPubM2(raw.m2 ? String(raw.m2) : '')
+    setPubDesc(raw.descripcion || '')
+    setPubTipo(raw.tipo || 'Apartamento')
+    setPubOperacion(raw.operacion ? (raw.operacion.charAt(0).toUpperCase() + raw.operacion.slice(1)) : 'Venta')
+    setPubHab(raw.habitaciones ? String(raw.habitaciones) : '1')
+    setPubBanos(raw.banos ? String(raw.banos) : '1')
+    setPubParqueos(raw.parqueos ? String(raw.parqueos) : '')
+    setPubPlanta(raw.planta || '')
+    setPubProvincia(provincia)
+    setPubSector(sector)
+    setAmenidadesSeleccionadas(Array.isArray(raw.amenidades) ? raw.amenidades : [])
+    setPubError(''); setPubExito(false)
+    setSeccion('publicar')
+  }
+
+  const eliminarAnuncio = async (id: string) => {
+    if (!confirm('¿Eliminar este anuncio definitivamente? Esta acción no se puede deshacer.')) return
+    await supabase.from('propiedades').delete().eq('id', id)
+    setAnunciosReales(prev => prev.filter(a => a.id !== id))
+  }
+
   const publicarAnuncio = async () => {
     if (!pubTitulo || !pubPrecio || !pubProvincia || !pubSector) { setPubError('Título, precio, provincia y sector son obligatorios'); return }
-    if (pubFotos.length === 0) { setPubError('Debes subir al menos una foto del inmueble'); return }
+    if (pubFotos.length === 0 && fotosExistentes.length === 0) { setPubError('Debes subir al menos una foto del inmueble'); return }
     setPubLoading(true)
     setPubError('')
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setPubError('Debes iniciar sesión para publicar'); setPubLoading(false); return }
 
-    // Subir fotos a Supabase Storage
-    const fotosUrls: string[] = []
+    // Subir fotos nuevas a Supabase Storage
+    const fotosNuevas: string[] = []
     for (const foto of pubFotos) {
       const ext = foto.name.split('.').pop()
       const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
       const { data: uploadData, error: uploadErr } = await supabase.storage.from('propiedades').upload(path, foto, { upsert: true })
       if (!uploadErr && uploadData) {
         const { data: urlData } = supabase.storage.from('propiedades').getPublicUrl(uploadData.path)
-        fotosUrls.push(urlData.publicUrl)
+        fotosNuevas.push(urlData.publicUrl)
       }
     }
+    const todasFotos = [...fotosExistentes, ...fotosNuevas]
 
-    const { error } = await supabase.from('propiedades').insert({
-      usuario_id: user.id,
+    const campos = {
       titulo: pubTitulo,
       descripcion: pubDesc,
       precio: Number(pubPrecio.replace(/\D/g, '')),
@@ -363,16 +398,24 @@ export default function Panel() {
       operacion: pubOperacion.toLowerCase(),
       zona: pubSector ? `${pubSector}, ${pubProvincia}` : pubProvincia,
       m2: pubM2 ? Number(pubM2) : null,
-      habitaciones: Number(pubHab),
-      banos: Number(pubBanos),
+      habitaciones: ['Edificio', 'Terreno'].includes(pubTipo) ? null : Number(pubHab),
+      banos: ['Edificio', 'Terreno'].includes(pubTipo) ? null : Number(pubBanos),
       amenidades: amenidadesSeleccionadas,
-      parqueos: pubParqueos ? Number(pubParqueos) : null,
+      parqueos: ['Edificio', 'Terreno'].includes(pubTipo) ? null : (pubParqueos ? Number(pubParqueos) : null),
       planta: ['Edificio', 'Terreno'].includes(pubTipo) ? null : (pubPlanta || null),
-      fotos: fotosUrls.length > 0 ? fotosUrls : null,
-      estado: 'activo',
-    })
-    if (error) { setPubError('Error al publicar. Inténtalo de nuevo.'); setPubLoading(false); return }
-    // Recargar anuncios para que aparezcan en Mis anuncios
+      fotos: todasFotos.length > 0 ? todasFotos : null,
+    }
+
+    let error: any
+    if (anuncioEditando) {
+      const { error: e } = await supabase.from('propiedades').update(campos).eq('id', anuncioEditando.id)
+      error = e
+    } else {
+      const { error: e } = await supabase.from('propiedades').insert({ ...campos, usuario_id: user.id, estado: 'activo' })
+      error = e
+    }
+    if (error) { setPubError('Error al guardar. Inténtalo de nuevo.'); setPubLoading(false); return }
+
     const { data: anunciosActualizados } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
     if (anunciosActualizados) setAnunciosReales(anunciosActualizados)
     setPubExito(true)
@@ -381,8 +424,8 @@ export default function Panel() {
     setPubProvincia(''); setPubSector(''); setPubHab('1'); setPubBanos('1')
     setPubParqueos(''); setPubPlanta(''); setPubAnio('')
     setPubFotos([]); setPubFotosPrev([])
+    setFotosExistentes([]); setAnuncioEditando(null)
     setAmenidadesSeleccionadas([])
-    // Ir a Mis anuncios automáticamente
     setTimeout(() => { setSeccion('anuncios'); setPubExito(false) }, 1200)
   }
 
@@ -542,10 +585,8 @@ export default function Panel() {
                       </span>
                       <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
                         <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>⭐ Destacar</button>
-                        <button style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>Editar</button>
-                        <button onClick={() => toggleEstado(a.id, estado)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>
-                          {estado === 'activo' ? 'Pausar' : 'Activar'}
-                        </button>
+                        <button onClick={() => handleEditar(a)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>Editar</button>
+                        <button onClick={() => eliminarAnuncio(a.id)} style={{ all: 'unset', border: '1px solid #fca5a5', color: '#dc2626', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer', fontWeight: 500 }}>Eliminar</button>
                       </div>
                     </div>
                   )
@@ -557,8 +598,8 @@ export default function Panel() {
           {/* PUBLICAR ANUNCIO */}
           {seccion === 'publicar' && (
             <div>
-              <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>Publicar anuncio</h1>
-              <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>Rellena los datos de tu propiedad</p>
+              <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>{anuncioEditando ? 'Editar anuncio' : 'Publicar anuncio'}</h1>
+              <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>{anuncioEditando ? 'Modifica los datos de tu propiedad' : 'Rellena los datos de tu propiedad'}</p>
 
               {/* Si es profesional sin plan pagado, mostrar pantalla de pago o verificando */}
               {usuario?.tipo === 'profesional' && usuario?.plan !== 'profesional' ? (
@@ -682,22 +723,29 @@ export default function Panel() {
 
                 {/* FOTOS */}
                 <div style={{ marginBottom: 20 }}>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Fotos <span style={{ color: '#aaa', fontWeight: 400 }}>(hasta 10)</span></label>
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Fotos <span style={{ color: '#aaa', fontWeight: 400 }}>(hasta 20)</span></label>
                   <label style={{ display: 'block', border: '2px dashed #e0e0e0', borderRadius: 6, padding: '24px', textAlign: 'center', cursor: 'pointer', background: '#fafafa' }}
                     onMouseEnter={e => e.currentTarget.style.borderColor='#006D77'}
                     onMouseLeave={e => e.currentTarget.style.borderColor='#e0e0e0'}>
                     <input type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={e => handleFotos(e.target.files)} />
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="1.5" style={{ margin: '0 auto 8px', display: 'block' }}><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                     <div style={{ fontSize: 13, color: '#555', marginBottom: 2 }}>Pulsa para seleccionar fotos</div>
-                    <div style={{ fontSize: 11, color: '#aaa' }}>JPG, PNG — máximo 10 fotos, 5MB cada una</div>
+                    <div style={{ fontSize: 11, color: '#aaa' }}>JPG, PNG — máximo 20 fotos, 5MB cada una</div>
                   </label>
-                  {pubFotosPrev.length > 0 && (
+                  {(fotosExistentes.length > 0 || pubFotosPrev.length > 0) && (
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8, marginTop: 12 }}>
+                      {fotosExistentes.map((src, i) => (
+                        <div key={`ex-${i}`} style={{ position: 'relative', aspectRatio: '4/3', borderRadius: 6, overflow: 'hidden', background: '#e8e8e8' }}>
+                          <img src={src} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          <button onClick={() => setFotosExistentes(prev => prev.filter((_, j) => j !== i))} style={{ all: 'unset', position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', color: '#fff', width: 20, height: 20, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 12, lineHeight: 1 }}>×</button>
+                          {i === 0 && <div style={{ position: 'absolute', bottom: 4, left: 4, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>PORTADA</div>}
+                        </div>
+                      ))}
                       {pubFotosPrev.map((src, i) => (
-                        <div key={i} style={{ position: 'relative', aspectRatio: '4/3', borderRadius: 6, overflow: 'hidden', background: '#e8e8e8' }}>
+                        <div key={`new-${i}`} style={{ position: 'relative', aspectRatio: '4/3', borderRadius: 6, overflow: 'hidden', background: '#e8e8e8' }}>
                           <img src={src} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           <button onClick={() => quitarFoto(i)} style={{ all: 'unset', position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', color: '#fff', width: 20, height: 20, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 12, lineHeight: 1 }}>×</button>
-                          {i === 0 && <div style={{ position: 'absolute', bottom: 4, left: 4, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>PORTADA</div>}
+                          {fotosExistentes.length === 0 && i === 0 && <div style={{ position: 'absolute', bottom: 4, left: 4, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>PORTADA</div>}
                         </div>
                       ))}
                     </div>
@@ -705,12 +753,12 @@ export default function Panel() {
                 </div>
 
                 {pubError && <div style={{ background: '#fee2e2', border: '1px solid #fca5a5', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#991b1b', marginBottom: 14 }}>{pubError}</div>}
-                {pubExito && <div style={{ background: '#e0f5f0', border: '1px solid #6ee7b7', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#065f46', marginBottom: 14 }}>✓ Anuncio publicado correctamente</div>}
+                {pubExito && <div style={{ background: '#e0f5f0', border: '1px solid #6ee7b7', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#065f46', marginBottom: 14 }}>✓ {anuncioEditando ? 'Cambios guardados correctamente' : 'Anuncio publicado correctamente'}</div>}
                 <div style={{ display: 'flex', gap: 10 }}>
                   <button onClick={publicarAnuncio} disabled={pubLoading} style={{ all: 'unset', flex: 1, background: pubLoading ? '#aaa' : '#006D77', color: '#fff', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: pubLoading ? 'default' : 'pointer', textAlign: 'center' }}>
-                    {pubLoading ? 'Publicando...' : 'Publicar anuncio'}
+                    {pubLoading ? (anuncioEditando ? 'Guardando...' : 'Publicando...') : (anuncioEditando ? 'Guardar cambios' : 'Publicar anuncio')}
                   </button>
-                  <button style={{ all: 'unset', border: '1.5px solid #e0e0e0', color: '#555', padding: '12px 20px', borderRadius: 6, fontSize: 14, cursor: 'pointer' }}>Guardar borrador</button>
+                  {anuncioEditando && <button onClick={() => { setAnuncioEditando(null); setFotosExistentes([]); setSeccion('anuncios') }} style={{ all: 'unset', border: '1.5px solid #e0e0e0', color: '#555', padding: '12px 20px', borderRadius: 6, fontSize: 14, cursor: 'pointer' }}>Cancelar</button>}
                 </div>
               </div>
               )}
