@@ -10,6 +10,7 @@ const menuItems = [
   { id: 'destacar', label: 'Destacar anuncio', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> },
   { id: 'plan', label: 'Mi plan', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> },
   { id: 'perfil', label: 'Mi perfil', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
+  { id: 'guardados', label: 'Guardados', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> },
   { id: 'cursos', label: 'Cursos AEI', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> },
 ]
 
@@ -88,6 +89,75 @@ function formatFecha(iso: string) {
   const days = Math.floor(hours / 24)
   if (days === 1) return 'Ayer'
   return `Hace ${days} días`
+}
+
+function GuardadosSeccion() {
+  const [guardados, setGuardados] = useState<any[]>([])
+  const [cargando, setCargando] = useState(true)
+
+  useEffect(() => {
+    const cargar = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { setCargando(false); return }
+      const { data } = await supabase
+        .from('favoritos')
+        .select('propiedad_id, propiedades(id, titulo, zona, precio, tipo, operacion, habitaciones, banos, m2, fotos)')
+        .eq('usuario_id', user.id)
+        .order('created_at', { ascending: false })
+      setGuardados(data || [])
+      setCargando(false)
+    }
+    cargar()
+  }, [])
+
+  const quitar = async (propiedadId: string) => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+    await supabase.from('favoritos').delete().eq('usuario_id', user.id).eq('propiedad_id', propiedadId)
+    setGuardados(prev => prev.filter(f => f.propiedad_id !== propiedadId))
+  }
+
+  return (
+    <div>
+      <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>Guardados</h1>
+      {cargando ? (
+        <div style={{ color: '#aaa', fontSize: 14 }}>Cargando...</div>
+      ) : guardados.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '60px 20px', color: '#aaa' }}>
+          <div style={{ fontSize: 40, marginBottom: 12 }}>♡</div>
+          <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 6 }}>No tienes propiedades guardadas</div>
+          <div style={{ fontSize: 13 }}>Dale al corazón en cualquier anuncio para guardarlo aquí</div>
+          <a href="/buscar" style={{ display: 'inline-block', marginTop: 16, background: '#006D77', color: '#fff', padding: '10px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>Explorar propiedades</a>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {guardados.map(f => {
+            const p = f.propiedades
+            if (!p) return null
+            const foto = Array.isArray(p.fotos) && p.fotos[0]
+            return (
+              <div key={f.propiedad_id} style={{ background: '#fff', borderRadius: 8, border: '1px solid #e8e8e8', display: 'flex', overflow: 'hidden', cursor: 'pointer' }} onClick={() => window.location.href = `/propiedad/${p.id}`}>
+                <div style={{ width: 140, minWidth: 140, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {foto ? <img src={foto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>}
+                </div>
+                <div style={{ flex: 1, padding: '14px 18px' }}>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: '#111', marginBottom: 4 }}>{p.titulo}</div>
+                  <div style={{ fontSize: 12, color: '#888', marginBottom: 8 }}>{p.zona}</div>
+                  <div style={{ fontSize: 16, fontWeight: 700, color: '#006D77', marginBottom: 6 }}>US$ {p.precio?.toLocaleString('en-US')}</div>
+                  <div style={{ fontSize: 12, color: '#aaa' }}>
+                    {p.habitaciones > 0 && `${p.habitaciones} hab · `}{p.banos > 0 && `${p.banos} baños`}{p.m2 > 0 && ` · ${p.m2} m²`}
+                  </div>
+                </div>
+                <div style={{ padding: '14px', display: 'flex', alignItems: 'center' }}>
+                  <button onClick={e => { e.stopPropagation(); quitar(f.propiedad_id) }} style={{ all: 'unset', color: '#006D77', fontSize: 20, cursor: 'pointer', lineHeight: 1 }} title="Quitar de guardados">♥</button>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default function Panel() {
@@ -1082,6 +1152,11 @@ export default function Panel() {
                 </div>
               </div>
             </div>
+          )}
+
+          {/* GUARDADOS */}
+          {seccion === 'guardados' && (
+            <GuardadosSeccion />
           )}
 
           {/* CURSOS AEI */}

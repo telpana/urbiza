@@ -281,15 +281,32 @@ function BuscarContent() {
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
   const [amenidadesFiltro, setAmenidadesFiltro] = useState<string[]>([])
   const [soloAei, setSoloAei] = useState(false)
+  const [favoritosSet, setFavoritosSet] = useState<Set<string>>(new Set())
+  const [userId, setUserId] = useState<string | null>(null)
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) return
       setSesionActiva(true)
+      setUserId(data.user.id)
       const { data: usr } = await supabase.from('usuarios').select('plan').eq('id', data.user.id).single()
       if (usr?.plan) setPlanUsuario(usr.plan)
+      const { data: favs } = await supabase.from('favoritos').select('propiedad_id').eq('usuario_id', data.user.id)
+      if (favs) setFavoritosSet(new Set(favs.map((f: any) => f.propiedad_id)))
     })
   }, [])
+
+  const toggleFavorito = async (e: React.MouseEvent, propId: string) => {
+    e.stopPropagation()
+    if (!userId) { window.location.href = '/login'; return }
+    if (favoritosSet.has(propId)) {
+      await supabase.from('favoritos').delete().eq('usuario_id', userId).eq('propiedad_id', propId)
+      setFavoritosSet(prev => { const s = new Set(prev); s.delete(propId); return s })
+    } else {
+      await supabase.from('favoritos').insert({ usuario_id: userId, propiedad_id: propId })
+      setFavoritosSet(prev => new Set(prev).add(propId))
+    }
+  }
 
   useEffect(() => {
     const cargar = async () => {
@@ -626,7 +643,7 @@ function BuscarContent() {
                       <span style={{ color: '#006D77', fontSize: 12 }}>{p.zona}</span>
                     </div>
                     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                      <button onClick={e => e.stopPropagation()} style={{ all: 'unset', border: '1px solid #e0e0e0', borderRadius: 4, padding: '6px 10px', cursor: 'pointer', color: '#ccc', fontSize: 16, lineHeight: 1 }}>♡</button>
+                      <button onClick={e => toggleFavorito(e, String(p.id))} style={{ all: 'unset', border: `1px solid ${favoritosSet.has(String(p.id)) ? '#006D77' : '#e0e0e0'}`, borderRadius: 4, padding: '6px 10px', cursor: 'pointer', color: favoritosSet.has(String(p.id)) ? '#006D77' : '#ccc', fontSize: 16, lineHeight: 1 }}>{favoritosSet.has(String(p.id)) ? '♥' : '♡'}</button>
                       <button onClick={e => { e.stopPropagation(); window.location.href = `/propiedad/${p.id}?tel=1` }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '7px 16px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Ver teléfono</button>
                       <button onClick={e => { e.stopPropagation(); window.location.href = `/propiedad/${p.id}` }} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '7px 18px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Contactar</button>
                     </div>

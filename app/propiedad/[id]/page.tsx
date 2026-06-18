@@ -155,6 +155,8 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   const [telVisible, setTelVisible] = useState(searchParams.get('tel') === '1')
   const [sesionActiva, setSesionActiva] = useState(false)
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
+  const [guardado, setGuardado] = useState(false)
+  const [userId, setUserId] = useState<string | null>(null)
 
   useEffect(() => {
     fetch('/api/visita', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ propiedadId: id }) })
@@ -164,10 +166,24 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
     supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) return
       setSesionActiva(true)
+      setUserId(data.user.id)
       const { data: usr } = await supabase.from('usuarios').select('plan').eq('id', data.user.id).single()
       if (usr?.plan) setPlanUsuario(usr.plan)
+      const { data: fav } = await supabase.from('favoritos').select('id').eq('usuario_id', data.user.id).eq('propiedad_id', id).maybeSingle()
+      if (fav) setGuardado(true)
     })
-  }, [])
+  }, [id])
+
+  const toggleGuardado = async () => {
+    if (!userId) { window.location.href = '/login'; return }
+    if (guardado) {
+      await supabase.from('favoritos').delete().eq('usuario_id', userId).eq('propiedad_id', id)
+      setGuardado(false)
+    } else {
+      await supabase.from('favoritos').insert({ usuario_id: userId, propiedad_id: id })
+      setGuardado(true)
+    }
+  }
 
   useEffect(() => {
     const cargar = async () => {
@@ -435,7 +451,9 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
             </div>
 
             <div style={{ display: 'flex', gap: 8 }}>
-              <button style={{ all: 'unset', flex: 1, border: '1px solid #e0e0e0', borderRadius: 6, padding: '10px', fontSize: 12, color: '#555', cursor: 'pointer', textAlign: 'center', background: '#fff' }}>♡ Guardar</button>
+              <button onClick={toggleGuardado} style={{ all: 'unset', flex: 1, border: `1px solid ${guardado ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, padding: '10px', fontSize: 12, color: guardado ? '#006D77' : '#555', cursor: 'pointer', textAlign: 'center', background: guardado ? '#e0f5f7' : '#fff', fontWeight: guardado ? 600 : 400 }}>
+                {guardado ? '♥ Guardado' : '♡ Guardar'}
+              </button>
               <button style={{ all: 'unset', flex: 1, border: '1px solid #e0e0e0', borderRadius: 6, padding: '10px', fontSize: 12, color: '#555', cursor: 'pointer', textAlign: 'center', background: '#fff' }}>↗ Compartir</button>
             </div>
           </div>
