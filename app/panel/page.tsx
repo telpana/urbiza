@@ -271,7 +271,7 @@ export default function Panel() {
     tipo: a.tipo || 'Apartamento',
     estado: estadosAnuncios[a.id] || a.estado || 'activo',
     impresiones: a.visitas || 0,
-    clics: Math.floor((a.visitas || 0) * 0.28),
+    clics: a.visitas || 0,
     telVistos: a.tel_vistos || 0,
     favoritos: a.favoritos || 0,
     destacado: a.destacado || false,
@@ -352,8 +352,7 @@ export default function Panel() {
               {/* KPIs reales */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 20 }}>
                 {[
-                  { label: 'Impresiones', val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: 'veces que apareció en búsquedas', color: '#006D77' },
-                  { label: 'Visitas al anuncio', val: anunciosReales.reduce((s, a) => s + Math.floor((a.visitas || 0) * 0.28), 0).toLocaleString(), sub: 'personas que lo abrieron', color: '#17A6B4' },
+                  { label: 'Visitas al anuncio', val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: 'personas que lo abrieron', color: '#006D77' },
                   { label: 'Tel. visualizados', val: anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0).toLocaleString(), sub: 'veces que vieron tu teléfono', color: '#10b981' },
                   { label: 'Guardados', val: anunciosReales.reduce((s, a) => s + (a.favoritos || 0), 0).toLocaleString(), sub: 'personas que lo guardaron', color: '#f59e0b' },
                 ].map(k => (
@@ -659,8 +658,7 @@ export default function Panel() {
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>Estadísticas</h1>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
                 {[
-                  { label: 'Impresiones totales', val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: 'veces que apareció en búsquedas', color: '#006D77' },
-                  { label: 'Visitas a tus anuncios', val: anunciosReales.reduce((s, a) => s + Math.floor((a.visitas || 0) * 0.28), 0).toLocaleString(), sub: 'personas que lo abrieron', color: '#17A6B4' },
+                  { label: 'Visitas a tus anuncios', val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: 'personas que lo abrieron', color: '#006D77' },
                   { label: 'Teléfonos visualizados', val: anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0).toLocaleString(), sub: 'interés real en contactarte', color: '#10b981' },
                   { label: 'Mensajes recibidos', val: mensajesReales.length.toString(), sub: `${noLeidos} sin leer`, color: '#f59e0b' },
                 ].map(s => (

@@ -76,6 +76,10 @@ export default function Propiedad({ params }: { params: { id: string } }) {
   }, [])
 
   useEffect(() => {
+    fetch('/api/visita', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ propiedadId: params.id }) })
+  }, [params.id])
+
+  useEffect(() => {
     const cargar = async () => {
       const { data } = await supabase.from('propiedades').select('usuario_id').eq('id', params.id).single()
       if (data) setVendedorId(data.usuario_id)
