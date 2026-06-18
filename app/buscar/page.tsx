@@ -23,20 +23,45 @@ const propiedadesEjemplo = [
 // Mapa mini limpio — solo muestra el mapa sin zonas seleccionadas
 const ZONAS_COORDS: Record<string, [number, number]> = {
   'piantini': [18.4890, -69.9370], 'naco': [18.4950, -69.9450], 'bella vista': [18.4760, -69.9450],
-  'arroyo hondo': [18.5050, -69.9650], 'serrallés': [18.4850, -69.9500], 'gazcue': [18.4720, -69.9300],
+  'arroyo hondo': [18.5050, -69.9650], 'serralles': [18.4850, -69.9500], 'gazcue': [18.4720, -69.9300],
   'evaristo morales': [18.4870, -69.9420], 'la esperilla': [18.4780, -69.9330], 'miramar': [18.4800, -69.9200],
-  'santo domingo': [18.4861, -69.9312], 'distrito nacional': [18.4861, -69.9312],
-  'punta cana': [18.5820, -68.4050], 'bávaro': [18.6835, -68.4070], 'cap cana': [18.5200, -68.3700],
-  'santiago': [19.4517, -70.6970], 'las terrenas': [19.3100, -69.5200], 'puerto plata': [19.7950, -70.6910],
-  'la romana': [18.4273, -68.9728], 'jarabacoa': [19.1130, -70.6380], 'samaná': [19.2060, -69.3360],
-  'san pedro de macorís': [18.4530, -69.3090], 'baní': [18.2790, -70.3310], 'boca chica': [18.4490, -69.6080],
+  'ciudad colonial': [18.4740, -69.8880], 'los cacicazgos': [18.4670, -69.9500], 'mirador norte': [18.5100, -69.9400],
+  'los prados': [18.5000, -69.9550], 'fernandez': [18.5020, -69.9460], 'reparto paraiso': [18.4600, -69.9650],
+  'distrito nacional': [18.4861, -69.9312], 'santo domingo este': [18.4900, -69.8600], 'santo domingo norte': [18.5500, -69.9500],
+  'santo domingo oeste': [18.4800, -70.0200], 'santo domingo': [18.4861, -69.9312],
+  'punta cana': [18.5820, -68.4050], 'bavaro': [18.6835, -68.4070], 'cap cana': [18.5200, -68.3700],
+  'los corales': [18.6700, -68.4200], 'cabeza de toro': [18.7200, -68.4100], 'uvero alto': [18.8000, -68.3200],
+  'la altagracia': [18.5820, -68.4050],
+  'santiago': [19.4517, -70.6970], 'los jardines': [19.4600, -70.7100], 'cerros de gurabo': [19.4700, -70.6500],
+  'reparto conuco': [19.4400, -70.6900], 'villa progreso': [19.4550, -70.6600],
+  'las terrenas': [19.3100, -69.5200], 'puerto plata': [19.7950, -70.6910], 'sosua': [19.7600, -70.5200],
+  'cabarete': [19.7700, -70.4100], 'costambar': [19.7900, -70.7200],
+  'la romana': [18.4273, -68.9728], 'casa de campo': [18.4000, -68.9700],
+  'jarabacoa': [19.1130, -70.6380], 'constanza': [18.9090, -70.7490],
+  'samana': [19.2060, -69.3360], 'las galeras': [19.2320, -69.2200],
+  'san pedro de macoris': [18.4530, -69.3090], 'bani': [18.2790, -70.3310],
+  'boca chica': [18.4490, -69.6080], 'juan dolio': [18.4400, -69.5300],
+  'azua': [18.4530, -70.7350], 'moca': [19.3960, -70.5150], 'nagua': [19.3730, -69.8470],
+}
+
+function normalize(s: string) {
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+}
+
+function getLatLngFromZona(zona: string): [number, number] {
+  if (!zona) return [18.4861, -69.9312]
+  const z = normalize(zona)
+  for (const [key, coords] of Object.entries(ZONAS_COORDS)) {
+    if (z.includes(normalize(key))) return coords
+  }
+  return [18.4861, -69.9312]
 }
 
 function getZonaCoords(zona: string): { center: [number, number], zoom: number } {
   if (!zona) return { center: [18.735, -70.165], zoom: 8 }
-  const z = zona.toLowerCase()
+  const z = normalize(zona)
   for (const [key, coords] of Object.entries(ZONAS_COORDS)) {
-    if (z.includes(key)) return { center: coords, zoom: 13 }
+    if (z.includes(normalize(key))) return { center: coords, zoom: 13 }
   }
   return { center: [18.735, -70.165], zoom: 8 }
 }
@@ -92,13 +117,14 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: typeof propiedad
       const L = (window as any).L
       if (!L || !mapRef.current) return
       const map = L.map(mapRef.current, {
-        center: [18.4861, -69.9312],
-        zoom: 11,
+        center: [18.735, -70.165],
+        zoom: 8,
         zoomControl: true,
         attributionControl: false,
       })
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
 
+      const marcadores: any[] = []
       propiedades.forEach(p => {
         const icono = L.divIcon({
           className: '',
@@ -110,16 +136,22 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: typeof propiedad
           iconAnchor: [11, 30],
           popupAnchor: [0, -30],
         })
-        L.marker([p.lat, p.lng], { icon: icono }).addTo(map).bindPopup(`
+        const m = L.marker([p.lat, p.lng], { icon: icono }).addTo(map)
+        m.bindPopup(`
           <div style="min-width:200px;font-family:sans-serif;">
             <div style="font-size:13px;font-weight:600;color:#006D77;margin-bottom:4px;">${p.titulo}</div>
             <div style="font-size:16px;font-weight:700;color:#111;margin-bottom:2px;">US$ ${p.precio.toLocaleString('en-US')}</div>
             <div style="font-size:11px;color:#aaa;margin-bottom:6px;">${formatDOP(p.precio)}</div>
-            <div style="font-size:12px;color:#555;margin-bottom:8px;">${p.hab > 0 ? p.hab + ' hab · ' : ''}${p.m2} m²${p.banos > 0 ? ' · ' + p.banos + ' baños' : ''}</div>
-            <div style="font-size:12px;color:#777;">${p.desc.substring(0, 80)}...</div>
+            <div style="font-size:12px;color:#555;margin-bottom:8px;">${p.hab > 0 ? p.hab + ' hab · ' : ''}${p.m2 > 0 ? p.m2 + ' m²' : ''}${p.banos > 0 ? ' · ' + p.banos + ' baños' : ''}</div>
+            <a href="/propiedad/${p.id}" style="display:inline-block;margin-top:6px;font-size:12px;color:#fff;background:#006D77;padding:4px 10px;border-radius:3px;text-decoration:none;">Ver propiedad</a>
           </div>
         `)
+        marcadores.push(m)
       })
+      if (marcadores.length > 0) {
+        const grupo = L.featureGroup(marcadores)
+        map.fitBounds(grupo.getBounds().pad(0.25))
+      }
       mapInstanceRef.current = map
     }
     if ((window as any).L) { load() }
@@ -224,8 +256,8 @@ function BuscarContent() {
     visitas: false,
     bg: '#e0f5f7',
     desc: p.descripcion || '',
-    lat: 18.4861,
-    lng: -69.9312,
+    lat: p.lat ?? getLatLngFromZona(p.zona || '')[0],
+    lng: p.lng ?? getLatLngFromZona(p.zona || '')[1],
   })) : propiedadesEjemplo
 
   const tipos = ['Todos', 'Apartamento', 'Villa', 'Oficina', 'Terreno', 'Local comercial']
