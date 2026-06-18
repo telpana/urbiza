@@ -535,12 +535,11 @@ function BuscarContent() {
                 { id: 'amueblado', label: 'Amueblado' },
                 { id: 'jardin', label: 'Jardín' },
                 { id: 'terraza', label: 'Terraza' },
+                { id: 'jacuzzi', label: 'Jacuzzi' },
+                { id: 'barbacoa', label: 'Barbacoa' },
                 { id: 'gimnasio', label: 'Gimnasio' },
-                { id: 'ascensor', label: 'Ascensor' },
                 { id: 'seguridad', label: 'Seguridad 24h' },
-                { id: 'bbq', label: 'BBQ / Área social' },
-                { id: 'lavanderia', label: 'Lavandería' },
-                { id: 'deposito', label: 'Depósito' },
+                { id: 'ascensor', label: 'Ascensor' },
               ].map(({ id, label }) => (
                 <label key={id} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 13, color: '#444', cursor: 'pointer' }}>
                   <input
@@ -558,14 +557,8 @@ function BuscarContent() {
           {/* FILTRO AEI */}
           <div style={{ paddingBottom: 14 }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#444', cursor: 'pointer' }}>
-              <input
-                type="checkbox"
-                checked={soloAei}
-                onChange={e => setSoloAei(e.target.checked)}
-                style={{ accentColor: '#006D77', width: 14, height: 14 }}
-              />
-              Solo agentes AEI verificados
-              <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>AEI</span>
+              <input type="checkbox" checked={soloAei} onChange={e => setSoloAei(e.target.checked)} style={{ accentColor: '#006D77', width: 14, height: 14 }} />
+              Agente <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>AEI</span>
             </label>
           </div>
 
