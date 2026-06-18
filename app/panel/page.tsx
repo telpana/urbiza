@@ -643,12 +643,7 @@ export default function Panel() {
                   )}
                 </div>
 
-                {['Edificio', 'Terreno'].includes(pubTipo) ? (
-                  <div style={{ marginBottom: 16, maxWidth: '33%' }}>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Parqueos <span style={{ color: '#aaa', fontWeight: 400 }}>(opcional)</span></label>
-                    <input type="number" min="0" value={pubParqueos} onChange={e => setPubParqueos(e.target.value)} placeholder="Ej: 2" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                  </div>
-                ) : (
+                {!['Edificio', 'Terreno'].includes(pubTipo) && (
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 16 }}>
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Baños</label>
