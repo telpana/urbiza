@@ -336,14 +336,36 @@ function BuscarContent() {
             <a key={item.label} href={item.href} style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: operacion === (item.label === 'Alquilar' ? 'alquiler' : 'venta') ? '#fff' : 'rgba(255,255,255,0.7)', textDecoration: 'none', borderBottom: operacion === (item.label === 'Alquilar' ? 'alquiler' : 'venta') ? '2px solid #83D4DB' : '2px solid transparent' }}>{item.label}</a>
           ))}
         </div>
-        <div style={{ flex: 1, maxWidth: 380, margin: '0 20px' }}>
+        <div style={{ flex: 1, maxWidth: 380, margin: '0 20px', position: 'relative' }}>
           <div style={{ display: 'flex', background: '#fff', borderRadius: 4, overflow: 'hidden', height: 34, boxShadow: '0 1px 4px rgba(0,0,0,0.15)' }}>
             <div style={{ display: 'flex', alignItems: 'center', padding: '0 10px', borderRight: '1px solid #e8e8e8' }}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             </div>
-            <input value={query} onChange={e => setQuery(e.target.value)} type="text" placeholder="Zona, sector, municipio..." style={{ flex: 1, padding: '0 10px', fontSize: 13, border: 'none', outline: 'none', color: '#222', background: '#fff' }} />
-            <button style={{ background: '#17A6B4', color: '#fff', border: 'none', padding: '0 16px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Buscar</button>
+            <input
+              value={query}
+              onChange={e => handleQueryChange(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') { setMostrarSugerencias(false); window.location.href = `/buscar?zona=${encodeURIComponent(query)}&operacion=${operacion}` } }}
+              type="text"
+              placeholder="Zona, sector, municipio..."
+              style={{ flex: 1, padding: '0 10px', fontSize: 13, border: 'none', outline: 'none', color: '#222', background: '#fff' }}
+            />
+            <button
+              onClick={() => { setMostrarSugerencias(false); window.location.href = `/buscar?zona=${encodeURIComponent(query)}&operacion=${operacion}` }}
+              style={{ background: '#17A6B4', color: '#fff', border: 'none', padding: '0 16px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Buscar</button>
           </div>
+          {mostrarSugerencias && sugerencias.length > 0 && (
+            <div style={{ position: 'absolute', top: 38, left: 0, right: 0, background: '#fff', borderRadius: 4, boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: 200, overflow: 'hidden' }}>
+              {sugerencias.map(s => (
+                <div key={s} onClick={() => { setQuery(s); setMostrarSugerencias(false); window.location.href = `/buscar?zona=${encodeURIComponent(s)}&operacion=${operacion}` }}
+                  style={{ padding: '9px 14px', fontSize: 13, color: '#333', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, borderBottom: '1px solid #f0f0f0' }}
+                  onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
+                  onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+                  {s}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           {sesionActiva
