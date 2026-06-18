@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, use } from 'react'
 import { supabase } from '../../../supabase'
 
 const USD_TO_DOP = 59.5
@@ -112,7 +112,8 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
   )
 }
 
-export default function Propiedad({ params }: { params: { id: string } }) {
+export default function Propiedad({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params)
   const [propiedad, setPropiedad] = useState<any>(null)
   const [cargando, setCargando] = useState(true)
   const [mensaje, setMensaje] = useState('')
@@ -126,8 +127,8 @@ export default function Propiedad({ params }: { params: { id: string } }) {
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
 
   useEffect(() => {
-    fetch('/api/visita', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ propiedadId: params.id }) })
-  }, [params.id])
+    fetch('/api/visita', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ propiedadId: id }) })
+  }, [id])
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -143,18 +144,18 @@ export default function Propiedad({ params }: { params: { id: string } }) {
       const { data, error } = await supabase
         .from('propiedades')
         .select('*, usuarios(*)')
-        .eq('id', params.id)
+        .eq('id', id)
         .single()
       if (error) console.error('[propiedad]', error)
       if (data) setPropiedad(data)
       setCargando(false)
     }
     cargar()
-  }, [params.id])
+  }, [id])
 
   const handleVerTelefono = () => {
     if (!telVisible) {
-      fetch('/api/tel-visto', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ propiedadId: params.id }) })
+      fetch('/api/tel-visto', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ propiedadId: id }) })
     }
     setTelVisible(v => !v)
   }
@@ -164,7 +165,7 @@ export default function Propiedad({ params }: { params: { id: string } }) {
     setEnviando(true)
     setErrorContacto('')
     const { error } = await supabase.from('mensajes').insert({
-      propiedad_id: params.id,
+      propiedad_id: id,
       vendedor_id: propiedad?.usuario_id,
       nombre_cliente: nombreContacto,
       telefono_cliente: telefonoContacto || null,
