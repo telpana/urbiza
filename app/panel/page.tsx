@@ -846,6 +846,7 @@ export default function Panel() {
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                               <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>{m.nombre_cliente}</div>
                               {m.remitente_id && bloqueadosSet.has(m.remitente_id) && <span style={{ fontSize: 11, background: '#fee2e2', color: '#dc2626', padding: '2px 8px', borderRadius: 10, fontWeight: 600 }}>Bloqueado</span>}
+                              {!m.remitente_id && <span style={{ fontSize: 11, color: '#aaa' }}>Sin cuenta</span>}
                             </div>
                             {m.telefono_cliente
                               ? <a href={`tel:${m.telefono_cliente}`} style={{ fontSize: 12, color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>📞 {m.telefono_cliente}</a>
@@ -853,11 +854,13 @@ export default function Panel() {
                             }
                           </div>
                           <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                            {m.remitente_id && (
-                              <button onClick={() => toggleBloqueo(m.remitente_id)} style={{ all: 'unset', border: `1px solid ${bloqueadosSet.has(m.remitente_id) ? '#e0e0e0' : '#fca5a5'}`, color: bloqueadosSet.has(m.remitente_id) ? '#555' : '#dc2626', padding: '5px 10px', borderRadius: 4, fontSize: 12, cursor: 'pointer', fontWeight: 500 }}>
-                                {bloqueadosSet.has(m.remitente_id) ? 'Desbloquear' : 'Bloquear'}
-                              </button>
-                            )}
+                            <button
+                              onClick={() => m.remitente_id ? toggleBloqueo(m.remitente_id) : undefined}
+                              disabled={!m.remitente_id}
+                              title={!m.remitente_id ? 'Este usuario no tiene cuenta registrada' : undefined}
+                              style={{ all: 'unset', border: `1px solid ${m.remitente_id && bloqueadosSet.has(m.remitente_id) ? '#e0e0e0' : '#fca5a5'}`, color: !m.remitente_id ? '#ccc' : (bloqueadosSet.has(m.remitente_id) ? '#555' : '#dc2626'), padding: '5px 10px', borderRadius: 4, fontSize: 12, cursor: m.remitente_id ? 'pointer' : 'default', fontWeight: 500 }}>
+                              {m.remitente_id && bloqueadosSet.has(m.remitente_id) ? 'Desbloquear' : 'Bloquear'}
+                            </button>
                             <button onClick={() => eliminarMensaje(m.id)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#888', padding: '5px 10px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>Eliminar</button>
                           </div>
                         </div>
