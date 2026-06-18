@@ -139,12 +139,17 @@ export default function Propiedad({ params }: { params: { id: string } }) {
   }, [])
 
   useEffect(() => {
-    supabase
-      .from('propiedades')
-      .select('*, usuarios(nombre, telefono, inmobiliaria, numero_aei, plan, foto_url)')
-      .eq('id', params.id)
-      .single()
-      .then(({ data }) => { if (data) setPropiedad(data); setCargando(false) })
+    const cargar = async () => {
+      const { data, error } = await supabase
+        .from('propiedades')
+        .select('*, usuarios(*)')
+        .eq('id', params.id)
+        .single()
+      if (error) console.error('[propiedad]', error)
+      if (data) setPropiedad(data)
+      setCargando(false)
+    }
+    cargar()
   }, [params.id])
 
   const handleVerTelefono = () => {
