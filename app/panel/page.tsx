@@ -440,7 +440,7 @@ export default function Panel() {
     clics: a.visitas || 0,
     telVistos: a.tel_vistos || 0,
     favoritos: a.favoritos || 0,
-    destacado: a.destacado || false,
+    destacado: a.destacado && (!a.destacado_hasta || new Date(a.destacado_hasta) > new Date()),
     vence: '30 días',
     bg: '#e0f5f7',
   }))

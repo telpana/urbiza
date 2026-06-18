@@ -340,7 +340,7 @@ function BuscarContent() {
     parqueos: p.parqueos || 0,
     tipo: p.tipo || 'Apartamento',
     operacion: p.operacion || 'venta',
-    dest: p.destacado || false,
+    dest: p.destacado && (!p.destacado_hasta || new Date(p.destacado_hasta) > new Date()),
     visitas: false,
     bg: '#e0f5f7',
     desc: p.descripcion || '',
