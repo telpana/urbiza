@@ -94,9 +94,9 @@ function getLatLngFromZona(zona: string): [number, number] {
 }
 
 function getZonaCoords(zona: string): { center: [number, number], zoom: number } {
-  if (!zona) return { center: [18.735, -70.165], zoom: 8 }
+  if (!zona) return { center: [18.735, -70.165], zoom: 7 }
   const coords = matchZona(zona)
-  return coords ? { center: coords, zoom: 13 } : { center: [18.735, -70.165], zoom: 8 }
+  return coords ? { center: coords, zoom: 11 } : { center: [18.735, -70.165], zoom: 7 }
 }
 
 function MapaMini({ zona }: { zona: string }) {
@@ -279,6 +279,8 @@ function BuscarContent() {
   const [verMapa, setVerMapa] = useState(false)
   const [sesionActiva, setSesionActiva] = useState(false)
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
+  const [amenidadesFiltro, setAmenidadesFiltro] = useState<string[]>([])
+  const [soloAei, setSoloAei] = useState(false)
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -294,7 +296,7 @@ function BuscarContent() {
       setCargando(true)
       let q = supabase
         .from('propiedades')
-        .select('*, usuarios(nombre, inmobiliaria, tipo, foto_url)')
+        .select('*, usuarios(nombre, inmobiliaria, tipo, foto_url, numero_aei)')
         .eq('estado', 'activo')
       if (operacionParam) q = q.eq('operacion', operacionParam)
       if (tipoParam) q = q.eq('tipo', tipoParam)
@@ -316,7 +318,7 @@ function BuscarContent() {
     hab: p.habitaciones || 0,
     banos: p.banos || 0,
     m2: p.m2 || 0,
-    parqueos: 0,
+    parqueos: p.parqueos || 0,
     tipo: p.tipo || 'Apartamento',
     operacion: p.operacion || 'venta',
     dest: p.destacado || false,
@@ -325,6 +327,10 @@ function BuscarContent() {
     desc: p.descripcion || '',
     lat: p.lat ?? getLatLngFromZona(p.zona || '')[0],
     lng: p.lng ?? getLatLngFromZona(p.zona || '')[1],
+    amenidades: Array.isArray(p.amenidades) ? p.amenidades : [],
+    aei: !!(p.usuarios?.numero_aei),
+    fotos: Array.isArray(p.fotos) ? p.fotos : [],
+    vendedor: p.usuarios || {},
   })) : propiedadesEjemplo
 
   const tipos = ['Todos', 'Apartamento', 'Villa', 'Oficina', 'Terreno', 'Local comercial']
@@ -340,6 +346,8 @@ function BuscarContent() {
     if (habMin > 0 && p.hab < habMin) return false
     if (banosMin > 0 && p.banos < banosMin) return false
     if (query && !p.titulo.toLowerCase().includes(query.toLowerCase()) && !p.zona.toLowerCase().includes(query.toLowerCase())) return false
+    if (soloAei && !p.aei) return false
+    if (amenidadesFiltro.length > 0 && !amenidadesFiltro.every(a => p.amenidades.includes(a))) return false
     return true
   }).sort((a, b) => {
     // Destacadas siempre primero sin importar el orden seleccionado
@@ -517,17 +525,48 @@ function BuscarContent() {
           </div>
 
           {/* FILTRO CARACTERÍSTICAS */}
-          <div style={{ paddingBottom: 14 }}>
+          <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>Características</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {['Piscina', 'Parqueo', 'Vista al mar', 'Amueblado', 'Jardín', 'Terraza', 'Agente AEI verificado'].map(c => (
-                <label key={c} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 13, color: '#444', cursor: 'pointer' }}>
-                  <input type="checkbox" style={{ accentColor: '#006D77', width: 14, height: 14 }} />
-                  {c}
-                  {c === 'Agente AEI verificado' && <span style={{ display: 'inline-flex', alignItems: 'center', background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 700, padding: '1px 5px', borderRadius: 3 }}>AEI</span>}
+              {[
+                { id: 'piscina', label: 'Piscina' },
+                { id: 'parqueo', label: 'Parqueo' },
+                { id: 'vista_mar', label: 'Vista al mar' },
+                { id: 'amueblado', label: 'Amueblado' },
+                { id: 'jardin', label: 'Jardín' },
+                { id: 'terraza', label: 'Terraza' },
+                { id: 'gimnasio', label: 'Gimnasio' },
+                { id: 'ascensor', label: 'Ascensor' },
+                { id: 'seguridad', label: 'Seguridad 24h' },
+                { id: 'bbq', label: 'BBQ / Área social' },
+                { id: 'lavanderia', label: 'Lavandería' },
+                { id: 'deposito', label: 'Depósito' },
+              ].map(({ id, label }) => (
+                <label key={id} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 13, color: '#444', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={amenidadesFiltro.includes(id)}
+                    onChange={e => setAmenidadesFiltro(prev => e.target.checked ? [...prev, id] : prev.filter(a => a !== id))}
+                    style={{ accentColor: '#006D77', width: 14, height: 14 }}
+                  />
+                  {label}
                 </label>
               ))}
             </div>
+          </div>
+
+          {/* FILTRO AEI */}
+          <div style={{ paddingBottom: 14 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#444', cursor: 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={soloAei}
+                onChange={e => setSoloAei(e.target.checked)}
+                style={{ accentColor: '#006D77', width: 14, height: 14 }}
+              />
+              Solo agentes AEI verificados
+              <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>AEI</span>
+            </label>
           </div>
 
         </div>
