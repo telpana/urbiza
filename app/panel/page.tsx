@@ -119,6 +119,13 @@ export default function Panel() {
   const [verificandoPago, setVerificandoPago] = useState(false)
 
   useEffect(() => {
+    if ((seccion === 'anuncios' || seccion === 'estadisticas') && usuario?.id) {
+      supabase.from('propiedades').select('*').eq('usuario_id', usuario.id).order('created_at', { ascending: false })
+        .then(({ data }) => { if (data) setAnunciosReales(data) })
+    }
+  }, [seccion])
+
+  useEffect(() => {
     const cargarDatos = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { window.location.href = '/login'; return }
