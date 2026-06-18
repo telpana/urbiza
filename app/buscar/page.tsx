@@ -29,7 +29,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'los prados': [18.5000, -69.9550], 'fernandez': [18.5020, -69.9460], 'reparto paraiso': [18.4600, -69.9650],
   'distrito nacional': [18.4861, -69.9312], 'santo domingo este': [18.4900, -69.8600], 'santo domingo norte': [18.5500, -69.9500],
   'santo domingo oeste': [18.4800, -70.0200], 'santo domingo': [18.4861, -69.9312],
-  'punta cana': [18.5654, -68.4500], 'bavaro': [18.6820, -68.4780], 'cap cana': [18.5100, -68.4400],
+  'punta cana': [18.5674, -68.3635], 'bavaro': [18.6820, -68.4780], 'cap cana': [18.5100, -68.4400],
   'los corales': [18.6600, -68.4500], 'cabeza de toro': [18.7100, -68.4600], 'uvero alto': [18.7800, -68.3800],
   'la altagracia': [18.5654, -68.4500],
   'santiago': [19.4517, -70.6970], 'los jardines': [19.4600, -70.7100], 'cerros de gurabo': [19.4700, -70.6500],
