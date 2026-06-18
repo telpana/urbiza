@@ -231,6 +231,9 @@ export default function Panel() {
       estado: 'activo',
     })
     if (error) { setPubError('Error al publicar. Inténtalo de nuevo.'); setPubLoading(false); return }
+    // Recargar anuncios para que aparezcan en Mis anuncios
+    const { data: anunciosActualizados } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
+    if (anunciosActualizados) setAnunciosReales(anunciosActualizados)
     setPubExito(true)
     setPubLoading(false)
     // Resetear form
