@@ -64,9 +64,15 @@ export default function Propiedad({ params }: { params: { id: string } }) {
   const [telVisible, setTelVisible] = useState(false)
   const [vendedorId, setVendedorId] = useState<string | null>(null)
   const [sesionActiva, setSesionActiva] = useState(false)
+  const [planUsuario, setPlanUsuario] = useState<string>('gratis')
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setSesionActiva(!!data.user))
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) return
+      setSesionActiva(true)
+      const { data: usr } = await supabase.from('usuarios').select('plan').eq('id', data.user.id).single()
+      if (usr?.plan) setPlanUsuario(usr.plan)
+    })
   }, [])
 
   useEffect(() => {
@@ -114,7 +120,7 @@ export default function Propiedad({ params }: { params: { id: string } }) {
             ? <a href="/panel" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 600 }}>Mi cuenta</a>
             : <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>Entrar</a>
           }
-          <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>+ Publicar gratis</a>
+          {planUsuario !== 'profesional' && <a href={sesionActiva ? '/panel' : '/registro'} style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>+ Publicar gratis</a>}
         </div>
       </nav>
 

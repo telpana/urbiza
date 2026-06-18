@@ -238,9 +238,15 @@ export default function Home() {
   const [masVistasReales, setMasVistasReales] = useState<any[]>([])
   const [slideIdx, setSlideIdx] = useState(0)
   const [sesionActiva, setSesionActiva] = useState(false)
+  const [planUsuario, setPlanUsuario] = useState<string>('gratis')
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setSesionActiva(!!data.user))
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) return
+      setSesionActiva(true)
+      const { data: usr } = await supabase.from('usuarios').select('plan').eq('id', data.user.id).single()
+      if (usr?.plan) setPlanUsuario(usr.plan)
+    })
   }, [])
 
   useEffect(() => {
@@ -307,7 +313,7 @@ export default function Home() {
             ? <a href="/panel" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 600 }}>Mi cuenta</a>
             : <a href="/login" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.entrar}</a>
           }
-          <a href="/registro" style={{ fontSize: 13, color: '#fff', background: '#006D77', padding: '8px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.publicar}</a>
+          {planUsuario !== 'profesional' && <a href={sesionActiva ? '/panel' : '/registro'} style={{ fontSize: 13, color: '#fff', background: '#006D77', padding: '8px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.publicar}</a>}
         </div>
       </nav>
 

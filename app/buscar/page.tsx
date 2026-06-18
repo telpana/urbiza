@@ -21,9 +21,30 @@ const propiedadesEjemplo = [
 ]
 
 // Mapa mini limpio — solo muestra el mapa sin zonas seleccionadas
-function MapaMini() {
+const ZONAS_COORDS: Record<string, [number, number]> = {
+  'piantini': [18.4890, -69.9370], 'naco': [18.4950, -69.9450], 'bella vista': [18.4760, -69.9450],
+  'arroyo hondo': [18.5050, -69.9650], 'serrallés': [18.4850, -69.9500], 'gazcue': [18.4720, -69.9300],
+  'evaristo morales': [18.4870, -69.9420], 'la esperilla': [18.4780, -69.9330], 'miramar': [18.4800, -69.9200],
+  'santo domingo': [18.4861, -69.9312], 'distrito nacional': [18.4861, -69.9312],
+  'punta cana': [18.5820, -68.4050], 'bávaro': [18.6835, -68.4070], 'cap cana': [18.5200, -68.3700],
+  'santiago': [19.4517, -70.6970], 'las terrenas': [19.3100, -69.5200], 'puerto plata': [19.7950, -70.6910],
+  'la romana': [18.4273, -68.9728], 'jarabacoa': [19.1130, -70.6380], 'samaná': [19.2060, -69.3360],
+  'san pedro de macorís': [18.4530, -69.3090], 'baní': [18.2790, -70.3310], 'boca chica': [18.4490, -69.6080],
+}
+
+function getZonaCoords(zona: string): { center: [number, number], zoom: number } {
+  if (!zona) return { center: [18.735, -70.165], zoom: 8 }
+  const z = zona.toLowerCase()
+  for (const [key, coords] of Object.entries(ZONAS_COORDS)) {
+    if (z.includes(key)) return { center: coords, zoom: 13 }
+  }
+  return { center: [18.735, -70.165], zoom: 8 }
+}
+
+function MapaMini({ zona }: { zona: string }) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<any>(null)
+  const { center, zoom } = getZonaCoords(zona)
 
   useEffect(() => {
     if (mapInstanceRef.current || !mapRef.current) return
@@ -37,8 +58,8 @@ function MapaMini() {
       const L = (window as any).L
       if (!L || !mapRef.current) return
       const map = L.map(mapRef.current, {
-        center: [18.4861, -69.9312],
-        zoom: 12,
+        center,
+        zoom,
         zoomControl: false,
         attributionControl: false,
         dragging: false,
@@ -158,9 +179,15 @@ function BuscarContent() {
   const [cargando, setCargando] = useState(true)
   const [verMapa, setVerMapa] = useState(false)
   const [sesionActiva, setSesionActiva] = useState(false)
+  const [planUsuario, setPlanUsuario] = useState<string>('gratis')
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => setSesionActiva(!!data.user))
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) return
+      setSesionActiva(true)
+      const { data: usr } = await supabase.from('usuarios').select('plan').eq('id', data.user.id).single()
+      if (usr?.plan) setPlanUsuario(usr.plan)
+    })
   }, [])
 
   useEffect(() => {
@@ -271,7 +298,7 @@ function BuscarContent() {
             ? <a href="/panel" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 600 }}>Mi cuenta</a>
             : <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>Entrar</a>
           }
-          <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>+ Publicar gratis</a>
+          {planUsuario !== 'profesional' && <a href={sesionActiva ? '/panel' : '/registro'} style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>+ Publicar gratis</a>}
         </div>
       </nav>
 
@@ -296,7 +323,7 @@ function BuscarContent() {
           {/* MAPA MINI LIMPIO */}
           <div style={{ border: '1px solid #e0e0e0', borderRadius: 6, overflow: 'hidden', marginBottom: 14 }}>
             <div style={{ height: 180 }}>
-              <MapaMini />
+              <MapaMini key={zonaParam} zona={zonaParam} />
             </div>
             <div style={{ padding: '8px 12px', borderTop: '1px solid #e8e8e8', background: '#fafafa' }}>
               <button onClick={() => setVerMapa(true)} style={{ all: 'unset', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, fontSize: 13, color: '#006D77', fontWeight: 500, cursor: 'pointer', width: '100%' }}>
