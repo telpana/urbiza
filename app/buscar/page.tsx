@@ -157,6 +157,11 @@ function BuscarContent() {
   const [propiedadesReales, setPropiedadesReales] = useState<any[]>([])
   const [cargando, setCargando] = useState(true)
   const [verMapa, setVerMapa] = useState(false)
+  const [sesionActiva, setSesionActiva] = useState(false)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setSesionActiva(!!data.user))
+  }, [])
 
   useEffect(() => {
     const cargar = async () => {
@@ -262,7 +267,10 @@ function BuscarContent() {
           </div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>Entrar</a>
+          {sesionActiva
+            ? <a href="/panel" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 600 }}>Mi cuenta</a>
+            : <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>Entrar</a>
+          }
           <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>+ Publicar gratis</a>
         </div>
       </nav>

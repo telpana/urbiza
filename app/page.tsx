@@ -237,6 +237,11 @@ export default function Home() {
   const [destReales, setDestReales] = useState<any[]>([])
   const [masVistasReales, setMasVistasReales] = useState<any[]>([])
   const [slideIdx, setSlideIdx] = useState(0)
+  const [sesionActiva, setSesionActiva] = useState(false)
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data }) => setSesionActiva(!!data.user))
+  }, [])
 
   useEffect(() => {
     const cargar = async () => {
@@ -298,7 +303,10 @@ export default function Home() {
             </select>
             <svg style={{ position: 'absolute', right: 0, pointerEvents: 'none' }} width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1L5 5L9 1" stroke="#006D77" strokeWidth="1.5" strokeLinecap="round"/></svg>
           </div>
-          <a href="/login" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.entrar}</a>
+          {sesionActiva
+            ? <a href="/panel" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 600 }}>Mi cuenta</a>
+            : <a href="/login" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.entrar}</a>
+          }
           <a href="/registro" style={{ fontSize: 13, color: '#fff', background: '#006D77', padding: '8px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.publicar}</a>
         </div>
       </nav>
