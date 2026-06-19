@@ -1124,7 +1124,8 @@ export default function Panel() {
               ) : (() => {
                 const fmt = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
                 const fmtCorto = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })
-                const activo = !planInfo || planInfo.estado === 'active' || planInfo.estado === 'trialing'
+                const activo = planInfo?.estado === 'active' || planInfo?.estado === 'trialing' ||
+                  (!planInfo?.estado && usuario?.plan === 'profesional' && (!usuario?.plan_activo_hasta || new Date(usuario.plan_activo_hasta) > new Date()))
                 return (
                 <div>
                   {/* Suscripción activa */}
@@ -1163,7 +1164,15 @@ export default function Panel() {
                     {!planInfo ? (
                       <div style={{ fontSize: 13, color: '#aaa', textAlign: 'center', padding: '16px 0' }}>Cargando...</div>
                     ) : planInfo.sin_sub || planInfo.error || !planInfo.pagos?.length ? (
+                      usuario?.plan_activo_hasta ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '10px 0' }}>
+                          <div style={{ flex: 1, fontSize: 13, color: '#333' }}>{fmtCorto(usuario.created_at)}</div>
+                          <div style={{ fontSize: 13, fontWeight: 600, color: '#111' }}>US$ 9.99</div>
+                          <span style={{ background: '#e0f5f0', color: '#065f46', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>Pagado</span>
+                        </div>
+                      ) : (
                       <div style={{ fontSize: 13, color: '#aaa', textAlign: 'center', padding: '16px 0' }}>No hay pagos registrados todavía</div>
+                      )
                     ) : planInfo.pagos?.map((p: any, i: number) => (
                       <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '10px 0', borderBottom: i < planInfo.pagos.length - 1 ? '1px solid #f5f5f5' : 'none' }}>
                         <div style={{ flex: 1, fontSize: 13, color: '#333' }}>{fmtCorto(p.fecha)}</div>
