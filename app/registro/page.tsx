@@ -27,19 +27,21 @@ export default function Registro() {
     setLoading(true)
     setError('')
     try {
-      const { data, error: signUpError } = await supabase.auth.signUp({ email, password })
+      const tipo = tipoCuenta === 'profesional' ? 'profesional' : 'particular'
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { nombre, tipo } }
+      })
       if (signUpError) { setError(signUpError.message); setLoading(false); return }
+      // El trigger on_auth_user_created crea la fila en usuarios automáticamente.
+      // Actualizamos los campos extra que el trigger no tiene (telefono, cedula, aei).
       if (data.user) {
-        await supabase.from('usuarios').insert({
-          id: data.user.id,
-          nombre,
-          email,
+        await supabase.from('usuarios').update({
           telefono: telefono || null,
           cedula: cedula || null,
           numero_aei: aei || null,
-          tipo: tipoCuenta === 'profesional' ? 'profesional' : 'particular',
-          plan: 'gratis',
-        })
+        }).eq('id', data.user.id)
       }
       setPaso(4)
     } catch (e) {
