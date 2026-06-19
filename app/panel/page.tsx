@@ -210,9 +210,9 @@ export default function Panel() {
     }
     if (seccion === 'plan' && usuario?.id && !planInfo) {
       fetch('/api/plan-info', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: usuario.id }) })
-        .then(r => r.json()).then(d => { if (d.ok) setPlanInfo(d) })
+        .then(r => r.json()).then(d => setPlanInfo(d ?? { error: true })).catch(() => setPlanInfo({ error: true }))
     }
-  }, [seccion])
+  }, [seccion, usuario])
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -1135,7 +1135,9 @@ export default function Panel() {
                         <div style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 4 }}>Profesional — US$ 9.99/mes</div>
                         {planInfo?.proximo_cobro
                           ? <div style={{ fontSize: 13, color: '#555' }}>Próxima facturación: <strong>{fmt(planInfo.proximo_cobro)}</strong></div>
-                          : <div style={{ fontSize: 13, color: '#555' }}>Cargando datos...</div>
+                          : usuario?.plan_activo_hasta
+                          ? <div style={{ fontSize: 13, color: '#555' }}>Activo hasta: <strong>{fmt(usuario.plan_activo_hasta)}</strong></div>
+                          : null
                         }
                         <div style={{ fontSize: 12, color: '#aaa', marginTop: 2 }}>Se renovará automáticamente. Cancela cuando quieras.</div>
                       </div>
@@ -1143,8 +1145,8 @@ export default function Panel() {
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, paddingTop: 16, borderTop: '1px solid #f0f0f0' }}>
                       {[
-                        { label: 'Miembro desde', val: planInfo?.inicio ? fmt(planInfo.inicio) : '—' },
-                        { label: 'Próximo cobro', val: planInfo?.proximo_cobro ? `US$ 9.99 · ${fmtCorto(planInfo.proximo_cobro)}` : '—' },
+                        { label: 'Miembro desde', val: planInfo?.inicio ? fmt(planInfo.inicio) : usuario?.created_at ? fmt(usuario.created_at) : '—' },
+                        { label: 'Próximo cobro', val: planInfo?.proximo_cobro ? `US$ 9.99 · ${fmtCorto(planInfo.proximo_cobro)}` : usuario?.plan_activo_hasta ? fmtCorto(usuario.plan_activo_hasta) : '—' },
                         { label: 'Método de pago', val: planInfo?.last4 ? `•••• ${planInfo.last4}` : '—' },
                       ].map(d => (
                         <div key={d.label}>
@@ -1160,8 +1162,8 @@ export default function Panel() {
                     <div style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 14 }}>Historial de pagos</div>
                     {!planInfo ? (
                       <div style={{ fontSize: 13, color: '#aaa', textAlign: 'center', padding: '16px 0' }}>Cargando...</div>
-                    ) : planInfo.pagos?.length === 0 ? (
-                      <div style={{ fontSize: 13, color: '#aaa', textAlign: 'center', padding: '16px 0' }}>Sin pagos registrados</div>
+                    ) : planInfo.sin_sub || planInfo.error || !planInfo.pagos?.length ? (
+                      <div style={{ fontSize: 13, color: '#aaa', textAlign: 'center', padding: '16px 0' }}>No hay pagos registrados todavía</div>
                     ) : planInfo.pagos?.map((p: any, i: number) => (
                       <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '10px 0', borderBottom: i < planInfo.pagos.length - 1 ? '1px solid #f5f5f5' : 'none' }}>
                         <div style={{ flex: 1, fontSize: 13, color: '#333' }}>{fmtCorto(p.fecha)}</div>
@@ -1177,9 +1179,12 @@ export default function Panel() {
                   <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderLeft: '3px solid #fee2e2' }}>
                     <div style={{ fontSize: 14, fontWeight: 600, color: '#333', marginBottom: 4 }}>Cancelar suscripción</div>
                     <div style={{ fontSize: 13, color: '#888', marginBottom: 14 }}>
-                      {planInfo?.proximo_cobro
-                        ? <>Si cancelas ahora seguirás teniendo acceso hasta el <strong>{fmt(planInfo.proximo_cobro)}</strong>. No se realizará ningún cobro más.</>
-                        : 'Si cancelas ahora seguirás teniendo acceso hasta el final del período pagado.'}
+                      {(() => {
+                        const hasta = planInfo?.proximo_cobro || usuario?.plan_activo_hasta
+                        return hasta
+                          ? <>Si cancelas ahora seguirás teniendo acceso hasta el <strong>{fmt(hasta)}</strong>. No se realizará ningún cobro más.</>
+                          : 'Si cancelas ahora seguirás teniendo acceso hasta el final del período pagado.'
+                      })()}
                     </div>
                     <button onClick={async () => { const { data: { user } } = await supabase.auth.getUser(); if (!user) return; if (!confirm('¿Seguro que quieres cancelar tu plan? Seguirás teniendo acceso hasta el final del período pagado.')) return; const res = await fetch('/api/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id }) }); const data = await res.json(); if (data.ok) alert('Plan cancelado. Seguirás activo hasta el final del período.'); else alert('Error al cancelar. Escríbenos a soporte@urbiza.com') }} style={{ all: 'unset', border: '1.5px solid #e55', color: '#e55', padding: '8px 18px', borderRadius: 6, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>
                       Dar de baja mi plan
