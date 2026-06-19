@@ -460,7 +460,6 @@ export default function Panel() {
     zona: a.zona || '',
     tipo: a.tipo || 'Apartamento',
     estado: estadosAnuncios[a.id] || a.estado || 'activo',
-    impresiones: a.impresiones || 0,
     clics: a.visitas || 0,
     telVistos: a.tel_vistos || 0,
     favoritos: a.favoritos || 0,
@@ -554,7 +553,6 @@ export default function Panel() {
               {/* KPIs reales */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 20 }}>
                 {[
-                  { label: 'Impresiones', val: anunciosReales.reduce((s, a) => s + (a.impresiones || 0), 0).toLocaleString(), sub: 'veces visto en listados', color: '#6366f1' },
                   { label: 'Visitas al anuncio', val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: 'personas que lo abrieron', color: '#006D77' },
                   { label: 'Tel. visualizados', val: anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0).toLocaleString(), sub: 'veces que vieron tu teléfono', color: '#10b981' },
                   { label: 'Guardados', val: anunciosReales.reduce((s, a) => s + (a.favoritos || 0), 0).toLocaleString(), sub: 'personas que lo guardaron', color: '#f59e0b' },
@@ -910,7 +908,6 @@ export default function Panel() {
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>Estadísticas</h1>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
                 {[
-                  { label: 'Impresiones', val: anunciosReales.reduce((s, a) => s + (a.impresiones || 0), 0).toLocaleString(), sub: 'veces que apareció en resultados', color: '#6366f1' },
                   { label: 'Visitas al anuncio', val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: 'personas que lo abrieron', color: '#006D77' },
                   { label: 'Teléfonos vistos', val: anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0).toLocaleString(), sub: 'interés real en contactarte', color: '#10b981' },
                   { label: 'Mensajes recibidos', val: mensajesReales.length.toString(), sub: `${noLeidos} sin leer`, color: '#f59e0b' },
@@ -927,28 +924,23 @@ export default function Panel() {
                 <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                   <thead>
                     <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                      {['Anuncio', 'Impresiones', 'Visitas', 'Tel. vistos', 'Mensajes', 'Guardados', 'CTR'].map(h => (
+                      {['Anuncio', 'Visitas', 'Tel. vistos', 'Mensajes', 'Guardados'].map(h => (
                         <th key={h} style={{ textAlign: 'left', fontSize: 12, color: '#aaa', fontWeight: 500, padding: '0 0 10px' }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {anunciosAMostrar.length === 0 ? (
-                      <tr><td colSpan={7} style={{ textAlign: 'center', padding: '24px', color: '#aaa', fontSize: 13 }}>Publica tu primer anuncio para ver las estadísticas</td></tr>
-                    ) : anunciosAMostrar.map((a: any) => {
-                      const ctr = a.impresiones > 0 ? ((a.clics / a.impresiones) * 100).toFixed(1) : '—'
-                      return (
-                        <tr key={a.id} style={{ borderBottom: '1px solid #f8f8f8' }}>
-                          <td style={{ padding: '10px 0', fontSize: 13, color: '#333', fontWeight: 500, maxWidth: 180, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.titulo}</td>
-                          <td style={{ padding: '10px 0', fontSize: 13, color: '#6366f1', fontWeight: 500 }}>{a.impresiones.toLocaleString()}</td>
-                          <td style={{ padding: '10px 0', fontSize: 13, color: '#006D77', fontWeight: 500 }}>{a.clics.toLocaleString()}</td>
-                          <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.telVistos}</td>
-                          <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.mensajes}</td>
-                          <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.favoritos}</td>
-                          <td style={{ padding: '10px 0', fontSize: 13, color: '#10b981', fontWeight: 600 }}>{ctr}{ctr !== '—' ? '%' : ''}</td>
-                        </tr>
-                      )
-                    })}
+                      <tr><td colSpan={5} style={{ textAlign: 'center', padding: '24px', color: '#aaa', fontSize: 13 }}>Publica tu primer anuncio para ver las estadísticas</td></tr>
+                    ) : anunciosAMostrar.map((a: any) => (
+                      <tr key={a.id} style={{ borderBottom: '1px solid #f8f8f8' }}>
+                        <td style={{ padding: '10px 0', fontSize: 13, color: '#333', fontWeight: 500, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.titulo}</td>
+                        <td style={{ padding: '10px 0', fontSize: 13, color: '#006D77', fontWeight: 500 }}>{a.clics.toLocaleString()}</td>
+                        <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.telVistos}</td>
+                        <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.mensajes}</td>
+                        <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.favoritos}</td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>

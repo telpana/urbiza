@@ -323,12 +323,7 @@ function BuscarContent() {
       if (zonaParam) q = q.ilike('zona', `%${zonaParam}%`)
       const { data, error } = await q
         .order('created_at', { ascending: false })
-      if (!error && data) {
-        setPropiedadesReales(data)
-        if (data.length > 0) {
-          fetch('/api/impresion', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids: data.map((p: any) => p.id) }) }).catch(() => {})
-        }
-      }
+      if (!error && data) setPropiedadesReales(data)
       setCargando(false)
     }
     cargar()
