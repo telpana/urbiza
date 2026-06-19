@@ -598,8 +598,7 @@ export default function Panel() {
                         <div style={{ fontSize: 15, fontWeight: 600, color: '#111', marginBottom: 3 }}>{a.titulo}</div>
                         <div style={{ fontSize: 13, color: '#888', marginBottom: 6 }}>{a.zona} · {a.tipo} · US$ {a.precio.toLocaleString('en-US')}</div>
                         <div style={{ display: 'flex', gap: 16, fontSize: 12, color: '#aaa', flexWrap: 'wrap' }}>
-                          <span>👁 {a.impresiones.toLocaleString()} impresiones</span>
-                          <span>🖱 {a.clics} visitas</span>
+                          <span>👁 {a.clics} visitas</span>
                           <span>📞 {a.telVistos} tel. vistos</span>
                           <span>❤️ {a.favoritos} guardados</span>
                         </div>
