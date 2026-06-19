@@ -14,6 +14,7 @@ export default function Registro() {
   const [aei, setAei] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [mostrarPassword, setMostrarPassword] = useState(false)
 
   const tipos = [
     { id: 'particular', titulo: 'Particular', desc: '2 anuncios gratuitos para vender o alquilar tu propiedad', icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> },
@@ -128,6 +129,9 @@ export default function Registro() {
                 <button onClick={() => { setMetodo('email'); setPaso(2) }} style={{ all: 'unset', width: '100%', background: '#006D77', color: '#fff', padding: '13px', borderRadius: 7, fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'center', display: 'block', boxSizing: 'border-box' }}>
                   Registrarse con email
                 </button>
+                <div style={{ marginTop: 14, textAlign: 'center' }}>
+                  <a href="/" style={{ fontSize: 13, color: '#aaa', textDecoration: 'none' }}>← Volver al inicio</a>
+                </div>
               </div>
             )}
 
@@ -174,7 +178,15 @@ export default function Registro() {
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Contraseña *</label>
-                    <input value={password} onChange={e => setPassword(e.target.value)} type="password" placeholder="Mínimo 6 caracteres" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 14px', fontSize: 14, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    <div style={{ position: 'relative' }}>
+                      <input value={password} onChange={e => setPassword(e.target.value)} type={mostrarPassword ? 'text' : 'password'} placeholder="Mínimo 6 caracteres" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 44px 11px 14px', fontSize: 14, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                      <button type="button" onClick={() => setMostrarPassword(v => !v)} style={{ all: 'unset', position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', color: '#aaa', display: 'flex', alignItems: 'center' }}>
+                        {mostrarPassword
+                          ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                          : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        }
+                      </button>
+                    </div>
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Teléfono *</label>
