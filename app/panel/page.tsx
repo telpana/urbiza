@@ -1214,7 +1214,7 @@ export default function Panel() {
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Teléfono <span style={{ color: '#e53e3e' }}>*</span></label>
-                    <input value={perfilTelefono} onChange={e => setPerfilTelefono(e.target.value)} placeholder="+1 809 000 0000" style={{ width: '100%', border: `1.5px solid ${!perfilTelefono ? '#e53e3e' : '#e0e0e0'}`, borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor= perfilTelefono ? '#e0e0e0' : '#e53e3e'} />
+                    <input value={perfilTelefono} onChange={e => setPerfilTelefono(e.target.value.slice(0, 16))} placeholder="+1 809 000 0000" maxLength={16} style={{ width: '100%', border: `1.5px solid ${!perfilTelefono ? '#e53e3e' : '#e0e0e0'}`, borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor= perfilTelefono ? '#e0e0e0' : '#e53e3e'} />
                     {!perfilTelefono && <div style={{ fontSize: 11, color: '#e53e3e', marginTop: 4 }}>Necesario para que los compradores puedan contactarte</div>}
                   </div>
                   <div>
