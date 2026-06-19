@@ -753,7 +753,7 @@ export default function Panel() {
 
                 {/* FOTOS */}
                 <div style={{ marginBottom: 20 }}>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Fotos <span style={{ color: '#aaa', fontWeight: 400 }}>(hasta 20)</span></label>
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Fotos</label>
                   <label style={{ display: 'block', border: '2px dashed #e0e0e0', borderRadius: 6, padding: '24px', textAlign: 'center', cursor: 'pointer', background: '#fafafa' }}
                     onMouseEnter={e => e.currentTarget.style.borderColor='#006D77'}
                     onMouseLeave={e => e.currentTarget.style.borderColor='#e0e0e0'}>
