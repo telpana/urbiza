@@ -958,7 +958,7 @@ export default function Panel() {
           {seccion === 'destacar' && (
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>Destacar anuncio</h1>
-              <p style={{ fontSize: 14, color: '#888', marginBottom: 16 }}>Los anuncios destacados aparecen primero y tienen hasta 5x más visitas</p>
+              <p style={{ fontSize: 14, color: '#888', marginBottom: 16 }}>Los anuncios destacados aparecen primero y tienen hasta 10x más visitas</p>
 
               {/* Anuncio seleccionado */}
               {anuncioADestacar ? (
