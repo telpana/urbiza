@@ -401,6 +401,7 @@ export default function Panel() {
   }
 
   const publicarAnuncio = async () => {
+    if (!anuncioEditando && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis) { setSeccion('planes'); return }
     if (!pubTitulo || !pubPrecio || !pubProvincia) { setPubError('El título, precio y provincia son obligatorios'); return }
     if (pubFotos.length === 0 && fotosExistentes.length === 0) { setPubError('Debes subir al menos una foto del inmueble'); return }
     setPubLoading(true)
