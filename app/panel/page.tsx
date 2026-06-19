@@ -164,6 +164,7 @@ export default function Panel() {
   const [seccion, setSeccion] = useState('anuncios')
   const [filtroTipo, setFiltroTipo] = useState('Todos')
   const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
+  const [planInfo, setPlanInfo] = useState<any>(null)
   const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
   const [mensajeSeleccionado, setMensajeSeleccionado] = useState<number | null>(null)
   const [anuncioADestacar, setAnuncioADestacar] = useState<any>(null)
@@ -206,6 +207,10 @@ export default function Panel() {
     if ((seccion === 'anuncios' || seccion === 'estadisticas') && usuario?.id) {
       supabase.from('propiedades').select('*').eq('usuario_id', usuario.id).order('created_at', { ascending: false })
         .then(({ data }) => { if (data) setAnunciosReales(data) })
+    }
+    if (seccion === 'plan' && usuario?.id && !planInfo) {
+      fetch('/api/plan-info', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: usuario.id }) })
+        .then(r => r.json()).then(d => { if (d.ok) setPlanInfo(d) })
     }
   }, [seccion])
 
@@ -1116,7 +1121,11 @@ export default function Panel() {
                     </div>
                   </div>
                 </div>
-              ) : (
+              ) : (() => {
+                const fmt = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
+                const fmtCorto = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })
+                const activo = !planInfo || planInfo.estado === 'active' || planInfo.estado === 'trialing'
+                return (
                 <div>
                   {/* Suscripción activa */}
                   <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', marginBottom: 16 }}>
@@ -1124,16 +1133,19 @@ export default function Panel() {
                       <div>
                         <div style={{ fontSize: 13, color: '#888', marginBottom: 4 }}>Plan actual</div>
                         <div style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 4 }}>Profesional — US$ 9.99/mes</div>
-                        <div style={{ fontSize: 13, color: '#555' }}>Próxima facturación: <strong>16 de julio 2026</strong></div>
+                        {planInfo?.proximo_cobro
+                          ? <div style={{ fontSize: 13, color: '#555' }}>Próxima facturación: <strong>{fmt(planInfo.proximo_cobro)}</strong></div>
+                          : <div style={{ fontSize: 13, color: '#555' }}>Cargando datos...</div>
+                        }
                         <div style={{ fontSize: 12, color: '#aaa', marginTop: 2 }}>Se renovará automáticamente. Cancela cuando quieras.</div>
                       </div>
-                      <span style={{ background: '#e0f5f0', color: '#065f46', fontSize: 12, fontWeight: 700, padding: '4px 14px', borderRadius: 10 }}>● ACTIVO</span>
+                      <span style={{ background: activo ? '#e0f5f0' : '#fee2e2', color: activo ? '#065f46' : '#dc2626', fontSize: 12, fontWeight: 700, padding: '4px 14px', borderRadius: 10 }}>● {activo ? 'ACTIVO' : 'INACTIVO'}</span>
                     </div>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, paddingTop: 16, borderTop: '1px solid #f0f0f0' }}>
                       {[
-                        { label: 'Miembro desde', val: '16 junio 2026' },
-                        { label: 'Próximo cobro', val: 'US$ 9.99 · 16 jul' },
-                        { label: 'Método de pago', val: '•••• 4242' },
+                        { label: 'Miembro desde', val: planInfo?.inicio ? fmt(planInfo.inicio) : '—' },
+                        { label: 'Próximo cobro', val: planInfo?.proximo_cobro ? `US$ 9.99 · ${fmtCorto(planInfo.proximo_cobro)}` : '—' },
+                        { label: 'Método de pago', val: planInfo?.last4 ? `•••• ${planInfo.last4}` : '—' },
                       ].map(d => (
                         <div key={d.label}>
                           <div style={{ fontSize: 11, color: '#aaa', marginBottom: 3 }}>{d.label}</div>
@@ -1146,15 +1158,17 @@ export default function Panel() {
                   {/* Historial de pagos */}
                   <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', marginBottom: 16 }}>
                     <div style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 14 }}>Historial de pagos</div>
-                    {[
-                      { fecha: '16 jun 2026', monto: 'US$ 9.99', estado: 'Pagado', factura: '#URB-001' },
-                      { fecha: '16 may 2026', monto: 'US$ 0', estado: 'Gratis', factura: '#URB-000' },
-                    ].map((p, i) => (
-                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '10px 0', borderBottom: i === 0 ? '1px solid #f5f5f5' : 'none' }}>
-                        <div style={{ flex: 1, fontSize: 13, color: '#333' }}>{p.fecha}</div>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: '#111' }}>{p.monto}</div>
-                        <span style={{ background: p.estado === 'Pagado' ? '#e0f5f0' : '#f0f0f0', color: p.estado === 'Pagado' ? '#065f46' : '#888', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>{p.estado}</span>
-                        <div style={{ fontSize: 12, color: '#aaa' }}>{p.factura}</div>
+                    {!planInfo ? (
+                      <div style={{ fontSize: 13, color: '#aaa', textAlign: 'center', padding: '16px 0' }}>Cargando...</div>
+                    ) : planInfo.pagos?.length === 0 ? (
+                      <div style={{ fontSize: 13, color: '#aaa', textAlign: 'center', padding: '16px 0' }}>Sin pagos registrados</div>
+                    ) : planInfo.pagos?.map((p: any, i: number) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '10px 0', borderBottom: i < planInfo.pagos.length - 1 ? '1px solid #f5f5f5' : 'none' }}>
+                        <div style={{ flex: 1, fontSize: 13, color: '#333' }}>{fmtCorto(p.fecha)}</div>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: '#111' }}>{p.moneda} {p.monto}</div>
+                        <span style={{ background: p.estado === 'paid' ? '#e0f5f0' : '#fff8e1', color: p.estado === 'paid' ? '#065f46' : '#92400e', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>{p.estado === 'paid' ? 'Pagado' : p.estado}</span>
+                        {p.numero && <div style={{ fontSize: 12, color: '#aaa', minWidth: 80 }}>{p.numero}</div>}
+                        {p.pdf && <a href={p.pdf} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>PDF</a>}
                       </div>
                     ))}
                   </div>
@@ -1162,13 +1176,18 @@ export default function Panel() {
                   {/* Dar de baja */}
                   <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderLeft: '3px solid #fee2e2' }}>
                     <div style={{ fontSize: 14, fontWeight: 600, color: '#333', marginBottom: 4 }}>Cancelar suscripción</div>
-                    <div style={{ fontSize: 13, color: '#888', marginBottom: 14 }}>Si cancelas ahora seguirás teniendo acceso hasta el <strong>16 de julio 2026</strong>. No se realizará ningún cobro más.</div>
+                    <div style={{ fontSize: 13, color: '#888', marginBottom: 14 }}>
+                      {planInfo?.proximo_cobro
+                        ? <>Si cancelas ahora seguirás teniendo acceso hasta el <strong>{fmt(planInfo.proximo_cobro)}</strong>. No se realizará ningún cobro más.</>
+                        : 'Si cancelas ahora seguirás teniendo acceso hasta el final del período pagado.'}
+                    </div>
                     <button onClick={async () => { const { data: { user } } = await supabase.auth.getUser(); if (!user) return; if (!confirm('¿Seguro que quieres cancelar tu plan? Seguirás teniendo acceso hasta el final del período pagado.')) return; const res = await fetch('/api/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id }) }); const data = await res.json(); if (data.ok) alert('Plan cancelado. Seguirás activo hasta el final del período.'); else alert('Error al cancelar. Escríbenos a soporte@urbiza.com') }} style={{ all: 'unset', border: '1.5px solid #e55', color: '#e55', padding: '8px 18px', borderRadius: 6, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>
                       Dar de baja mi plan
                     </button>
                   </div>
                 </div>
-              )}
+                )
+              })()}
             </div>
           )}
 
