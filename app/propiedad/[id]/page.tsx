@@ -414,7 +414,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                   {v.numero_aei && (
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3, background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3, marginTop: 4 }}>
                       <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#83D4DB" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
-                      AEI {v.numero_aei}
+                      AEI
                     </span>
                   )}
                 </div>
