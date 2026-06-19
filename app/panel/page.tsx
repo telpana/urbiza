@@ -603,7 +603,7 @@ export default function Panel() {
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 15, fontWeight: 600, color: '#111', marginBottom: 3 }}>{a.titulo}</div>
+                        <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 15, fontWeight: 600, color: '#006D77', marginBottom: 3, display: 'block', textDecoration: 'none' }} onMouseEnter={e => (e.currentTarget.style.textDecoration='underline')} onMouseLeave={e => (e.currentTarget.style.textDecoration='none')}>{a.titulo}</a>
                         <div style={{ fontSize: 13, color: '#888', marginBottom: 6 }}>{a.zona} · {a.tipo} · US$ {a.precio.toLocaleString('en-US')}</div>
                         <div style={{ display: 'flex', gap: 16, fontSize: 12, color: '#aaa', flexWrap: 'wrap' }}>
                           <span>👁 {a.clics} visitas</span>
