@@ -428,7 +428,7 @@ export default function Panel() {
       tipo: pubTipo,
       operacion: pubOperacion.toLowerCase(),
       zona: pubSector ? `${pubSector}, ${pubProvincia}` : pubProvincia,
-      m2: pubM2 ? Number(pubM2) : null,
+      m2: pubM2 ? Number(pubM2.replace(/\D/g, '')) : null,
       habitaciones: ['Edificio', 'Terreno'].includes(pubTipo) ? null : Number(pubHab),
       banos: ['Edificio', 'Terreno'].includes(pubTipo) ? null : Number(pubBanos),
       amenidades: amenidadesSeleccionadas,
@@ -702,7 +702,7 @@ export default function Panel() {
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Superficie (m²)</label>
-                    <input type="text" value={pubM2} onChange={e => setPubM2(e.target.value.replace(/\D/g, '').slice(0, 7))} placeholder="Ej: 150" inputMode="numeric" maxLength={7} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    <input type="text" value={pubM2} onChange={e => { const raw = e.target.value.replace(/\D/g, '').slice(0, 8); setPubM2(raw ? Number(raw).toLocaleString('es-ES') : '') }} placeholder="Ej: 150" inputMode="numeric" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
                   {!['Edificio', 'Terreno'].includes(pubTipo) && (
                     <div>
