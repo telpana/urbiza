@@ -126,11 +126,11 @@ export default function Registro() {
                   <span style={{ fontSize: 12, color: '#aaa' }}>o con email</span>
                   <div style={{ flex: 1, height: 1, background: '#e8e8e8' }} />
                 </div>
-                <button onClick={() => { setMetodo('email'); setPaso(2) }} style={{ all: 'unset', width: '100%', background: '#006D77', color: '#fff', padding: '13px', borderRadius: 7, fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'center', display: 'block', boxSizing: 'border-box' }}>
-                  Registrarse con email
-                </button>
-                <div style={{ marginTop: 14, textAlign: 'center' }}>
-                  <a href="/" style={{ fontSize: 13, color: '#aaa', textDecoration: 'none' }}>← Volver al inicio</a>
+                <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
+                  <a href="/" style={{ all: 'unset', flex: 1, border: '1.5px solid #e0e0e0', color: '#555', padding: '13px', borderRadius: 7, fontSize: 14, fontWeight: 500, cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box' }}>← Atrás</a>
+                  <button onClick={() => { setMetodo('email'); setPaso(2) }} style={{ all: 'unset', flex: 2, background: '#006D77', color: '#fff', padding: '13px', borderRadius: 7, fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box' }}>
+                    Registrarse con email
+                  </button>
                 </div>
               </div>
             )}
