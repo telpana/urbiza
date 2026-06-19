@@ -401,7 +401,7 @@ export default function Panel() {
   }
 
   const publicarAnuncio = async () => {
-    if (!pubTitulo || !pubPrecio || !pubProvincia || !pubSector) { setPubError('Título, precio, provincia y sector son obligatorios'); return }
+    if (!pubTitulo || !pubPrecio) { setPubError('El título y el precio son obligatorios'); return }
     if (pubFotos.length === 0 && fotosExistentes.length === 0) { setPubError('Debes subir al menos una foto del inmueble'); return }
     setPubLoading(true)
     setPubError('')
@@ -679,22 +679,22 @@ export default function Panel() {
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Título del anuncio *</label>
-                    <input type="text" value={pubTitulo} onChange={e => setPubTitulo(e.target.value)} placeholder="Ej: Apartamento en Piantini con vista al mar" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Título del anuncio * <span style={{ fontWeight: 400, color: '#aaa' }}>({pubTitulo.length}/80)</span></label>
+                    <input type="text" value={pubTitulo} onChange={e => setPubTitulo(e.target.value.slice(0, 80))} maxLength={80} placeholder="Ej: Apartamento en Piantini con vista al mar" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Precio (US$) *</label>
-                    <input type="text" value={pubPrecio} onChange={e => setPubPrecio(e.target.value)} placeholder="Ej: 250000" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    <input type="text" value={pubPrecio} onChange={e => { const v = e.target.value.replace(/\D/g, '').slice(0, 9); setPubPrecio(v) }} placeholder="Ej: 250000" inputMode="numeric" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Provincia *</label>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Provincia <span style={{ fontWeight: 400, color: '#aaa' }}>(opcional)</span></label>
                     <select value={pubProvincia} onChange={e => { setPubProvincia(e.target.value); setPubSector('') }} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
                       <option value="">Selecciona provincia</option>
                       {Object.keys(provinciasZonas).map(p => <option key={p} value={p}>{p}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Sector / Zona *</label>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Sector / Zona <span style={{ fontWeight: 400, color: '#aaa' }}>(opcional)</span></label>
                     <select value={pubSector} onChange={e => setPubSector(e.target.value)} disabled={!pubProvincia} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: pubProvincia ? '#fff' : '#f9f9f9', color: pubProvincia ? '#333' : '#aaa' }}>
                       <option value="">Selecciona sector</option>
                       {pubProvincia && provinciasZonas[pubProvincia].map(z => <option key={z} value={z}>{z}</option>)}
