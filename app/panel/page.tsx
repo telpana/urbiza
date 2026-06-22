@@ -640,8 +640,15 @@ export default function Panel() {
         {/* CONTENIDO */}
         <div style={{ flex: 1, padding: '28px 32px', overflowY: 'auto' }}>
 
+          {cargando && (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
+              <div style={{ width: 36, height: 36, border: '3px solid #e0e0e0', borderTopColor: '#006D77', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+              <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+            </div>
+          )}
+
           {/* AVISO TELÉFONO FALTANTE */}
-          {!perfilTelefono && seccion !== 'perfil' && (
+          {!cargando && !perfilTelefono && seccion !== 'perfil' && (
             <div style={{ background: '#fff8e1', border: '1px solid #ffe082', borderRadius: 8, padding: '12px 18px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <span style={{ fontSize: 18 }}>⚠️</span>
@@ -652,7 +659,7 @@ export default function Panel() {
           )}
 
           {/* MIS ANUNCIOS */}
-          {seccion === 'anuncios' && (
+          {!cargando && seccion === 'anuncios' && (
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                 <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111' }}>{Tpanel.anuncios.titulo}</h1>
@@ -744,7 +751,7 @@ export default function Panel() {
           )}
 
           {/* PUBLICAR ANUNCIO */}
-          {seccion === 'publicar' && (
+          {!cargando && seccion === 'publicar' && (
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>{anuncioEditando ? Tpanel.publicar.tituloEditar : Tpanel.publicar.titulo}</h1>
               <p style={{ fontSize: 14, color: '#888', marginBottom: 24 }}>{anuncioEditando ? Tpanel.publicar.descEdit : Tpanel.publicar.desc}</p>
@@ -928,7 +935,7 @@ export default function Panel() {
           )}
 
           {/* MENSAJES */}
-          {seccion === 'mensajes' && (() => {
+          {!cargando && seccion === 'mensajes' && (() => {
             // Agrupar por conversación: una entrada por (propiedad + contacto)
             const convMap = new Map<string, { key: string, propiedadId: string, otherUserId: string | null, msg: any, tieneNoLeido: boolean }>()
             const agregarMsg = (m: any, esEnviado: boolean) => {
@@ -1101,7 +1108,7 @@ export default function Panel() {
           })()}
 
           {/* ESTADÍSTICAS */}
-          {seccion === 'estadisticas' && (
+          {!cargando && seccion === 'estadisticas' && (
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>{Tpanel.estadisticas.titulo}</h1>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
@@ -1146,7 +1153,7 @@ export default function Panel() {
           )}
 
           {/* DESTACAR */}
-          {seccion === 'destacar' && (
+          {!cargando && seccion === 'destacar' && (
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>{Tpanel.destacar.titulo}</h1>
               <p style={{ fontSize: 14, color: '#888', marginBottom: 16 }}>{Tpanel.destacar.desc}</p>
@@ -1193,7 +1200,7 @@ export default function Panel() {
           )}
 
           {/* PLANES PRO — pantalla para particulares que llegan al límite */}
-          {seccion === 'planes' && (
+          {!cargando && seccion === 'planes' && (
             <div style={{ maxWidth: 480, margin: '0 auto', textAlign: 'center' }}>
               <div style={{ fontSize: 48, marginBottom: 16 }}>🚀</div>
               <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 8 }}>{Tpanel.planes.titulo}</h1>
@@ -1219,7 +1226,7 @@ export default function Panel() {
           )}
 
           {/* MI EQUIPO */}
-          {seccion === 'equipo' && ['agencia', 'unlimited'].includes(tipoUsuario) && (
+          {!cargando && seccion === 'equipo' && ['agencia', 'unlimited'].includes(tipoUsuario) && (
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                 <div>
@@ -1284,7 +1291,7 @@ export default function Panel() {
           )}
 
           {/* MI PLAN */}
-          {seccion === 'plan' && (
+          {!cargando && seccion === 'plan' && (
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>{Tpanel.plan.titulo}</h1>
 
@@ -1388,7 +1395,7 @@ export default function Panel() {
           )}
 
           {/* MI PERFIL */}
-          {seccion === 'perfil' && (
+          {!cargando && seccion === 'perfil' && (
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>{Tpanel.perfil.titulo}</h1>
               <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
@@ -1485,12 +1492,12 @@ export default function Panel() {
           )}
 
           {/* GUARDADOS */}
-          {seccion === 'guardados' && (
+          {!cargando && seccion === 'guardados' && (
             <GuardadosSeccion />
           )}
 
           {/* CURSOS AEI */}
-          {seccion === 'cursos' && (
+          {!cargando && seccion === 'cursos' && (
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 8 }}>
                 <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111' }}>Cursos AEI</h1>
