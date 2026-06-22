@@ -186,8 +186,9 @@ export default function Panel() {
   const [planInfo, setPlanInfo] = useState<any>(null)
   const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
   const [mensajeSeleccionado, setMensajeSeleccionado] = useState<string | null>(null)
+  const [convActiva, setConvActiva] = useState<{ propiedadId: string, otherUserId: string | null, msg: any } | null>(null)
   const [anuncioADestacar, setAnuncioADestacar] = useState<any>(null)
-  const [mensajesLeidos, setMensajesLeidos] = useState<Record<number, boolean>>({})
+  const [mensajesLeidos, setMensajesLeidos] = useState<Record<string, boolean>>({})
   const [mensajesEnviados, setMensajesEnviados] = useState<any[]>([])
   const [vistaMsg, setVistaMsg] = useState<'recibidos' | 'enviados'>('recibidos')
   const [hilo, setHilo] = useState<any[]>([])
@@ -916,14 +917,26 @@ export default function Panel() {
 
           {/* MENSAJES */}
           {seccion === 'mensajes' && (() => {
-            // Combinar recibidos y enviados, no leídos recibidos primero
-            const recibidos = mensajesReales.map((m: any) => ({ ...m, _tipo: 'recibido' }))
-            const enviados = mensajesEnviados.map((m: any) => ({ ...m, _tipo: 'enviado' }))
-            const byDate = (a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-            const todosMensajes = [
-              ...recibidos.filter((m: any) => !(mensajesLeidos[m.id] ?? false)).sort(byDate),
-              ...[...recibidos.filter((m: any) => mensajesLeidos[m.id] ?? false), ...enviados].sort(byDate),
-            ]
+            // Agrupar por conversación: una entrada por (propiedad + contacto)
+            const convMap = new Map<string, { key: string, propiedadId: string, otherUserId: string | null, msg: any, tieneNoLeido: boolean }>()
+            const agregarMsg = (m: any, esEnviado: boolean) => {
+              const otherId = esEnviado ? m.vendedor_id : (m.remitente_id || null)
+              const key = `${m.propiedad_id}__${otherId || 'anon'}`
+              const noLeido = !esEnviado && !(mensajesLeidos[m.id] ?? false)
+              const existing = convMap.get(key)
+              if (!existing || new Date(m.created_at) > new Date(existing.msg.created_at)) {
+                convMap.set(key, { key, propiedadId: m.propiedad_id, otherUserId: otherId, msg: { ...m, _tipo: esEnviado ? 'enviado' : 'recibido' }, tieneNoLeido: noLeido || (existing?.tieneNoLeido ?? false) })
+              } else if (noLeido) {
+                convMap.set(key, { ...existing, tieneNoLeido: true })
+              }
+            }
+            mensajesReales.forEach((m: any) => agregarMsg(m, false))
+            mensajesEnviados.forEach((m: any) => agregarMsg(m, true))
+            const conversaciones = Array.from(convMap.values()).sort((a, b) => {
+              if (a.tieneNoLeido && !b.tieneNoLeido) return -1
+              if (!a.tieneNoLeido && b.tieneNoLeido) return 1
+              return new Date(b.msg.created_at).getTime() - new Date(a.msg.created_at).getTime()
+            })
             return (
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
@@ -931,65 +944,65 @@ export default function Panel() {
                 {noLeidos > 0 && <span style={{ background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 600, padding: '4px 12px', borderRadius: 10 }}>{noLeidos} {Tpanel.mensajes.noLeidos}</span>}
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 16, height: 'calc(100vh - 180px)', minHeight: 500 }}>
-                {/* Lista */}
+                {/* Lista de conversaciones */}
                 <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', overflowY: 'auto' }}>
-                  {todosMensajes.length === 0 && (
+                  {conversaciones.length === 0 && (
                     <div style={{ padding: '48px 24px', textAlign: 'center' }}>
                       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" strokeWidth="1" style={{ margin: '0 auto 16px', display: 'block' }}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                       <div style={{ fontSize: 16, fontWeight: 600, color: '#555', marginBottom: 8 }}>{Tpanel.mensajes.sinMensajes}</div>
                     </div>
                   )}
-                  {todosMensajes.map((m: any) => {
+                  {conversaciones.map((conv) => {
+                    const m = conv.msg
                     const esEnviado = m._tipo === 'enviado'
-                    const leido = esEnviado ? true : (mensajesLeidos[m.id] ?? false)
-                    const nombreMostrar = esEnviado ? (m.propiedades?.titulo || 'Propiedad') : m.nombre_cliente
+                    const nombreMostrar = esEnviado ? (m._nombre || m.propiedades?.titulo || 'Propiedad') : (m.nombre_cliente || m._nombre || '?')
+                    const seleccionada = mensajeSeleccionado === conv.key
                     return (
-                      <div key={`${m._tipo}-${m.id}`} onClick={async () => {
-                          setMensajeSeleccionado(`${m._tipo}-${m.id}`)
-                          if (!esEnviado) setMensajesLeidos(prev => ({ ...prev, [m.id]: true }))
+                      <div key={conv.key} onClick={async () => {
+                          setMensajeSeleccionado(conv.key)
+                          setConvActiva({ propiedadId: conv.propiedadId, otherUserId: conv.otherUserId, msg: m })
+                          if (!esEnviado) {
+                            mensajesReales.filter((x: any) => {
+                              const k = `${x.propiedad_id}__${x.remitente_id || 'anon'}`
+                              return k === conv.key
+                            }).forEach((x: any) => setMensajesLeidos(prev => ({ ...prev, [x.id]: true })))
+                          }
                           const { data: { user } } = await supabase.auth.getUser()
-                          if (user && m.propiedad_id) {
-                            const otherId = esEnviado ? m.vendedor_id : (m.remitente_id || null)
-                            if (otherId) cargarHilo(m.propiedad_id, user.id, otherId)
-                            else setHilo([m])
+                          if (user && conv.propiedadId && conv.otherUserId) {
+                            cargarHilo(conv.propiedadId, user.id, conv.otherUserId)
+                          } else {
+                            setHilo([m])
                           }
                         }}
-                        style={{ padding: '14px 16px', borderBottom: '1px solid #f5f5f5', cursor: 'pointer', background: mensajeSeleccionado === `${m._tipo}-${m.id}` ? '#f0fafb' : '#fff', borderLeft: mensajeSeleccionado === `${m._tipo}-${m.id}` ? '3px solid #006D77' : '3px solid transparent' }}>
+                        style={{ padding: '14px 16px', borderBottom: '1px solid #f5f5f5', cursor: 'pointer', background: seleccionada ? '#f0fafb' : '#fff', borderLeft: seleccionada ? '3px solid #006D77' : '3px solid transparent' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                          <div style={{ width: 36, height: 36, borderRadius: '50%', background: leido ? '#f0f0f0' : '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: leido ? '#888' : '#006D77', flexShrink: 0, overflow: 'hidden' }}>
-                            {m._foto ? <img src={m._foto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : getAvatar(esEnviado ? (m._nombre || m.nombre_cliente || '?') : (m.nombre_cliente || m._nombre || '?'))}
+                          <div style={{ width: 36, height: 36, borderRadius: '50%', background: conv.tieneNoLeido ? '#e0f5f7' : '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: conv.tieneNoLeido ? '#006D77' : '#888', flexShrink: 0, overflow: 'hidden' }}>
+                            {m._foto ? <img src={m._foto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : getAvatar(nombreMostrar)}
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                              <div style={{ fontSize: 13, fontWeight: leido ? 500 : 700, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 140 }}>{nombreMostrar}</div>
-                              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                <div style={{ fontSize: 11, color: '#aaa' }}>{formatFecha(m.created_at, Tpanel.mensajes.hace, Tpanel.mensajes.hoy)}</div>
-                                {!esEnviado && <button onClick={e => { e.stopPropagation(); eliminarMensaje(m.id) }} title="Eliminar" style={{ all: 'unset', color: '#ccc', fontSize: 14, cursor: 'pointer', lineHeight: 1, padding: '0 2px' }} onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.color='#e55'} onMouseLeave={e => (e.currentTarget as HTMLButtonElement).style.color='#ccc'}>🗑</button>}
-                              </div>
+                              <div style={{ fontSize: 13, fontWeight: conv.tieneNoLeido ? 700 : 500, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 160 }}>{nombreMostrar}</div>
+                              <div style={{ fontSize: 11, color: '#aaa' }}>{formatFecha(m.created_at, Tpanel.mensajes.hace, Tpanel.mensajes.hoy)}</div>
                             </div>
-                            <div style={{ fontSize: 11, color: esEnviado ? '#aaa' : '#006D77', fontWeight: esEnviado ? 400 : 500 }}>
-                              {esEnviado ? '↗ Enviado' : `📍 ${m.propiedades?.titulo}`}
-                            </div>
+                            <div style={{ fontSize: 11, color: '#aaa', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>📍 {m.propiedades?.titulo}</div>
                           </div>
-                          {!leido && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#006D77', flexShrink: 0 }} />}
+                          {conv.tieneNoLeido && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#006D77', flexShrink: 0 }} />}
                         </div>
-                        <div style={{ fontSize: 12, color: '#777', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingLeft: 46 }}>{m.mensaje}</div>
+                        <div style={{ fontSize: 12, color: '#777', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingLeft: 46 }}>
+                          {esEnviado ? '↗ ' : ''}{m.mensaje}
+                        </div>
                       </div>
                     )
                   })}
                 </div>
 
                 {/* Detalle — chat */}
-                {mensajeSeleccionado && (() => {
-                  const [tipo, ...idParts] = mensajeSeleccionado.split('-')
-                  const id = idParts.join('-')
-                  const lista = tipo === 'recibido' ? mensajesReales : mensajesEnviados
-                  const m = lista.find((x: any) => String(x.id) === id)
-                  if (!m) return null
-                  const anuncio = anunciosAMostrar.find((a: any) => a.id === m?.propiedad_id)
-                  const contactoNombre = tipo === 'recibido' ? (m.nombre_cliente || m._nombre || '?') : (m._nombre || m.propiedades?.titulo || '?')
-                  const contactoTel = tipo === 'recibido' ? m.telefono_cliente : null
-                  const contactoId = tipo === 'recibido' ? m.remitente_id : m.vendedor_id
+                {convActiva && (() => {
+                  const m = convActiva.msg
+                  const esEnviado = m._tipo === 'enviado'
+                  const contactoNombre = esEnviado ? (m._nombre || m.propiedades?.titulo || '?') : (m.nombre_cliente || m._nombre || '?')
+                  const contactoTel = esEnviado ? null : m.telefono_cliente
+                  const contactoId = convActiva.otherUserId
                   return (
                     <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
                       {/* Header */}
@@ -1011,7 +1024,7 @@ export default function Panel() {
                           </div>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#f4f5f6', borderRadius: 6, padding: '7px 10px' }}>
-                          <div style={{ fontSize: 12, fontWeight: 600, color: '#333', flex: 1 }}>📍 {m.propiedades?.titulo || anuncio?.titulo}</div>
+                          <div style={{ fontSize: 12, fontWeight: 600, color: '#333', flex: 1 }}>📍 {m.propiedades?.titulo}</div>
                           <a href={`/propiedad/${m.propiedad_id}`} style={{ fontSize: 11, color: '#006D77', textDecoration: 'none', fontWeight: 500, flexShrink: 0 }}>{Tpanel.mensajes.verAnuncio} →</a>
                         </div>
                       </div>
