@@ -961,11 +961,12 @@ export default function Panel() {
                       <div key={conv.key} onClick={async () => {
                           setMensajeSeleccionado(conv.key)
                           setConvActiva({ propiedadId: conv.propiedadId, otherUserId: conv.otherUserId, msg: m })
-                          if (!esEnviado) {
-                            mensajesReales.filter((x: any) => {
-                              const k = `${x.propiedad_id}__${x.remitente_id || 'anon'}`
-                              return k === conv.key
-                            }).forEach((x: any) => setMensajesLeidos(prev => ({ ...prev, [x.id]: true })))
+                          // marcar todos los recibidos de esta conversacion como leidos
+                          const msgsConv = mensajesReales.filter((x: any) => `${x.propiedad_id}__${x.remitente_id || 'anon'}` === conv.key)
+                          if (msgsConv.length > 0) {
+                            const updates: Record<string, boolean> = {}
+                            msgsConv.forEach((x: any) => { updates[x.id] = true })
+                            setMensajesLeidos(prev => ({ ...prev, ...updates }))
                           }
                           const { data: { user } } = await supabase.auth.getUser()
                           if (user && conv.propiedadId && conv.otherUserId) {
@@ -984,7 +985,10 @@ export default function Panel() {
                               <div style={{ fontSize: 13, fontWeight: conv.tieneNoLeido ? 700 : 500, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 160 }}>{nombreMostrar}</div>
                               <div style={{ fontSize: 11, color: '#aaa' }}>{formatFecha(m.created_at, Tpanel.mensajes.hace, Tpanel.mensajes.hoy)}</div>
                             </div>
-                            <div style={{ fontSize: 11, color: '#aaa', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>📍 {m.propiedades?.titulo}</div>
+                            <div style={{ fontSize: 11, color: '#aaa', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 3 }}>
+                              <svg width="9" height="11" viewBox="0 0 9 11" fill="none" style={{ flexShrink: 0 }}><path d="M4.5 0C2.015 0 0 2.015 0 4.5c0 3.375 4.5 6.5 4.5 6.5S9 7.875 9 4.5C9 2.015 6.985 0 4.5 0zm0 6.125A1.625 1.625 0 1 1 4.5 2.875a1.625 1.625 0 0 1 0 3.25z" fill="#17A6B4"/></svg>
+                              {m.propiedades?.titulo}
+                            </div>
                           </div>
                           {conv.tieneNoLeido && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#006D77', flexShrink: 0 }} />}
                         </div>
@@ -1024,7 +1028,10 @@ export default function Panel() {
                           </div>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#f4f5f6', borderRadius: 6, padding: '7px 10px' }}>
-                          <div style={{ fontSize: 12, fontWeight: 600, color: '#333', flex: 1 }}>📍 {m.propiedades?.titulo}</div>
+                          <div style={{ fontSize: 12, fontWeight: 600, color: '#333', flex: 1, display: 'flex', alignItems: 'center', gap: 4 }}>
+                            <svg width="10" height="13" viewBox="0 0 9 11" fill="none" style={{ flexShrink: 0 }}><path d="M4.5 0C2.015 0 0 2.015 0 4.5c0 3.375 4.5 6.5 4.5 6.5S9 7.875 9 4.5C9 2.015 6.985 0 4.5 0zm0 6.125A1.625 1.625 0 1 1 4.5 2.875a1.625 1.625 0 0 1 0 3.25z" fill="#006D77"/></svg>
+                            {m.propiedades?.titulo}
+                          </div>
                           <a href={`/propiedad/${m.propiedad_id}`} style={{ fontSize: 11, color: '#006D77', textDecoration: 'none', fontWeight: 500, flexShrink: 0 }}>{Tpanel.mensajes.verAnuncio} →</a>
                         </div>
                       </div>
