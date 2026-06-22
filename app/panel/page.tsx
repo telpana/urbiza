@@ -339,6 +339,11 @@ export default function Panel() {
       }
       if (msgs) setMensajesReales(msgs.map((m: any) => ({ ...m, _foto: userMap[m.remitente_id]?.foto_url || null, _nombre: userMap[m.remitente_id]?.nombre || null })))
       if (enviados) setMensajesEnviados(enviados.map((m: any) => ({ ...m, _foto: userMap[m.vendedor_id]?.foto_url || null, _nombre: userMap[m.vendedor_id]?.nombre || null })))
+      // Restaurar mensajes leídos desde localStorage
+      try {
+        const stored = localStorage.getItem(`urbiza_leidos_${user.id}`)
+        if (stored) setMensajesLeidos(JSON.parse(stored))
+      } catch {}
       const { data: bqs } = await supabase.from('bloqueados').select('bloqueado_id').eq('bloqueador_id', user.id)
       if (bqs) setBloqueadosSet(new Set(bqs.map((b: any) => b.bloqueado_id)))
 
@@ -966,7 +971,14 @@ export default function Panel() {
                           if (msgsConv.length > 0) {
                             const updates: Record<string, boolean> = {}
                             msgsConv.forEach((x: any) => { updates[x.id] = true })
-                            setMensajesLeidos(prev => ({ ...prev, ...updates }))
+                            setMensajesLeidos(prev => {
+                              const next = { ...prev, ...updates }
+                              try {
+                                const { data: { user: u } } = { data: { user: usuario } }
+                                if (u?.id) localStorage.setItem(`urbiza_leidos_${u.id}`, JSON.stringify(next))
+                              } catch {}
+                              return next
+                            })
                           }
                           const { data: { user } } = await supabase.auth.getUser()
                           if (user && conv.propiedadId && conv.otherUserId) {
