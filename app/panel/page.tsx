@@ -94,6 +94,17 @@ function formatFecha(iso: string, hace = 'Hace', ayer = 'Ayer') {
   return `${hace} ${days}d`
 }
 
+function formatHoraChat(iso: string) {
+  if (!iso) return ''
+  const d = new Date(iso)
+  const hoy = new Date()
+  const esHoy = d.toDateString() === hoy.toDateString()
+  const hh = d.getHours().toString().padStart(2, '0')
+  const mm = d.getMinutes().toString().padStart(2, '0')
+  if (esHoy) return `${hh}:${mm}`
+  return `${d.getDate()} ${d.toLocaleString('es', { month: 'short' })}, ${hh}:${mm}`
+}
+
 function GuardadosSeccion() {
   const { tr } = useIdioma()
   const Tg = tr.panel.guardados
@@ -1014,7 +1025,7 @@ export default function Panel() {
                             <div key={msg.id} style={{ display: 'flex', justifyContent: esMio ? 'flex-end' : 'flex-start' }}>
                               <div style={{ background: esMio ? '#006D77' : '#f4f5f6', color: esMio ? '#fff' : '#333', borderRadius: esMio ? '12px 12px 2px 12px' : '12px 12px 12px 2px', padding: '10px 14px', maxWidth: '75%' }}>
                                 <div style={{ fontSize: 14, lineHeight: 1.5, marginBottom: 4 }}>{msg.mensaje}</div>
-                                <div style={{ fontSize: 10, opacity: 0.65, textAlign: esMio ? 'right' : 'left' }}>{formatFecha(msg.created_at, Tpanel.mensajes.hace, Tpanel.mensajes.hoy)}</div>
+                                <div style={{ fontSize: 10, opacity: 0.65, textAlign: esMio ? 'right' : 'left' }}>{formatHoraChat(msg.created_at)}</div>
                               </div>
                             </div>
                           )
