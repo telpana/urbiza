@@ -34,6 +34,7 @@ export async function POST(req: Request) {
       const { error } = await supabase.from('propiedades').update({
         destacado: true,
         destacado_hasta: new Date(Date.now() + dias * 24 * 60 * 60 * 1000).toISOString(),
+        destacado_dias: dias,
       }).eq('id', propiedadId)
       if (error) {
         console.error('[verificar-pago] error destacado:', error)
@@ -44,6 +45,7 @@ export async function POST(req: Request) {
       // Pago de plan profesional
       const { error } = await supabase.from('usuarios').update({
         plan: 'profesional',
+        tipo: 'profesional',
         stripe_subscription_id: session.subscription as string || null,
         plan_activo_hasta: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
       }).eq('id', userId)

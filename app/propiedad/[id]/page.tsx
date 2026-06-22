@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, use } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../../supabase'
+import { useIdioma } from '../../../IdiomaContext'
 
 const USD_TO_DOP = 59.5
 function formatDOP(usd: number) {
@@ -32,6 +33,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'santiago': [19.4517, -70.6970], 'los jardines': [19.4600, -70.7100], 'cerros de gurabo': [19.4700, -70.6500],
   'las terrenas': [19.3100, -69.5200], 'samana': [19.2060, -69.3360], 'las galeras': [19.2320, -69.2200],
   'el portillo': [19.3300, -69.4800], 'sanchez': [19.2317, -69.6088],
+  'el limon': [19.2760, -69.5050], 'rancho espanol': [19.2514, -69.4548],
   'puerto plata': [19.7950, -70.6910], 'sosua': [19.7600, -70.5200], 'cabarete': [19.7700, -70.4100],
   'costambar': [19.7900, -70.7200], 'luperon': [19.8977, -70.9480], 'villa isabela': [19.8400, -71.0700], 'la isabela': [19.8400, -71.0700],
   'la romana': [18.4273, -68.9728], 'casa de campo': [18.4080, -68.9130],
@@ -115,7 +117,7 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
     return (
       <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden', marginBottom: 16 }}>
         <div style={{ height: 380, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-          {destacado && <div style={{ position: 'absolute', top: 12, left: 12, background: '#006D77', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 12px', borderRadius: 3 }}>⭐ DESTACADO</div>}
+          {destacado && <div style={{ position: 'absolute', top: 8, right: 8, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>DESTACADO</div>}
           <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="0.8" opacity="0.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         </div>
       </div>
@@ -124,7 +126,7 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
   return (
     <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden', marginBottom: 16 }}>
       <div style={{ height: 420, position: 'relative', background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        {destacado && <div style={{ position: 'absolute', top: 12, left: 12, zIndex: 2, background: '#006D77', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 12px', borderRadius: 3 }}>⭐ DESTACADO</div>}
+        {destacado && <div style={{ position: 'absolute', top: 8, right: 8, zIndex: 2, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>DESTACADO</div>}
         <img src={fotos[activa]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         <div style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 11, padding: '4px 10px', borderRadius: 20 }}>{activa + 1} / {fotos.length}</div>
         {activa > 0 && <button onClick={() => setActiva(a => a - 1)} style={{ all: 'unset', position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.9)', width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 20, color: '#333' }}>‹</button>}
@@ -143,6 +145,9 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
 
 export default function Propiedad({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
+  const { tr } = useIdioma()
+  const Tp = tr.propiedad
+  const Tn = tr.nav
   const searchParams = useSearchParams()
   const [propiedad, setPropiedad] = useState<any>(null)
   const [cargando, setCargando] = useState(true)
@@ -153,8 +158,11 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   const [enviado, setEnviado] = useState(false)
   const [errorContacto, setErrorContacto] = useState('')
   const [telVisible, setTelVisible] = useState(searchParams.get('tel') === '1')
+  const [verConversion, setVerConversion] = useState(false)
   const [sesionActiva, setSesionActiva] = useState(false)
+  const [authReady, setAuthReady] = useState(false)
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
+  const [fotoUrlNav, setFotoUrlNav] = useState<string>('')
   const [guardado, setGuardado] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
   const [nombreUsuario, setNombreUsuario] = useState('')
@@ -166,13 +174,16 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
+      setAuthReady(true)
       if (!data.user) return
       setSesionActiva(true)
       setUserId(data.user.id)
-      const { data: usr } = await supabase.from('usuarios').select('plan, nombre, telefono').eq('id', data.user.id).single()
+      const { data: usr } = await supabase.from('usuarios').select('plan, nombre, telefono, foto_url').eq('id', data.user.id).single()
       if (usr?.plan) setPlanUsuario(usr.plan)
       if (usr?.nombre) { setNombreUsuario(usr.nombre); setNombreContacto(usr.nombre) }
       if (usr?.telefono) { setTelefonoUsuario(usr.telefono); setTelefonoContacto(usr.telefono) }
+      const foto = usr?.foto_url || data.user.user_metadata?.avatar_url || data.user.user_metadata?.picture || ''
+      if (foto) setFotoUrlNav(foto)
       const { data: fav } = await supabase.from('favoritos').select('id').eq('usuario_id', data.user.id).eq('propiedad_id', id).maybeSingle()
       if (fav) setGuardado(true)
     })
@@ -214,10 +225,10 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
 
   const enviarMensaje = async () => {
     if (!sesionActiva) { window.location.href = `/login?next=/propiedad/${id}`; return }
-    if (userId === propiedad?.usuario_id) { setErrorContacto('No puedes enviarte mensajes a ti mismo'); return }
-    if (!nombreContacto || !mensaje) { setErrorContacto('El nombre y el mensaje son obligatorios'); return }
+    if (userId === propiedad?.usuario_id) { setErrorContacto(Tp.err_propio); return }
+    if (!nombreContacto || !mensaje) { setErrorContacto(Tp.err_campos); return }
     const { data: bloq } = await supabase.from('bloqueados').select('id').eq('bloqueador_id', propiedad?.usuario_id).eq('bloqueado_id', userId).maybeSingle()
-    if (bloq) { setErrorContacto('No es posible enviar el mensaje'); setEnviando(false); return }
+    if (bloq) { setErrorContacto(Tp.err_bloqueado); setEnviando(false); return }
     setEnviando(true)
     setErrorContacto('')
     const { error } = await supabase.from('mensajes').insert({
@@ -228,7 +239,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
       telefono_cliente: telefonoContacto || null,
       mensaje,
     })
-    if (error) { setErrorContacto('Error al enviar. Inténtalo de nuevo.'); setEnviando(false); return }
+    if (error) { setErrorContacto(Tp.err_envio); setEnviando(false); return }
     setEnviado(true)
     setEnviando(false)
     setMensaje('')
@@ -236,15 +247,15 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
 
   if (cargando) return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontFamily: 'sans-serif' }}>
-      <div style={{ color: '#006D77', fontSize: 15 }}>Cargando...</div>
+      <div style={{ color: '#006D77', fontSize: 15 }}>{Tp.cargando}</div>
     </div>
   )
 
   if (!propiedad) return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontFamily: 'sans-serif' }}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 18, color: '#333', marginBottom: 12 }}>Propiedad no encontrada</div>
-        <a href="/buscar" style={{ color: '#006D77' }}>Volver al buscador</a>
+        <div style={{ fontSize: 18, color: '#333', marginBottom: 12 }}>{Tp.noEncontrada}</div>
+        <a href="/buscar" style={{ color: '#006D77' }}>{Tp.volver}</a>
       </div>
     </div>
   )
@@ -259,12 +270,16 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   const m2 = propiedad.m2 || 0
 
   const tipoSinHab = ['Edificio', 'Terreno'].includes(propiedad.tipo)
+  const esTerreno = propiedad.tipo === 'Terreno'
+  const sqft = m2 > 0 ? Math.round(m2 * 10.7639) : 0
+  const tareas = m2 > 0 ? (m2 / 628.86) : 0
+  const tareasStr = tareas < 1 ? tareas.toFixed(2) : Number.isInteger(tareas) ? String(tareas) : tareas.toFixed(2)
   const caracteristicas = [
-    !tipoSinHab && propiedad.habitaciones > 0 && { label: 'Habitaciones', val: propiedad.habitaciones, icon: 'bed' },
-    !tipoSinHab && propiedad.banos > 0 && { label: 'Baños', val: propiedad.banos, icon: 'bath' },
-    m2 > 0 && { label: 'Superficie', val: m2 + ' m²', icon: 'area' },
-    !tipoSinHab && propiedad.parqueos > 0 && { label: 'Parqueos', val: propiedad.parqueos, icon: 'park' },
-    !tipoSinHab && propiedad.planta && { label: 'Planta', val: propiedad.planta, icon: 'floor' },
+    m2 > 0 && { label: Tp.superficie, val: m2.toLocaleString('en-US') + ' m²', icon: 'area' },
+    !tipoSinHab && propiedad.habitaciones > 0 && { label: Tp.habitaciones, val: propiedad.habitaciones, icon: 'bed' },
+    !tipoSinHab && propiedad.banos > 0 && { label: Tp.banos, val: propiedad.banos, icon: 'bath' },
+    !tipoSinHab && propiedad.parqueos > 0 && { label: Tp.parqueos, val: propiedad.parqueos, icon: 'park' },
+    !tipoSinHab && propiedad.planta && { label: Tp.planta, val: propiedad.planta, icon: 'floor' },
   ].filter(Boolean) as { label: string, val: any, icon: string }[]
 
   const iconosCar: Record<string, JSX.Element> = {
@@ -285,16 +300,22 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
           <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', marginRight: 28 }}>
             urbiza<span style={{ color: '#83D4DB' }}>.</span>
           </a>
-          {[{ label: 'Comprar', href: '/buscar?operacion=venta' }, { label: 'Alquilar', href: '/buscar?operacion=alquiler' }].map(item => (
+          {[{ label: Tn.comprar, href: '/buscar?operacion=venta' }, { label: Tn.alquilar, href: '/buscar?operacion=alquiler' }].map(item => (
             <a key={item.label} href={item.href} style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>{item.label}</a>
           ))}
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'flex', gap: 8, visibility: authReady ? 'visible' : 'hidden', minWidth: 180, justifyContent: 'flex-end', flexShrink: 0 }}>
           {sesionActiva
-            ? <a href="/panel" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 600 }}>Mi cuenta</a>
-            : <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>Entrar</a>
+            ? <a href="/panel" style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                {fotoUrlNav
+                  ? <img src={fotoUrlNav} style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid rgba(255,255,255,0.5)' }} />
+                  : <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#83D4DB', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 700, color: '#004E57' }}>👤</div>
+                }
+                {Tn.miCuenta}
+              </a>
+            : <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.entrar}</a>
           }
-          {planUsuario !== 'profesional' && <a href={sesionActiva ? '/panel' : '/registro'} style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>+ Publicar gratis</a>}
+          {!sesionActiva && <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.publicar}</a>}
         </div>
       </nav>
 
@@ -339,9 +360,35 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
             {/* CARACTERÍSTICAS */}
             {caracteristicas.length > 0 && (
               <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
-                <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 16 }}>Características</h2>
+                <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 16 }}>{Tp.caracteristicas}</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
                   {caracteristicas.map(c => (
+                    c.icon === 'area' ? (
+                      <div key={c.label} style={{ display: 'flex', flexDirection: 'column', padding: '10px 14px', background: '#f8f8f8', borderRadius: 6, cursor: 'pointer', userSelect: 'none' }} onClick={() => setVerConversion(v => !v)}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <div style={{ width: 36, height: 36, background: '#e0f5f7', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{iconosCar[c.icon]}</div>
+                          <div style={{ flex: 1 }}>
+                            <div style={{ fontSize: 11, color: '#aaa', marginBottom: 2 }}>{c.label}</div>
+                            <div style={{ fontSize: 14, fontWeight: 600, color: '#222' }}>{c.val}</div>
+                          </div>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5" style={{ flexShrink: 0, transform: verConversion ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                        {verConversion && (
+                          <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                            {esTerreno && (
+                              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+                                <span style={{ color: '#888' }}>Tareas</span>
+                                <span style={{ fontWeight: 600, color: '#111' }}>{tareasStr} tareas</span>
+                              </div>
+                            )}
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
+                              <span style={{ color: '#888' }}>Pies cuadrados</span>
+                              <span style={{ fontWeight: 600, color: '#111' }}>{sqft.toLocaleString('en-US')} sq ft</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
                     <div key={c.label} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', background: '#f8f8f8', borderRadius: 6 }}>
                       <div style={{ width: 36, height: 36, background: '#e0f5f7', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{iconosCar[c.icon]}</div>
                       <div>
@@ -349,6 +396,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                         <div style={{ fontSize: 14, fontWeight: 600, color: '#222' }}>{c.val}</div>
                       </div>
                     </div>
+                    )
                   ))}
                 </div>
               </div>
@@ -357,7 +405,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
             {/* DESCRIPCIÓN */}
             {propiedad.descripcion && (
               <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
-                <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 14 }}>Descripción</h2>
+                <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 14 }}>{Tp.descripcion}</h2>
                 {(propiedad.descripcion as string).split('\n\n').map((p: string, i: number) => (
                   <p key={i} style={{ fontSize: 14, color: '#555', lineHeight: 1.8, marginBottom: 12 }}>{p}</p>
                 ))}
@@ -367,7 +415,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
             {/* AMENIDADES */}
             {amenidadesArray.length > 0 && (
               <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
-                <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 14 }}>Amenidades</h2>
+                <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 14 }}>{Tp.amenidades}</h2>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 }}>
                   {amenidadesArray.map((a: string) => (
                     <div key={a} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#444' }}>
@@ -383,7 +431,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
 
             {/* MAPA */}
             <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
-              <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 14 }}>Ubicación</h2>
+              <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 14 }}>{Tp.ubicacion}</h2>
               <div style={{ height: 300, borderRadius: 6, overflow: 'hidden', border: '1px solid #e8e8e8' }}>
                 <MapaUbicacion zona={propiedad.zona || ''} />
               </div>
@@ -399,8 +447,11 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
           <div style={{ position: 'sticky', top: 70 }}>
             <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden', marginBottom: 16, boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>
               <div style={{ background: '#006D77', padding: '16px 18px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <div style={{ width: 46, height: 46, borderRadius: '50%', background: '#004E57', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: '#83D4DB', flexShrink: 0 }}>
-                  {(v.nombre || 'U').split(' ').map((n: string) => n[0] || '').join('').slice(0, 2).toUpperCase()}
+                <div style={{ width: 46, height: 46, borderRadius: '50%', background: '#004E57', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: '#83D4DB', flexShrink: 0, overflow: 'hidden' }}>
+                  {v.foto_url
+                    ? <img src={v.foto_url} alt={v.nombre} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    : (v.nombre || 'U').split(' ').map((n: string) => n[0] || '').join('').slice(0, 2).toUpperCase()
+                  }
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ color: '#fff', fontSize: 14, fontWeight: 600, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap' }}>
@@ -411,7 +462,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                     }
                   </div>
                   {v.inmobiliaria && <div style={{ color: 'rgba(255,255,255,0.7)', fontSize: 12 }}>{v.inmobiliaria}</div>}
-                  {v.numero_aei && (
+                  {v.numero_aei && v.aei_aprobado && (
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3, background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3, marginTop: 4 }}>
                       <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#83D4DB" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
                       AEI
@@ -424,44 +475,44 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                 {/* TELÉFONO */}
                 {!telVisible && (
                   <button onClick={handleVerTelefono} style={{ all: 'unset', width: '100%', background: '#006D77', color: '#fff', padding: '11px', borderRadius: 5, fontSize: 13, fontWeight: 600, cursor: 'pointer', textAlign: 'center', display: 'block', marginBottom: 14, boxSizing: 'border-box' }}>
-                    Ver teléfono
+                    {Tp.verTelefono}
                   </button>
                 )}
                 {telVisible && (
                   <div style={{ background: '#e0f5f7', border: '1px solid #b2dde2', borderRadius: 5, padding: '12px 14px', marginBottom: 14, textAlign: 'center' }}>
-                    <div style={{ fontSize: 11, color: '#555', marginBottom: 4 }}>Teléfono de contacto</div>
+                    <div style={{ fontSize: 11, color: '#555', marginBottom: 4 }}>{Tp.telContacto}</div>
                     {telVendedor
                       ? <a href={`tel:${telVendedor}`} style={{ fontSize: 20, fontWeight: 700, color: '#006D77', textDecoration: 'none', display: 'block' }}>{telVendedor}</a>
-                      : <span style={{ fontSize: 13, color: '#888' }}>El propietario no ha publicado su teléfono</span>
+                      : <span style={{ fontSize: 13, color: '#888' }}>{Tp.sinTelefono}</span>
                     }
                   </div>
                 )}
 
                 {/* FORMULARIO DE CONTACTO */}
                 <div style={{ borderTop: '1px solid #f0f0f0', paddingTop: 14 }}>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: '#888', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>Enviar mensaje</div>
+                  <div style={{ fontSize: 12, fontWeight: 600, color: '#888', marginBottom: 10, textTransform: 'uppercase', letterSpacing: 0.5 }}>{Tp.enviarMensaje}</div>
                   {!sesionActiva ? (
                     <div style={{ background: '#f9f9f9', border: '1px solid #e8e8e8', borderRadius: 6, padding: '16px', textAlign: 'center' }}>
-                      <div style={{ fontSize: 13, color: '#555', marginBottom: 12 }}>Inicia sesión para enviar mensajes al anunciante</div>
-                      <a href={`/login?next=/propiedad/${id}`} style={{ display: 'inline-block', background: '#17A6B4', color: '#fff', padding: '9px 22px', borderRadius: 5, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>Iniciar sesión</a>
-                      <div style={{ marginTop: 10, fontSize: 12, color: '#aaa' }}>¿No tienes cuenta? <a href="/registro" style={{ color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>Regístrate gratis</a></div>
+                      <div style={{ fontSize: 13, color: '#555', marginBottom: 12 }}>{Tp.sinSesion}</div>
+                      <a href={`/login?next=/propiedad/${id}`} style={{ display: 'inline-block', background: '#17A6B4', color: '#fff', padding: '9px 22px', borderRadius: 5, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}>{Tp.iniciarSesion}</a>
+                      <div style={{ marginTop: 10, fontSize: 12, color: '#aaa' }}>{Tp.sinCuenta} <a href="/registro" style={{ color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>{Tp.registrate}</a></div>
                     </div>
                   ) : userId === propiedad?.usuario_id ? (
                     <div style={{ background: '#fff8e1', border: '1px solid #ffe082', borderRadius: 6, padding: '12px', textAlign: 'center', fontSize: 13, color: '#7a6000' }}>
-                      Este es tu propio anuncio
+                      {Tp.tuAnuncio}
                     </div>
                   ) : enviado ? (
                     <div style={{ background: '#e0f5f7', border: '1px solid #c5e8ea', borderRadius: 6, padding: '14px', textAlign: 'center', fontSize: 13, color: '#004E57', fontWeight: 500 }}>
-                      ✓ Mensaje enviado correctamente
+                      {Tp.mensajeEnviado}
                     </div>
                   ) : (
                     <>
-                      <input value={nombreContacto} onChange={e => setNombreContacto(e.target.value)} placeholder="Tu nombre *" style={{ width: '100%', border: '1px solid #ddd', borderRadius: 5, padding: '9px 10px', fontSize: 13, color: '#333', outline: 'none', boxSizing: 'border-box', marginBottom: 8, fontFamily: 'sans-serif' }} />
-                      <input value={telefonoContacto} onChange={e => setTelefonoContacto(e.target.value)} placeholder="Tu teléfono (opcional)" style={{ width: '100%', border: '1px solid #ddd', borderRadius: 5, padding: '9px 10px', fontSize: 13, color: '#333', outline: 'none', boxSizing: 'border-box', marginBottom: 8, fontFamily: 'sans-serif' }} />
-                      <textarea value={mensaje} onChange={e => setMensaje(e.target.value)} rows={3} placeholder="Hola, me interesa esta propiedad..." style={{ width: '100%', border: '1px solid #ddd', borderRadius: 5, padding: '10px', fontSize: 13, color: '#333', resize: 'none', fontFamily: 'sans-serif', outline: 'none', boxSizing: 'border-box', marginBottom: 8 }} />
+                      <input value={nombreContacto} onChange={e => setNombreContacto(e.target.value)} placeholder={Tp.tuNombre} style={{ width: '100%', border: '1px solid #ddd', borderRadius: 5, padding: '9px 10px', fontSize: 13, color: '#333', outline: 'none', boxSizing: 'border-box', marginBottom: 8, fontFamily: 'sans-serif' }} />
+                      <input value={telefonoContacto} onChange={e => setTelefonoContacto(e.target.value)} placeholder={Tp.tuTelefono} style={{ width: '100%', border: '1px solid #ddd', borderRadius: 5, padding: '9px 10px', fontSize: 13, color: '#333', outline: 'none', boxSizing: 'border-box', marginBottom: 8, fontFamily: 'sans-serif' }} />
+                      <textarea value={mensaje} onChange={e => setMensaje(e.target.value)} rows={3} placeholder={Tp.placeholder_msg} style={{ width: '100%', border: '1px solid #ddd', borderRadius: 5, padding: '10px', fontSize: 13, color: '#333', resize: 'none', fontFamily: 'sans-serif', outline: 'none', boxSizing: 'border-box', marginBottom: 8 }} />
                       {errorContacto && <div style={{ fontSize: 12, color: '#e53e3e', marginBottom: 8 }}>{errorContacto}</div>}
                       <button onClick={enviarMensaje} disabled={enviando} style={{ all: 'unset', width: '100%', background: enviando ? '#aaa' : '#17A6B4', color: '#fff', padding: '11px', borderRadius: 5, fontSize: 13, fontWeight: 600, cursor: enviando ? 'default' : 'pointer', textAlign: 'center', display: 'block', boxSizing: 'border-box' }}>
-                        {enviando ? 'Enviando...' : 'Enviar mensaje'}
+                        {enviando ? Tp.enviando : Tp.enviarMensaje}
                       </button>
                     </>
                   )}
@@ -471,13 +522,13 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
 
             <div style={{ display: 'flex', gap: 8 }}>
               <button onClick={toggleGuardado} style={{ all: 'unset', flex: 1, border: `1px solid ${guardado ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, padding: '10px', fontSize: 12, color: guardado ? '#006D77' : '#555', cursor: 'pointer', textAlign: 'center', background: guardado ? '#e0f5f7' : '#fff', fontWeight: guardado ? 600 : 400 }}>
-                {guardado ? '♥ Guardado' : '♡ Guardar'}
+                {guardado ? Tp.guardado : Tp.guardar}
               </button>
               <button onClick={async () => {
                 const url = window.location.href.split('?')[0]
                 if (navigator.share) { navigator.share({ title: propiedad?.titulo || 'Propiedad en Urbiza', url }) }
-                else { await navigator.clipboard.writeText(url); alert('Enlace copiado al portapapeles') }
-              }} style={{ all: 'unset', flex: 1, border: '1px solid #e0e0e0', borderRadius: 6, padding: '10px', fontSize: 12, color: '#555', cursor: 'pointer', textAlign: 'center', background: '#fff' }}>↗ Compartir</button>
+                else { await navigator.clipboard.writeText(url); alert(Tp.enlaceCopiad) }
+              }} style={{ all: 'unset', flex: 1, border: '1px solid #e0e0e0', borderRadius: 6, padding: '10px', fontSize: 12, color: '#555', cursor: 'pointer', textAlign: 'center', background: '#fff' }}>{Tp.compartir}</button>
             </div>
           </div>
         </div>

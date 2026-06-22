@@ -188,39 +188,61 @@ const zonas = [
   { nombre: 'La Vega', tipo: 'Casas en venta' },
 ]
 
-function SeccionNovedad({ titulo, subtitulo, props }: { titulo: string, subtitulo: string, props: { price: number, title: string, feats: string, bg: string }[] }) {
+const bgsNovedad = ['#e0f5f7','#ddf0e8','#e8eaf0','#f0ebe0']
+
+function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona }: {
+  titulo: string, subtitulo: string, zona: string,
+  reales: any[],
+  ejemplos: { price: number, title: string, feats: string, bg: string }[]
+}) {
+  const items = reales.length > 0 ? reales : null
+  if (items === null && ejemplos.length === 0) return null
   return (
     <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 20px 0' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
         <div>
           <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>{titulo}</h2>
-          <a href="/buscar" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>{subtitulo} →</a>
-        </div>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button style={{ all: 'unset', width: 32, height: 32, border: '1px solid #e0e0e0', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#fff', fontSize: 18, color: '#555' }}>‹</button>
-          <button style={{ all: 'unset', width: 32, height: 32, border: '1px solid #e0e0e0', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', background: '#fff', fontSize: 18, color: '#555' }}>›</button>
+          <a href={`/buscar?zona=${encodeURIComponent(zona)}`} style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>{subtitulo} →</a>
         </div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, paddingBottom: 32 }}>
-        {props.map((p) => (
-          <div key={p.title} style={{ background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '1px solid #ebebeb' }}
-            onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
-            onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
-            <div style={{ height: 160, background: p.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-              <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25">
-                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                <polyline points="9 22 9 12 15 12 15 22"/>
-              </svg>
-              <div style={{ position: 'absolute', top: 8, right: 8, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>NUEVO</div>
-            </div>
-            <div style={{ padding: '12px 14px' }}>
-              <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {p.price.toLocaleString('en-US')}</div>
-              <div style={{ fontSize: 11, color: '#aaa', marginBottom: 6 }}>{formatDOP(p.price)}</div>
-              <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 2 }}>{p.title}</div>
-              <div style={{ fontSize: 12, color: '#888' }}>{p.feats}</div>
-            </div>
-          </div>
-        ))}
+        {items
+          ? items.map((p: any, i: number) => (
+              <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', border: '1px solid #ebebeb', display: 'block' }}
+                onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
+                onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
+                <div style={{ height: 160, background: bgsNovedad[i % 4], position: 'relative', overflow: 'hidden' }}>
+                  {Array.isArray(p.fotos) && p.fotos.length > 0
+                    ? <img src={p.fotos[0]} alt={p.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                    : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+                  }
+                  <div style={{ position: 'absolute', top: 8, right: 8, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>NUEVO</div>
+                </div>
+                <div style={{ padding: '12px 14px' }}>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio || 0).toLocaleString('en-US')}</div>
+                  <div style={{ fontSize: 11, color: '#aaa', marginBottom: 6 }}>{formatDOP(p.precio || 0)}</div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 2 }}>{p.titulo}</div>
+                  <div style={{ fontSize: 12, color: '#888' }}>{[p.tipo, p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ')}</div>
+                </div>
+              </a>
+            ))
+          : ejemplos.map((p) => (
+              <div key={p.title} style={{ background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '1px solid #ebebeb' }}
+                onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
+                onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
+                <div style={{ height: 160, background: p.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                  <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  <div style={{ position: 'absolute', top: 8, right: 8, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>NUEVO</div>
+                </div>
+                <div style={{ padding: '12px 14px' }}>
+                  <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {p.price.toLocaleString('en-US')}</div>
+                  <div style={{ fontSize: 11, color: '#aaa', marginBottom: 6 }}>{formatDOP(p.price)}</div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 2 }}>{p.title}</div>
+                  <div style={{ fontSize: 12, color: '#888' }}>{p.feats}</div>
+                </div>
+              </div>
+            ))
+        }
       </div>
     </div>
   )
@@ -237,27 +259,69 @@ export default function Home() {
   const [destReales, setDestReales] = useState<any[]>([])
   const [masVistasReales, setMasVistasReales] = useState<any[]>([])
   const [slideIdx, setSlideIdx] = useState(0)
+  const [novedadesSantoDomingo, setNovedadesSantoDomingo] = useState<any[]>([])
+  const [novedadesPuntaCana, setNovedadesPuntaCana] = useState<any[]>([])
+  const [novedadesSantiago, setNovedadesSantiago] = useState<any[]>([])
   const [sesionActiva, setSesionActiva] = useState(false)
+  const [authReady, setAuthReady] = useState(false)
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
+  const [tipoUsuario, setTipoUsuario] = useState<string>('')
+  const [fotoUrl, setFotoUrl] = useState<string>('')
+  const [nombreUsuario, setNombreUsuario] = useState<string>('')
   const [idiomaOpen, setIdiomaOpen] = useState(false)
+  const [bannerUrl, setBannerUrl] = useState('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80')
+  const [featureImgUrl, setFeatureImgUrl] = useState('')
+  const [faviconUrl, setFaviconUrl] = useState('')
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
-      if (!data.user) return
+      if (!data.user) { setAuthReady(true); return }
       setSesionActiva(true)
-      const { data: usr } = await supabase.from('usuarios').select('plan').eq('id', data.user.id).single()
+      const meta = data.user.user_metadata || {}
+      const avatarMeta = meta.avatar_url || meta.picture || ''
+      const { data: usr } = await supabase.from('usuarios').select('plan,tipo,foto_url,nombre').eq('id', data.user.id).single()
       if (usr?.plan) setPlanUsuario(usr.plan)
+      if (usr?.tipo) setTipoUsuario(usr.tipo)
+      if (usr?.nombre) setNombreUsuario(usr.nombre)
+      setFotoUrl(usr?.foto_url || avatarMeta)
+      setAuthReady(true)
     })
+    // Load site config
+    fetch('/api/admin/config').then(r => r.json()).then(cfg => {
+      if (cfg.banner_url) setBannerUrl(cfg.banner_url)
+      if (cfg.feature_img_url) setFeatureImgUrl(cfg.feature_img_url)
+      if (cfg.favicon_url) {
+        setFaviconUrl(cfg.favicon_url)
+        const link = document.querySelector("link[rel='icon']") as HTMLLinkElement
+        if (link) link.href = cfg.favicon_url
+      }
+    }).catch(() => {})
   }, [])
 
   useEffect(() => {
     const cargar = async () => {
       const { data: dest } = await supabase.from('propiedades')
-        .select('id,titulo,precio,zona,habitaciones,m2,operacion').eq('destacado', true).eq('estado', 'activo').limit(12)
+        .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos').eq('destacado', true).eq('estado', 'activo').limit(12)
       if (dest && dest.length > 0) setDestReales(dest)
       const { data: vistas } = await supabase.from('propiedades')
-        .select('id,titulo,precio,zona,habitaciones,m2,operacion').eq('estado', 'activo').order('visitas', { ascending: false }).limit(3)
+        .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos').eq('estado', 'activo').order('visitas', { ascending: false }).limit(3)
       if (vistas && vistas.length > 0) setMasVistasReales(vistas)
+
+      const campos = 'id,titulo,precio,zona,habitaciones,m2,tipo,operacion,fotos'
+      const [{ data: sd }, { data: pc }, { data: stg }] = await Promise.all([
+        supabase.from('propiedades').select(campos).eq('estado', 'activo')
+          .or('zona.ilike.%Santo Domingo%,zona.ilike.%Distrito Nacional%')
+          .order('created_at', { ascending: false }).limit(4),
+        supabase.from('propiedades').select(campos).eq('estado', 'activo')
+          .or('zona.ilike.%Punta Cana%,zona.ilike.%Bávaro%,zona.ilike.%La Altagracia%,zona.ilike.%Cap Cana%')
+          .order('created_at', { ascending: false }).limit(4),
+        supabase.from('propiedades').select(campos).eq('estado', 'activo')
+          .or('zona.ilike.%Santiago%')
+          .order('created_at', { ascending: false }).limit(4),
+      ])
+      if (sd && sd.length > 0) setNovedadesSantoDomingo(sd)
+      if (pc && pc.length > 0) setNovedadesPuntaCana(pc)
+      if (stg && stg.length > 0) setNovedadesSantiago(stg)
     }
     cargar()
   }, [])
@@ -268,11 +332,12 @@ export default function Home() {
     return () => clearInterval(t)
   }, [destReales.length])
 
-  const zonasRD = ['Piantini, Distrito Nacional', 'Naco, Distrito Nacional', 'Serrallés, Distrito Nacional', 'Bella Vista, Distrito Nacional', 'Arroyo Hondo, Distrito Nacional', 'Los Cacicazgos, Distrito Nacional', 'Gazcue, Distrito Nacional', 'Ciudad Colonial, Distrito Nacional', 'Evaristo Morales, Distrito Nacional', 'Miramar, Distrito Nacional', 'La Esperilla, Distrito Nacional', 'Urbanización Real, Distrito Nacional', 'Viejo Arroyo Hondo, Distrito Nacional', 'Los Prados, Distrito Nacional', 'Jardines del Norte, Distrito Nacional', 'Ensanche Naco, Distrito Nacional', 'Ensanche Ozama, Distrito Nacional', 'Villa Consuelo, Distrito Nacional', 'Cristo Rey, Distrito Nacional', 'Alma Rosa, Santo Domingo Este', 'Los Tres Brazos, Santo Domingo Este', 'Ensanche Isabelita, Santo Domingo Este', 'San Isidro, Santo Domingo Este', 'Los Mina, Santo Domingo Este', 'Bávaro, La Altagracia', 'Punta Cana, La Altagracia', 'Downtown Punta Cana, La Altagracia', 'Cap Cana, La Altagracia', 'Cabeza de Toro, La Altagracia', 'Los Corales, La Altagracia', 'Uvero Alto, La Altagracia', 'Macao, La Altagracia', 'Cortecito, La Altagracia', 'El Cortecito, La Altagracia', 'Higüey, La Altagracia', 'San Rafael del Yuma, La Altagracia', 'Los Jardines, Santiago', 'Cerros de Gurabo, Santiago', 'Reparto Conuco, Santiago', 'Bella Vista, Santiago', 'Villa Olga, Santiago', 'Pontezuela, Santiago', 'Urbanización Tropical, Santiago', 'Las Colinas, Santiago', 'El Dorado, Santiago', 'Las Terrenas, Samaná', 'Samaná', 'El Portillo, Samaná', 'Cosón, Samaná', 'Las Galeras, Samaná', 'Puerto Plata', 'Sosúa, Puerto Plata', 'Cabarete, Puerto Plata', 'Costámbar, Puerto Plata', 'Cofresí, Puerto Plata', 'Playa Dorada, Puerto Plata', 'La Romana', 'Casa de Campo, La Romana', 'Bayahíbe, La Romana', 'Dominicus, La Romana', 'Jarabacoa, La Vega', 'Constanza, La Vega', 'La Vega', 'San Pedro de Macorís', 'Juan Dolio, San Pedro de Macorís', 'Guayacanes, San Pedro de Macorís', 'Boca Chica, Santo Domingo', 'Andrés, Boca Chica', 'San Cristóbal', 'Baní, Peravia', 'Azua', 'Barahona', 'Monte Plata', 'Hato Mayor', 'El Seibo', 'Miches, El Seibo', 'Moca, Espaillat', 'San Francisco de Macorís, Duarte', 'Nagua, María Trinidad Sánchez', 'Monte Cristi', 'Dajabón', 'Pedernales', 'Neiba, Baoruco', 'San Juan de la Maguana']
+  const zonasRD = ['Piantini, Distrito Nacional', 'Naco, Distrito Nacional', 'Serrallés, Distrito Nacional', 'Bella Vista, Distrito Nacional', 'Arroyo Hondo, Distrito Nacional', 'Los Cacicazgos, Distrito Nacional', 'Gazcue, Distrito Nacional', 'Ciudad Colonial, Distrito Nacional', 'Evaristo Morales, Distrito Nacional', 'Miramar, Distrito Nacional', 'La Esperilla, Distrito Nacional', 'Urbanización Real, Distrito Nacional', 'Viejo Arroyo Hondo, Distrito Nacional', 'Los Prados, Distrito Nacional', 'Jardines del Norte, Distrito Nacional', 'Ensanche Naco, Distrito Nacional', 'Ensanche Ozama, Distrito Nacional', 'Villa Consuelo, Distrito Nacional', 'Cristo Rey, Distrito Nacional', 'Alma Rosa, Santo Domingo Este', 'Los Tres Brazos, Santo Domingo Este', 'Ensanche Isabelita, Santo Domingo Este', 'San Isidro, Santo Domingo Este', 'Los Mina, Santo Domingo Este', 'Bávaro, La Altagracia', 'Punta Cana, La Altagracia', 'Downtown Punta Cana, La Altagracia', 'Cap Cana, La Altagracia', 'Cabeza de Toro, La Altagracia', 'Los Corales, La Altagracia', 'Uvero Alto, La Altagracia', 'Macao, La Altagracia', 'Cortecito, La Altagracia', 'El Cortecito, La Altagracia', 'Higüey, La Altagracia', 'San Rafael del Yuma, La Altagracia', 'Los Jardines, Santiago', 'Cerros de Gurabo, Santiago', 'Reparto Conuco, Santiago', 'Bella Vista, Santiago', 'Villa Olga, Santiago', 'Pontezuela, Santiago', 'Urbanización Tropical, Santiago', 'Las Colinas, Santiago', 'El Dorado, Santiago', 'Las Terrenas, Samaná', 'Samaná', 'El Portillo, Samaná', 'Cosón, Samaná', 'Las Galeras, Samaná', 'El Limón, Samaná', 'Rancho Español, Samaná', 'Puerto Plata', 'Sosúa, Puerto Plata', 'Cabarete, Puerto Plata', 'Costámbar, Puerto Plata', 'Cofresí, Puerto Plata', 'Playa Dorada, Puerto Plata', 'La Romana', 'Casa de Campo, La Romana', 'Bayahíbe, La Romana', 'Dominicus, La Romana', 'Jarabacoa, La Vega', 'Constanza, La Vega', 'La Vega', 'San Pedro de Macorís', 'Juan Dolio, San Pedro de Macorís', 'Guayacanes, San Pedro de Macorís', 'Boca Chica, Santo Domingo', 'Andrés, Boca Chica', 'San Cristóbal', 'Baní, Peravia', 'Azua', 'Barahona', 'Monte Plata', 'Hato Mayor', 'El Seibo', 'Miches, El Seibo', 'Moca, Espaillat', 'San Francisco de Macorís, Duarte', 'Nagua, María Trinidad Sánchez', 'Monte Cristi', 'Dajabón', 'Pedernales', 'Neiba, Baoruco', 'San Juan de la Maguana']
   const handleQueryHome = (val: string) => {
     setQueryHome(val)
     if (val.length >= 2) {
-      setSugHome(zonasRD.filter(z => z.toLowerCase().includes(val.toLowerCase())).slice(0, 6))
+      const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+      setSugHome(zonasRD.filter(z => norm(z).includes(norm(val))).slice(0, 6))
       setMostrarSugHome(true)
     } else {
       setSugHome([])
@@ -285,8 +350,8 @@ export default function Home() {
       {verMapa && <MapaCompletoPropiedades onCerrar={() => setVerMapa(false)} />}
 
       {/* NAV — BLANCO, menu junto al logo a la izquierda */}
-      <nav style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', height: 60, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+      <nav style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', height: 60, display: 'flex', alignItems: 'center', padding: '0 24px', position: 'sticky', top: 0, zIndex: 100 }}>
+        <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
           <a href="/" style={{ fontSize: 28, fontWeight: 700, color: '#006D77', letterSpacing: -2, marginRight: 32, textDecoration: 'none' }}>
             urbiza<span style={{ color: '#17A6B4' }}>.</span>
           </a>
@@ -301,7 +366,9 @@ export default function Home() {
             </a>
           ))}
         </div>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+
+        {/* Idioma — posición fija, nunca se mueve */}
+        <div style={{ position: 'absolute', right: 24, top: 0, bottom: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ position: 'relative' }} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setIdiomaOpen(false) }}>
             <button onClick={() => setIdiomaOpen(!idiomaOpen)} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 600, color: '#555', cursor: 'pointer', padding: '5px 8px', borderRadius: 4 }}
               onMouseEnter={e => e.currentTarget.style.color = '#006D77'}
@@ -321,18 +388,24 @@ export default function Home() {
               </div>
             )}
           </div>
-          {sesionActiva
-            ? <a href="/panel" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 600 }}>Mi cuenta</a>
-            : <a href="/login" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.entrar}</a>
+          {authReady && sesionActiva
+            ? <a href="/panel" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '6px 14px 6px 8px', borderRadius: 4, textDecoration: 'none', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
+                {fotoUrl
+                  ? <img src={fotoUrl} alt="" style={{ width: 26, height: 26, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} referrerPolicy="no-referrer" onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
+                  : <div style={{ width: 26, height: 26, borderRadius: '50%', background: '#006D77', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, flexShrink: 0 }}>{nombreUsuario?.[0]?.toUpperCase() || 'U'}</div>
+                }
+                Mi cuenta
+              </a>
+            : authReady && <a href="/login" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.entrar}</a>
           }
-          {planUsuario !== 'profesional' && <a href={sesionActiva ? '/panel' : '/registro'} style={{ fontSize: 13, color: '#fff', background: '#006D77', padding: '8px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.publicar}</a>}
+          {authReady && !sesionActiva && <a href="/registro" style={{ fontSize: 13, color: '#fff', background: '#006D77', padding: '8px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.publicar}</a>}
         </div>
       </nav>
 
       {/* BANNER CON IMAGEN — imagen configurable desde panel de administración */}
       <div style={{ position: 'relative', minHeight: 420, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
         {/* Imagen de fondo — se cambia desde el panel admin */}
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'url(https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80)', backgroundSize: 'cover', backgroundPosition: 'center' }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: `url(${bannerUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,78,87,0.72)' }} />
         <div style={{ position: 'relative', zIndex: 2, width: '100%', padding: '40px 20px 36px' }}>
         <div style={{ maxWidth: 720, margin: '0 auto' }}>
@@ -406,18 +479,21 @@ export default function Home() {
             </div>
           </a>
           <a href="/registro" style={{ display: 'flex', gap: 20, padding: '28px 32px', textDecoration: 'none', alignItems: 'center' }}>
-            <div style={{ width: 140, height: 100, borderRadius: 8, flexShrink: 0, background: '#006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #c5e8ea', position: 'relative' }}>
-              <svg width="44" height="72" viewBox="0 0 44 72" fill="none">
-                <rect x="2" y="2" width="40" height="68" rx="6" fill="#fff" opacity="0.15"/>
-                <rect x="4" y="4" width="36" height="64" rx="5" fill="#fff"/>
-                <rect x="8" y="12" width="28" height="40" rx="2" fill="#e0f5f7"/>
-                <rect x="16" y="60" width="12" height="3" rx="1.5" fill="#006D77" opacity="0.4"/>
-                <rect x="10" y="20" width="24" height="2" rx="1" fill="#006D77" opacity="0.5"/>
-                <rect x="10" y="26" width="16" height="2" rx="1" fill="#006D77" opacity="0.3"/>
-                <rect x="10" y="32" width="20" height="2" rx="1" fill="#006D77" opacity="0.3"/>
-                <circle cx="22" cy="42" r="7" fill="#006D77" opacity="0.15"/>
-                <path d="M19 42 L21 44 L26 39" stroke="#006D77" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+            <div style={{ width: 140, height: 100, borderRadius: 8, flexShrink: 0, background: '#006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #c5e8ea', position: 'relative', overflow: 'hidden' }}>
+              {featureImgUrl
+                ? <img src={featureImgUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                : <svg width="44" height="72" viewBox="0 0 44 72" fill="none">
+                    <rect x="2" y="2" width="40" height="68" rx="6" fill="#fff" opacity="0.15"/>
+                    <rect x="4" y="4" width="36" height="64" rx="5" fill="#fff"/>
+                    <rect x="8" y="12" width="28" height="40" rx="2" fill="#e0f5f7"/>
+                    <rect x="16" y="60" width="12" height="3" rx="1.5" fill="#006D77" opacity="0.4"/>
+                    <rect x="10" y="20" width="24" height="2" rx="1" fill="#006D77" opacity="0.5"/>
+                    <rect x="10" y="26" width="16" height="2" rx="1" fill="#006D77" opacity="0.3"/>
+                    <rect x="10" y="32" width="20" height="2" rx="1" fill="#006D77" opacity="0.3"/>
+                    <circle cx="22" cy="42" r="7" fill="#006D77" opacity="0.15"/>
+                    <path d="M19 42 L21 44 L26 39" stroke="#006D77" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+              }
               <div style={{ position: 'absolute', top: 6, right: 6, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 10 }}>GRATIS</div>
             </div>
             <div>
@@ -458,10 +534,13 @@ export default function Home() {
                     <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '2px solid #006D77', display: 'block' }}
                       onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
-                      <div style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                        <div style={{ position: 'absolute', top: 8, left: 8, background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 600, padding: '3px 8px', borderRadius: 3 }}>⭐ Destacado</div>
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                        <div style={{ position: 'absolute', bottom: 10, right: 10, display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.92)', padding: '3px 9px', borderRadius: 20, fontSize: 11, color: '#006D77', border: '1px solid #c5e8ea' }}>
+                      <div style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                        {Array.isArray(p.fotos) && p.fotos.length > 0
+                          ? <img src={p.fotos[0]} alt={p.titulo ?? p.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                          : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        }
+                        <div style={{ position: 'absolute', top: 8, right: 8, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>DESTACADO</div>
+                        <div style={{ position: 'absolute', bottom: 10, right: 10, display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.92)', padding: '3px 9px', borderRadius: 20, fontSize: 11, color: '#006D77', border: '1px solid #c5e8ea', zIndex: 1 }}>
                           <svg width="9" height="9" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
                           {(p.zona || p.loc || '').split(',')[0]}
                         </div>
@@ -496,10 +575,13 @@ export default function Home() {
                     <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '1px solid #ebebeb', display: 'block' }}
                       onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
-                      <div style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                        <div style={{ position: 'absolute', top: 8, left: 8, background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 600, padding: '3px 8px', borderRadius: 3 }}>🔥 Más visto</div>
-                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                        <div style={{ position: 'absolute', bottom: 10, right: 10, display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.92)', padding: '3px 9px', borderRadius: 20, fontSize: 11, color: '#006D77', border: '1px solid #c5e8ea' }}>
+                      <div style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                        {Array.isArray(p.fotos) && p.fotos.length > 0
+                          ? <img src={p.fotos[0]} alt={p.titulo ?? p.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                          : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        }
+                        <div style={{ position: 'absolute', top: 8, right: 8, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>MÁS VISTO</div>
+                        <div style={{ position: 'absolute', bottom: 10, right: 10, display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.92)', padding: '3px 9px', borderRadius: 20, fontSize: 11, color: '#006D77', border: '1px solid #c5e8ea', zIndex: 1 }}>
                           <svg width="9" height="9" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
                           {(p.zona || p.loc || '').split(',')[0]}
                         </div>
@@ -518,9 +600,9 @@ export default function Home() {
         </div>
 
         {/* NOVEDADES POR ZONA */}
-        <SeccionNovedad titulo="Novedades en Santo Domingo" subtitulo="Ver todas las propiedades en venta" props={propiedadesSantoDomingo} />
-        <SeccionNovedad titulo="Novedades en Punta Cana" subtitulo="Ver todas las propiedades en venta" props={propiedadesPuntaCana} />
-        <SeccionNovedad titulo="Novedades en Santiago" subtitulo="Ver todas las propiedades en venta" props={propiedadesSantiago} />
+        <SeccionNovedad titulo="Novedades en Santo Domingo" subtitulo="Ver todas las propiedades" zona="Santo Domingo" reales={novedadesSantoDomingo} ejemplos={propiedadesSantoDomingo} />
+        <SeccionNovedad titulo="Novedades en Punta Cana" subtitulo="Ver todas las propiedades" zona="Punta Cana" reales={novedadesPuntaCana} ejemplos={propiedadesPuntaCana} />
+        <SeccionNovedad titulo="Novedades en Santiago" subtitulo="Ver todas las propiedades" zona="Santiago" reales={novedadesSantiago} ejemplos={propiedadesSantiago} />
       </div>
 
       {/* ZONAS MÁS BUSCADAS */}

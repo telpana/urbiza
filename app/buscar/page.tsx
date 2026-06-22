@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../supabase'
+import { useIdioma } from '../../IdiomaContext'
 
 const USD_TO_DOP = 59.5
 
@@ -47,6 +48,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   // Samaná
   'las terrenas': [19.3100, -69.5200], 'samana': [19.2060, -69.3360], 'las galeras': [19.2320, -69.2200],
   'el portillo': [19.3300, -69.4800], 'coson': [19.3400, -69.4500], 'sanchez': [19.2317, -69.6088],
+  'el limon': [19.2750, -69.4800], 'rancho espanol': [19.2514, -69.4548],
   // La Romana
   'la romana': [18.4273, -68.9728], 'casa de campo': [18.4080, -68.9130],
   'bayahibe': [18.3650, -68.8280], 'dominicus': [18.3600, -68.8600],
@@ -148,7 +150,7 @@ function MapaMini({ zona }: { zona: string }) {
 }
 
 // Mapa completo con iconos de propiedades
-function MapaCompleto({ propiedades, onCerrar }: { propiedades: typeof propiedades, onCerrar: () => void }) {
+function MapaCompleto({ propiedades, onCerrar }: { propiedades: any[], onCerrar: () => void }) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<any>(null)
 
@@ -218,45 +220,100 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: typeof propiedad
   )
 }
 
+// Grupos de búsqueda amplia (clave normalizada sin acentos) → sectores que engloba
+const gruposZona: Record<string, string[]> = {
+  // Zonas turísticas
+  'punta cana':            ['Bávaro', 'Punta Cana', 'Downtown Punta Cana', 'Cap Cana', 'Los Corales', 'Cabeza de Toro', 'Uvero Alto', 'Macao', 'Cortecito', 'Verón', 'Pueblo Bávaro', 'Bávaro Hills', 'Arena Gorda'],
+  'bavaro':                ['Bávaro', 'Pueblo Bávaro', 'Cortecito', 'Los Corales', 'Cabeza de Toro', 'Arena Gorda', 'Bávaro Hills'],
+  'las terrenas':          ['Las Terrenas', 'El Portillo', 'Cosón'],
+  'costa norte':           ['Sosúa', 'Cabarete', 'Costámbar', 'Cofresí', 'Playa Dorada', 'Puerto Plata', 'La Isabela'],
+  // Provincias (clave sin acentos)
+  'distrito nacional':     ['Piantini', 'Naco', 'Serrallés', 'Bella Vista', 'Arroyo Hondo', 'Evaristo Morales', 'Los Cacicazgos', 'Gazcue', 'Ciudad Colonial', 'Miramar', 'La Esperilla', 'Distrito Nacional', 'Quisqueya', 'Mirador Norte', 'Mirador Sur', 'Altos de Arroyo Hondo', 'Los Prados', 'Fernández'],
+  'santo domingo':         ['Santo Domingo', 'Piantini', 'Naco', 'Serrallés', 'Bella Vista', 'Arroyo Hondo', 'Evaristo Morales', 'Los Cacicazgos', 'Gazcue', 'Ciudad Colonial', 'Miramar', 'La Esperilla', 'Distrito Nacional', 'Santo Domingo Este', 'Santo Domingo Norte', 'Santo Domingo Oeste', 'Boca Chica'],
+  'la altagracia':         ['La Altagracia', 'Bávaro', 'Punta Cana', 'Downtown Punta Cana', 'Cap Cana', 'Los Corales', 'Cabeza de Toro', 'Uvero Alto', 'Macao', 'Cortecito', 'Higüey', 'San Rafael del Yuma', 'Boca de Yuma', 'Verón', 'Pueblo Bávaro', 'Arena Gorda'],
+  'santiago':              ['Santiago', 'Los Jardines', 'Cerros de Gurabo', 'Reparto Conuco', 'Villa Olga', 'Pontificia', 'Nibaje'],
+  'puerto plata':          ['Puerto Plata', 'Sosúa', 'Cabarete', 'Costámbar', 'Cofresí', 'Playa Dorada', 'Luperón', 'Villa Isabela', 'La Isabela'],
+  'samana':                ['Samaná', 'Las Terrenas', 'Las Galeras', 'Sánchez', 'El Portillo', 'Cosón', 'El Limón', 'Rancho Español'],
+  'el limon':              ['El Limón', 'El Limon'],
+  'rancho espanol':        ['Rancho Español', 'Rancho Espanol'],
+  'la romana':             ['La Romana', 'Casa de Campo', 'Bayahibe', 'Dominicus'],
+  'san pedro de macoris':  ['San Pedro de Macorís', 'Juan Dolio', 'Guayacanes'],
+  'la vega':               ['La Vega', 'Jarabacoa', 'Constanza'],
+  'maria trinidad sanchez':['Nagua', 'Río San Juan', 'María Trinidad Sánchez'],
+  'el seibo':              ['El Seibo', 'Miches'],
+  'hato mayor':            ['Hato Mayor', 'Sabana de la Mar'],
+  'san cristobal':         ['San Cristóbal'],
+  'peravia':               ['Baní', 'Peravia'],
+  'espaillat':             ['Moca', 'Espaillat'],
+  'duarte':                ['San Francisco de Macorís', 'Duarte'],
+  'monsenor nouel':        ['Bonao', 'Monseñor Nouel'],
+  'valverde':              ['Mao', 'Valverde'],
+  'monte cristi':          ['Monte Cristi'],
+  'dajabon':               ['Dajabón'],
+  'azua':                  ['Azua'],
+  'barahona':              ['Barahona'],
+  'pedernales':            ['Pedernales'],
+}
+
+// Devuelve los sectores que engloba un término, o null si no aplica
+function expandirGrupo(q: string): string[] | null {
+  const n = normalize(q)
+  for (const [key, zonas] of Object.entries(gruposZona)) {
+    if (n === key || n.startsWith(key) || key.startsWith(n)) return zonas
+  }
+  return null
+}
+
 const zonasSugerencias = [
-  // Distrito Nacional
+  // --- Búsqueda por provincia o zona turística ---
+  'Punta Cana', 'La Altagracia', 'Bávaro',
+  'Distrito Nacional', 'Santo Domingo',
+  'Santiago', 'Puerto Plata', 'Samaná', 'Las Terrenas',
+  'La Romana', 'San Pedro de Macorís', 'La Vega',
+  'María Trinidad Sánchez', 'El Seibo', 'Hato Mayor',
+  'San Cristóbal', 'Peravia', 'Espaillat', 'Duarte', 'Monseñor Nouel',
+  'Valverde', 'Monte Cristi', 'Dajabón', 'Azua', 'Barahona', 'Pedernales',
+  // --- Sectores: Distrito Nacional ---
   'Piantini, Distrito Nacional', 'Naco, Distrito Nacional', 'Serrallés, Distrito Nacional',
   'Bella Vista, Distrito Nacional', 'Arroyo Hondo, Distrito Nacional', 'Evaristo Morales, Distrito Nacional',
   'Los Cacicazgos, Distrito Nacional', 'Gazcue, Distrito Nacional', 'Ciudad Colonial, Distrito Nacional',
   'Miramar, Distrito Nacional', 'La Esperilla, Distrito Nacional',
   'Santo Domingo Este', 'Santo Domingo Norte', 'Santo Domingo Oeste', 'Boca Chica, Santo Domingo',
-  // La Altagracia
-  'Bávaro, La Altagracia', 'Punta Cana, La Altagracia', 'Downtown Punta Cana, La Altagracia',
-  'Cap Cana, La Altagracia', 'Los Corales, La Altagracia', 'Cabeza de Toro, La Altagracia',
-  'Uvero Alto, La Altagracia', 'Macao, La Altagracia', 'Cortecito, La Altagracia',
+  // --- Sectores: La Altagracia / Punta Cana ---
+  'Bávaro, La Altagracia', 'Pueblo Bávaro, La Altagracia', 'Punta Cana, La Altagracia',
+  'Downtown Punta Cana, La Altagracia', 'Cap Cana, La Altagracia', 'Los Corales, La Altagracia',
+  'Cabeza de Toro, La Altagracia', 'Uvero Alto, La Altagracia', 'Macao, La Altagracia',
+  'Cortecito, La Altagracia', 'Verón, La Altagracia', 'Arena Gorda, La Altagracia',
   'Higüey, La Altagracia', 'San Rafael del Yuma, La Altagracia', 'Boca de Yuma, La Altagracia',
-  // Santiago
+  // --- Sectores: Santiago ---
   'Los Jardines, Santiago', 'Cerros de Gurabo, Santiago', 'Reparto Conuco, Santiago',
   'Bella Vista, Santiago', 'Villa Olga, Santiago',
-  // Puerto Plata
-  'Puerto Plata', 'Sosúa, Puerto Plata', 'Cabarete, Puerto Plata', 'Costámbar, Puerto Plata',
-  'Cofresí, Puerto Plata', 'Playa Dorada, Puerto Plata', 'Luperón, Puerto Plata',
-  'Villa Isabela, Puerto Plata', 'La Isabela, Puerto Plata',
-  // Samaná
-  'Las Terrenas, Samaná', 'Samaná', 'Las Galeras, Samaná', 'Sánchez, Samaná',
-  'El Portillo, Samaná', 'Cosón, Samaná',
-  // La Romana
-  'La Romana', 'Casa de Campo, La Romana', 'Bayahibe, La Romana', 'Dominicus, La Romana',
-  // La Vega
-  'Jarabacoa, La Vega', 'Constanza, La Vega', 'La Vega',
-  // San Pedro / Macorís
-  'San Pedro de Macorís', 'Juan Dolio, San Pedro de Macorís', 'Guayacanes, San Pedro de Macorís',
-  // María Trinidad Sánchez
+  // --- Sectores: Puerto Plata ---
+  'Puerto Plata, Puerto Plata', 'Sosúa, Puerto Plata', 'Cabarete, Puerto Plata',
+  'Costámbar, Puerto Plata', 'Cofresí, Puerto Plata', 'Playa Dorada, Puerto Plata',
+  'Luperón, Puerto Plata', 'Villa Isabela, Puerto Plata', 'La Isabela, Puerto Plata',
+  // --- Sectores: Samaná ---
+  'Samaná, Samaná', 'Las Terrenas, Samaná', 'Las Galeras, Samaná',
+  'Sánchez, Samaná', 'El Portillo, Samaná', 'Cosón, Samaná', 'El Limón, Samaná', 'Rancho Español, Samaná',
+  // --- Sectores: La Romana ---
+  'La Romana, La Romana', 'Casa de Campo, La Romana', 'Bayahibe, La Romana', 'Dominicus, La Romana',
+  // --- Sectores: La Vega ---
+  'Jarabacoa, La Vega', 'Constanza, La Vega', 'La Vega, La Vega',
+  // --- Sectores: San Pedro de Macorís ---
+  'San Pedro de Macorís, San Pedro de Macorís', 'Juan Dolio, San Pedro de Macorís', 'Guayacanes, San Pedro de Macorís',
+  // --- Sectores: otras provincias ---
   'Nagua, María Trinidad Sánchez', 'Río San Juan, María Trinidad Sánchez',
-  // El Seibo / Hato Mayor
-  'Miches, El Seibo', 'El Seibo', 'Hato Mayor', 'Sabana de la Mar, Hato Mayor',
-  // Otras provincias
-  'San Cristóbal', 'Baní, Peravia', 'Azua', 'Barahona', 'Pedernales',
+  'Miches, El Seibo', 'Sabana de la Mar, Hato Mayor',
+  'San Cristóbal, San Cristóbal', 'Baní, Peravia',
   'Moca, Espaillat', 'San Francisco de Macorís, Duarte', 'Bonao, Monseñor Nouel',
-  'Monte Cristi', 'Dajabón', 'Mao, Valverde',
+  'Mao, Valverde', 'Monte Cristi, Monte Cristi', 'Dajabón, Dajabón',
+  'Azua, Azua', 'Barahona, Barahona', 'Pedernales, Pedernales',
 ]
 
 function BuscarContent() {
+  const { tr } = useIdioma()
+  const Tb = tr.buscar
+  const Tn = tr.nav
   const searchParams = useSearchParams()
   const operacionParam = searchParams.get('operacion') || ''
   const zonaParam = searchParams.get('zona') || ''
@@ -278,7 +335,10 @@ function BuscarContent() {
   const [cargando, setCargando] = useState(true)
   const [verMapa, setVerMapa] = useState(false)
   const [sesionActiva, setSesionActiva] = useState(false)
+  const [authReady, setAuthReady] = useState(false)
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
+  const [tipoUsuario, setTipoUsuario] = useState<string>('')
+  const [fotoUrl, setFotoUrl] = useState<string>('')
   const [amenidadesFiltro, setAmenidadesFiltro] = useState<string[]>([])
   const [soloAei, setSoloAei] = useState(false)
   const [pisosMin, setPisosMin] = useState(0)
@@ -287,11 +347,15 @@ function BuscarContent() {
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
+      setAuthReady(true)
       if (!data.user) return
       setSesionActiva(true)
       setUserId(data.user.id)
-      const { data: usr } = await supabase.from('usuarios').select('plan').eq('id', data.user.id).single()
+      const { data: usr } = await supabase.from('usuarios').select('plan,tipo,foto_url').eq('id', data.user.id).single()
       if (usr?.plan) setPlanUsuario(usr.plan)
+      if (usr?.tipo) setTipoUsuario(usr.tipo)
+      const foto = usr?.foto_url || data.user.user_metadata?.avatar_url || data.user.user_metadata?.picture || ''
+      if (foto) setFotoUrl(foto)
       const { data: favs } = await supabase.from('favoritos').select('propiedad_id').eq('usuario_id', data.user.id)
       if (favs) setFavoritosSet(new Set(favs.map((f: any) => f.propiedad_id)))
     })
@@ -316,11 +380,18 @@ function BuscarContent() {
       setCargando(true)
       let q = supabase
         .from('propiedades')
-        .select('*, usuarios(nombre, inmobiliaria, tipo, foto_url, numero_aei)')
+        .select('*, usuarios(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado)')
         .eq('estado', 'activo')
-      if (operacionParam) q = q.eq('operacion', operacionParam)
+      // operacion se filtra en cliente para que el sidebar funcione sin recargar
       if (tipoParam) q = q.eq('tipo', tipoParam)
-      if (zonaParam) q = q.ilike('zona', `%${zonaParam}%`)
+      if (zonaParam) {
+        const sectores = expandirGrupo(zonaParam)
+        if (sectores) {
+          q = q.or(sectores.map(s => `zona.ilike.%${s}%`).join(','))
+        } else {
+          q = q.ilike('zona', `%${zonaParam}%`)
+        }
+      }
       const { data, error } = await q
         .order('created_at', { ascending: false })
       if (!error && data) setPropiedadesReales(data)
@@ -329,7 +400,7 @@ function BuscarContent() {
     cargar()
   }, [])
 
-  const propiedadesActivas = propiedadesReales.length > 0 ? propiedadesReales.map(p => ({
+  const propiedadesActivas: any[] = propiedadesReales.length > 0 ? propiedadesReales.map(p => ({
     id: p.id,
     precio: p.precio,
     titulo: p.titulo,
@@ -347,14 +418,19 @@ function BuscarContent() {
     lat: p.lat ?? getLatLngFromZona(p.zona || '')[0],
     lng: p.lng ?? getLatLngFromZona(p.zona || '')[1],
     amenidades: Array.isArray(p.amenidades) ? p.amenidades : [],
-    aei: !!(p.usuarios?.numero_aei),
+    aei: !!(p.usuarios?.numero_aei && p.usuarios?.aei_aprobado),
     fotos: Array.isArray(p.fotos) ? p.fotos : [],
     vendedor: p.usuarios || {},
     created_at: p.created_at || '',
   })) : propiedadesEjemplo
 
   const tipos = ['Todos', 'Apartamento', 'Casa', 'Villa', 'Edificio', 'Oficina', 'Terreno', 'Local comercial']
-  const ordenes = ['Relevancia', 'Recientes', 'Baratos', 'Caros']
+  const ordenes = [
+    { val: 'Relevancia', label: Tb.relevancia },
+    { val: 'Recientes', label: Tb.recientes },
+    { val: 'Baratos', label: Tb.baratos },
+    { val: 'Caros', label: Tb.caros },
+  ]
 
   const filtradas = propiedadesActivas.filter((p: any) => {
     if (operacion && p.operacion !== operacion) return false
@@ -365,7 +441,14 @@ function BuscarContent() {
     if (m2Min && p.m2 < Number(m2Min.replace(/\D/g, ''))) return false
     if (habMin > 0 && p.hab < habMin) return false
     if (banosMin > 0 && p.banos < banosMin) return false
-    if (query && !p.titulo.toLowerCase().includes(query.toLowerCase()) && !p.zona.toLowerCase().includes(query.toLowerCase())) return false
+    if (query) {
+      const sectores = expandirGrupo(query)
+      if (sectores) {
+        if (!sectores.some(s => normalize(p.zona).includes(normalize(s)))) return false
+      } else if (!normalize(p.titulo).includes(normalize(query)) && !normalize(p.zona).includes(normalize(query))) {
+        return false
+      }
+    }
     if (soloAei && !p.aei) return false
     if (amenidadesFiltro.length > 0 && !amenidadesFiltro.every(a => p.amenidades.includes(a))) return false
     return true
@@ -381,7 +464,7 @@ function BuscarContent() {
   const handleQueryChange = (val: string) => {
     setQuery(val)
     if (val.length >= 2) {
-      setSugerencias(zonasSugerencias.filter(z => z.toLowerCase().includes(val.toLowerCase())).slice(0, 6))
+      setSugerencias(zonasSugerencias.filter(z => normalize(z).includes(normalize(val))).slice(0, 6))
       setMostrarSugerencias(true)
     } else {
       setSugerencias([])
@@ -389,9 +472,8 @@ function BuscarContent() {
     }
   }
 
-  const tituloOperacion = operacion === 'alquiler' ? 'en alquiler' : 'en venta'
-  const tituloZona = query ? `en ${query.split(',')[0].trim()}` : 'en República Dominicana'
-  const tituloPagina = `Propiedades ${tituloOperacion} ${tituloZona}`
+  const tituloOperacion = operacion === 'alquiler' ? Tb.operacion.alquiler : Tb.operacion.venta
+  const tituloPagina = `${filtradas.length} propiedades ${query ? `en ${query.split(',')[0].trim()}` : 'en República Dominicana'}`
 
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
@@ -406,10 +488,10 @@ function BuscarContent() {
             urbiza<span style={{ color: '#83D4DB' }}>.</span>
           </a>
           {[
-            { label: 'Comprar', href: '/buscar?operacion=venta' },
-            { label: 'Alquilar', href: '/buscar?operacion=alquiler' },
+            { label: Tn.comprar, href: '/buscar?operacion=venta', op: 'venta' },
+            { label: Tn.alquilar, href: '/buscar?operacion=alquiler', op: 'alquiler' },
           ].map(item => (
-            <a key={item.label} href={item.href} style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: operacion === (item.label === 'Alquilar' ? 'alquiler' : 'venta') ? '#fff' : 'rgba(255,255,255,0.7)', textDecoration: 'none', borderBottom: operacion === (item.label === 'Alquilar' ? 'alquiler' : 'venta') ? '2px solid #83D4DB' : '2px solid transparent' }}>{item.label}</a>
+            <a key={item.op} href={item.href} style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: operacion === item.op ? '#fff' : 'rgba(255,255,255,0.7)', textDecoration: 'none', borderBottom: operacion === item.op ? '2px solid #83D4DB' : '2px solid transparent' }}>{item.label}</a>
           ))}
         </div>
         <div style={{ flex: 1, maxWidth: 380, margin: '0 20px', position: 'relative' }}>
@@ -427,7 +509,7 @@ function BuscarContent() {
             />
             <button
               onClick={() => { setMostrarSugerencias(false); window.location.href = `/buscar?zona=${encodeURIComponent(query)}&operacion=${operacion}` }}
-              style={{ background: '#17A6B4', color: '#fff', border: 'none', padding: '0 16px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Buscar</button>
+              style={{ background: '#17A6B4', color: '#fff', border: 'none', padding: '0 16px', fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>{tr.hero.buscar}</button>
           </div>
           {mostrarSugerencias && sugerencias.length > 0 && (
             <div style={{ position: 'absolute', top: 38, left: 0, right: 0, background: '#fff', borderRadius: 4, boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: 200, overflow: 'hidden' }}>
@@ -443,12 +525,20 @@ function BuscarContent() {
             </div>
           )}
         </div>
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: 'flex', gap: 8, visibility: authReady ? 'visible' : 'hidden', minWidth: 220, justifyContent: 'flex-end', flexShrink: 0 }}>
           {sesionActiva
-            ? <a href="/panel" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 600 }}>Mi cuenta</a>
-            : <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>Entrar</a>
+            ? <a href="/panel" style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                {fotoUrl
+                  ? <img src={fotoUrl} style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid rgba(255,255,255,0.5)' }} />
+                  : <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#83D4DB', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 700, color: '#004E57' }}>👤</div>
+                }
+                {Tn.miCuenta}
+              </a>
+            : <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.entrar}</a>
           }
-          {planUsuario !== 'profesional' && <a href={sesionActiva ? '/panel' : '/registro'} style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>+ Publicar gratis</a>}
+          {!sesionActiva && (
+            <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.publicar}</a>
+          )}
         </div>
       </nav>
 
@@ -459,9 +549,9 @@ function BuscarContent() {
         <a href="/buscar" style={{ color: '#006D77', textDecoration: 'none' }}>República Dominicana</a>
         {query && <><span>›</span><span style={{ color: '#444' }}>{query.split(',')[0].trim()}</span></>}
         <span>›</span>
-        <span style={{ color: '#444' }}>{operacion === 'alquiler' ? 'Alquiler' : 'Venta'}</span>
+        <span style={{ color: '#444' }}>{operacion === 'alquiler' ? Tb.operacion.alquiler : Tb.operacion.venta}</span>
         <span style={{ color: '#ccc', marginLeft: 8 }}>·</span>
-        <span style={{ color: '#444', marginLeft: 8, fontWeight: 500 }}>{filtradas.length} propiedades</span>
+        <span style={{ color: '#444', marginLeft: 8, fontWeight: 500 }}>{filtradas.length} {Tb.titulo}</span>
       </div>
 
       {/* BODY */}
@@ -478,16 +568,16 @@ function BuscarContent() {
             <div style={{ padding: '8px 12px', borderTop: '1px solid #e8e8e8', background: '#fafafa' }}>
               <button onClick={() => setVerMapa(true)} style={{ all: 'unset', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, fontSize: 13, color: '#006D77', fontWeight: 500, cursor: 'pointer', width: '100%' }}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                Ver en mapa
+                {Tb.verMapa}
               </button>
             </div>
           </div>
 
           {/* FILTRO OPERACION */}
           <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>Operación</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>{tr.panel?.publicar?.operacion ?? 'Operación'}</div>
             <div style={{ display: 'flex', gap: 0, background: '#f4f5f6', borderRadius: 6, padding: 3 }}>
-              {[{ val: '', label: 'Todas' }, { val: 'venta', label: 'Venta' }, { val: 'alquiler', label: 'Alquiler' }].map(op => (
+              {[{ val: '', label: Tb.todos }, { val: 'venta', label: tr.panel?.publicar?.venta ?? 'Venta' }, { val: 'alquiler', label: tr.panel?.publicar?.alquiler ?? 'Alquiler' }].map(op => (
                 <button key={op.val} onClick={() => setOperacion(op.val)} style={{ all: 'unset', flex: 1, padding: '6px 0', textAlign: 'center', fontSize: 12, fontWeight: operacion === op.val ? 700 : 400, color: operacion === op.val ? '#fff' : '#555', background: operacion === op.val ? '#006D77' : 'transparent', borderRadius: 4, cursor: 'pointer' }}>
                   {op.label}
                 </button>
@@ -497,7 +587,7 @@ function BuscarContent() {
 
           {/* FILTRO TIPO */}
           <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>Tipo de inmueble</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>{Tb.tipoInmueble}</div>
             <select value={tipo} onChange={e => setTipo(e.target.value)} style={{ width: '100%', border: '1px solid #ddd', borderRadius: 4, padding: '8px 10px', fontSize: 13, color: '#444', background: '#fff', cursor: 'pointer', outline: 'none' }}>
               {tipos.map(t => <option key={t}>{t}</option>)}
             </select>
@@ -505,26 +595,26 @@ function BuscarContent() {
 
           {/* FILTRO PRECIO */}
           <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>Precio (US$)</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>{Tb.precio}</div>
             <div style={{ display: 'flex', gap: 8 }}>
-              <input type="text" placeholder="Mínimo" value={precioMin} onChange={e => setPrecioMin(e.target.value)} style={{ flex: 1, width: 0, border: '1px solid #ddd', borderRadius: 4, padding: '8px 10px', fontSize: 12, outline: 'none', color: '#444' }} />
-              <input type="text" placeholder="Máximo" value={precioMax} onChange={e => setPrecioMax(e.target.value)} style={{ flex: 1, width: 0, border: '1px solid #ddd', borderRadius: 4, padding: '8px 10px', fontSize: 12, outline: 'none', color: '#444' }} />
+              <input type="text" placeholder={Tb.minimo} value={precioMin} onChange={e => setPrecioMin(e.target.value)} style={{ flex: 1, width: 0, border: '1px solid #ddd', borderRadius: 4, padding: '8px 10px', fontSize: 12, outline: 'none', color: '#444' }} />
+              <input type="text" placeholder={Tb.maximo} value={precioMax} onChange={e => setPrecioMax(e.target.value)} style={{ flex: 1, width: 0, border: '1px solid #ddd', borderRadius: 4, padding: '8px 10px', fontSize: 12, outline: 'none', color: '#444' }} />
             </div>
           </div>
 
           {/* FILTRO SUPERFICIE */}
           <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>Superficie (m²)</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>{Tb.superficie}</div>
             <div style={{ display: 'flex', gap: 8 }}>
-              <input type="text" placeholder="Mínimo" value={m2Min} onChange={e => setM2Min(e.target.value)} style={{ flex: 1, width: 0, border: '1px solid #ddd', borderRadius: 4, padding: '8px 10px', fontSize: 12, outline: 'none', color: '#444' }} />
-              <input type="text" placeholder="Máximo" value={m2Max} onChange={e => setM2Max(e.target.value)} style={{ flex: 1, width: 0, border: '1px solid #ddd', borderRadius: 4, padding: '8px 10px', fontSize: 12, outline: 'none', color: '#444' }} />
+              <input type="text" placeholder={Tb.minimo} value={m2Min} onChange={e => setM2Min(e.target.value)} style={{ flex: 1, width: 0, border: '1px solid #ddd', borderRadius: 4, padding: '8px 10px', fontSize: 12, outline: 'none', color: '#444' }} />
+              <input type="text" placeholder={Tb.maximo} value={m2Max} onChange={e => setM2Max(e.target.value)} style={{ flex: 1, width: 0, border: '1px solid #ddd', borderRadius: 4, padding: '8px 10px', fontSize: 12, outline: 'none', color: '#444' }} />
             </div>
           </div>
 
           {/* FILTRO HABITACIONES — oculto para Edificio y Terreno */}
           {tipo !== 'Edificio' && tipo !== 'Terreno' && (
             <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>Habitaciones</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>{Tb.habitaciones}</div>
               <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
                 {[0, 1, 2, 3, 4].map(h => (
                   <button key={h} onClick={() => setHabMin(h)} style={{ all: 'unset', border: `1px solid ${habMin === h ? '#006D77' : '#ddd'}`, borderRadius: 4, padding: '6px 10px', fontSize: 12, cursor: 'pointer', color: habMin === h ? '#006D77' : '#666', background: habMin === h ? '#f0fafb' : '#fff' }}>
@@ -538,7 +628,7 @@ function BuscarContent() {
           {/* FILTRO BAÑOS — oculto para Edificio y Terreno */}
           {tipo !== 'Edificio' && tipo !== 'Terreno' && (
             <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>Baños</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>{Tb.banos}</div>
               <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
                 {[1, 2, 3].map(b => (
                   <button key={b} onClick={() => setBanosMin(b === banosMin ? 0 : b)} style={{ all: 'unset', border: `1px solid ${banosMin === b ? '#006D77' : '#ddd'}`, borderRadius: 4, padding: '6px 12px', fontSize: 12, cursor: 'pointer', color: banosMin === b ? '#006D77' : '#666', background: banosMin === b ? '#f0fafb' : '#fff' }}>
@@ -551,7 +641,7 @@ function BuscarContent() {
 
           {/* FILTRO CARACTERÍSTICAS */}
           <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>Características</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>{Tb.caracteristicas}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {[
                 { id: 'piscina', label: 'Piscina' },
@@ -608,13 +698,13 @@ function BuscarContent() {
           <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <h1 style={{ fontSize: 18, fontWeight: 600, color: '#111', margin: 0 }}>
-                {cargando ? 'Cargando propiedades...' : `${filtradas.length} ${tituloPagina}`}
+                {cargando ? `${tr.hero.buscar}...` : tituloPagina}
               </h1>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 13, color: '#777' }}>Ordenar:</span>
+                <span style={{ fontSize: 13, color: '#777' }}>{Tb.ordenar}</span>
                 {ordenes.map(o => (
-                  <button key={o} onClick={() => setOrden(o)} style={{ all: 'unset', border: `1px solid ${orden === o ? '#006D77' : '#ddd'}`, borderRadius: 4, padding: '5px 12px', fontSize: 13, color: orden === o ? '#006D77' : '#555', cursor: 'pointer', background: orden === o ? '#f0fafb' : '#fff' }}>
-                    {o}
+                  <button key={o.val} onClick={() => setOrden(o.val)} style={{ all: 'unset', border: `1px solid ${orden === o.val ? '#006D77' : '#ddd'}`, borderRadius: 4, padding: '5px 12px', fontSize: 13, color: orden === o.val ? '#006D77' : '#555', cursor: 'pointer', background: orden === o.val ? '#f0fafb' : '#fff' }}>
+                    {o.label}
                   </button>
                 ))}
               </div>
@@ -627,23 +717,24 @@ function BuscarContent() {
                 onClick={() => window.location.href = `/propiedad/${p.id}`}
                 onMouseEnter={e => (e.currentTarget.style.background = '#fafefe')}
                 onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
-                <div style={{ width: 300, minWidth: 300, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {p.dest && <div style={{ position: 'absolute', top: 10, left: 10, background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '4px 10px', borderRadius: 3, display: 'flex', alignItems: 'center', gap: 4 }}>⭐ DESTACADO</div>}
-                  {p.visitas && !p.dest && <div style={{ position: 'absolute', top: 10, left: 10, background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 600, padding: '3px 10px', borderRadius: 3 }}>🔥 Más visto</div>}
-                  <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.2">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22"/>
-                  </svg>
-                  <div style={{ position: 'absolute', bottom: 10, left: 10, background: 'rgba(0,0,0,0.45)', color: '#fff', fontSize: 10, padding: '2px 8px', borderRadius: 3, display: 'flex', alignItems: 'center', gap: 4 }}>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                    {p.id * 3 + 5}
-                  </div>
+                <div style={{ width: 300, minWidth: 300, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                  {p.fotos && p.fotos.length > 0
+                    ? <img src={p.fotos[0]} alt={p.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                    : <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  }
+                  {p.dest && <div style={{ position: 'absolute', top: 8, right: 8, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>{Tb.destacado ?? 'DESTACADO'}</div>}
+                  {p.visitas && !p.dest && <div style={{ position: 'absolute', top: 8, right: 8, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>MÁS VISTO</div>}
+                  {p.fotos && p.fotos.length > 0 && (
+                    <div style={{ position: 'absolute', bottom: 10, left: 10, background: 'rgba(0,0,0,0.45)', color: '#fff', fontSize: 10, padding: '2px 8px', borderRadius: 3, display: 'flex', alignItems: 'center', gap: 4, zIndex: 1 }}>
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                      {p.fotos.length}
+                    </div>
+                  )}
                 </div>
                 <div style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0 }}>
                   <div>
-                    <div style={{ fontSize: 15, fontWeight: 600, color: '#006D77', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ fontSize: 15, fontWeight: 600, color: '#006D77', marginBottom: 8 }}>
                       {p.titulo}
-                      {p.dest && <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 3 }}>DESTACADO</span>}
                     </div>
                     <div style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 2 }}>
                       US$ {p.precio.toLocaleString('en-US')}
@@ -665,8 +756,8 @@ function BuscarContent() {
                     </div>
                     <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                       <button onClick={e => toggleFavorito(e, String(p.id))} style={{ all: 'unset', border: `1px solid ${favoritosSet.has(String(p.id)) ? '#006D77' : '#e0e0e0'}`, borderRadius: 4, padding: '6px 10px', cursor: 'pointer', color: favoritosSet.has(String(p.id)) ? '#006D77' : '#ccc', fontSize: 16, lineHeight: 1 }}>{favoritosSet.has(String(p.id)) ? '♥' : '♡'}</button>
-                      <button onClick={e => { e.stopPropagation(); window.location.href = `/propiedad/${p.id}?tel=1` }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '7px 16px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Ver teléfono</button>
-                      <button onClick={e => { e.stopPropagation(); window.location.href = `/propiedad/${p.id}` }} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '7px 18px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>Contactar</button>
+                      <button onClick={e => { e.stopPropagation(); window.location.href = `/propiedad/${p.id}?tel=1` }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '7px 16px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>{Tb.verTelefono}</button>
+                      <button onClick={e => { e.stopPropagation(); window.location.href = `/propiedad/${p.id}` }} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '7px 18px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>{Tb.contactar}</button>
                     </div>
                   </div>
                 </div>
@@ -676,8 +767,8 @@ function BuscarContent() {
             {filtradas.length === 0 && (
               <div style={{ textAlign: 'center', padding: '60px 20px', color: '#aaa', background: '#fff' }}>
                 <div style={{ fontSize: 40, marginBottom: 12 }}>🔍</div>
-                <div style={{ fontSize: 16, fontWeight: 500, color: '#555', marginBottom: 6 }}>No hay propiedades con esos filtros</div>
-                <div style={{ fontSize: 13 }}>Prueba a cambiar el tipo o ampliar el rango de precio</div>
+                <div style={{ fontSize: 16, fontWeight: 500, color: '#555', marginBottom: 6 }}>{Tb.sinResultados}</div>
+                <div style={{ fontSize: 13 }}>{Tb.modificaFiltros}</div>
               </div>
             )}
           </div>
@@ -685,7 +776,7 @@ function BuscarContent() {
           {filtradas.length > 0 && (
             <div style={{ textAlign: 'center', padding: '24px', background: '#f4f5f6' }}>
               <button style={{ all: 'unset', border: '1.5px solid #006D77', color: '#006D77', background: '#fff', padding: '11px 36px', borderRadius: 4, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>
-                Ver más propiedades
+                {Tb.verMas}
               </button>
             </div>
           )}
@@ -701,7 +792,7 @@ export default function Buscar() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', fontFamily: 'sans-serif', background: '#f4f5f6' }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 24, fontWeight: 700, color: '#006D77', marginBottom: 8 }}>urbiza<span style={{ color: '#17A6B4' }}>.</span></div>
-          <div style={{ fontSize: 14, color: '#888' }}>Cargando propiedades...</div>
+          <div style={{ fontSize: 14, color: '#888' }}>Cargando...</div>
         </div>
       </div>
     }>
