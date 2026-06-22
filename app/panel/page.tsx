@@ -958,7 +958,13 @@ export default function Panel() {
               <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 16, height: 'calc(100vh - 180px)', minHeight: 500 }}>
                 {/* Lista de conversaciones */}
                 <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', overflowY: 'auto' }}>
-                  {conversaciones.length === 0 && (
+                  {cargando && (
+                    <div style={{ padding: '48px 24px', textAlign: 'center' }}>
+                      <div style={{ width: 28, height: 28, border: '3px solid #e0e0e0', borderTopColor: '#006D77', borderRadius: '50%', margin: '0 auto 12px', animation: 'spin 0.8s linear infinite' }} />
+                      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+                    </div>
+                  )}
+                  {!cargando && conversaciones.length === 0 && (
                     <div style={{ padding: '48px 24px', textAlign: 'center' }}>
                       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" strokeWidth="1" style={{ margin: '0 auto 16px', display: 'block' }}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                       <div style={{ fontSize: 16, fontWeight: 600, color: '#555', marginBottom: 8 }}>{Tpanel.mensajes.sinMensajes}</div>
