@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../supabase'
 import { useIdioma } from '../../IdiomaContext'
+import NavUserMenu from '../../components/NavUserMenu'
 
 const USD_TO_DOP = 59.5
 
@@ -525,20 +526,12 @@ function BuscarContent() {
             </div>
           )}
         </div>
-        <div style={{ display: 'flex', gap: 8, visibility: authReady ? 'visible' : 'hidden', minWidth: 220, justifyContent: 'flex-end', flexShrink: 0 }}>
-          {sesionActiva
-            ? <a href="/panel" style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>
-                {fotoUrl
-                  ? <img src={fotoUrl} style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid rgba(255,255,255,0.5)' }} />
-                  : <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#83D4DB', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 700, color: '#004E57' }}>👤</div>
-                }
-                {Tn.miCuenta}
-              </a>
-            : <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.entrar}</a>
-          }
-          {!sesionActiva && (
+        <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
+          <NavUserMenu dark={true} />
+          {authReady && !sesionActiva && <>
+            <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.entrar}</a>
             <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.publicar}</a>
-          )}
+          </>}
         </div>
       </nav>
 

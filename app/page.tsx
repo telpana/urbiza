@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useIdioma } from '../IdiomaContext'
 import { supabase } from '../supabase'
+import NavUserMenu from '../components/NavUserMenu'
 
 const propiedadesMapaHome = [
   { id: 1, precio: 285000, titulo: 'Apartamento en Piantini', zona: 'Piantini, D.N.', tipo: 'Apartamento', hab: 3, m2: 150, banos: 2, lat: 18.4890, lng: -69.9370, desc: 'Amplio apartamento en Piantini con acabados de alta calidad.' },
@@ -388,17 +389,11 @@ export default function Home() {
               </div>
             )}
           </div>
-          {authReady && sesionActiva
-            ? <a href="/panel" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '6px 14px 6px 8px', borderRadius: 4, textDecoration: 'none', fontWeight: 600, display: 'flex', alignItems: 'center', gap: 8 }}>
-                {fotoUrl
-                  ? <img src={fotoUrl} alt="" style={{ width: 26, height: 26, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} referrerPolicy="no-referrer" onError={e => { (e.target as HTMLImageElement).style.display = 'none' }} />
-                  : <div style={{ width: 26, height: 26, borderRadius: '50%', background: '#006D77', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, fontWeight: 700, flexShrink: 0 }}>{nombreUsuario?.[0]?.toUpperCase() || 'U'}</div>
-                }
-                Mi cuenta
-              </a>
-            : authReady && <a href="/login" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.entrar}</a>
-          }
-          {authReady && !sesionActiva && <a href="/registro" style={{ fontSize: 13, color: '#fff', background: '#006D77', padding: '8px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.publicar}</a>}
+          <NavUserMenu dark={false} />
+          {authReady && !sesionActiva && <>
+            <a href="/login" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.entrar}</a>
+            <a href="/registro" style={{ fontSize: 13, color: '#fff', background: '#006D77', padding: '8px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.publicar}</a>
+          </>}
         </div>
       </nav>
 

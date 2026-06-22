@@ -229,6 +229,13 @@ export default function Panel() {
   const [respuesta, setRespuesta] = useState('')
   const [verificandoPago, setVerificandoPago] = useState(false)
 
+  // Leer sección desde URL (?s=mensajes, ?s=anuncios, etc.)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const s = params.get('s')
+    if (s) setSeccion(s)
+  }, [])
+
   useEffect(() => {
     if ((seccion === 'anuncios' || seccion === 'estadisticas') && usuario?.id) {
       supabase.from('propiedades').select('*').eq('usuario_id', usuario.id).order('created_at', { ascending: false })
