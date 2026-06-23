@@ -744,7 +744,7 @@ export default function Panel() {
                         {estado === 'activo' ? `● ${Tpanel.anuncios.estado.activo}` : `○ ${Tpanel.anuncios.estado.pausado}`}
                       </span>
                       <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                        <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}><svg width="12" height="12" viewBox="0 0 24 24" fill="#17A6B4" stroke="#17A6B4" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Destacar</button>
+                        <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}><svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Destacar</button>
                         <button onClick={() => handleEditar(a)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>{Tpanel.anuncios.editar}</button>
                         <button onClick={() => eliminarAnuncio(a.id)} style={{ all: 'unset', border: '1px solid #fca5a5', color: '#dc2626', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer', fontWeight: 500 }}>{Tpanel.anuncios.eliminar}</button>
                       </div>
@@ -1191,7 +1191,7 @@ export default function Panel() {
                 </div>
               ) : (
                 <div style={{ background: '#fff8e1', border: '1px solid #f59e0b', borderRadius: 6, padding: '10px 16px', fontSize: 13, color: '#92400e', marginBottom: 20 }}>
-                  {Tpanel.destacar.sinAnuncio}
+                  Ve a Mis anuncios y pulsa <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1.5" style={{ display: 'inline', verticalAlign: 'middle', marginBottom: 1 }}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Destacar en el anuncio que quieres destacar
                 </div>
               )}
 
