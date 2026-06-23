@@ -131,7 +131,7 @@ export default function CompletarPerfil() {
 
             <div style={{ marginBottom: 16 }}>
               <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Teléfono</label>
-              <input value={telefono} onChange={e => { let v = e.target.value; if (!v.startsWith('+')) v = '+' + v.replace(/^\+*/, ''); setTelefono(v.slice(0, 17)) }} placeholder="+1 809 000 0000" type="tel"
+              <input value={telefono} onChange={e => { let v = e.target.value.replace(/[^\d\s\-+()\+]/g, '').replace(/(?!^)\+/g, ''); if (!v.startsWith('+')) v = '+' + v.replace(/^\+*/, ''); setTelefono(v.slice(0, 17)) }} placeholder="+1 809 000 0000" type="tel"
                 style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 14px', fontSize: 14, outline: 'none', color: '#222', boxSizing: 'border-box' }}
                 onFocus={e => { if (!e.target.value) setTelefono('+'); e.target.style.borderColor = '#006D77' }} onBlur={e => { if (e.target.value === '+') setTelefono(''); e.target.style.borderColor = '#e0e0e0' }} />
             </div>
