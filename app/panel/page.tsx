@@ -228,6 +228,8 @@ export default function Panel() {
   const [cargando, setCargando] = useState(true)
   const [respuesta, setRespuesta] = useState('')
   const [verificandoPago, setVerificandoPago] = useState(false)
+  const [modalBaja, setModalBaja] = useState(false)
+  const [bajando, setBajando] = useState(false)
 
   // Leer sección desde URL (?s=mensajes, ?s=anuncios, etc.)
   useEffect(() => {
@@ -1475,10 +1477,56 @@ export default function Panel() {
                   <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderTop: '2px solid #fee2e2' }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: '#555', marginBottom: 2 }}>{Tpanel.plan.cancelar}</div>
                     <div style={{ fontSize: 12, color: '#aaa', marginBottom: 12 }}>Se eliminarán todos tus anuncios, mensajes e interacciones de forma inmediata e irreversible.</div>
-                    <button onClick={async () => { const { data: { user } } = await supabase.auth.getUser(); if (!user) return; if (!confirm(Tpanel.plan.cancelarConfirm)) return; const res = await fetch('/api/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id }) }); const data = await res.json(); if (data.ok) { alert(Tpanel.plan.cancelarOk); window.location.href = '/panel' } else alert(Tpanel.plan.cancelarErr) }} style={{ all: 'unset', border: '1px solid #fca5a5', color: '#dc2626', padding: '7px 16px', borderRadius: 6, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>
+                    <button onClick={() => setModalBaja(true)} style={{ all: 'unset', border: '1px solid #fca5a5', color: '#dc2626', padding: '7px 16px', borderRadius: 6, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>
                       {Tpanel.plan.cancelarBtn}
                     </button>
                   </div>
+
+                  {/* Modal confirmación baja */}
+                  {modalBaja && (
+                    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+                      onClick={e => { if (e.target === e.currentTarget) setModalBaja(false) }}>
+                      <div style={{ background: '#fff', borderRadius: 12, padding: '32px 28px', maxWidth: 440, width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
+                        {/* Icono advertencia */}
+                        <div style={{ width: 52, height: 52, borderRadius: '50%', background: '#fee2e2', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        </div>
+                        <div style={{ fontSize: 18, fontWeight: 700, color: '#111', textAlign: 'center', marginBottom: 6 }}>¿Seguro que quieres darte de baja?</div>
+                        <div style={{ fontSize: 13, color: '#666', textAlign: 'center', marginBottom: 20 }}>Esta acción es <strong>permanente e irreversible</strong>. En el momento en que confirmes:</div>
+                        <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '14px 16px', marginBottom: 20 }}>
+                          {[
+                            { icon: '🏠', text: 'Todos tus anuncios publicados serán eliminados' },
+                            { icon: '💬', text: 'Todos tus mensajes e historial de conversaciones desaparecerán' },
+                            { icon: '❤️', text: 'Tus propiedades guardadas como favoritos se borrarán' },
+                            { icon: '🏅', text: 'Perderás tu badge y número AEI verificado' },
+                            { icon: '📊', text: 'No podrás publicar nuevos anuncios hasta volver a suscribirte' },
+                          ].map(item => (
+                            <div key={item.text} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10, fontSize: 13, color: '#7f1d1d' }}>
+                              <span style={{ flexShrink: 0, fontSize: 15 }}>{item.icon}</span>
+                              <span>{item.text}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{ display: 'flex', gap: 10 }}>
+                          <button onClick={() => setModalBaja(false)} style={{ all: 'unset', flex: 1, background: '#f5f5f5', color: '#333', padding: '11px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'center' }}>
+                            Cancelar
+                          </button>
+                          <button disabled={bajando} onClick={async () => {
+                            const { data: { user } } = await supabase.auth.getUser()
+                            if (!user) return
+                            setBajando(true)
+                            const res = await fetch('/api/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id }) })
+                            const data = await res.json()
+                            setBajando(false)
+                            if (data.ok) { setModalBaja(false); alert(Tpanel.plan.cancelarOk); window.location.href = '/panel' }
+                            else { alert(Tpanel.plan.cancelarErr); setModalBaja(false) }
+                          }} style={{ all: 'unset', flex: 1, background: bajando ? '#fca5a5' : '#dc2626', color: '#fff', padding: '11px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: bajando ? 'default' : 'pointer', textAlign: 'center' }}>
+                            {bajando ? 'Procesando...' : 'Sí, dar de baja'}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 )
               })()}
