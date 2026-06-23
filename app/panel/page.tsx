@@ -718,7 +718,11 @@ export default function Panel() {
                   <div style={{ background: '#fff', borderRadius: 8, padding: '48px 24px', textAlign: 'center', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" strokeWidth="1" style={{ margin: '0 auto 16px', display: 'block' }}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                     <div style={{ fontSize: 16, fontWeight: 600, color: '#555', marginBottom: 8 }}>{Tpanel.anuncios.sinAnuncios}</div>
-                    <div style={{ fontSize: 13, color: '#aaa', marginBottom: 20 }}>{Tpanel.anuncios.sinAnunciosDesc}</div>
+                    <div style={{ fontSize: 13, color: '#aaa', marginBottom: 20 }}>
+                      {tipoUsuario === 'profesional'
+                        ? 'Miles de compradores buscan propiedades en Propiteca cada día. Publica tu primer anuncio y empieza a recibir contactos.'
+                        : Tpanel.anuncios.sinAnunciosDesc}
+                    </div>
                     <button onClick={() => setSeccion('publicar')} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>
                       {Tpanel.anuncios.publicarPrimero}
                     </button>
