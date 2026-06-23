@@ -963,11 +963,18 @@ export default function Panel() {
             })
             return (
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
-                <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111' }}>{Tpanel.mensajes.titulo}</h1>
-                {noLeidos > 0 && <span style={{ background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 600, padding: '4px 12px', borderRadius: 10 }}>{noLeidos} {Tpanel.mensajes.noLeidos}</span>}
+              {/* Header */}
+              <div style={{ background: 'linear-gradient(135deg, #006D77 0%, #17A6B4 100%)', borderRadius: 12, padding: '20px 24px', marginBottom: 20, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <div>
+                    <div style={{ fontSize: 18, fontWeight: 700 }}>{Tpanel.mensajes.titulo}</div>
+                    <div style={{ fontSize: 12, opacity: 0.8, marginTop: 2 }}>{conversaciones.length} conversación{conversaciones.length !== 1 ? 'es' : ''}</div>
+                  </div>
+                </div>
+                {noLeidos > 0 && <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '5px 14px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.3)' }}>{noLeidos} sin leer</span>}
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 16, height: 'calc(100vh - 180px)', minHeight: 500 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 16, height: 'calc(100vh - 230px)', minHeight: 500 }}>
                 {/* Lista de conversaciones */}
                 <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', overflowY: 'auto' }}>
                   {cargando && (
@@ -1038,6 +1045,15 @@ export default function Panel() {
                 </div>
 
                 {/* Detalle — chat */}
+                {!convActiva && (
+                  <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, color: '#ccc' }}>
+                    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" strokeWidth="1"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontSize: 15, fontWeight: 600, color: '#bbb', marginBottom: 4 }}>Selecciona una conversación</div>
+                      <div style={{ fontSize: 13, color: '#ddd' }}>Elige un contacto de la lista para ver el chat</div>
+                    </div>
+                  </div>
+                )}
                 {convActiva && (() => {
                   const m = convActiva.msg
                   const esEnviado = m._tipo === 'enviado'
