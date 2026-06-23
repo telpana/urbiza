@@ -461,40 +461,31 @@ export default function Home() {
       </div>
 
       {/* SECCIONES ACCIÓN */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
-          <a href="#" onClick={e => { e.preventDefault(); setVerMapa(true) }} style={{ display: 'flex', gap: 20, padding: '28px 32px', textDecoration: 'none', borderRight: '1px solid #e8e8e8', alignItems: 'center' }}>
-            <div style={{ width: 140, height: 100, borderRadius: 8, flexShrink: 0, overflow: 'hidden', border: '2px solid #c5e8ea' }}>
+      <div style={{ background: '#f4f5f6', borderBottom: '1px solid #e8e8e8', padding: '32px 20px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+          <a href="#" onClick={e => { e.preventDefault(); setVerMapa(true) }} style={{ display: 'flex', gap: 20, padding: '24px', textDecoration: 'none', alignItems: 'center', background: '#fff', borderRadius: 12, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', border: '1px solid #e8e8e8' }}
+            onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)'}
+            onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 1px 6px rgba(0,0,0,0.06)'}>
+            <div style={{ width: 90, height: 90, borderRadius: 10, flexShrink: 0, overflow: 'hidden', border: '2px solid #c5e8ea' }}>
               <MapaMiniHome />
             </div>
             <div>
-              <div style={{ fontSize: 16, fontWeight: 600, color: '#111', marginBottom: 6 }}>Seleccionar zonas en el mapa</div>
-              <div style={{ fontSize: 13, color: '#777', lineHeight: 1.6, marginBottom: 8 }}>Puedes buscar en varias zonas seleccionándolas directamente en el mapa de República Dominicana.</div>
-              <div style={{ fontSize: 13, color: '#006D77', fontWeight: 500 }}>Empezar a seleccionar zonas →</div>
+              <div style={{ display: 'inline-block', background: '#e0f5f7', color: '#006D77', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, marginBottom: 8 }}>Búsqueda avanzada</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 6 }}>Selecciona zonas en el mapa</div>
+              <div style={{ fontSize: 13, color: '#777', lineHeight: 1.6 }}>Elige varias zonas a la vez directamente sobre el mapa de República Dominicana.</div>
             </div>
           </a>
-          <a href="/registro" style={{ display: 'flex', gap: 20, padding: '28px 32px', textDecoration: 'none', alignItems: 'center' }}>
-            <div style={{ width: 140, height: 100, borderRadius: 8, flexShrink: 0, background: '#006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid #c5e8ea', position: 'relative', overflow: 'hidden' }}>
-              {featureImgUrl
-                ? <img src={featureImgUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                : <svg width="44" height="72" viewBox="0 0 44 72" fill="none">
-                    <rect x="2" y="2" width="40" height="68" rx="6" fill="#fff" opacity="0.15"/>
-                    <rect x="4" y="4" width="36" height="64" rx="5" fill="#fff"/>
-                    <rect x="8" y="12" width="28" height="40" rx="2" fill="#e0f5f7"/>
-                    <rect x="16" y="60" width="12" height="3" rx="1.5" fill="#006D77" opacity="0.4"/>
-                    <rect x="10" y="20" width="24" height="2" rx="1" fill="#006D77" opacity="0.5"/>
-                    <rect x="10" y="26" width="16" height="2" rx="1" fill="#006D77" opacity="0.3"/>
-                    <rect x="10" y="32" width="20" height="2" rx="1" fill="#006D77" opacity="0.3"/>
-                    <circle cx="22" cy="42" r="7" fill="#006D77" opacity="0.15"/>
-                    <path d="M19 42 L21 44 L26 39" stroke="#006D77" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-              }
-              <div style={{ position: 'absolute', top: 6, right: 6, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 10 }}>GRATIS</div>
+          <a href="/registro" style={{ display: 'flex', gap: 20, padding: '24px', textDecoration: 'none', alignItems: 'center', background: 'linear-gradient(135deg, #006D77 0%, #17A6B4 100%)', borderRadius: 12, boxShadow: '0 1px 6px rgba(0,109,119,0.2)' }}
+            onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 4px 16px rgba(0,109,119,0.3)'}
+            onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 1px 6px rgba(0,109,119,0.2)'}>
+            <div style={{ width: 90, height: 90, borderRadius: 10, flexShrink: 0, background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 4 }}>
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="1.5"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              <div style={{ fontSize: 10, fontWeight: 700, color: '#fff', opacity: 0.85 }}>GRATIS</div>
             </div>
             <div>
-              <div style={{ fontSize: 16, fontWeight: 600, color: '#111', marginBottom: 6 }}>Publicar tu anuncio</div>
-              <div style={{ fontSize: 13, color: '#777', lineHeight: 1.6, marginBottom: 8 }}>Tus 2 primeros anuncios son completamente gratis. Apartamentos, casas, villas, terrenos... ¡Todo cabe!</div>
-              <div style={{ fontSize: 13, color: '#006D77', fontWeight: 500 }}>Poner tu anuncio →</div>
+              <div style={{ display: 'inline-block', background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, marginBottom: 8 }}>Para propietarios</div>
+              <div style={{ fontSize: 16, fontWeight: 700, color: '#fff', marginBottom: 6 }}>Publica tu anuncio</div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.85)', lineHeight: 1.6 }}>Tus 2 primeros anuncios son gratis. Apartamentos, casas, villas, terrenos...</div>
             </div>
           </a>
         </div>
