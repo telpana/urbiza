@@ -1179,12 +1179,9 @@ export default function Panel() {
             <div>
               {/* Hero */}
               <div style={{ background: 'linear-gradient(135deg, #006D77 0%, #17A6B4 100%)', borderRadius: 12, padding: '24px 28px', marginBottom: 28, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                  <div>
-                    <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>Destacar anuncio</h1>
-                    <p style={{ fontSize: 13, opacity: 0.85, margin: '4px 0 0' }}>Aparece primero en las búsquedas y consigue hasta 10x más visitas</p>
-                  </div>
+                <div>
+                  <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>Destacar anuncio</h1>
+                  <p style={{ fontSize: 13, opacity: 0.85, margin: '4px 0 0' }}>Aparece primero en las búsquedas y consigue hasta 10x más visitas</p>
                 </div>
                 <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
                   {[{ n: '10x', label: 'más visitas' }, { n: 'TOP', label: 'posición' }].map(s => (
@@ -1232,7 +1229,7 @@ export default function Panel() {
                             <div style={{ fontSize: 13, fontWeight: 600, color: '#111', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.titulo}</div>
                             <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>US$ {a.precio?.toLocaleString('en-US')} · {a.zona}</div>
                           </div>
-                          {a.destacado && <span style={{ fontSize: 10, fontWeight: 700, background: '#FFF3CD', color: '#92400e', padding: '2px 8px', borderRadius: 10, flexShrink: 0 }}>YA DESTACADO</span>}
+                          {a.destacado && a.destacado_hasta && (() => { const dias = Math.ceil((new Date(a.destacado_hasta).getTime() - Date.now()) / 86400000); return dias > 0 ? <span style={{ fontSize: 10, fontWeight: 700, background: dias <= 3 ? '#fee2e2' : '#e0f5f7', color: dias <= 3 ? '#991b1b' : '#006D77', padding: '2px 8px', borderRadius: 10, flexShrink: 0, whiteSpace: 'nowrap' }}>⏱ {dias}d restantes</span> : null })()}
                           <div style={{ width: 18, height: 18, borderRadius: '50%', border: `2px solid ${sel ? '#006D77' : '#ccc'}`, background: sel ? '#006D77' : '#fff', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             {sel && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
                           </div>
@@ -1255,7 +1252,6 @@ export default function Panel() {
                 const data = await res.json()
                 if (data.url) window.location.href = data.url
               }} style={{ all: 'unset', background: planSeleccionado && anuncioADestacar ? '#006D77' : '#d1d5db', color: '#fff', padding: '14px 36px', borderRadius: 8, fontSize: 15, fontWeight: 700, cursor: planSeleccionado && anuncioADestacar ? 'pointer' : 'default', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 {Tpanel.destacar.pagar}
               </button>
             </div>
