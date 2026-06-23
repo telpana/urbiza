@@ -1376,9 +1376,11 @@ export default function Panel() {
               {/* Plan actual */}
               {usuario?.plan !== 'profesional' ? (
                 <div style={{ background: '#fff', borderRadius: 8, padding: '36px 28px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center' }}>
+                  {usuario?.tipo !== 'profesional' && (
+                    <div style={{ display: 'inline-block', background: '#f4f5f6', border: '1px solid #e0e0e0', borderRadius: 20, padding: '4px 14px', fontSize: 12, color: '#888', fontWeight: 600, marginBottom: 16 }}>{Tpanel.plan.planGratis} · {Tpanel.plan.anunciosUsados.replace('{n}', String(anunciosUsados)).replace('{max}', String(anunciosGratis))}</div>
+                  )}
                   <div style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 8 }}>{Tpanel.plan.haztePro}</div>
-                  <div style={{ fontSize: 40, fontWeight: 800, color: '#006D77', marginBottom: 4, letterSpacing: -1 }}>US$ 9.99<span style={{ fontSize: 16, fontWeight: 400, color: '#aaa' }}>/mes</span></div>
-                  <div style={{ fontSize: 13, color: '#aaa', marginBottom: 28 }}>{Tpanel.planes.primer_mes}</div>
+                  <div style={{ fontSize: 40, fontWeight: 800, color: '#006D77', marginBottom: 24, letterSpacing: -1 }}>US$ 9.99<span style={{ fontSize: 16, fontWeight: 400, color: '#aaa' }}>/mes</span></div>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 280, margin: '0 auto 28px', textAlign: 'left' }}>
                     {(Tpanel.planes.ventajas as string[]).map((f: string) => (
                       <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: '#444' }}>
