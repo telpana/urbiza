@@ -1177,34 +1177,73 @@ export default function Panel() {
           {/* DESTACAR */}
           {!cargando && seccion === 'destacar' && (
             <div>
-              <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>{Tpanel.destacar.titulo}</h1>
-              <p style={{ fontSize: 14, color: '#888', marginBottom: 16 }}>{Tpanel.destacar.desc}</p>
-
-              {/* Anuncio seleccionado */}
-              {anuncioADestacar ? (
-                <div style={{ background: '#e0f5f7', border: '1.5px solid #c5e8ea', borderRadius: 8, padding: '14px 18px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{ width: 48, height: 36, borderRadius: 6, background: '#006D77', opacity: 0.3, flexShrink: 0 }} />
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#111' }}>{anuncioADestacar.titulo}</div>
-                    <div style={{ fontSize: 13, color: '#888' }}>US$ {anuncioADestacar.precio?.toLocaleString('en-US')} · {anuncioADestacar.zona}</div>
+              {/* Hero */}
+              <div style={{ background: 'linear-gradient(135deg, #006D77 0%, #17A6B4 100%)', borderRadius: 12, padding: '28px 32px', marginBottom: 28, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>Destacar anuncio</h1>
                   </div>
+                  <p style={{ fontSize: 13, opacity: 0.85, margin: 0 }}>Aparece primero en las búsquedas y consigue hasta 10x más visitas</p>
                 </div>
-              ) : (
-                <div style={{ background: '#fff8e1', border: '1px solid #f59e0b', borderRadius: 6, padding: '10px 16px', fontSize: 13, color: '#92400e', marginBottom: 20 }}>
-                  Ve a Mis anuncios y pulsa <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1.5" style={{ display: 'inline', verticalAlign: 'middle', marginBottom: 1 }}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Destacar en el anuncio que quieres destacar
+                <div style={{ display: 'flex', gap: 12, flexShrink: 0 }}>
+                  {[{ n: '10x', label: 'más visitas' }, { n: '#1', label: 'posición' }, { n: '30d', label: 'máx. duración' }].map(s => (
+                    <div key={s.n} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.15)', borderRadius: 8, padding: '10px 16px' }}>
+                      <div style={{ fontSize: 18, fontWeight: 700 }}>{s.n}</div>
+                      <div style={{ fontSize: 11, opacity: 0.8 }}>{s.label}</div>
+                    </div>
+                  ))}
                 </div>
-              )}
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 24 }}>
-                {planesDestacado.map(p => (
-                  <div key={p.dias} onClick={() => setPlanSeleccionado(String(p.dias))} style={{ background: '#fff', borderRadius: 8, padding: '24px 20px', textAlign: 'center', cursor: 'pointer', border: `2px solid ${planSeleccionado === String(p.dias) ? '#006D77' : '#e0e0e0'}`, position: 'relative', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
-                    {p.popular && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 12px', borderRadius: 10 }}>{Tpanel.destacar.popular}</div>}
-                    <div style={{ fontSize: 32, fontWeight: 700, color: '#111', marginBottom: 4 }}>US$ {p.precio}</div>
-                    <div style={{ fontSize: 14, color: '#888', marginBottom: 16 }}>{p.label}</div>
-                    <div style={{ fontSize: 12, color: '#006D77' }}>✓ Posición prioritaria<br/>✓ Badge Destacado<br/>✓ Más visibilidad</div>
-                  </div>
-                ))}
               </div>
+
+              {/* Paso 1: seleccionar anuncio */}
+              <div style={{ marginBottom: 28 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#006D77', letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 12 }}>1 · Selecciona tu anuncio</div>
+                {anunciosReales.length === 0 ? (
+                  <div style={{ background: '#f4f5f6', borderRadius: 8, padding: '20px', fontSize: 13, color: '#888', textAlign: 'center' }}>
+                    Aún no tienes anuncios publicados. <a href="#" onClick={e => { e.preventDefault(); setSeccion('publicar') }} style={{ color: '#006D77', fontWeight: 600 }}>Publica uno gratis →</a>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                    {anunciosReales.map((a: any) => {
+                      const sel = anuncioADestacar?.id === a.id
+                      return (
+                        <div key={a.id} onClick={() => setAnuncioADestacar(a)} style={{ display: 'flex', alignItems: 'center', gap: 14, background: '#fff', border: `2px solid ${sel ? '#006D77' : '#e8e8e8'}`, borderRadius: 10, padding: '12px 16px', cursor: 'pointer', transition: 'border-color 0.15s', boxShadow: sel ? '0 0 0 3px rgba(0,109,119,0.08)' : 'none' }}>
+                          {a.fotos?.[0]
+                            ? <img src={a.fotos[0]} alt="" style={{ width: 60, height: 44, objectFit: 'cover', borderRadius: 6, flexShrink: 0 }} />
+                            : <div style={{ width: 60, height: 44, background: '#e0f5f7', borderRadius: 6, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+                          }
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div style={{ fontSize: 13, fontWeight: 600, color: '#111', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.titulo}</div>
+                            <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>US$ {a.precio?.toLocaleString('en-US')} · {a.zona}</div>
+                          </div>
+                          {a.destacado && <span style={{ fontSize: 10, fontWeight: 700, background: '#FFF3CD', color: '#92400e', padding: '2px 8px', borderRadius: 10, flexShrink: 0 }}>YA DESTACADO</span>}
+                          <div style={{ width: 18, height: 18, borderRadius: '50%', border: `2px solid ${sel ? '#006D77' : '#ccc'}`, background: sel ? '#006D77' : '#fff', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            {sel && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* Paso 2: elegir plan */}
+              <div style={{ marginBottom: 24 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#006D77', letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 12 }}>2 · Elige la duración</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+                  {planesDestacado.map(p => (
+                    <div key={p.dias} onClick={() => setPlanSeleccionado(String(p.dias))} style={{ background: '#fff', borderRadius: 10, padding: '22px 16px', textAlign: 'center', cursor: 'pointer', border: `2px solid ${planSeleccionado === String(p.dias) ? '#006D77' : '#e0e0e0'}`, position: 'relative', boxShadow: planSeleccionado === String(p.dias) ? '0 0 0 3px rgba(0,109,119,0.08)' : '0 1px 4px rgba(0,0,0,0.05)', transition: 'border-color 0.15s' }}>
+                      {p.popular && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 12px', borderRadius: 10, whiteSpace: 'nowrap' }}>MÁS POPULAR</div>}
+                      <div style={{ fontSize: 28, fontWeight: 800, color: '#111', marginBottom: 2 }}>US$ {p.precio}</div>
+                      <div style={{ fontSize: 13, color: '#888', marginBottom: 14 }}>{p.label}</div>
+                      <div style={{ fontSize: 11, color: '#006D77', lineHeight: 1.8 }}>✓ Posición prioritaria<br/>✓ Badge Destacado<br/>✓ Más visibilidad</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* CTA */}
               <button onClick={async () => {
                 if (!planSeleccionado || !anuncioADestacar) return
                 const { data: { user } } = await supabase.auth.getUser()
@@ -1215,7 +1254,8 @@ export default function Panel() {
                 })
                 const data = await res.json()
                 if (data.url) window.location.href = data.url
-              }} style={{ all: 'unset', background: planSeleccionado && anuncioADestacar ? '#006D77' : '#e0e0e0', color: '#fff', padding: '13px 32px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: planSeleccionado && anuncioADestacar ? 'pointer' : 'default' }}>
+              }} style={{ all: 'unset', background: planSeleccionado && anuncioADestacar ? '#006D77' : '#d1d5db', color: '#fff', padding: '14px 36px', borderRadius: 8, fontSize: 15, fontWeight: 700, cursor: planSeleccionado && anuncioADestacar ? 'pointer' : 'default', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 {Tpanel.destacar.pagar}
               </button>
             </div>
