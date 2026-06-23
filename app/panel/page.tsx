@@ -1178,16 +1178,16 @@ export default function Panel() {
           {!cargando && seccion === 'destacar' && (
             <div>
               {/* Hero */}
-              <div style={{ background: 'linear-gradient(135deg, #006D77 0%, #17A6B4 100%)', borderRadius: 12, padding: '28px 32px', marginBottom: 28, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              <div style={{ background: 'linear-gradient(135deg, #006D77 0%, #17A6B4 100%)', borderRadius: 12, padding: '24px 28px', marginBottom: 28, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <div>
                     <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>Destacar anuncio</h1>
+                    <p style={{ fontSize: 13, opacity: 0.85, margin: '4px 0 0' }}>Aparece primero en las búsquedas y consigue hasta 10x más visitas</p>
                   </div>
-                  <p style={{ fontSize: 13, opacity: 0.85, margin: 0 }}>Aparece primero en las búsquedas y consigue hasta 10x más visitas</p>
                 </div>
-                <div style={{ display: 'flex', gap: 12, flexShrink: 0 }}>
-                  {[{ n: '10x', label: 'más visitas' }, { n: '#1', label: 'posición' }, { n: '30d', label: 'máx. duración' }].map(s => (
+                <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
+                  {[{ n: '10x', label: 'más visitas' }, { n: 'TOP', label: 'posición' }].map(s => (
                     <div key={s.n} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.15)', borderRadius: 8, padding: '10px 16px' }}>
                       <div style={{ fontSize: 18, fontWeight: 700 }}>{s.n}</div>
                       <div style={{ fontSize: 11, opacity: 0.8 }}>{s.label}</div>
@@ -1196,9 +1196,24 @@ export default function Panel() {
                 </div>
               </div>
 
-              {/* Paso 1: seleccionar anuncio */}
+              {/* Paso 1: elegir plan */}
               <div style={{ marginBottom: 28 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#006D77', letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 12 }}>1 · Selecciona tu anuncio</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#006D77', letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 12 }}>1 · Elige la duración</div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
+                  {planesDestacado.map(p => (
+                    <div key={p.dias} onClick={() => setPlanSeleccionado(String(p.dias))} style={{ background: '#fff', borderRadius: 10, padding: '22px 16px', textAlign: 'center', cursor: 'pointer', border: `2px solid ${planSeleccionado === String(p.dias) ? '#006D77' : '#e0e0e0'}`, position: 'relative', boxShadow: planSeleccionado === String(p.dias) ? '0 0 0 3px rgba(0,109,119,0.08)' : '0 1px 4px rgba(0,0,0,0.05)', transition: 'border-color 0.15s' }}>
+                      {p.popular && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 12px', borderRadius: 10, whiteSpace: 'nowrap' }}>MÁS POPULAR</div>}
+                      <div style={{ fontSize: 28, fontWeight: 800, color: '#111', marginBottom: 2 }}>US$ {p.precio}</div>
+                      <div style={{ fontSize: 13, color: '#888', marginBottom: 14 }}>{p.label}</div>
+                      <div style={{ fontSize: 11, color: '#006D77', lineHeight: 1.8 }}>✓ Posición prioritaria<br/>✓ Badge Destacado<br/>✓ Más visibilidad</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Paso 2: seleccionar anuncio */}
+              <div style={{ marginBottom: 28 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#006D77', letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 12 }}>2 · Selecciona tu anuncio</div>
                 {anunciosReales.length === 0 ? (
                   <div style={{ background: '#f4f5f6', borderRadius: 8, padding: '20px', fontSize: 13, color: '#888', textAlign: 'center' }}>
                     Aún no tienes anuncios publicados. <a href="#" onClick={e => { e.preventDefault(); setSeccion('publicar') }} style={{ color: '#006D77', fontWeight: 600 }}>Publica uno gratis →</a>
@@ -1226,21 +1241,6 @@ export default function Panel() {
                     })}
                   </div>
                 )}
-              </div>
-
-              {/* Paso 2: elegir plan */}
-              <div style={{ marginBottom: 24 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#006D77', letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 12 }}>2 · Elige la duración</div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
-                  {planesDestacado.map(p => (
-                    <div key={p.dias} onClick={() => setPlanSeleccionado(String(p.dias))} style={{ background: '#fff', borderRadius: 10, padding: '22px 16px', textAlign: 'center', cursor: 'pointer', border: `2px solid ${planSeleccionado === String(p.dias) ? '#006D77' : '#e0e0e0'}`, position: 'relative', boxShadow: planSeleccionado === String(p.dias) ? '0 0 0 3px rgba(0,109,119,0.08)' : '0 1px 4px rgba(0,0,0,0.05)', transition: 'border-color 0.15s' }}>
-                      {p.popular && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 12px', borderRadius: 10, whiteSpace: 'nowrap' }}>MÁS POPULAR</div>}
-                      <div style={{ fontSize: 28, fontWeight: 800, color: '#111', marginBottom: 2 }}>US$ {p.precio}</div>
-                      <div style={{ fontSize: 13, color: '#888', marginBottom: 14 }}>{p.label}</div>
-                      <div style={{ fontSize: 11, color: '#006D77', lineHeight: 1.8 }}>✓ Posición prioritaria<br/>✓ Badge Destacado<br/>✓ Más visibilidad</div>
-                    </div>
-                  ))}
-                </div>
               </div>
 
               {/* CTA */}
