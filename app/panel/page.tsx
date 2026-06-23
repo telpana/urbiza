@@ -622,7 +622,7 @@ export default function Panel() {
           <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.35)', padding: '5px 14px', borderRadius: 6, textDecoration: 'none', fontWeight: 500 }}
             onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.7)'}
             onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.35)'}>
-            ← {Tn.verWeb}
+            {Tn.verWeb}
           </a>
         </div>
       </nav>
