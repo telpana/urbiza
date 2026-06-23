@@ -10,6 +10,6 @@ export async function POST(req: Request) {
   const { ids } = await req.json()
   if (!ids || ids.length === 0) return NextResponse.json({ data: [] })
 
-  const { data } = await sb.from('usuarios').select('id, foto_url, nombre').in('id', ids)
+  const { data } = await sb.from('usuarios').select('id, foto_url, nombre, tipo, plan, numero_aei, aei_aprobado').in('id', ids)
   return NextResponse.json({ data: data ?? [] })
 }

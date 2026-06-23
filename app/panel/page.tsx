@@ -338,14 +338,15 @@ export default function Panel() {
       const idsRemitentes = (msgs || []).filter((m: any) => m.remitente_id).map((m: any) => m.remitente_id)
       const idsVendedores = (enviados || []).filter((m: any) => m.vendedor_id).map((m: any) => m.vendedor_id)
       const todosIds = [...new Set([...idsRemitentes, ...idsVendedores])]
-      let userMap: Record<string, { foto_url: string | null, nombre: string | null }> = {}
+      let userMap: Record<string, { foto_url: string | null, nombre: string | null, tipo: string | null, plan: string | null, numero_aei: string | null, aei_aprobado: boolean | null }> = {}
       if (todosIds.length > 0) {
         const resFotos = await fetch('/api/user-fotos', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ids: todosIds }) })
         const { data: ufotos } = await resFotos.json()
-        if (ufotos) ufotos.forEach((u: any) => { userMap[u.id] = { foto_url: u.foto_url || null, nombre: u.nombre || null } })
+        if (ufotos) ufotos.forEach((u: any) => { userMap[u.id] = { foto_url: u.foto_url || null, nombre: u.nombre || null, tipo: u.tipo || null, plan: u.plan || null, numero_aei: u.numero_aei || null, aei_aprobado: u.aei_aprobado ?? null } })
       }
-      if (msgs) setMensajesReales(msgs.map((m: any) => ({ ...m, _foto: userMap[m.remitente_id]?.foto_url || null, _nombre: userMap[m.remitente_id]?.nombre || null })))
-      if (enviados) setMensajesEnviados(enviados.map((m: any) => ({ ...m, _foto: userMap[m.vendedor_id]?.foto_url || null, _nombre: userMap[m.vendedor_id]?.nombre || null })))
+      const enrich = (m: any, uid: string) => ({ ...m, _foto: userMap[uid]?.foto_url || null, _nombre: userMap[uid]?.nombre || null, _plan: userMap[uid]?.plan || null, _tipo: userMap[uid]?.tipo || null, _numero_aei: userMap[uid]?.numero_aei || null, _aei_aprobado: userMap[uid]?.aei_aprobado ?? null })
+      if (msgs) setMensajesReales(msgs.map((m: any) => enrich(m, m.remitente_id)))
+      if (enviados) setMensajesEnviados(enviados.map((m: any) => enrich(m, m.vendedor_id)))
       // Restaurar mensajes leídos desde localStorage
       try {
         const stored = localStorage.getItem(`urbiza_leidos_${user.id}`)
@@ -1053,7 +1054,22 @@ export default function Panel() {
                             {m._foto ? <img src={m._foto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : getAvatar(contactoNombre)}
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>{contactoNombre}</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 2 }}>
+                              <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>{contactoNombre}</span>
+                              {(() => {
+                                const esPro = m._plan === 'profesional' || m._tipo === 'profesional'
+                                return (
+                                  <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, background: esPro ? '#17A6B4' : 'rgba(0,109,119,0.12)', color: esPro ? '#fff' : '#006D77' }}>
+                                    {esPro ? 'PROFESIONAL' : 'PARTICULAR'}
+                                  </span>
+                                )
+                              })()}
+                              {m._numero_aei && (
+                                <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, background: m._aei_aprobado ? '#006D77' : '#f59e0b', color: '#fff' }}>
+                                  {m._aei_aprobado ? 'AEI' : 'AEI ⏳'}
+                                </span>
+                              )}
+                            </div>
                             {contactoTel && <a href={`tel:${contactoTel}`} style={{ fontSize: 12, color: '#006D77', textDecoration: 'none' }}>📞 {contactoTel}</a>}
                           </div>
                           <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
