@@ -128,8 +128,8 @@ export const t = {
         suscribirse: 'Suscribirse a PRO', cargando: 'Cargando datos...',
         anunciosUsados: 'Has usado {n} de {max} anuncios gratuitos',
         cancelar: 'Cancelar suscripción', cancelarBtn: 'Dar de baja mi plan',
-        cancelarConfirm: '¿Seguro que quieres cancelar tu plan? Seguirás teniendo acceso hasta el final del período pagado.',
-        cancelarOk: 'Plan cancelado. Seguirás activo hasta el final del período.',
+        cancelarConfirm: '⚠️ ATENCIÓN: Si confirmas, se eliminarán TODOS tus anuncios, mensajes e interacciones de forma inmediata e irreversible. Tu cuenta pasará a ser particular sin posibilidad de publicar. ¿Estás seguro?',
+        cancelarOk: 'Cuenta dada de baja. Todos tus anuncios han sido eliminados.',
         cancelarErr: 'Error al cancelar. Escríbenos a soporte@propiteca.com',
       },
       perfil: {
@@ -273,8 +273,8 @@ export const t = {
         suscribirse: 'Subscribe to PRO', cargando: 'Loading data...',
         anunciosUsados: "You've used {n} of {max} free listings",
         cancelar: 'Cancel subscription', cancelarBtn: 'Cancel my plan',
-        cancelarConfirm: 'Are you sure you want to cancel your plan? You will keep access until the end of the paid period.',
-        cancelarOk: 'Plan cancelled. You will remain active until the end of the period.',
+        cancelarConfirm: '⚠️ WARNING: Confirming will permanently delete ALL your listings, messages and interactions immediately. Your account will become a basic account with no publishing access. Are you sure?',
+        cancelarOk: 'Account cancelled. All your listings have been deleted.',
         cancelarErr: 'Error cancelling. Email us at soporte@propiteca.com',
       },
       perfil: {
@@ -418,8 +418,8 @@ export const t = {
         suscribirse: "S'abonner au PRO", cargando: 'Chargement des données...',
         anunciosUsados: 'Vous avez utilisé {n} de vos {max} annonces gratuites',
         cancelar: "Résilier l'abonnement", cancelarBtn: 'Résilier mon abonnement',
-        cancelarConfirm: 'Êtes-vous sûr de vouloir résilier votre abonnement ? Vous conserverez l\'accès jusqu\'à la fin de la période payée.',
-        cancelarOk: 'Abonnement résilié. Vous restez actif jusqu\'à la fin de la période.',
+        cancelarConfirm: '⚠️ ATTENTION : En confirmant, toutes vos annonces, messages et interactions seront supprimés immédiatement et de façon irréversible. Votre compte deviendra un compte particulier sans possibilité de publier. Êtes-vous sûr ?',
+        cancelarOk: 'Compte résilié. Toutes vos annonces ont été supprimées.',
         cancelarErr: 'Erreur lors de la résiliation. Écrivez-nous à soporte@propiteca.com',
       },
       perfil: {

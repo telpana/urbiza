@@ -1474,8 +1474,8 @@ export default function Panel() {
                   {/* Dar de baja */}
                   <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderTop: '2px solid #fee2e2' }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: '#555', marginBottom: 2 }}>{Tpanel.plan.cancelar}</div>
-                    <div style={{ fontSize: 12, color: '#aaa', marginBottom: 12 }}>Perderás el acceso a todos los beneficios del plan profesional.</div>
-                    <button onClick={async () => { const { data: { user } } = await supabase.auth.getUser(); if (!user) return; if (!confirm(Tpanel.plan.cancelarConfirm)) return; const res = await fetch('/api/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id }) }); const data = await res.json(); if (data.ok) alert(Tpanel.plan.cancelarOk); else alert(Tpanel.plan.cancelarErr) }} style={{ all: 'unset', border: '1px solid #fca5a5', color: '#dc2626', padding: '7px 16px', borderRadius: 6, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>
+                    <div style={{ fontSize: 12, color: '#aaa', marginBottom: 12 }}>Se eliminarán todos tus anuncios, mensajes e interacciones de forma inmediata e irreversible.</div>
+                    <button onClick={async () => { const { data: { user } } = await supabase.auth.getUser(); if (!user) return; if (!confirm(Tpanel.plan.cancelarConfirm)) return; const res = await fetch('/api/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id }) }); const data = await res.json(); if (data.ok) { alert(Tpanel.plan.cancelarOk); window.location.href = '/panel' } else alert(Tpanel.plan.cancelarErr) }} style={{ all: 'unset', border: '1px solid #fca5a5', color: '#dc2626', padding: '7px 16px', borderRadius: 6, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>
                       {Tpanel.plan.cancelarBtn}
                     </button>
                   </div>
