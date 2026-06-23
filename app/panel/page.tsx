@@ -1064,7 +1064,10 @@ export default function Panel() {
                             <svg width="10" height="13" viewBox="0 0 9 11" fill="none" style={{ flexShrink: 0 }}><path d="M4.5 0C2.015 0 0 2.015 0 4.5c0 3.375 4.5 6.5 4.5 6.5S9 7.875 9 4.5C9 2.015 6.985 0 4.5 0zm0 6.125A1.625 1.625 0 1 1 4.5 2.875a1.625 1.625 0 0 1 0 3.25z" fill="#006D77"/></svg>
                             {m.propiedades?.titulo}
                           </div>
-                          <a href={`/propiedad/${m.propiedad_id}`} style={{ fontSize: 11, color: '#006D77', textDecoration: 'none', fontWeight: 500, flexShrink: 0 }}>{Tpanel.mensajes.verAnuncio} →</a>
+                          <a href={`/propiedad/${m.propiedad_id}`} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#006D77', textDecoration: 'none', fontWeight: 600, flexShrink: 0, background: '#e8f5f6', padding: '4px 10px', borderRadius: 20, border: '1px solid #c0e4e7' }}>
+                            Ver anuncio
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                          </a>
                         </div>
                       </div>
                       {/* Mensajes del hilo */}
@@ -1090,7 +1093,7 @@ export default function Panel() {
                           <textarea value={respuesta} onChange={e => setRespuesta(e.target.value)}
                             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviarRespuesta(m, respuesta) } }}
                             placeholder="Escribe un mensaje..." rows={2}
-                            style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 8, padding: '9px 12px', fontSize: 13, outline: 'none', resize: 'none', fontFamily: 'sans-serif', boxSizing: 'border-box' }}
+                            style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 8, padding: '9px 12px', fontSize: 13, outline: 'none', resize: 'none', fontFamily: 'sans-serif', boxSizing: 'border-box', color: '#111' }}
                             onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                           <button type="button" onClick={() => enviarRespuesta(m, respuesta)}
                             style={{ background: respuesta.trim() ? '#006D77' : '#ccc', color: '#fff', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: 'none', whiteSpace: 'nowrap' }}>
