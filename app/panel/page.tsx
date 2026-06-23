@@ -1536,7 +1536,7 @@ export default function Panel() {
                   <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>La AEI es la asociación oficial de agentes inmobiliarios de RD. Con tu certificación aparecerá el badge AEI verificado en todos tus anuncios de Urbiza.</div>
                 </div>
                 <a href="https://aei.com.do" target="_blank" rel="noopener noreferrer" style={{ all: 'unset', background: '#fff', color: '#1a3a5c', padding: '12px 24px', borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                  Visitar AEI →
+                  Visitar AEI
                 </a>
               </div>
 
@@ -1546,7 +1546,7 @@ export default function Panel() {
                   Al completar cualquier curso recibirás tu certificación y el badge AEI verificado aparecerá en todos tus anuncios de Urbiza.
                 </div>
                 <a href="https://aei.com.do" target="_blank" rel="noopener noreferrer" style={{ all: 'unset', background: '#1a3a5c', color: '#fff', padding: '13px 32px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'inline-block' }}>
-                  Ver todos los cursos en AEI →
+                  Ver todos los cursos en AEI
                 </a>
                 <div style={{ fontSize: 12, color: '#aaa', marginTop: 14 }}>
                   Serás redirigido a la web oficial de la Asociación de Agentes y Empresas Inmobiliarias de República Dominicana.
