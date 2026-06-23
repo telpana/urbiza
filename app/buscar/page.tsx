@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../supabase'
@@ -486,7 +486,7 @@ function BuscarContent() {
       <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', marginRight: 28 }}>
-            urbiza<span style={{ color: '#83D4DB' }}>.</span>
+            propiteca<span style={{ color: '#83D4DB' }}>.</span>
           </a>
           {[
             { label: Tn.comprar, href: '/buscar?operacion=venta', op: 'venta' },
@@ -537,7 +537,7 @@ function BuscarContent() {
 
       {/* BREADCRUMB */}
       <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '8px 20px', fontSize: 12, color: '#aaa', display: 'flex', alignItems: 'center', gap: 6 }}>
-        <a href="/" style={{ color: '#006D77', textDecoration: 'none' }}>Urbiza</a>
+        <a href="/" style={{ color: '#006D77', textDecoration: 'none' }}>Propiteca</a>
         <span>›</span>
         <a href="/buscar" style={{ color: '#006D77', textDecoration: 'none' }}>República Dominicana</a>
         {query && <><span>›</span><span style={{ color: '#444' }}>{query.split(',')[0].trim()}</span></>}
@@ -784,7 +784,7 @@ export default function Buscar() {
     <Suspense fallback={
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', fontFamily: 'sans-serif', background: '#f4f5f6' }}>
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 24, fontWeight: 700, color: '#006D77', marginBottom: 8 }}>urbiza<span style={{ color: '#17A6B4' }}>.</span></div>
+          <div style={{ fontSize: 24, fontWeight: 700, color: '#006D77', marginBottom: 8 }}>propiteca<span style={{ color: '#17A6B4' }}>.</span></div>
           <div style={{ fontSize: 14, color: '#888' }}>Cargando...</div>
         </div>
       </div>

@@ -1,9 +1,9 @@
-import { NextResponse } from 'next/server'
+﻿import { NextResponse } from 'next/server'
 import { createHash } from 'crypto'
 
 export function makeAdminToken() {
   return createHash('sha256')
-    .update(process.env.ADMIN_PASSWORD! + 'urbiza-admin-salt')
+    .update(process.env.ADMIN_PASSWORD! + 'propiteca-admin-salt')
     .digest('hex')
 }
 

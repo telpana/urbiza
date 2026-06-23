@@ -1,4 +1,4 @@
-export const idiomas = ['es', 'en', 'fr'] as const
+﻿export const idiomas = ['es', 'en', 'fr'] as const
 export type Idioma = typeof idiomas[number]
 
 export const t = {
@@ -14,7 +14,7 @@ export const t = {
     destacadas: { titulo: 'Propiedades destacadas', subtitulo: 'Las mejores oportunidades del mercado dominicano', verTodas: 'Ver todas las propiedades →', destacado: 'Destacado', masVisto: 'Más visto', ver: 'Ver propiedad' },
     novedades: { santoDomingo: 'Novedades en Santo Domingo', puntaCana: 'Novedades en Punta Cana', santiago: 'Novedades en Santiago', verTodas: 'Ver todas las propiedades en venta →', nuevo: 'NUEVO' },
     zonas: { titulo: 'Dónde están buscando todos en República Dominicana ahora mismo' },
-    footer: { avisoLegal: 'Aviso legal', privacidad: 'Privacidad', cookies: 'Cookies', ayuda: 'Ayuda', publicar: 'Publicar anuncio', planes: 'Planes', derechos: '© 2025 urbiza.com · República Dominicana' },
+    footer: { avisoLegal: 'Aviso legal', privacidad: 'Privacidad', cookies: 'Cookies', ayuda: 'Ayuda', publicar: 'Publicar anuncio', planes: 'Planes', derechos: '© 2025 propiteca.com · República Dominicana' },
     buscar: {
       titulo: 'propiedades en República Dominicana', ordenar: 'Ordenar por:', relevancia: 'Relevancia', recientes: 'Recientes', baratos: 'Más baratos', caros: 'Más caros',
       tipoInmueble: 'Tipo de inmueble', todos: 'Todos', precio: 'Precio (US$)', superficie: 'Superficie (m²)', habitaciones: 'Habitaciones', banos: 'Baños',
@@ -33,7 +33,7 @@ export const t = {
       err_emailVacio: 'Introduce tu email para recuperar la contraseña', err_envio: 'Error al enviar el email. Verifica que el email es correcto.',
     },
     registro: {
-      titulo1: 'Crea tu cuenta gratis', titulo2: '¿Cómo vas a usar Urbiza?', titulo3: 'Tus datos', titulo4: '¡Bienvenido a Urbiza!',
+      titulo1: 'Crea tu cuenta gratis', titulo2: '¿Cómo vas a usar Propiteca?', titulo3: 'Tus datos', titulo4: '¡Bienvenido a Propiteca!',
       subtitulo1: 'Elige cómo quieres crear tu cuenta', subtitulo2: 'Elige el tipo de cuenta que mejor se adapta a ti',
       subtitulo3: 'Rellena tu información',
       back: '← Atrás', continuar: 'Continuar', registrarse: 'Registrarse con email', oEmail: 'o con email',
@@ -44,7 +44,7 @@ export const t = {
       cedula: 'Cédula / RNC', aei: 'Número AEI', aeiOpcional: '(opcional)', aeiDesc: 'Si tienes número AEI lo verificamos en 24-48h y aparece el badge en tus anuncios',
       placeholder_nombre: 'Tu nombre y apellidos', placeholder_pass: 'Mínimo 6 caracteres',
       crearCuenta: 'Crear cuenta', creando: 'Creando cuenta...',
-      bienvenido: '¡Bienvenido a Urbiza!', verificacion: 'Hemos enviado un email de verificación a',
+      bienvenido: '¡Bienvenido a Propiteca!', verificacion: 'Hemos enviado un email de verificación a',
       verificaEmail: 'Verifica tu email y luego entra a tu panel',
       aeiVerificacion: 'Tu número AEI será verificado en las próximas 24-48h',
       irPanel: 'Ir a mi panel →', explorar: 'Explorar propiedades',
@@ -81,7 +81,7 @@ export const t = {
         visitas: 'visitas', guardados: 'guardados',
         kpi_visitas: 'Visitas al anuncio', kpi_tel: 'Tel. visualizados',
         kpi_visitas_sub: 'personas que lo abrieron', kpi_tel_sub: 'veces que vieron tu teléfono', kpi_guardados_sub: 'personas que lo guardaron',
-        sinAnunciosDesc: 'Miles de compradores buscan propiedades en Urbiza cada día. Publica gratis y empieza a recibir contactos hoy mismo.',
+        sinAnunciosDesc: 'Miles de compradores buscan propiedades en Propiteca cada día. Publica gratis y empieza a recibir contactos hoy mismo.',
         publicarPrimero: '+ Publicar mi primer anuncio',
         avisoTel: 'Añade tu teléfono en el perfil para que los compradores puedan contactarte cuando publiques un anuncio.',
         irPerfil: 'Ir al perfil',
@@ -130,7 +130,7 @@ export const t = {
         cancelar: 'Cancelar suscripción', cancelarBtn: 'Dar de baja mi plan',
         cancelarConfirm: '¿Seguro que quieres cancelar tu plan? Seguirás teniendo acceso hasta el final del período pagado.',
         cancelarOk: 'Plan cancelado. Seguirás activo hasta el final del período.',
-        cancelarErr: 'Error al cancelar. Escríbenos a soporte@urbiza.com',
+        cancelarErr: 'Error al cancelar. Escríbenos a soporte@propiteca.com',
       },
       perfil: {
         titulo: 'Mi perfil', nombre: 'Nombre completo', email: 'Email', telefono: 'Teléfono *',
@@ -159,7 +159,7 @@ export const t = {
     destacadas: { titulo: 'Featured properties', subtitulo: 'The best opportunities in the Dominican market', verTodas: 'View all properties →', destacado: 'Featured', masVisto: 'Most viewed', ver: 'View property' },
     novedades: { santoDomingo: 'New listings in Santo Domingo', puntaCana: 'New listings in Punta Cana', santiago: 'New listings in Santiago', verTodas: 'View all properties for sale →', nuevo: 'NEW' },
     zonas: { titulo: 'Where everyone is searching in the Dominican Republic right now' },
-    footer: { avisoLegal: 'Legal notice', privacidad: 'Privacy', cookies: 'Cookies', ayuda: 'Help', publicar: 'Post a listing', planes: 'Plans', derechos: '© 2025 urbiza.com · Dominican Republic' },
+    footer: { avisoLegal: 'Legal notice', privacidad: 'Privacy', cookies: 'Cookies', ayuda: 'Help', publicar: 'Post a listing', planes: 'Plans', derechos: '© 2025 propiteca.com · Dominican Republic' },
     buscar: {
       titulo: 'properties in the Dominican Republic', ordenar: 'Sort by:', relevancia: 'Relevance', recientes: 'Recent', baratos: 'Cheapest', caros: 'Most expensive',
       tipoInmueble: 'Property type', todos: 'All', precio: 'Price (US$)', superficie: 'Area (m²)', habitaciones: 'Bedrooms', banos: 'Bathrooms',
@@ -178,7 +178,7 @@ export const t = {
       err_emailVacio: 'Enter your email to recover your password', err_envio: 'Error sending email. Please check the email address.',
     },
     registro: {
-      titulo1: 'Create your free account', titulo2: 'How will you use Urbiza?', titulo3: 'Your details', titulo4: 'Welcome to Urbiza!',
+      titulo1: 'Create your free account', titulo2: 'How will you use Propiteca?', titulo3: 'Your details', titulo4: 'Welcome to Propiteca!',
       subtitulo1: 'Choose how you want to create your account', subtitulo2: 'Choose the account type that suits you best',
       subtitulo3: 'Fill in your information',
       back: '← Back', continuar: 'Continue', registrarse: 'Sign up with email', oEmail: 'or with email',
@@ -189,7 +189,7 @@ export const t = {
       cedula: 'ID / Tax number', aei: 'AEI number', aeiOpcional: '(optional)', aeiDesc: 'If you have an AEI number we verify it in 24-48h and the badge appears on your listings',
       placeholder_nombre: 'Your full name', placeholder_pass: 'Minimum 6 characters',
       crearCuenta: 'Create account', creando: 'Creating account...',
-      bienvenido: 'Welcome to Urbiza!', verificacion: 'We have sent a verification email to',
+      bienvenido: 'Welcome to Propiteca!', verificacion: 'We have sent a verification email to',
       verificaEmail: 'Verify your email and then access your dashboard',
       aeiVerificacion: 'Your AEI number will be verified within the next 24-48h',
       irPanel: 'Go to my dashboard →', explorar: 'Explore properties',
@@ -226,7 +226,7 @@ export const t = {
         visitas: 'views', guardados: 'saved',
         kpi_visitas: 'Listing views', kpi_tel: 'Phone reveals',
         kpi_visitas_sub: 'people who opened it', kpi_tel_sub: 'times your phone was seen', kpi_guardados_sub: 'people who saved it',
-        sinAnunciosDesc: 'Thousands of buyers search for properties on Urbiza every day. Post for free and start receiving inquiries today.',
+        sinAnunciosDesc: 'Thousands of buyers search for properties on Propiteca every day. Post for free and start receiving inquiries today.',
         publicarPrimero: '+ Post my first listing',
         avisoTel: 'Add your phone number in your profile so buyers can contact you when you publish a listing.',
         irPerfil: 'Go to profile',
@@ -275,7 +275,7 @@ export const t = {
         cancelar: 'Cancel subscription', cancelarBtn: 'Cancel my plan',
         cancelarConfirm: 'Are you sure you want to cancel your plan? You will keep access until the end of the paid period.',
         cancelarOk: 'Plan cancelled. You will remain active until the end of the period.',
-        cancelarErr: 'Error cancelling. Email us at soporte@urbiza.com',
+        cancelarErr: 'Error cancelling. Email us at soporte@propiteca.com',
       },
       perfil: {
         titulo: 'My profile', nombre: 'Full name', email: 'Email', telefono: 'Phone *',
@@ -304,7 +304,7 @@ export const t = {
     destacadas: { titulo: 'Propriétés en vedette', subtitulo: 'Les meilleures opportunités du marché dominicain', verTodas: 'Voir toutes les propriétés →', destacado: 'En vedette', masVisto: 'Plus consulté', ver: 'Voir la propriété' },
     novedades: { santoDomingo: 'Nouveautés à Saint-Domingue', puntaCana: 'Nouveautés à Punta Cana', santiago: 'Nouveautés à Santiago', verTodas: 'Voir toutes les propriétés à vendre →', nuevo: 'NOUVEAU' },
     zonas: { titulo: 'Où tout le monde recherche en République Dominicaine en ce moment' },
-    footer: { avisoLegal: 'Mentions légales', privacidad: 'Confidentialité', cookies: 'Cookies', ayuda: 'Aide', publicar: 'Publier une annonce', planes: 'Abonnements', derechos: '© 2025 urbiza.com · République Dominicaine' },
+    footer: { avisoLegal: 'Mentions légales', privacidad: 'Confidentialité', cookies: 'Cookies', ayuda: 'Aide', publicar: 'Publier une annonce', planes: 'Abonnements', derechos: '© 2025 propiteca.com · République Dominicaine' },
     buscar: {
       titulo: 'propriétés en République Dominicaine', ordenar: 'Trier par :', relevancia: 'Pertinence', recientes: 'Récents', baratos: 'Moins chers', caros: 'Plus chers',
       tipoInmueble: 'Type de bien', todos: 'Tous', precio: 'Prix (US$)', superficie: 'Surface (m²)', habitaciones: 'Chambres', banos: 'Salles de bain',
@@ -323,7 +323,7 @@ export const t = {
       err_emailVacio: 'Saisissez votre email pour récupérer votre mot de passe', err_envio: "Erreur lors de l'envoi. Vérifiez l'adresse email.",
     },
     registro: {
-      titulo1: 'Créez votre compte gratuit', titulo2: 'Comment allez-vous utiliser Urbiza ?', titulo3: 'Vos informations', titulo4: 'Bienvenue sur Urbiza !',
+      titulo1: 'Créez votre compte gratuit', titulo2: 'Comment allez-vous utiliser Propiteca ?', titulo3: 'Vos informations', titulo4: 'Bienvenue sur Propiteca !',
       subtitulo1: 'Choisissez comment créer votre compte', subtitulo2: 'Choisissez le type de compte qui vous convient',
       subtitulo3: 'Remplissez vos informations',
       back: '← Retour', continuar: 'Continuer', registrarse: "S'inscrire avec email", oEmail: 'ou avec email',
@@ -334,7 +334,7 @@ export const t = {
       cedula: 'Pièce d\'identité / Numéro fiscal', aei: 'Numéro AEI', aeiOpcional: '(optionnel)', aeiDesc: 'Si vous avez un numéro AEI, nous le vérifions en 24-48h et le badge apparaît sur vos annonces',
       placeholder_nombre: 'Votre nom et prénom', placeholder_pass: 'Minimum 6 caractères',
       crearCuenta: 'Créer un compte', creando: 'Création du compte...',
-      bienvenido: 'Bienvenue sur Urbiza !', verificacion: 'Nous avons envoyé un email de vérification à',
+      bienvenido: 'Bienvenue sur Propiteca !', verificacion: 'Nous avons envoyé un email de vérification à',
       verificaEmail: 'Vérifiez votre email puis accédez à votre tableau de bord',
       aeiVerificacion: 'Votre numéro AEI sera vérifié dans les 24-48h',
       irPanel: 'Aller à mon tableau de bord →', explorar: 'Explorer les propriétés',
@@ -371,7 +371,7 @@ export const t = {
         visitas: 'vues', guardados: 'sauvegardés',
         kpi_visitas: "Vues de l'annonce", kpi_tel: 'Tél. révélés',
         kpi_visitas_sub: "personnes qui l'ont ouverte", kpi_tel_sub: 'fois où votre téléphone a été vu', kpi_guardados_sub: 'personnes qui l\'ont sauvegardée',
-        sinAnunciosDesc: "Des milliers d'acheteurs cherchent des biens sur Urbiza chaque jour. Publiez gratuitement et commencez à recevoir des contacts dès aujourd'hui.",
+        sinAnunciosDesc: "Des milliers d'acheteurs cherchent des biens sur Propiteca chaque jour. Publiez gratuitement et commencez à recevoir des contacts dès aujourd'hui.",
         publicarPrimero: '+ Publier ma première annonce',
         avisoTel: "Ajoutez votre numéro de téléphone dans votre profil pour que les acheteurs puissent vous contacter lorsque vous publiez une annonce.",
         irPerfil: 'Aller au profil',
@@ -420,7 +420,7 @@ export const t = {
         cancelar: "Résilier l'abonnement", cancelarBtn: 'Résilier mon abonnement',
         cancelarConfirm: 'Êtes-vous sûr de vouloir résilier votre abonnement ? Vous conserverez l\'accès jusqu\'à la fin de la période payée.',
         cancelarOk: 'Abonnement résilié. Vous restez actif jusqu\'à la fin de la période.',
-        cancelarErr: 'Erreur lors de la résiliation. Écrivez-nous à soporte@urbiza.com',
+        cancelarErr: 'Erreur lors de la résiliation. Écrivez-nous à soporte@propiteca.com',
       },
       perfil: {
         titulo: 'Mon profil', nombre: 'Nom complet', email: 'Email', telefono: 'Téléphone *',

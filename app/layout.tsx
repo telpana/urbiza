@@ -1,9 +1,9 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import "./globals.css";
 import { IdiomaProvider } from "../IdiomaContext";
 
 export const metadata: Metadata = {
-  title: "Urbiza - Portal inmobiliario República Dominicana",
+  title: "Propiteca - Portal inmobiliario República Dominicana",
   description: "Encuentra tu próxima propiedad en República Dominicana. Apartamentos, villas, terrenos y más.",
 };
 

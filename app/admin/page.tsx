@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState, useEffect, useCallback } from 'react'
 
 const C = { verde: '#006D77', azul: '#17A6B4', oscuro: '#004E57', bg: '#f4f5f6' }
@@ -64,10 +64,10 @@ export default function Admin() {
 
   // Verificar token al cargar
   useEffect(() => {
-    const stored = localStorage.getItem('urbiza_admin_token')
+    const stored = localStorage.getItem('propiteca_admin_token')
     if (!stored) { setAuthed(false); return }
     fetch('/api/admin/verify', { method: 'POST', headers: { 'Authorization': `Bearer ${stored}`, 'Content-Type': 'application/json' } })
-      .then(r => { if (r.ok) { setToken(stored); setAuthed(true) } else { localStorage.removeItem('urbiza_admin_token'); setAuthed(false) } })
+      .then(r => { if (r.ok) { setToken(stored); setAuthed(true) } else { localStorage.removeItem('propiteca_admin_token'); setAuthed(false) } })
       .catch(() => setAuthed(false))
   }, [])
 
@@ -84,12 +84,12 @@ export default function Admin() {
     setLoginLoading(true); setLoginError('')
     const r = await fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: loginPass }) })
     const d = await r.json()
-    if (r.ok) { localStorage.setItem('urbiza_admin_token', d.token); setToken(d.token); setAuthed(true) }
+    if (r.ok) { localStorage.setItem('propiteca_admin_token', d.token); setToken(d.token); setAuthed(true) }
     else { setLoginError(d.error || 'Error') }
     setLoginLoading(false)
   }
 
-  const logout = () => { localStorage.removeItem('urbiza_admin_token'); setAuthed(false); setToken('') }
+  const logout = () => { localStorage.removeItem('propiteca_admin_token'); setAuthed(false); setToken('') }
 
   const cargarAei = useCallback(async () => {
     setAeiLoading(true)
@@ -228,7 +228,7 @@ export default function Admin() {
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: C.oscuro }}>
       <div style={{ background: '#fff', borderRadius: 12, padding: '48px 40px', width: 360, boxShadow: '0 8px 40px rgba(0,0,0,0.25)' }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div style={{ fontSize: 28, fontWeight: 700, color: C.verde, letterSpacing: -1.5 }}>urbiza<span style={{ color: C.azul }}>.</span></div>
+          <div style={{ fontSize: 28, fontWeight: 700, color: C.verde, letterSpacing: -1.5 }}>propiteca<span style={{ color: C.azul }}>.</span></div>
           <div style={{ fontSize: 13, color: '#888', marginTop: 4 }}>Panel de administración</div>
         </div>
         <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#555', marginBottom: 8 }}>Contraseña</label>
@@ -295,7 +295,7 @@ export default function Admin() {
       {/* NAV */}
       <nav style={{ background: C.verde, height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <a href="/" style={{ fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>urbiza<span style={{ color: '#83D4DB' }}>.</span></a>
+          <a href="/" style={{ fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>propiteca<span style={{ color: '#83D4DB' }}>.</span></a>
           <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 10px', borderRadius: 10 }}>ADMIN</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -478,7 +478,7 @@ export default function Admin() {
 
           {/* ANUNCIOS */}
           {seccion === 'propiedades' && (
-            <Seccion titulo="Anuncios" desc="Gestiona todos los anuncios publicados en Urbiza">
+            <Seccion titulo="Anuncios" desc="Gestiona todos los anuncios publicados en Propiteca">
               <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
                 <input value={propQ} onChange={e => setPropQ(e.target.value)} onKeyDown={e => e.key === 'Enter' && cargarPropiedades(propQ)} placeholder="Buscar por título..." style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 14px', fontSize: 13, outline: 'none' }} />
                 <button onClick={() => cargarPropiedades(propQ)} style={{ all: 'unset', background: C.verde, color: '#fff', padding: '9px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Buscar</button>
@@ -517,7 +517,7 @@ export default function Admin() {
 
           {/* USUARIOS */}
           {seccion === 'usuarios' && (
-            <Seccion titulo="Usuarios" desc="Todos los usuarios registrados en Urbiza">
+            <Seccion titulo="Usuarios" desc="Todos los usuarios registrados en Propiteca">
               <div style={{ display: 'flex', gap: 10, marginBottom: 20 }}>
                 <input value={usersQ} onChange={e => setUsersQ(e.target.value)} onKeyDown={e => e.key === 'Enter' && cargarUsuarios(usersQ)} placeholder="Buscar por nombre o email..." style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 14px', fontSize: 13, outline: 'none' }} />
                 <button onClick={() => cargarUsuarios(usersQ)} style={{ all: 'unset', background: C.verde, color: '#fff', padding: '9px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Buscar</button>
@@ -659,7 +659,7 @@ export default function Admin() {
 
           {/* BANNER */}
           {seccion === 'banner' && (
-            <Seccion titulo="Banner de inicio" desc="Cambia la imagen de fondo del banner principal de Urbiza">
+            <Seccion titulo="Banner de inicio" desc="Cambia la imagen de fondo del banner principal de Propiteca">
               <Card style={{ padding: '20px 24px', marginBottom: 20 }}>
                 <div style={{ fontSize: 14, fontWeight: 600, color: '#111', marginBottom: 12 }}>Vista previa</div>
                 <div style={{ height: 200, borderRadius: 6, overflow: 'hidden', position: 'relative' }}>
@@ -761,9 +761,9 @@ export default function Admin() {
             <Seccion titulo="Redes sociales" desc="Configura los enlaces a las redes sociales del footer">
               <Card style={{ padding: 24 }}>
                 {[
-                  { label: 'Instagram', emoji: '📸', val: instagramUrl, set: setInstagramUrl, placeholder: 'https://instagram.com/urbiza' },
-                  { label: 'Facebook', emoji: '👥', val: facebookUrl, set: setFacebookUrl, placeholder: 'https://facebook.com/urbiza' },
-                  { label: 'TikTok', emoji: '🎵', val: tiktokUrl, set: setTiktokUrl, placeholder: 'https://tiktok.com/@urbiza' },
+                  { label: 'Instagram', emoji: '📸', val: instagramUrl, set: setInstagramUrl, placeholder: 'https://instagram.com/propiteca' },
+                  { label: 'Facebook', emoji: '👥', val: facebookUrl, set: setFacebookUrl, placeholder: 'https://facebook.com/propiteca' },
+                  { label: 'TikTok', emoji: '🎵', val: tiktokUrl, set: setTiktokUrl, placeholder: 'https://tiktok.com/@propiteca' },
                   { label: 'WhatsApp', emoji: '💬', val: whatsappUrl, set: setWhatsappUrl, placeholder: 'https://wa.me/18095550000' },
                 ].map(r => (
                   <div key={r.label} style={{ marginBottom: 18 }}>

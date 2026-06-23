@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { t, Idioma } from './i18n'
 
@@ -19,7 +19,7 @@ export function IdiomaProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Detectar idioma del navegador automáticamente
-    const guardado = localStorage.getItem('urbiza-idioma') as Idioma
+    const guardado = localStorage.getItem('propiteca-idioma') as Idioma
     if (guardado && ['es', 'en', 'fr'].includes(guardado)) {
       setIdiomaState(guardado)
       return
@@ -32,7 +32,7 @@ export function IdiomaProvider({ children }: { children: ReactNode }) {
 
   const setIdioma = (i: Idioma) => {
     setIdiomaState(i)
-    localStorage.setItem('urbiza-idioma', i)
+    localStorage.setItem('propiteca-idioma', i)
   }
 
   return (

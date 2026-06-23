@@ -349,7 +349,7 @@ export default function Panel() {
       if (enviados) setMensajesEnviados(enviados.map((m: any) => enrich(m, m.vendedor_id)))
       // Restaurar mensajes leídos desde localStorage
       try {
-        const stored = localStorage.getItem(`urbiza_leidos_${user.id}`)
+        const stored = localStorage.getItem(`propiteca_leidos_${user.id}`)
         if (stored) setMensajesLeidos(JSON.parse(stored))
       } catch {}
       const { data: bqs } = await supabase.from('bloqueados').select('bloqueado_id').eq('bloqueador_id', user.id)
@@ -602,7 +602,7 @@ export default function Panel() {
       <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <a href="/" style={{ fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>
-            urbiza<span style={{ color: '#83D4DB' }}>.</span>
+            propiteca<span style={{ color: '#83D4DB' }}>.</span>
           </a>
           <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 10px', borderRadius: 10 }}>MI PANEL</span>
         </div>
@@ -780,9 +780,9 @@ export default function Panel() {
                 <div style={{ background: '#fff', borderRadius: 8, padding: '48px 32px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center' }}>
                   {verificandoPago ? (
                     <>
-                      <style>{`@keyframes urbiza-spin { to { transform: rotate(360deg); } }`}</style>
+                      <style>{`@keyframes propiteca-spin { to { transform: rotate(360deg); } }`}</style>
                       <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'center' }}>
-                        <svg style={{ animation: 'urbiza-spin 1s linear infinite' }} width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><circle cx="12" cy="12" r="10" strokeDasharray="32" strokeDashoffset="10"/></svg>
+                        <svg style={{ animation: 'propiteca-spin 1s linear infinite' }} width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><circle cx="12" cy="12" r="10" strokeDasharray="32" strokeDashoffset="10"/></svg>
                       </div>
                       <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 8 }}>{Tpanel.publicar.verificandoPago}</h2>
                       <p style={{ fontSize: 14, color: '#888' }}>{Tpanel.publicar.verificandoSecs}</p>
@@ -1000,7 +1000,7 @@ export default function Panel() {
                               const next = { ...prev, ...updates }
                               try {
                                 const { data: { user: u } } = { data: { user: usuario } }
-                                if (u?.id) localStorage.setItem(`urbiza_leidos_${u.id}`, JSON.stringify(next))
+                                if (u?.id) localStorage.setItem(`propiteca_leidos_${u.id}`, JSON.stringify(next))
                               } catch {}
                               return next
                             })
@@ -1485,13 +1485,13 @@ export default function Panel() {
                       {perfilAei && usuario?.aei_aprobado !== true && (
                         <div style={{ fontSize: 11, color: '#92400e', marginTop: 5, display: 'flex', alignItems: 'center', gap: 4 }}>
                           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                          Pendiente de verificación por Urbiza
+                          Pendiente de verificación por Propiteca
                         </div>
                       )}
                       {perfilAei && usuario?.aei_aprobado === true && (
                         <div style={{ fontSize: 11, color: '#065f46', marginTop: 5, display: 'flex', alignItems: 'center', gap: 4 }}>
                           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
-                          Verificado por Urbiza
+                          Verificado por Propiteca
                         </div>
                       )}
                     </div>
@@ -1533,7 +1533,7 @@ export default function Panel() {
                 <div>
                   <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: 600, letterSpacing: 1, marginBottom: 8 }}>ASOCIACIÓN OFICIAL</div>
                   <div style={{ fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 8 }}>Certifícate como agente inmobiliario profesional</div>
-                  <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>La AEI es la asociación oficial de agentes inmobiliarios de RD. Con tu certificación aparecerá el badge AEI verificado en todos tus anuncios de Urbiza.</div>
+                  <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>La AEI es la asociación oficial de agentes inmobiliarios de RD. Con tu certificación aparecerá el badge AEI verificado en todos tus anuncios de Propiteca.</div>
                 </div>
                 <a href="https://aei.com.do" target="_blank" rel="noopener noreferrer" style={{ all: 'unset', background: '#fff', color: '#1a3a5c', padding: '12px 24px', borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}>
                   Visitar AEI
@@ -1543,7 +1543,7 @@ export default function Panel() {
               <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center' }}>
                 <div style={{ fontSize: 15, color: '#555', lineHeight: 1.8, marginBottom: 20 }}>
                   Accede a toda la oferta formativa oficial de la AEI directamente en su web.<br/>
-                  Al completar cualquier curso recibirás tu certificación y el badge AEI verificado aparecerá en todos tus anuncios de Urbiza.
+                  Al completar cualquier curso recibirás tu certificación y el badge AEI verificado aparecerá en todos tus anuncios de Propiteca.
                 </div>
                 <a href="https://aei.com.do" target="_blank" rel="noopener noreferrer" style={{ all: 'unset', background: '#1a3a5c', color: '#fff', padding: '13px 32px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'inline-block' }}>
                   Ver todos los cursos en AEI

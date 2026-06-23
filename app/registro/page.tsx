@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState } from 'react'
 import { supabase } from '../../supabase'
 import { useIdioma } from '../../IdiomaContext'
@@ -64,7 +64,7 @@ export default function Registro() {
       <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px' }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', marginRight: 28 }}>
-            urbiza<span style={{ color: '#83D4DB' }}>.</span>
+            propiteca<span style={{ color: '#83D4DB' }}>.</span>
           </a>
           {[{ label: Tn.comprar, href: '/buscar?operacion=venta' }, { label: Tn.alquilar, href: '/buscar?operacion=alquiler' }].map(item => (
             <a key={item.label} href={item.href} style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>{item.label}</a>
@@ -78,7 +78,7 @@ export default function Registro() {
 
           <div style={{ textAlign: 'center', marginBottom: 28 }}>
             <div style={{ fontSize: 32, fontWeight: 700, color: '#006D77', letterSpacing: -2, marginBottom: 6 }}>
-              urbiza<span style={{ color: '#17A6B4' }}>.</span>
+              propiteca<span style={{ color: '#17A6B4' }}>.</span>
             </div>
             <div style={{ fontSize: 14, color: '#888' }}>
               {paso === 1 && T.titulo1}

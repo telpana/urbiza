@@ -1,4 +1,4 @@
-{
+﻿{
   "nav": {
     "comprar": "Buy",
     "alquilar": "Rent",
@@ -55,7 +55,7 @@
     "ayuda": "Help",
     "publicar": "Post a listing",
     "planes": "Plans",
-    "derechos": "© 2025 urbiza.com · Dominican Republic"
+    "derechos": "© 2025 propiteca.com · Dominican Republic"
   },
   "buscar": {
     "titulo": "properties in the Dominican Republic",
