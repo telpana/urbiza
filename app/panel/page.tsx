@@ -619,11 +619,10 @@ export default function Panel() {
               {tipoUsuario === 'particular' ? Tpanel.anuncios.roles.particular : Tpanel.anuncios.roles.profesional}
             </span>
           </div>
-          <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: 'rgba(255,255,255,0.85)', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', padding: '5px 12px', borderRadius: 20, textDecoration: 'none', fontWeight: 500, transition: 'background 0.15s' }}
-            onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.18)'}
-            onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'rgba(255,255,255,0.1)'}>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            {Tn.verWeb}
+          <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.35)', padding: '5px 14px', borderRadius: 6, textDecoration: 'none', fontWeight: 500 }}
+            onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.7)'}
+            onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.35)'}>
+            ← {Tn.verWeb}
           </a>
         </div>
       </nav>
