@@ -1459,7 +1459,7 @@ export default function Panel() {
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.nombre} <span style={{ color: '#e53e3e' }}>*</span></label>
-                    <input value={perfilNombre} onChange={e => setPerfilNombre(e.target.value)} style={{ width: '100%', border: `1.5px solid ${!perfilNombre ? '#e53e3e' : '#e0e0e0'}`, borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor= perfilNombre ? '#e0e0e0' : '#e53e3e'} />
+                    <input value={perfilNombre} onChange={e => setPerfilNombre(e.target.value)} maxLength={22} style={{ width: '100%', border: `1.5px solid ${!perfilNombre ? '#e53e3e' : '#e0e0e0'}`, borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor= perfilNombre ? '#e0e0e0' : '#e53e3e'} />
                     {!perfilNombre && <div style={{ fontSize: 11, color: '#e53e3e', marginTop: 4 }}>{Tpanel.perfil.err_nombre}</div>}
                   </div>
                   <div>
