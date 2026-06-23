@@ -1398,32 +1398,48 @@ export default function Panel() {
                 const fmtCorto = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })
                 const activo = planInfo?.estado === 'active' || planInfo?.estado === 'trialing' ||
                   (!planInfo?.estado && usuario?.plan === 'profesional' && (!usuario?.plan_activo_hasta || new Date(usuario.plan_activo_hasta) > new Date()))
+                const iconosBeneficios = [
+                  <svg key="i" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>,
+                  <svg key="s" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>,
+                  <svg key="b" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
+                  <svg key="p" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>,
+                  <svg key="h" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.62 3.41 2 2 0 0 1 3.59 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>,
+                ]
                 return (
                 <div>
-                  {/* Suscripción activa */}
-                  <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', marginBottom: 16 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
-                      <div>
-                        <div style={{ fontSize: 13, color: '#888', marginBottom: 4 }}>{Tpanel.plan.planPro}</div>
-                        <div style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 4 }}>US$ 9.99/mes</div>
-                        {planInfo?.proximo_cobro
-                          ? <div style={{ fontSize: 13, color: '#555' }}>{Tpanel.plan.proximoCobro}: <strong>{fmt(planInfo.proximo_cobro)}</strong></div>
-                          : usuario?.plan_activo_hasta
-                          ? <div style={{ fontSize: 13, color: '#555' }}>{Tpanel.plan.activo}: <strong>{fmt(usuario.plan_activo_hasta)}</strong></div>
-                          : null
-                        }
+                  {/* Hero */}
+                  <div style={{ background: 'linear-gradient(135deg, #006D77 0%, #17A6B4 100%)', borderRadius: 12, padding: '24px 28px', marginBottom: 20, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                        <span style={{ fontSize: 20, fontWeight: 700 }}>{Tpanel.plan.planPro}</span>
+                        <span style={{ background: activo ? 'rgba(255,255,255,0.25)' : 'rgba(255,80,80,0.3)', color: '#fff', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.3)' }}>● {activo ? Tpanel.plan.activo : Tpanel.plan.inactivo}</span>
                       </div>
-                      <span style={{ background: activo ? '#e0f5f0' : '#fee2e2', color: activo ? '#065f46' : '#dc2626', fontSize: 12, fontWeight: 700, padding: '4px 14px', borderRadius: 10 }}>● {activo ? Tpanel.plan.activo : Tpanel.plan.inactivo}</span>
+                      <div style={{ fontSize: 28, fontWeight: 800, letterSpacing: -0.5 }}>US$ 9.99<span style={{ fontSize: 15, fontWeight: 400, opacity: 0.8 }}>/mes</span></div>
+                      {planInfo?.proximo_cobro
+                        ? <div style={{ fontSize: 12, opacity: 0.8, marginTop: 4 }}>{Tpanel.plan.proximoCobro}: {fmt(planInfo.proximo_cobro)}</div>
+                        : usuario?.plan_activo_hasta
+                        ? <div style={{ fontSize: 12, opacity: 0.8, marginTop: 4 }}>{Tpanel.plan.activo}: {fmt(usuario.plan_activo_hasta)}</div>
+                        : null
+                      }
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, paddingTop: 16, borderTop: '1px solid #f0f0f0' }}>
-                      {[
-                        { label: Tpanel.plan.inicio, val: planInfo?.inicio ? fmt(planInfo.inicio) : usuario?.created_at ? fmt(usuario.created_at) : '—' },
-                        { label: Tpanel.plan.proximoCobro, val: planInfo?.proximo_cobro ? `US$ 9.99 · ${fmtCorto(planInfo.proximo_cobro)}` : usuario?.plan_activo_hasta ? fmtCorto(usuario.plan_activo_hasta) : '—' },
-                        { label: Tpanel.plan.tarjeta, val: planInfo?.last4 ? `•••• ${planInfo.last4}` : '—' },
-                      ].map(d => (
-                        <div key={d.label}>
-                          <div style={{ fontSize: 11, color: '#aaa', marginBottom: 3 }}>{d.label}</div>
-                          <div style={{ fontSize: 13, fontWeight: 600, color: '#333' }}>{d.val}</div>
+                    <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
+                      {[{ n: planInfo?.last4 ? `····${planInfo.last4}` : '—', label: Tpanel.plan.tarjeta }, { n: planInfo?.inicio ? new Date(planInfo.inicio).getFullYear().toString() : '—', label: Tpanel.plan.inicio }].map(s => (
+                        <div key={s.label} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.15)', borderRadius: 8, padding: '10px 16px' }}>
+                          <div style={{ fontSize: 15, fontWeight: 700 }}>{s.n}</div>
+                          <div style={{ fontSize: 11, opacity: 0.75 }}>{s.label}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Beneficios */}
+                  <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', marginBottom: 16 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 14 }}>Lo que incluye tu plan</div>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
+                      {(Tpanel.planes.ventajas as string[]).map((v: string, i: number) => (
+                        <div key={v} style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#f8fdfd', border: '1px solid #e0f5f7', borderRadius: 8, padding: '12px 14px' }}>
+                          {iconosBeneficios[i] || <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>}
+                          <span style={{ fontSize: 13, color: '#333', fontWeight: 500 }}>{v}</span>
                         </div>
                       ))}
                     </div>
@@ -1456,9 +1472,10 @@ export default function Panel() {
                   </div>
 
                   {/* Dar de baja */}
-                  <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderLeft: '3px solid #fee2e2' }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#333', marginBottom: 4 }}>{Tpanel.plan.cancelar}</div>
-                    <button onClick={async () => { const { data: { user } } = await supabase.auth.getUser(); if (!user) return; if (!confirm(Tpanel.plan.cancelarConfirm)) return; const res = await fetch('/api/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id }) }); const data = await res.json(); if (data.ok) alert(Tpanel.plan.cancelarOk); else alert(Tpanel.plan.cancelarErr) }} style={{ all: 'unset', border: '1.5px solid #e55', color: '#e55', padding: '8px 18px', borderRadius: 6, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>
+                  <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderTop: '2px solid #fee2e2' }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: '#555', marginBottom: 2 }}>{Tpanel.plan.cancelar}</div>
+                    <div style={{ fontSize: 12, color: '#aaa', marginBottom: 12 }}>Perderás el acceso a todos los beneficios del plan profesional.</div>
+                    <button onClick={async () => { const { data: { user } } = await supabase.auth.getUser(); if (!user) return; if (!confirm(Tpanel.plan.cancelarConfirm)) return; const res = await fetch('/api/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id }) }); const data = await res.json(); if (data.ok) alert(Tpanel.plan.cancelarOk); else alert(Tpanel.plan.cancelarErr) }} style={{ all: 'unset', border: '1px solid #fca5a5', color: '#dc2626', padding: '7px 16px', borderRadius: 6, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>
                       {Tpanel.plan.cancelarBtn}
                     </button>
                   </div>
