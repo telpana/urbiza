@@ -1424,14 +1424,6 @@ export default function Panel() {
                         : null
                       }
                     </div>
-                    <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
-                      {[{ n: planInfo?.last4 ? `····${planInfo.last4}` : '—', label: Tpanel.plan.tarjeta }, { n: planInfo?.inicio ? new Date(planInfo.inicio).getFullYear().toString() : '—', label: Tpanel.plan.inicio }].map(s => (
-                        <div key={s.label} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.15)', borderRadius: 8, padding: '10px 16px' }}>
-                          <div style={{ fontSize: 15, fontWeight: 700 }}>{s.n}</div>
-                          <div style={{ fontSize: 11, opacity: 0.75 }}>{s.label}</div>
-                        </div>
-                      ))}
-                    </div>
                   </div>
 
                   {/* Beneficios */}
