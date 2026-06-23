@@ -1396,8 +1396,8 @@ export default function Panel() {
                   <a href="/pago/profesional" style={{ background: '#006D77', color: '#fff', padding: '12px 32px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', textDecoration: 'none', display: 'inline-block' }}>{Tpanel.planes.suscribirse}</a>
                 </div>
               ) : (() => {
-                const fmt = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
-                const fmtCorto = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })
+                const fmt = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
+                const fmtCorto = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
                 const activo = planInfo?.estado === 'active' || planInfo?.estado === 'trialing' ||
                   (!planInfo?.estado && usuario?.plan === 'profesional' && (!usuario?.plan_activo_hasta || new Date(usuario.plan_activo_hasta) > new Date()))
                 const iconosBeneficios = [
