@@ -473,19 +473,32 @@ export default function Home() {
                 </button>
               ))}
             </div>
-            <div style={{ position: 'relative' }}>
             <div className="hero-search" style={{ display: 'flex', border: '1.5px solid #006D77', borderRadius: 4, overflow: 'hidden' }}>
               <div style={{ display: 'flex', alignItems: 'center', padding: '0 12px', background: '#f9f9f9', borderRight: '1px solid #e0e0e0' }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               </div>
-              <input
-                type="text"
-                value={queryHome}
-                onChange={e => handleQueryHome(e.target.value)}
-                onBlur={() => setTimeout(() => setMostrarSugHome(false), 150)}
-                placeholder={tr.hero.placeholder}
-                style={{ flex: 1, padding: '12px 14px', fontSize: 14, border: 'none', outline: 'none', color: '#222', background: '#fff', boxSizing: 'border-box', minWidth: 0 }}
-              />
+              <div style={{ position: 'relative', flex: 1, minWidth: 0 }}>
+                <input
+                  type="text"
+                  value={queryHome}
+                  onChange={e => handleQueryHome(e.target.value)}
+                  onBlur={() => setTimeout(() => setMostrarSugHome(false), 150)}
+                  placeholder={tr.hero.placeholder}
+                  style={{ width: '100%', padding: '12px 14px', fontSize: 14, border: 'none', outline: 'none', color: '#222', background: '#fff', boxSizing: 'border-box' }}
+                />
+                {mostrarSugHome && sugHome.length > 0 && (
+                  <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #e0e0e0', borderTop: 'none', borderRadius: '0 0 6px 6px', boxShadow: '0 4px 16px rgba(0,0,0,0.12)', zIndex: 500 }}>
+                  {sugHome.map((s: string, i: number) => (
+                    <div key={i} onMouseDown={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); p.set('zona', s); window.location.href = `/buscar?${p.toString()}` }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', fontSize: 14, color: '#333', cursor: 'pointer', borderBottom: i < sugHome.length - 1 ? '1px solid #f5f5f5' : 'none' }}
+                      onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
+                      onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                      {s}
+                    </div>
+                  ))}
+                  </div>
+                )}
+              </div>{/* fin input wrapper */}
               <select value={tipoInmueble} onChange={e => setTipoInmueble(e.target.value)} style={{ padding: '0 30px 0 12px', fontSize: 13, border: 'none', borderLeft: '1px solid #e0e0e0', outline: 'none', color: '#555', background: `#f9f9f9 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23888' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") no-repeat right 10px center`, appearance: 'none', WebkitAppearance: 'none', cursor: 'pointer' }}>
                 <option value="Apartamento">Apartamento</option>
                 <option value="Casa">Casa</option>
@@ -496,21 +509,8 @@ export default function Home() {
                 <option value="Edificio">Edificio</option>
               </select>
               <button onClick={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); if (queryHome) p.set('zona', queryHome); if (tipoInmueble) p.set('tipo', tipoInmueble); window.location.href = `/buscar?${p.toString()}` }} style={{ background: '#006D77', color: '#fff', border: 'none', padding: '0 26px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>{tr.hero.buscar}</button>
-            </div>
-            {mostrarSugHome && sugHome.length > 0 && (
-              <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #e0e0e0', borderTop: 'none', borderRadius: '0 0 6px 6px', boxShadow: '0 4px 16px rgba(0,0,0,0.12)', zIndex: 200 }}>
-                {sugHome.map((s: string, i: number) => (
-                  <div key={i} onMouseDown={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); p.set('zona', s); window.location.href = `/buscar?${p.toString()}` }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', fontSize: 14, color: '#333', cursor: 'pointer', borderBottom: i < sugHome.length - 1 ? '1px solid #f5f5f5' : 'none' }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
-                    onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                    {s}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          </div>
+            </div>{/* fin hero-search */}
+          </div>{/* fin hero-search-box */}
         </div>
         </div>
       </div>
