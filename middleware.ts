@@ -4,13 +4,16 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Dejar pasar: la propia página, admin, APIs y assets
+  // Dejar pasar: la propia página, admin, APIs, assets y páginas de zona para SEO
   if (
     pathname.startsWith('/proximamente') ||
     pathname.startsWith('/admin') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/_next') ||
-    pathname.startsWith('/favicon')
+    pathname.startsWith('/favicon') ||
+    pathname.startsWith('/propiedades') ||
+    pathname === '/sitemap.xml' ||
+    pathname === '/robots.txt'
   ) {
     return NextResponse.next()
   }
