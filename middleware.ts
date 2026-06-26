@@ -1,10 +1,17 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+const OPEN = false
+
 export function middleware(request: NextRequest) {
-  return NextResponse.next()
+  if (OPEN) return NextResponse.next()
+  const { pathname } = request.nextUrl
+  if (pathname.startsWith('/proximamente') || pathname.startsWith('/_next') || pathname.startsWith('/favicon')) {
+    return NextResponse.next()
+  }
+  return NextResponse.redirect(new URL('/proximamente', request.url))
 }
 
 export const config = {
-  matcher: [],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 }
