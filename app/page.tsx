@@ -412,7 +412,7 @@ export default function Home() {
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, marginBottom: 22, textAlign: 'center' }}>
             {tr.hero.subtitulo}
           </p>
-          <div style={{ background: '#fff', borderRadius: 8, padding: '18px 18px', boxShadow: '0 4px 24px rgba(0,0,0,0.15)' }}>
+          <div className="hero-search-box" style={{ background: '#fff', borderRadius: 8, padding: '18px 18px', boxShadow: '0 4px 24px rgba(0,0,0,0.15)' }}>
             <div style={{ display: 'flex', gap: 0, marginBottom: 14 }}>
               {['Comprar', 'Alquilar'].map((t) => (
                 <button key={t} onClick={() => setTipo(t)} style={{ flex: 1, padding: '9px', fontSize: 14, fontWeight: 500, cursor: 'pointer', border: 'none', borderBottom: tipo === t ? '2.5px solid #006D77' : '2.5px solid #e0e0e0', background: 'transparent', color: tipo === t ? '#006D77' : '#888' }}>
@@ -530,7 +530,7 @@ export default function Home() {
                     </div>
                   )}
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+                <div className="slide-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
                   {visibles.map((p: any, i: number) => (
                     <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '2px solid #006D77', display: 'block' }}
                       onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
@@ -571,7 +571,7 @@ export default function Home() {
                     <a href="/buscar" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades →</a>
                   </div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+                <div className="slide-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
                   {src.slice(0,3).map((p: any, i: number) => (
                     <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '1px solid #ebebeb', display: 'block' }}
                       onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}

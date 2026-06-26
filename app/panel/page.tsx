@@ -621,7 +621,7 @@ export default function Panel() {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
               <span style={{ color: 'rgba(255,255,255,0.9)', fontSize: 13, fontWeight: 500 }}>{usuario?.nombre || Tn.miCuenta}</span>
-              <span style={{ color: 'rgba(255,255,255,0.45)', fontSize: 10 }}>{usuario?.email || ''}</span>
+              <span className="panel-nav-email" style={{ color: 'rgba(255,255,255,0.45)', fontSize: 10 }}>{usuario?.email || ''}</span>
             </div>
             <span style={{ background: tipoUsuario === 'particular' ? 'rgba(255,255,255,0.2)' : '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>
               {tipoUsuario === 'particular' ? Tpanel.anuncios.roles.particular : Tpanel.anuncios.roles.profesional}

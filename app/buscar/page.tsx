@@ -489,12 +489,14 @@ function BuscarContent() {
           <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', marginRight: 28 }}>
             habitade<span style={{ color: '#83D4DB' }}>.</span>
           </a>
+          <div className="buscar-nav-links" style={{ display: 'flex' }}>
           {[
             { label: Tn.comprar, href: '/buscar?operacion=venta', op: 'venta' },
             { label: Tn.alquilar, href: '/buscar?operacion=alquiler', op: 'alquiler' },
           ].map(item => (
             <a key={item.op} href={item.href} style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: operacion === item.op ? '#fff' : 'rgba(255,255,255,0.7)', textDecoration: 'none', borderBottom: operacion === item.op ? '2px solid #83D4DB' : '2px solid transparent' }}>{item.label}</a>
           ))}
+          </div>
         </div>
         <div style={{ flex: 1, maxWidth: 380, margin: '0 20px', position: 'relative' }}>
           <div style={{ display: 'flex', background: '#fff', borderRadius: 4, overflow: 'hidden', height: 34, boxShadow: '0 1px 4px rgba(0,0,0,0.15)' }}>
@@ -718,11 +720,11 @@ function BuscarContent() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {filtradas.map(p => (
-              <div key={p.id} style={{ display: 'flex', background: '#fff', borderBottom: '8px solid #f4f5f6', borderLeft: p.dest ? '4px solid #006D77' : 'none', cursor: 'pointer', minHeight: 220, boxShadow: p.dest ? '0 2px 12px rgba(0,109,119,0.10)' : 'none' }}
+              <div key={p.id} className="prop-card" style={{ display: 'flex', background: '#fff', borderBottom: '8px solid #f4f5f6', borderLeft: p.dest ? '4px solid #006D77' : 'none', cursor: 'pointer', minHeight: 220, boxShadow: p.dest ? '0 2px 12px rgba(0,109,119,0.10)' : 'none' }}
                 onClick={() => window.location.href = `/propiedad/${p.id}`}
                 onMouseEnter={e => (e.currentTarget.style.background = '#fafefe')}
                 onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
-                <div style={{ width: 300, minWidth: 300, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+                <div className="prop-card-img" style={{ width: 300, minWidth: 300, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                   {p.fotos && p.fotos.length > 0
                     ? <img src={p.fotos[0]} alt={p.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                     : <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>

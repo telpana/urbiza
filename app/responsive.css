@@ -2,78 +2,186 @@
 * { box-sizing: border-box; }
 img { max-width: 100%; }
 
-/* ─── HOME ─── */
+/* ════════════════════════════════
+   HOME
+════════════════════════════════ */
 @media (max-width: 768px) {
+  /* Nav: ocultar links, solo logo + botones */
   .nav-links { display: none !important; }
-  .hero-content { padding: 32px 16px !important; }
-  .hero-search { flex-direction: column !important; gap: 10px !important; }
-  .hero-search input { border-radius: 8px !important; }
-  .hero-search button { border-radius: 8px !important; width: 100% !important; }
-  .hero-filters { flex-wrap: wrap !important; gap: 8px !important; }
+
+  /* Hero: reducir padding */
+  .hero-search-box { padding: 14px 14px !important; }
+
+  /* Search input: apilar verticalmente */
+  .hero-search {
+    flex-direction: column !important;
+    border: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    gap: 8px !important;
+  }
+  .hero-search > div:first-child { display: none !important; } /* ocultar icono pin */
+  .hero-search input {
+    border: 1.5px solid #006D77 !important;
+    border-radius: 6px !important;
+    padding: 12px 14px !important;
+    width: 100% !important;
+    font-size: 15px !important;
+  }
+  .hero-search select {
+    border: 1.5px solid #e0e0e0 !important;
+    border-radius: 6px !important;
+    padding: 11px 14px !important;
+    width: 100% !important;
+    font-size: 15px !important;
+    background-color: #fff !important;
+  }
+  .hero-search button {
+    border-radius: 6px !important;
+    width: 100% !important;
+    padding: 13px !important;
+    font-size: 15px !important;
+  }
+
+  /* Sección acción: apilada */
   .home-actions-grid { grid-template-columns: 1fr !important; }
-  .home-actions-grid > a:first-child { border-right: none !important; border-bottom: 1px solid #e8e8e8 !important; }
-  .destacadas-grid { grid-template-columns: 1fr !important; }
-  .novedades-grid { grid-template-columns: 1fr !important; }
-  .zonas-grid { grid-template-columns: repeat(2, 1fr) !important; }
-  .footer-grid { flex-direction: column !important; gap: 16px !important; text-align: center !important; }
+  .home-actions-grid > a:first-child {
+    border-right: none !important;
+    border-bottom: 1px solid #e8e8e8 !important;
+  }
+
+  /* Tarjetas de propiedades: 1 columna */
   .slide-cards { grid-template-columns: 1fr !important; }
+  .slide-cards > a { display: flex !important; flex-direction: row !important; height: 100px !important; }
+  .slide-cards > a > div:first-child { width: 120px !important; min-width: 120px !important; height: 100% !important; flex-shrink: 0 !important; }
+  .slide-cards > a > div:last-child { padding: 10px 12px !important; }
+  .slide-cards > a > div:last-child > div:first-child { font-size: 15px !important; margin-bottom: 2px !important; }
+  .slide-cards > a > div:last-child > div:nth-child(2) { font-size: 11px !important; }
+  .slide-cards > a > div:last-child > div:nth-child(3) { font-size: 11px !important; }
+
+  /* Grids de zonas */
+  .zonas-grid { grid-template-columns: repeat(2, 1fr) !important; }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
-  .home-actions-grid { gap: 0 !important; }
-  .destacadas-grid { grid-template-columns: repeat(2, 1fr) !important; }
-  .zonas-grid { grid-template-columns: repeat(3, 1fr) !important; }
   .slide-cards { grid-template-columns: repeat(2, 1fr) !important; }
+  .zonas-grid { grid-template-columns: repeat(3, 1fr) !important; }
 }
 
-/* ─── PANEL ─── */
+/* ════════════════════════════════
+   PANEL
+════════════════════════════════ */
+.panel-hamburger { display: none; }
+.panel-sidebar-overlay { display: none; }
+
 @media (max-width: 900px) {
-  .panel-layout { grid-template-columns: 1fr !important; }
+  /* Sidebar oculto, hamburger visible */
   .panel-sidebar { display: none !important; }
-  .panel-sidebar.open { display: flex !important; position: fixed !important; top: 0 !important; left: 0 !important; width: 260px !important; height: 100vh !important; z-index: 500 !important; box-shadow: 4px 0 20px rgba(0,0,0,0.2) !important; }
-  .panel-sidebar-overlay { display: block !important; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 499; }
-  .panel-hamburger { display: flex !important; }
+  .panel-hamburger {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Sidebar abierto: slide-in desde la izquierda */
+  .panel-sidebar.open {
+    display: flex !important;
+    flex-direction: column;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 240px !important;
+    height: 100vh !important;
+    z-index: 500 !important;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.25) !important;
+    overflow-y: auto;
+  }
+
+  /* Overlay oscuro detrás del sidebar */
+  .panel-sidebar-overlay {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 499;
+  }
+
+  /* Contenido principal: padding reducido */
   .panel-main { padding: 16px !important; }
-  .chat-grid { grid-template-columns: 1fr !important; height: auto !important; }
-  .chat-list { max-height: 280px !important; }
-  .plan-beneficios-grid { grid-template-columns: 1fr 1fr !important; }
-  .destacar-pasos { flex-direction: column !important; }
+
+  /* KPIs: 2 columnas */
   .kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
-  .stats-table { font-size: 12px !important; }
+
+  /* Chat: lista arriba, detalle abajo */
+  .chat-grid {
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+    min-height: unset !important;
+  }
+  .chat-list { max-height: 260px !important; overflow-y: auto !important; }
+
+  /* Beneficios plan: 2 columnas */
+  .plan-beneficios-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Nav del panel: reducir texto */
+  .panel-nav-email { display: none !important; }
 }
 
 @media (max-width: 480px) {
-  .chat-grid { min-height: auto !important; }
-  .plan-beneficios-grid { grid-template-columns: 1fr !important; }
   .kpi-grid { grid-template-columns: 1fr !important; }
+  .plan-beneficios-grid { grid-template-columns: 1fr !important; }
+  .panel-main { padding: 12px !important; }
 }
 
-/* ─── BUSCAR ─── */
+/* ════════════════════════════════
+   BUSCAR
+════════════════════════════════ */
+.buscar-filtros-toggle { display: none; }
+
 @media (max-width: 900px) {
+  /* Layout: 1 columna */
   .buscar-layout { grid-template-columns: 1fr !important; }
-  .buscar-filtros { border-right: none !important; border-bottom: 1px solid #e8e8e8 !important; }
+  .buscar-filtros {
+    border-right: none !important;
+    border-bottom: 1px solid #e8e8e8 !important;
+  }
+
+  /* Filtros ocultos por defecto */
   .buscar-filtros-panel { display: none !important; }
   .buscar-filtros-panel.open { display: block !important; }
+
+  /* Botón filtros visible */
   .buscar-filtros-toggle { display: flex !important; }
-  .buscar-lista { padding-left: 0 !important; }
-  .prop-card { flex-direction: column !important; height: auto !important; }
-  .prop-card-img { width: 100% !important; height: 200px !important; }
+
+  /* Tarjetas de propiedad: imagen arriba, contenido abajo */
+  .prop-card {
+    flex-direction: column !important;
+    min-height: unset !important;
+    border-left: none !important;
+  }
+  .prop-card-img {
+    width: 100% !important;
+    min-width: unset !important;
+    height: 220px !important;
+  }
+
+  /* Nav de buscar: ocultar links extra */
+  .buscar-nav-links { display: none !important; }
 }
 
-/* ─── PROPIEDAD DETALLE ─── */
+/* ════════════════════════════════
+   PROPIEDAD DETALLE
+════════════════════════════════ */
 @media (max-width: 768px) {
   .propiedad-layout { grid-template-columns: 1fr !important; }
   .propiedad-galeria { height: 250px !important; }
-  .propiedad-sidebar { position: static !important; }
+  .propiedad-sidebar { position: static !important; top: auto !important; }
 }
 
-/* ─── FORMULARIOS / REGISTRO / LOGIN ─── */
+/* ════════════════════════════════
+   AUTH (registro/login)
+════════════════════════════════ */
 @media (max-width: 480px) {
-  .auth-card { padding: 24px 16px !important; }
+  .auth-card { padding: 24px 16px !important; margin: 16px !important; }
   .tipo-grid { grid-template-columns: 1fr !important; }
 }
-
-/* ─── PANEL HAMBURGER (siempre oculto en desktop) ─── */
-.panel-hamburger { display: none; }
-.panel-sidebar-overlay { display: none; }
-.buscar-filtros-toggle { display: none; }
