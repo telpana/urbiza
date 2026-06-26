@@ -354,7 +354,7 @@ export default function Home() {
       <nav style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', height: 60, display: 'flex', alignItems: 'center', padding: '0 24px', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
           <a href="/" style={{ fontSize: 28, fontWeight: 700, color: '#006D77', letterSpacing: -2, marginRight: 32, textDecoration: 'none' }}>
-            propiteca<span style={{ color: '#17A6B4' }}>.</span>
+            habitade<span style={{ color: '#17A6B4' }}>.</span>
           </a>
           {[
             { label: 'Comprar', href: '/buscar?operacion=venta' },
@@ -625,7 +625,7 @@ export default function Home() {
           {/* Logo y redes */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, flexWrap: 'wrap', gap: 14 }}>
             <div style={{ fontSize: 26, fontWeight: 700, color: '#fff', letterSpacing: -1.5 }}>
-              propiteca<span style={{ color: '#83D4DB' }}>.</span>
+              habitade<span style={{ color: '#83D4DB' }}>.</span>
             </div>
             {/* Iconos redes sociales — enlaces se añaden desde el panel de admin */}
             <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
@@ -665,7 +665,7 @@ export default function Home() {
               ))}
             </div>
             <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
-              © 2025 propiteca.com · República Dominicana
+              © 2025 habitade.com · República Dominicana
             </div>
           </div>
         </div>
