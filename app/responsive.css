@@ -72,6 +72,24 @@ img { max-width: 100%; }
     scroll-snap-align: start;
   }
 
+  /* Propiedades destacadas y más vistos: scroll horizontal */
+  .slide-cards {
+    display: flex !important;
+    overflow-x: auto !important;
+    gap: 12px !important;
+    padding-bottom: 12px !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .slide-cards::-webkit-scrollbar { display: none; }
+  .slide-cards > a {
+    min-width: 240px !important;
+    max-width: 240px !important;
+    flex-shrink: 0 !important;
+    scroll-snap-align: start;
+  }
+
   /* Grids de zonas */
   .zonas-grid { grid-template-columns: repeat(2, 1fr) !important; }
 }
