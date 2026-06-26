@@ -206,7 +206,7 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona }: {
           <a href={`/buscar?zona=${encodeURIComponent(zona)}`} style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>{subtitulo} →</a>
         </div>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, paddingBottom: 32 }}>
+      <div className="novedades-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, paddingBottom: 32 }}>
         {items
           ? items.map((p: any, i: number) => (
               <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', border: '1px solid #ebebeb', display: 'block' }}

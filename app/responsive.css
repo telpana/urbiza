@@ -55,17 +55,19 @@ img { max-width: 100%; }
     border-bottom: 1px solid #e8e8e8 !important;
   }
 
-  /* Tarjetas de propiedades: scroll horizontal en móvil */
-  .slide-cards {
+  /* Novedades: scroll horizontal deslizable */
+  .novedades-grid {
     display: flex !important;
     overflow-x: auto !important;
     gap: 12px !important;
-    padding-bottom: 8px !important;
+    padding-bottom: 12px !important;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
-  .slide-cards > a {
-    min-width: 220px !important;
+  .novedades-grid::-webkit-scrollbar { display: none; }
+  .novedades-grid > * {
+    min-width: 200px !important;
     flex-shrink: 0 !important;
     scroll-snap-align: start;
   }
