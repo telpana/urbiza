@@ -8,6 +8,13 @@ img { max-width: 100%; }
 .nav-mobile-hamburger { display: none; }
 .buscar-mobile-hamburger { display: none; }
 
+/* Slide-cards: grid en desktop */
+.slide-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
 @media (max-width: 768px) {
   /* Nav: ocultar links y parte derecha desktop, mostrar hamburger */
   .nav-links { display: none !important; }
