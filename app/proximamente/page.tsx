@@ -8,7 +8,7 @@ export default function Proximamente() {
         <div style={{ width: 48, height: 3, background: 'linear-gradient(90deg, #006D77, #17A6B4)', borderRadius: 2, margin: '16px auto 28px' }} />
         <div style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 12 }}>Estamos preparando algo grande</div>
         <div style={{ fontSize: 15, color: '#777', lineHeight: 1.7, marginBottom: 32 }}>
-          El portal inmobiliario líder del Caribe está a punto de llegar. Pronto podrás encontrar, publicar y destacar propiedades en República Dominicana.
+          Algo muy especial está en camino.
         </div>
         <div style={{ background: '#fff', borderRadius: 10, padding: '20px 24px', boxShadow: '0 2px 12px rgba(0,109,119,0.08)', border: '1px solid #e0f5f7', display: 'inline-block' }}>
           <div style={{ fontSize: 13, color: '#888', marginBottom: 6 }}>¿Quieres ser el primero en saber cuándo abrimos?</div>

@@ -356,6 +356,7 @@ export default function Home() {
           <a href="/" style={{ fontSize: 28, fontWeight: 700, color: '#006D77', letterSpacing: -2, marginRight: 32, textDecoration: 'none' }}>
             habitade<span style={{ color: '#17A6B4' }}>.</span>
           </a>
+          <div className="nav-links" style={{ display: 'flex' }}>
           {[
             { label: 'Comprar', href: '/buscar?operacion=venta' },
             { label: 'Alquilar', href: '/buscar?operacion=alquiler' },
@@ -366,6 +367,7 @@ export default function Home() {
               {item.label}
             </a>
           ))}
+          </div>
         </div>
 
         {/* Idioma — posición fija, nunca se mueve */}
@@ -419,7 +421,7 @@ export default function Home() {
               ))}
             </div>
             <div style={{ position: 'relative' }}>
-            <div style={{ display: 'flex', border: '1.5px solid #006D77', borderRadius: 4, overflow: 'hidden' }}>
+            <div className="hero-search" style={{ display: 'flex', border: '1.5px solid #006D77', borderRadius: 4, overflow: 'hidden' }}>
               <div style={{ display: 'flex', alignItems: 'center', padding: '0 12px', background: '#f9f9f9', borderRight: '1px solid #e0e0e0' }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               </div>
@@ -462,7 +464,7 @@ export default function Home() {
 
       {/* SECCIONES ACCIÓN */}
       <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
+        <div className="home-actions-grid" style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
           <a href="#" onClick={e => { e.preventDefault(); setVerMapa(true) }}
             style={{ display: 'flex', gap: 20, padding: '28px 32px', textDecoration: 'none', borderRight: '1px solid #e8e8e8', alignItems: 'center', transition: 'background 0.15s' }}
             onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = '#f8fdfd'}

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./responsive.css";
 import { IdiomaProvider } from "../IdiomaContext";
 
 export const metadata: Metadata = {

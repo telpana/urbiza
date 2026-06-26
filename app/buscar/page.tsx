@@ -321,6 +321,7 @@ function BuscarContent() {
   const tipoParam = searchParams.get('tipo') || ''
 
   const [tipo, setTipo] = useState(tipoParam || 'Todos')
+  const [filtrosOpen, setFiltrosOpen] = useState(false)
   const [operacion, setOperacion] = useState(operacionParam)
   const [query, setQuery] = useState(zonaParam)
   const [orden, setOrden] = useState('Relevancia')
@@ -535,8 +536,17 @@ function BuscarContent() {
         </div>
       </nav>
 
+      {/* BARRA MÓVIL FILTROS */}
+      <div className="buscar-filtros-toggle" style={{ display: 'none', background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '10px 16px', gap: 10, alignItems: 'center' }}>
+        <button onClick={() => setFiltrosOpen(v => !v)} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 8, background: filtrosOpen ? '#006D77' : '#f4f5f6', color: filtrosOpen ? '#fff' : '#333', padding: '8px 16px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: '1px solid #e0e0e0' }}>
+          <svg width="14" height="12" viewBox="0 0 14 12" fill="none"><rect y="0" width="14" height="2" rx="1" fill="currentColor"/><rect x="2" y="5" width="10" height="2" rx="1" fill="currentColor"/><rect x="4" y="10" width="6" height="2" rx="1" fill="currentColor"/></svg>
+          Filtros
+        </button>
+        <span style={{ fontSize: 12, color: '#777' }}>{filtradas.length} resultados</span>
+      </div>
+
       {/* BREADCRUMB */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '8px 20px', fontSize: 12, color: '#aaa', display: 'flex', alignItems: 'center', gap: 6 }}>
+      <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '8px 20px', fontSize: 12, color: '#aaa', display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
         <a href="/" style={{ color: '#006D77', textDecoration: 'none' }}>Habitade</a>
         <span>›</span>
         <a href="/buscar" style={{ color: '#006D77', textDecoration: 'none' }}>República Dominicana</a>
@@ -548,10 +558,11 @@ function BuscarContent() {
       </div>
 
       {/* BODY */}
-      <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', minHeight: 'calc(100vh - 90px)' }}>
+      <div className="buscar-layout" style={{ display: 'grid', gridTemplateColumns: '280px 1fr', minHeight: 'calc(100vh - 90px)' }}>
 
         {/* SIDEBAR */}
-        <div style={{ background: '#fff', borderRight: '1px solid #e8e8e8', padding: '14px', isolation: 'isolate' }}>
+        <div className="buscar-filtros" style={{ background: '#fff', borderRight: '1px solid #e8e8e8', isolation: 'isolate' }}>
+          <div className={`buscar-filtros-panel${filtrosOpen ? ' open' : ''}`} style={{ padding: '14px' }}>
 
           {/* MAPA MINI LIMPIO */}
           <div style={{ border: '1px solid #e0e0e0', borderRadius: 6, overflow: 'hidden', marginBottom: 14 }}>
@@ -684,10 +695,11 @@ function BuscarContent() {
             </label>
           </div>
 
-        </div>
+          </div>{/* fin buscar-filtros-panel */}
+        </div>{/* fin buscar-filtros */}
 
         {/* RESULTADOS */}
-        <div>
+        <div className="buscar-lista">
           <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <h1 style={{ fontSize: 18, fontWeight: 600, color: '#111', margin: 0 }}>

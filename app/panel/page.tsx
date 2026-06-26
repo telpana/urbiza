@@ -181,6 +181,7 @@ export default function Panel() {
   const Tn = trLang.nav
   const menuItems = getMenuItems(Tpanel)
   const [seccion, setSeccion] = useState('anuncios')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [filtroTipo, setFiltroTipo] = useState('')
   const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
   const [planInfo, setPlanInfo] = useState<any>(null)
@@ -605,6 +606,9 @@ export default function Panel() {
       {/* NAV */}
       <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+          <button className="panel-hamburger" onClick={() => setSidebarOpen(v => !v)} style={{ all: 'unset', cursor: 'pointer', display: 'none', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 6, background: 'rgba(255,255,255,0.15)' }}>
+            <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect y="0" width="18" height="2" rx="1" fill="white"/><rect y="6" width="18" height="2" rx="1" fill="white"/><rect y="12" width="18" height="2" rx="1" fill="white"/></svg>
+          </button>
           <a href="/" style={{ fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>
             habitade<span style={{ color: '#83D4DB' }}>.</span>
           </a>
@@ -633,10 +637,13 @@ export default function Panel() {
 
       <div style={{ display: 'flex' }}>
 
+        {/* SIDEBAR OVERLAY (móvil) */}
+        {sidebarOpen && <div className="panel-sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
+
         {/* SIDEBAR */}
-        <div style={{ width: 220, background: '#004E57', minHeight: 'calc(100vh - 54px)', padding: '20px 0', flexShrink: 0 }}>
+        <div className={`panel-sidebar${sidebarOpen ? ' open' : ''}`} style={{ width: 220, background: '#004E57', minHeight: 'calc(100vh - 54px)', padding: '20px 0', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
           {menuItems.filter(item => item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)).map(item => (
-            <button key={item.id} onClick={() => { if (item.id === 'publicar' && !(perfilNombre && perfilTelefono)) { setSeccion('publicar'); return } if (item.id === 'publicar' && !anuncioEditando && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis) { setSeccion('planes'); return } setSeccion(item.id) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.6)', background: seccion === item.id ? 'rgba(255,255,255,0.12)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? '3px solid #83D4DB' : '3px solid transparent', boxSizing: 'border-box', position: 'relative' }}>
+            <button key={item.id} onClick={() => { if (item.id === 'publicar' && !(perfilNombre && perfilTelefono)) { setSeccion('publicar'); setSidebarOpen(false); return } if (item.id === 'publicar' && !anuncioEditando && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis) { setSeccion('planes'); setSidebarOpen(false); return } setSeccion(item.id); setSidebarOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.6)', background: seccion === item.id ? 'rgba(255,255,255,0.12)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? '3px solid #83D4DB' : '3px solid transparent', boxSizing: 'border-box', position: 'relative' }}>
               {item.icon}
               {item.label}
               {item.id === 'mensajes' && noLeidos > 0 && (
@@ -647,7 +654,7 @@ export default function Panel() {
         </div>
 
         {/* CONTENIDO */}
-        <div style={{ flex: 1, padding: '28px 32px', overflowY: 'auto' }}>
+        <div className="panel-main" style={{ flex: 1, padding: '28px 32px', overflowY: 'auto' }}>
 
           {cargando && (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
@@ -689,7 +696,7 @@ export default function Panel() {
               )}
 
               {/* KPIs reales */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 20 }}>
+              <div className="kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 20 }}>
                 {[
                   { label: Tpanel.anuncios.kpi_visitas, val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: Tpanel.anuncios.kpi_visitas_sub, color: '#006D77' },
                   { label: Tpanel.anuncios.kpi_tel, val: anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0).toLocaleString(), sub: Tpanel.anuncios.kpi_tel_sub, color: '#10b981' },
@@ -982,9 +989,9 @@ export default function Panel() {
                 </div>
                 {noLeidos > 0 && <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '5px 14px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.3)' }}>{noLeidos} sin leer</span>}
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 16, height: 'calc(100vh - 230px)', minHeight: 500 }}>
+              <div className="chat-grid" style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 16, height: 'calc(100vh - 230px)', minHeight: 500 }}>
                 {/* Lista de conversaciones */}
-                <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', overflowY: 'auto' }}>
+                <div className="chat-list" style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', overflowY: 'auto' }}>
                   {cargando && (
                     <div style={{ padding: '48px 24px', textAlign: 'center' }}>
                       <div style={{ width: 28, height: 28, border: '3px solid #e0e0e0', borderTopColor: '#006D77', borderRadius: '50%', margin: '0 auto 12px', animation: 'spin 0.8s linear infinite' }} />
@@ -1157,7 +1164,7 @@ export default function Panel() {
           {!cargando && seccion === 'estadisticas' && (
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>{Tpanel.estadisticas.titulo}</h1>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
+              <div className="kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
                 {[
                   { label: Tpanel.estadisticas.visitas, val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: Tpanel.anuncios.kpi_visitas_sub, color: '#006D77' },
                   { label: Tpanel.estadisticas.telVistos, val: anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0).toLocaleString(), sub: Tpanel.anuncios.kpi_tel_sub, color: '#10b981' },
@@ -1429,7 +1436,7 @@ export default function Panel() {
                   {/* Beneficios */}
                   <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', marginBottom: 16 }}>
                     <div style={{ fontSize: 13, fontWeight: 700, color: '#111', marginBottom: 14 }}>Lo que incluye tu plan</div>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
+                    <div className="plan-beneficios-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 12 }}>
                       {(Tpanel.planes.ventajas as string[]).map((v: string, i: number) => (
                         <div key={v} style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#f8fdfd', border: '1px solid #e0f5f7', borderRadius: 8, padding: '12px 14px' }}>
                           {iconosBeneficios[i] || <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>}
