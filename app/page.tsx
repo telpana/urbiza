@@ -250,6 +250,14 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona }: {
 }
 
 export default function Home() {
+  const [isMobile, setIsMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
   const [tipo, setTipo] = useState('Comprar')
   const [tipoInmueble, setTipoInmueble] = useState('Apartamento')
   const [verMapa, setVerMapa] = useState(false)
@@ -583,9 +591,9 @@ export default function Home() {
                     </div>
                   )}
                 </div>
-                <div className="slide-cards" style={{ gap: 16 }}>
+                <div style={isMobile ? { display: 'flex', overflowX: 'auto', gap: 12, paddingBottom: 12, scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' } : { display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
                   {visibles.map((p: any, i: number) => (
-                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '2px solid #006D77', display: 'block' }}
+                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '2px solid #006D77', display: 'block', ...(isMobile ? { minWidth: 240, maxWidth: 240, flexShrink: 0, scrollSnapAlign: 'start' } : {}) }}
                       onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                       <div style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
@@ -624,9 +632,9 @@ export default function Home() {
                     <a href="/buscar" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades →</a>
                   </div>
                 </div>
-                <div className="slide-cards" style={{ gap: 16 }}>
+                <div style={isMobile ? { display: 'flex', overflowX: 'auto', gap: 12, paddingBottom: 12, scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' } : { display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
                   {src.slice(0,3).map((p: any, i: number) => (
-                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '1px solid #ebebeb', display: 'block' }}
+                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '1px solid #ebebeb', display: 'block', ...(isMobile ? { minWidth: 240, maxWidth: 240, flexShrink: 0, scrollSnapAlign: 'start' } : {}) }}
                       onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                       <div style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
