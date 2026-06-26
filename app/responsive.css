@@ -183,6 +183,9 @@ img { max-width: 100%; }
   .buscar-nav-search { display: none !important; }
   .buscar-nav-desktop { display: none !important; }
   .buscar-mobile-hamburger { display: flex !important; }
+
+  /* Ocultar mapa mini en móvil (Leaflet no inicializa bien en display:none) */
+  .buscar-mapa-mini { display: none !important; }
 }
 
 /* ════════════════════════════════

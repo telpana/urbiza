@@ -611,7 +611,7 @@ function BuscarContent() {
           <div className={`buscar-filtros-panel${filtrosOpen ? ' open' : ''}`} style={{ padding: '14px' }}>
 
           {/* MAPA MINI LIMPIO */}
-          <div style={{ border: '1px solid #e0e0e0', borderRadius: 6, overflow: 'hidden', marginBottom: 14 }}>
+          <div className="buscar-mapa-mini" style={{ border: '1px solid #e0e0e0', borderRadius: 6, overflow: 'hidden', marginBottom: 14 }}>
             <div style={{ height: 180 }}>
               <MapaMini key={zonaParam} zona={zonaParam} />
             </div>
