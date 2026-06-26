@@ -67,6 +67,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="geo.placename" content="República Dominicana" />
         <meta name="language" content="Spanish" />
         <meta name="revisit-after" content="7 days" />
+        <style dangerouslySetInnerHTML={{__html:`
+          .sc-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+          @media(max-width:768px){
+            .sc-wrap{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto!important;gap:12px!important;padding-bottom:12px!important;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory}
+            .sc-wrap>a{min-width:240px!important;max-width:240px!important;flex-shrink:0!important;scroll-snap-align:start}
+          }
+        `}} />
       </head>
       <body>
         <IdiomaProvider>
