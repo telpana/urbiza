@@ -360,14 +360,6 @@ export default function Home() {
               <button onClick={() => setMobileMenuOpen(false)} style={{ all: 'unset', cursor: 'pointer', color: '#fff', fontSize: 24, lineHeight: 1 }}>×</button>
             </div>
             <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
-              {[
-                { label: 'Comprar', href: '/buscar?operacion=venta' },
-                { label: 'Alquilar', href: '/buscar?operacion=alquiler' },
-              ].map(item => (
-                <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', padding: '15px 20px', fontSize: 15, fontWeight: 500, color: '#111', textDecoration: 'none', borderBottom: '1px solid #f5f5f5' }}>
-                  {item.label}
-                </a>
-              ))}
               {authReady && sesionActiva ? (<>
                 <div style={{ padding: '10px 20px 4px', fontSize: 11, fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: 0.5 }}>Mi cuenta</div>
                 {[

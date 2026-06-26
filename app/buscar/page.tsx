@@ -493,16 +493,6 @@ function BuscarContent() {
               <button onClick={() => setMobileMenuOpen(false)} style={{ all: 'unset', cursor: 'pointer', color: '#fff', fontSize: 22, lineHeight: 1 }}>×</button>
             </div>
             <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
-              {[
-                { label: 'Comprar', href: '/buscar?operacion=venta' },
-                { label: 'Alquilar', href: '/buscar?operacion=alquiler' },
-              ].map(item => (
-                <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', fontSize: 15, color: '#111', textDecoration: 'none', borderBottom: '1px solid #f5f5f5' }}
-                  onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
-                  {item.label}
-                </a>
-              ))}
               {sesionActiva ? (<>
                 <div style={{ padding: '10px 20px 4px', fontSize: 11, fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: 0.5 }}>Mi cuenta</div>
                 {[
