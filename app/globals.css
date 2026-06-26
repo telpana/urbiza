@@ -24,3 +24,187 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+* { box-sizing: border-box; }
+img { max-width: 100%; }
+
+/* ── DEFAULTS (desktop) ── */
+.nav-mobile-hamburger    { display: none; }
+.buscar-mobile-hamburger { display: none; }
+.panel-hamburger         { display: none; }
+.panel-sidebar-overlay   { display: none; }
+.buscar-filtros-toggle   { display: none; }
+
+.slide-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+/* ══════════════════════════════════
+   MÓVIL ≤ 768px  — HOME
+══════════════════════════════════ */
+@media (max-width: 768px) {
+  .nav-links          { display: none !important; }
+  .nav-desktop-right  { display: none !important; }
+  .nav-mobile-hamburger { display: flex !important; }
+
+  .hero-search-box { padding: 14px !important; }
+
+  .hero-search {
+    flex-direction: column !important;
+    border: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    gap: 8px !important;
+  }
+  .hero-search > div:first-child { display: none !important; }
+  .hero-search input {
+    border: 1.5px solid #006D77 !important;
+    border-radius: 6px !important;
+    padding: 12px 14px !important;
+    width: 100% !important;
+    font-size: 15px !important;
+  }
+  .hero-search select {
+    border: 1.5px solid #e0e0e0 !important;
+    border-radius: 6px !important;
+    padding: 11px 14px !important;
+    width: 100% !important;
+    font-size: 15px !important;
+    background-color: #fff !important;
+  }
+  .hero-search button {
+    border-radius: 6px !important;
+    width: 100% !important;
+    padding: 13px !important;
+    font-size: 15px !important;
+  }
+
+  .home-actions-grid { grid-template-columns: 1fr !important; }
+  .home-actions-grid > a:first-child {
+    border-right: none !important;
+    border-bottom: 1px solid #e8e8e8 !important;
+  }
+
+  /* ── SLIDE CARDS: scroll horizontal ── */
+  .slide-cards {
+    display: flex !important;
+    overflow-x: auto !important;
+    gap: 12px !important;
+    padding-bottom: 12px !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .slide-cards::-webkit-scrollbar { display: none; }
+  .slide-cards > a {
+    min-width: 240px !important;
+    max-width: 240px !important;
+    flex-shrink: 0 !important;
+    scroll-snap-align: start;
+  }
+
+  /* ── NOVEDADES: scroll horizontal ── */
+  .novedades-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    gap: 12px !important;
+    padding-bottom: 12px !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .novedades-grid::-webkit-scrollbar { display: none; }
+  .novedades-grid > * {
+    min-width: 200px !important;
+    flex-shrink: 0 !important;
+    scroll-snap-align: start;
+  }
+
+  .zonas-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .slide-cards { grid-template-columns: repeat(2, 1fr) !important; }
+  .zonas-grid  { grid-template-columns: repeat(3, 1fr) !important; }
+}
+
+/* ══════════════════════════════════
+   PANEL ≤ 900px
+══════════════════════════════════ */
+@media (max-width: 900px) {
+  .panel-sidebar { display: none !important; }
+  .panel-hamburger {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+  .panel-sidebar.open {
+    display: flex !important;
+    flex-direction: column;
+    position: fixed !important;
+    top: 0 !important; left: 0 !important;
+    width: 240px !important;
+    height: 100vh !important;
+    z-index: 500 !important;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.25) !important;
+    overflow-y: auto;
+  }
+  .panel-sidebar-overlay {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 499;
+  }
+  .panel-main    { padding: 16px !important; }
+  .kpi-grid      { grid-template-columns: repeat(2, 1fr) !important; }
+  .chat-grid     { grid-template-columns: 1fr !important; height: auto !important; min-height: unset !important; }
+  .chat-list     { max-height: 260px !important; overflow-y: auto !important; }
+  .plan-beneficios-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .panel-nav-email { display: none !important; }
+}
+
+@media (max-width: 480px) {
+  .kpi-grid             { grid-template-columns: 1fr !important; }
+  .plan-beneficios-grid { grid-template-columns: 1fr !important; }
+  .panel-main           { padding: 12px !important; }
+}
+
+/* ══════════════════════════════════
+   BUSCAR ≤ 900px
+══════════════════════════════════ */
+@media (max-width: 900px) {
+  .buscar-layout        { grid-template-columns: 1fr !important; }
+  .buscar-filtros       { border-right: none !important; border-bottom: 1px solid #e8e8e8 !important; }
+  .buscar-filtros-panel { display: none !important; }
+  .buscar-filtros-panel.open { display: block !important; }
+  .buscar-filtros-toggle     { display: flex !important; }
+
+  .prop-card     { flex-direction: column !important; min-height: unset !important; border-left: none !important; }
+  .prop-card-img { width: 100% !important; min-width: unset !important; height: 220px !important; }
+
+  .buscar-nav-links    { display: none !important; }
+  .buscar-nav-search   { display: none !important; }
+  .buscar-nav-desktop  { display: none !important; }
+  .buscar-mobile-hamburger { display: flex !important; }
+  .buscar-mapa-mini    { display: none !important; }
+}
+
+/* ══════════════════════════════════
+   PROPIEDAD DETALLE ≤ 768px
+══════════════════════════════════ */
+@media (max-width: 768px) {
+  .propiedad-layout  { grid-template-columns: 1fr !important; }
+  .propiedad-galeria { height: 250px !important; }
+  .propiedad-sidebar { position: static !important; top: auto !important; }
+}
+
+/* ══════════════════════════════════
+   AUTH ≤ 480px
+══════════════════════════════════ */
+@media (max-width: 480px) {
+  .auth-card  { padding: 24px 16px !important; margin: 16px !important; }
+  .tipo-grid  { grid-template-columns: 1fr !important; }
+}
