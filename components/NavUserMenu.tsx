@@ -35,7 +35,7 @@ export default function NavUserMenu({ dark = false }: Props) {
         .eq('vendedor_id', user.id)
       if (msgs) {
         try {
-          const leidos: Record<string, boolean> = JSON.parse(localStorage.getItem(`propiteca_leidos_${user.id}`) || '{}')
+          const leidos: Record<string, boolean> = JSON.parse(localStorage.getItem(`habitade_leidos_${user.id}`) || '{}')
           setNoLeidos(msgs.filter(m => !leidos[m.id]).length)
         } catch {
           setNoLeidos(msgs.length)

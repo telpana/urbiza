@@ -3,7 +3,7 @@ import { createHash } from 'crypto'
 
 export function makeAdminToken() {
   return createHash('sha256')
-    .update(process.env.ADMIN_PASSWORD! + 'propiteca-admin-salt')
+    .update(process.env.ADMIN_PASSWORD! + 'habitade-admin-salt')
     .digest('hex')
 }
 

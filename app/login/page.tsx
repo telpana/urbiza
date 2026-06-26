@@ -83,12 +83,12 @@ export default function Login() {
   if (resetMode) return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
       <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', padding: '0 24px' }}>
-        <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>propiteca<span style={{ color: '#83D4DB' }}>.</span></a>
+        <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>habitade<span style={{ color: '#83D4DB' }}>.</span></a>
       </nav>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 54px)', padding: '40px 20px' }}>
         <div style={{ width: '100%', maxWidth: 420 }}>
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
-            <div style={{ fontSize: 36, fontWeight: 700, color: '#006D77', letterSpacing: -2, marginBottom: 6 }}>propiteca<span style={{ color: '#17A6B4' }}>.</span></div>
+            <div style={{ fontSize: 36, fontWeight: 700, color: '#006D77', letterSpacing: -2, marginBottom: 6 }}>habitade<span style={{ color: '#17A6B4' }}>.</span></div>
             <div style={{ fontSize: 14, color: '#888' }}>Elige tu nueva contraseña</div>
           </div>
           <div style={{ background: '#fff', borderRadius: 10, padding: '32px 28px', boxShadow: '0 2px 16px rgba(0,0,0,0.08)' }}>
@@ -120,7 +120,7 @@ export default function Login() {
       <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', marginRight: 28 }}>
-            propiteca<span style={{ color: '#83D4DB' }}>.</span>
+            habitade<span style={{ color: '#83D4DB' }}>.</span>
           </a>
           {[{ label: Tn.comprar, href: '/buscar?operacion=venta' }, { label: Tn.alquilar, href: '/buscar?operacion=alquiler' }].map(item => (
             <a key={item.label} href={item.href} style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>{item.label}</a>
@@ -134,7 +134,7 @@ export default function Login() {
 
           <div style={{ textAlign: 'center', marginBottom: 32 }}>
             <div style={{ fontSize: 36, fontWeight: 700, color: '#006D77', letterSpacing: -2, marginBottom: 6 }}>
-              propiteca<span style={{ color: '#17A6B4' }}>.</span>
+              habitade<span style={{ color: '#17A6B4' }}>.</span>
             </div>
             <div style={{ fontSize: 14, color: '#888' }}>{T.acceder}</div>
           </div>

@@ -19,7 +19,7 @@ export function IdiomaProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Detectar idioma del navegador automáticamente
-    const guardado = localStorage.getItem('propiteca-idioma') as Idioma
+    const guardado = localStorage.getItem('habitade-idioma') as Idioma
     if (guardado && ['es', 'en', 'fr'].includes(guardado)) {
       setIdiomaState(guardado)
       return
@@ -32,7 +32,7 @@ export function IdiomaProvider({ children }: { children: ReactNode }) {
 
   const setIdioma = (i: Idioma) => {
     setIdiomaState(i)
-    localStorage.setItem('propiteca-idioma', i)
+    localStorage.setItem('habitade-idioma', i)
   }
 
   return (

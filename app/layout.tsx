@@ -3,7 +3,7 @@ import "./globals.css";
 import { IdiomaProvider } from "../IdiomaContext";
 
 export const metadata: Metadata = {
-  title: "Propiteca - Portal inmobiliario República Dominicana",
+  title: "Habitade - Portal inmobiliario República Dominicana",
   description: "Encuentra tu próxima propiedad en República Dominicana. Apartamentos, villas, terrenos y más.",
 };
 

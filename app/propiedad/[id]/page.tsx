@@ -298,7 +298,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
       <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', marginRight: 28 }}>
-            propiteca<span style={{ color: '#83D4DB' }}>.</span>
+            habitade<span style={{ color: '#83D4DB' }}>.</span>
           </a>
           {[{ label: Tn.comprar, href: '/buscar?operacion=venta' }, { label: Tn.alquilar, href: '/buscar?operacion=alquiler' }].map(item => (
             <a key={item.label} href={item.href} style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>{item.label}</a>
@@ -321,7 +321,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
 
       {/* BREADCRUMB */}
       <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '8px 20px', fontSize: 12, color: '#aaa', display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-        <a href="/" style={{ color: '#006D77', textDecoration: 'none' }}>Propiteca</a>
+        <a href="/" style={{ color: '#006D77', textDecoration: 'none' }}>Habitade</a>
         <span>›</span>
         <a href="/buscar" style={{ color: '#006D77', textDecoration: 'none' }}>República Dominicana</a>
         <span>›</span>
@@ -526,7 +526,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
               </button>
               <button onClick={async () => {
                 const url = window.location.href.split('?')[0]
-                if (navigator.share) { navigator.share({ title: propiedad?.titulo || 'Propiedad en Propiteca', url }) }
+                if (navigator.share) { navigator.share({ title: propiedad?.titulo || 'Propiedad en Habitade', url }) }
                 else { await navigator.clipboard.writeText(url); alert(Tp.enlaceCopiad) }
               }} style={{ all: 'unset', flex: 1, border: '1px solid #e0e0e0', borderRadius: 6, padding: '10px', fontSize: 12, color: '#555', cursor: 'pointer', textAlign: 'center', background: '#fff' }}>{Tp.compartir}</button>
             </div>
@@ -535,7 +535,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
       </div>
 
       <footer style={{ background: '#004E57', color: 'rgba(255,255,255,0.5)', padding: '20px', fontSize: 12, textAlign: 'center' }}>
-        <strong style={{ color: 'rgba(255,255,255,0.8)' }}>propiteca.com</strong> · © 2025 · República Dominicana
+        <strong style={{ color: 'rgba(255,255,255,0.8)' }}>habitade.com</strong> · © 2025 · República Dominicana
       </footer>
     </main>
   )

@@ -87,7 +87,7 @@ export default function CompletarPerfil() {
     <main style={{ fontFamily: 'sans-serif', background: '#f4f5f6', minHeight: '100vh' }}>
       <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', padding: '0 24px' }}>
         <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>
-          propiteca<span style={{ color: '#83D4DB' }}>.</span>
+          habitade<span style={{ color: '#83D4DB' }}>.</span>
         </a>
       </nav>
 
