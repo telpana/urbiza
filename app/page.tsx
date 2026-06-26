@@ -568,6 +568,14 @@ export default function Home() {
       </div>
 
       {/* PROPIEDADES DESTACADAS */}
+      <style dangerouslySetInnerHTML={{__html:`
+        .sc-wrap { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+        .sc-wrap > a { display: block; }
+        @media (max-width: 768px) {
+          .sc-wrap { display: flex !important; overflow-x: auto !important; gap: 12px !important; padding-bottom: 12px !important; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
+          .sc-wrap > a { min-width: 240px !important; max-width: 240px !important; flex-shrink: 0 !important; scroll-snap-align: start; }
+        }
+      `}} />
       <div style={{ background: '#f4f5f6' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '36px 20px 0' }}>
           {/* Destacadas rotando */}
@@ -591,9 +599,9 @@ export default function Home() {
                     </div>
                   )}
                 </div>
-                <div style={isMobile ? { display: 'flex', overflowX: 'auto', gap: 12, paddingBottom: 12, scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' } : { display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
+                <div className="sc-wrap">
                   {visibles.map((p: any, i: number) => (
-                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '2px solid #006D77', display: 'block', ...(isMobile ? { minWidth: 240, maxWidth: 240, flexShrink: 0, scrollSnapAlign: 'start' } : {}) }}
+                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '2px solid #006D77' }}
                       onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                       <div style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
@@ -632,9 +640,9 @@ export default function Home() {
                     <a href="/buscar" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades →</a>
                   </div>
                 </div>
-                <div style={isMobile ? { display: 'flex', overflowX: 'auto', gap: 12, paddingBottom: 12, scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' } : { display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
+                <div className="sc-wrap">
                   {src.slice(0,3).map((p: any, i: number) => (
-                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '1px solid #ebebeb', display: 'block', ...(isMobile ? { minWidth: 240, maxWidth: 240, flexShrink: 0, scrollSnapAlign: 'start' } : {}) }}
+                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '1px solid #ebebeb' }}
                       onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                       <div style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
