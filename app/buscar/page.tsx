@@ -322,6 +322,7 @@ function BuscarContent() {
 
   const [tipo, setTipo] = useState(tipoParam || 'Todos')
   const [filtrosOpen, setFiltrosOpen] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [operacion, setOperacion] = useState(operacionParam)
   const [query, setQuery] = useState(zonaParam)
   const [orden, setOrden] = useState('Relevancia')
@@ -483,6 +484,54 @@ function BuscarContent() {
       {/* MAPA COMPLETO — pantalla entera */}
       {verMapa && <MapaCompleto propiedades={filtradas} onCerrar={() => setVerMapa(false)} />}
 
+      {/* MENÚ MÓVIL OVERLAY */}
+      {mobileMenuOpen && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 400 }} onClick={() => setMobileMenuOpen(false)}>
+          <div style={{ position: 'absolute', top: 0, right: 0, width: 260, height: '100vh', background: '#fff', boxShadow: '-4px 0 24px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
+            <div style={{ background: '#006D77', padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: 20, fontWeight: 700, color: '#fff', letterSpacing: -1 }}>habitade<span style={{ color: '#83D4DB' }}>.</span></span>
+              <button onClick={() => setMobileMenuOpen(false)} style={{ all: 'unset', cursor: 'pointer', color: '#fff', fontSize: 22, lineHeight: 1 }}>×</button>
+            </div>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
+              {[
+                { label: 'Comprar', href: '/buscar?operacion=venta' },
+                { label: 'Alquilar', href: '/buscar?operacion=alquiler' },
+              ].map(item => (
+                <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', fontSize: 15, color: '#111', textDecoration: 'none', borderBottom: '1px solid #f5f5f5' }}
+                  onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                  {item.label}
+                </a>
+              ))}
+              {sesionActiva ? (<>
+                <div style={{ padding: '10px 20px 4px', fontSize: 11, fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: 0.5 }}>Mi cuenta</div>
+                {[
+                  { label: 'Mi panel', href: '/panel' },
+                  { label: 'Mis anuncios', href: '/panel?s=anuncios' },
+                  { label: 'Mensajes', href: '/panel?s=mensajes' },
+                  { label: 'Guardados', href: '/panel?s=guardados' },
+                  { label: 'Mi perfil', href: '/panel?s=perfil' },
+                ].map(item => (
+                  <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 20px', fontSize: 14, color: '#333', textDecoration: 'none', borderBottom: '1px solid #f5f5f5' }}
+                    onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                    {item.label}
+                  </a>
+                ))}
+                <button onClick={async () => { const { supabase: sb } = await import('../../supabase'); await sb.auth.signOut(); window.location.href = '/' }} style={{ all: 'unset', display: 'flex', width: '100%', alignItems: 'center', padding: '13px 20px', fontSize: 14, color: '#e63946', cursor: 'pointer', borderTop: '1px solid #f0f0f0', boxSizing: 'border-box', marginTop: 8 }}>
+                  Cerrar sesión
+                </button>
+              </>) : (<>
+                <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 10, borderTop: '1px solid #f0f0f0', marginTop: 8 }}>
+                  <a href="/login" style={{ display: 'block', textAlign: 'center', padding: '12px', fontSize: 14, fontWeight: 600, color: '#006D77', border: '1.5px solid #006D77', borderRadius: 8, textDecoration: 'none' }}>Iniciar sesión</a>
+                  <a href="/registro" style={{ display: 'block', textAlign: 'center', padding: '12px', fontSize: 14, fontWeight: 600, color: '#fff', background: '#006D77', borderRadius: 8, textDecoration: 'none' }}>Publicar gratis</a>
+                </div>
+              </>)}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* NAV */}
       <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -498,7 +547,7 @@ function BuscarContent() {
           ))}
           </div>
         </div>
-        <div style={{ flex: 1, maxWidth: 380, margin: '0 20px', position: 'relative' }}>
+        <div className="buscar-nav-search" style={{ flex: 1, maxWidth: 380, margin: '0 20px', position: 'relative' }}>
           <div style={{ display: 'flex', background: '#fff', borderRadius: 4, overflow: 'hidden', height: 34, boxShadow: '0 1px 4px rgba(0,0,0,0.15)' }}>
             <div style={{ display: 'flex', alignItems: 'center', padding: '0 10px', borderRight: '1px solid #e8e8e8' }}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
@@ -530,11 +579,16 @@ function BuscarContent() {
           )}
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
-          <NavUserMenu dark={true} />
-          {authReady && !sesionActiva && <>
-            <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.entrar}</a>
-            <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.publicar}</a>
-          </>}
+          <div className="buscar-nav-desktop" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <NavUserMenu dark={true} />
+            {authReady && !sesionActiva && <>
+              <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.entrar}</a>
+              <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.publicar}</a>
+            </>}
+          </div>
+          <button className="buscar-mobile-hamburger" onClick={() => setMobileMenuOpen(true)} style={{ display: 'none', all: 'unset', cursor: 'pointer', padding: '6px 8px', borderRadius: 6, background: 'rgba(255,255,255,0.15)' }}>
+            <svg width="20" height="16" viewBox="0 0 20 16" fill="none"><rect y="0" width="20" height="2.5" rx="1.25" fill="white"/><rect y="6.5" width="20" height="2.5" rx="1.25" fill="white"/><rect y="13" width="20" height="2.5" rx="1.25" fill="white"/></svg>
+          </button>
         </div>
       </nav>
 
@@ -702,19 +756,17 @@ function BuscarContent() {
 
         {/* RESULTADOS */}
         <div className="buscar-lista">
-          <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 20px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <h1 style={{ fontSize: 18, fontWeight: 600, color: '#111', margin: 0 }}>
-                {cargando ? `${tr.hero.buscar}...` : tituloPagina}
-              </h1>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 13, color: '#777' }}>{Tb.ordenar}</span>
-                {ordenes.map(o => (
-                  <button key={o.val} onClick={() => setOrden(o.val)} style={{ all: 'unset', border: `1px solid ${orden === o.val ? '#006D77' : '#ddd'}`, borderRadius: 4, padding: '5px 12px', fontSize: 13, color: orden === o.val ? '#006D77' : '#555', cursor: 'pointer', background: orden === o.val ? '#f0fafb' : '#fff' }}>
-                    {o.label}
-                  </button>
-                ))}
-              </div>
+          <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 16px' }}>
+            <h1 style={{ fontSize: 17, fontWeight: 600, color: '#111', margin: '0 0 8px' }}>
+              {cargando ? `${tr.hero.buscar}...` : tituloPagina}
+            </h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+              <span style={{ fontSize: 12, color: '#777' }}>{Tb.ordenar}</span>
+              {ordenes.map(o => (
+                <button key={o.val} onClick={() => setOrden(o.val)} style={{ all: 'unset', border: `1px solid ${orden === o.val ? '#006D77' : '#ddd'}`, borderRadius: 4, padding: '5px 12px', fontSize: 12, color: orden === o.val ? '#006D77' : '#555', cursor: 'pointer', background: orden === o.val ? '#f0fafb' : '#fff' }}>
+                  {o.label}
+                </button>
+              ))}
             </div>
           </div>
 

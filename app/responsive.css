@@ -5,9 +5,14 @@ img { max-width: 100%; }
 /* ════════════════════════════════
    HOME
 ════════════════════════════════ */
+.nav-mobile-hamburger { display: none; }
+.buscar-mobile-hamburger { display: none; }
+
 @media (max-width: 768px) {
-  /* Nav: ocultar links, solo logo + botones */
+  /* Nav: ocultar links y parte derecha desktop, mostrar hamburger */
   .nav-links { display: none !important; }
+  .nav-desktop-right { display: none !important; }
+  .nav-mobile-hamburger { display: flex !important; }
 
   /* Hero: reducir padding */
   .hero-search-box { padding: 14px 14px !important; }
@@ -50,14 +55,20 @@ img { max-width: 100%; }
     border-bottom: 1px solid #e8e8e8 !important;
   }
 
-  /* Tarjetas de propiedades: 1 columna */
-  .slide-cards { grid-template-columns: 1fr !important; }
-  .slide-cards > a { display: flex !important; flex-direction: row !important; height: 100px !important; }
-  .slide-cards > a > div:first-child { width: 120px !important; min-width: 120px !important; height: 100% !important; flex-shrink: 0 !important; }
-  .slide-cards > a > div:last-child { padding: 10px 12px !important; }
-  .slide-cards > a > div:last-child > div:first-child { font-size: 15px !important; margin-bottom: 2px !important; }
-  .slide-cards > a > div:last-child > div:nth-child(2) { font-size: 11px !important; }
-  .slide-cards > a > div:last-child > div:nth-child(3) { font-size: 11px !important; }
+  /* Tarjetas de propiedades: scroll horizontal en móvil */
+  .slide-cards {
+    display: flex !important;
+    overflow-x: auto !important;
+    gap: 12px !important;
+    padding-bottom: 8px !important;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .slide-cards > a {
+    min-width: 220px !important;
+    flex-shrink: 0 !important;
+    scroll-snap-align: start;
+  }
 
   /* Grids de zonas */
   .zonas-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -165,8 +176,11 @@ img { max-width: 100%; }
     height: 220px !important;
   }
 
-  /* Nav de buscar: ocultar links extra */
+  /* Nav de buscar en móvil */
   .buscar-nav-links { display: none !important; }
+  .buscar-nav-search { display: none !important; }
+  .buscar-nav-desktop { display: none !important; }
+  .buscar-mobile-hamburger { display: flex !important; }
 }
 
 /* ════════════════════════════════

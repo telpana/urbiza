@@ -265,6 +265,7 @@ export default function Home() {
   const [novedadesSantiago, setNovedadesSantiago] = useState<any[]>([])
   const [sesionActiva, setSesionActiva] = useState(false)
   const [authReady, setAuthReady] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
   const [tipoUsuario, setTipoUsuario] = useState<string>('')
   const [fotoUrl, setFotoUrl] = useState<string>('')
@@ -350,7 +351,62 @@ export default function Home() {
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6' }}>
       {verMapa && <MapaCompletoPropiedades onCerrar={() => setVerMapa(false)} />}
 
-      {/* NAV — BLANCO, menu junto al logo a la izquierda */}
+      {/* MENÚ MÓVIL OVERLAY */}
+      {mobileMenuOpen && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 400 }} onClick={() => setMobileMenuOpen(false)}>
+          <div style={{ position: 'absolute', top: 0, right: 0, width: 270, height: '100vh', background: '#fff', boxShadow: '-4px 0 24px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
+            <div style={{ background: '#006D77', padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <span style={{ fontSize: 20, fontWeight: 700, color: '#fff', letterSpacing: -1 }}>habitade<span style={{ color: '#83D4DB' }}>.</span></span>
+              <button onClick={() => setMobileMenuOpen(false)} style={{ all: 'unset', cursor: 'pointer', color: '#fff', fontSize: 24, lineHeight: 1 }}>×</button>
+            </div>
+            <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
+              {[
+                { label: 'Comprar', href: '/buscar?operacion=venta' },
+                { label: 'Alquilar', href: '/buscar?operacion=alquiler' },
+              ].map(item => (
+                <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', padding: '15px 20px', fontSize: 15, fontWeight: 500, color: '#111', textDecoration: 'none', borderBottom: '1px solid #f5f5f5' }}>
+                  {item.label}
+                </a>
+              ))}
+              {authReady && sesionActiva ? (<>
+                <div style={{ padding: '10px 20px 4px', fontSize: 11, fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: 0.5 }}>Mi cuenta</div>
+                {[
+                  { label: 'Mi panel', href: '/panel' },
+                  { label: 'Mis anuncios', href: '/panel?s=anuncios' },
+                  { label: 'Mensajes', href: '/panel?s=mensajes' },
+                  { label: 'Guardados', href: '/panel?s=guardados' },
+                  { label: 'Mi perfil', href: '/panel?s=perfil' },
+                ].map(item => (
+                  <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', padding: '13px 20px', fontSize: 14, color: '#333', textDecoration: 'none', borderBottom: '1px solid #f5f5f5' }}>
+                    {item.label}
+                  </a>
+                ))}
+                <button onClick={async () => { const { supabase: sb } = await import('../supabase'); await sb.auth.signOut(); window.location.href = '/' }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', padding: '14px 20px', fontSize: 14, color: '#e63946', cursor: 'pointer', borderTop: '1px solid #f0f0f0', marginTop: 8, boxSizing: 'border-box' }}>
+                  Cerrar sesión
+                </button>
+              </>) : authReady ? (
+                <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 10, borderTop: '1px solid #f0f0f0', marginTop: 8 }}>
+                  <a href="/login" style={{ display: 'block', textAlign: 'center', padding: '13px', fontSize: 15, fontWeight: 600, color: '#006D77', border: '1.5px solid #006D77', borderRadius: 8, textDecoration: 'none' }}>Iniciar sesión</a>
+                  <a href="/registro" style={{ display: 'block', textAlign: 'center', padding: '13px', fontSize: 15, fontWeight: 600, color: '#fff', background: '#006D77', borderRadius: 8, textDecoration: 'none' }}>Publicar gratis</a>
+                </div>
+              ) : null}
+              {/* Idioma */}
+              <div style={{ padding: '12px 20px', borderTop: '1px solid #f0f0f0', marginTop: 8 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 10 }}>Idioma</div>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  {(['es', 'en', 'fr'] as const).map(l => (
+                    <button key={l} onClick={() => { setIdioma(l); setMobileMenuOpen(false) }} style={{ all: 'unset', padding: '8px 16px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: `1.5px solid ${idioma === l ? '#006D77' : '#e0e0e0'}`, color: idioma === l ? '#006D77' : '#666', background: idioma === l ? '#f0fafb' : '#fff' }}>
+                      {l.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* NAV — BLANCO */}
       <nav style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', height: 60, display: 'flex', alignItems: 'center', padding: '0 24px', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
           <a href="/" style={{ fontSize: 28, fontWeight: 700, color: '#006D77', letterSpacing: -2, marginRight: 32, textDecoration: 'none' }}>
@@ -370,8 +426,8 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Idioma — posición fija, nunca se mueve */}
-        <div style={{ position: 'absolute', right: 24, top: 0, bottom: 0, display: 'flex', alignItems: 'center', gap: 10 }}>
+        {/* Desktop: idioma + NavUserMenu + botones auth */}
+        <div className="nav-desktop-right" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ position: 'relative' }} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setIdiomaOpen(false) }}>
             <button onClick={() => setIdiomaOpen(!idiomaOpen)} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 600, color: '#555', cursor: 'pointer', padding: '5px 8px', borderRadius: 4 }}
               onMouseEnter={e => e.currentTarget.style.color = '#006D77'}
@@ -397,6 +453,11 @@ export default function Home() {
             <a href="/registro" style={{ fontSize: 13, color: '#fff', background: '#006D77', padding: '8px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.publicar}</a>
           </>}
         </div>
+
+        {/* Móvil: hamburger */}
+        <button className="nav-mobile-hamburger" onClick={() => setMobileMenuOpen(true)} style={{ display: 'none', all: 'unset', cursor: 'pointer', padding: '8px', borderRadius: 6, border: '1.5px solid #e0e0e0' }}>
+          <svg width="20" height="16" viewBox="0 0 20 16" fill="none"><rect y="0" width="20" height="2.5" rx="1.25" fill="#006D77"/><rect y="6.5" width="20" height="2.5" rx="1.25" fill="#006D77"/><rect y="13" width="20" height="2.5" rx="1.25" fill="#006D77"/></svg>
+        </button>
       </nav>
 
       {/* BANNER CON IMAGEN — imagen configurable desde panel de administración */}
