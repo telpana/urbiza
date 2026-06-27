@@ -391,7 +391,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
         <span style={{ color: '#444' }}>{propiedad.titulo}</span>
       </div>
 
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '20px 20px 40px' }}>
+      <div className="propiedad-outer" style={{ maxWidth: 1100, margin: '0 auto', padding: '20px 20px 40px' }}>
         <div className="propiedad-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 24, alignItems: 'start' }}>
 
           {/* COLUMNA IZQUIERDA */}
