@@ -496,7 +496,7 @@ export default function Home() {
           <div className="banner-img" style={{ position: 'absolute', inset: 0, backgroundImage: `url(${bannerUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
         </div>
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,78,87,0.72)' }} />
-        <div style={{ position: 'relative', zIndex: 2, width: '100%', padding: '40px 20px 36px' }}>
+        <div style={{ position: 'relative', zIndex: 50, width: '100%', padding: '40px 20px 36px' }}>
         <div style={{ maxWidth: 720, margin: '0 auto' }}>
           <h1 className="home-hero-h1" style={{ color: '#fff', fontSize: 26, fontWeight: 600, marginBottom: 6, textAlign: 'center', letterSpacing: -0.5 }}>
             {tr.hero.titulo}
