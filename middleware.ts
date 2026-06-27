@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const OPEN = true
+const OPEN = false
 
 export function middleware(request: NextRequest) {
   if (OPEN) return NextResponse.next()
