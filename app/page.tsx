@@ -731,8 +731,14 @@ export default function Home() {
           {/* Links */}
           <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-              {['Aviso legal', 'Privacidad', 'Cookies', 'Ayuda', 'Publicar anuncio', 'Planes'].map((l) => (
-                <a key={l} href="#" style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: 12 }}>{l}</a>
+              {[
+                { label: 'Aviso legal', href: '/legal/aviso-legal' },
+                { label: 'Privacidad', href: '/legal/privacidad' },
+                { label: 'Cookies', href: '/legal/cookies' },
+                { label: 'Publicar anuncio', href: '/panel' },
+                { label: 'Planes', href: '/panel?s=plan' },
+              ].map(({ label, href }) => (
+                <a key={label} href={href} style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: 12 }}>{label}</a>
               ))}
             </div>
             <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>
