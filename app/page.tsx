@@ -280,7 +280,7 @@ export default function Home() {
   const [idiomaOpen, setIdiomaOpen] = useState(false)
   const [bannerUrl, setBannerUrl] = useState(() =>
     (typeof window !== 'undefined' && localStorage.getItem('hb_banner')) ||
-    'https://images.unsplash.com/photo-1757840998335-3188f8d37627?w=1600&q=80'
+    'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1600&q=80'
   )
   const [featureImgUrl, setFeatureImgUrl] = useState('')
   const [faviconUrl, setFaviconUrl] = useState('')
