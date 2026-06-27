@@ -834,7 +834,7 @@ function BuscarContent() {
               <button onClick={() => { setPagina(p => Math.max(1, p - 1)); window.scrollTo(0,0) }}
                 disabled={pagina === 1}
                 style={{ border: '1.5px solid #e0e0e0', background: '#fff', color: pagina === 1 ? '#ccc' : '#333', padding: '8px 14px', borderRadius: 4, fontSize: 13, cursor: pagina === 1 ? 'default' : 'pointer' }}>
-                ← Anterior
+                Anterior
               </button>
               {Array.from({ length: totalPaginas }, (_, i) => i + 1)
                 .filter(n => n === 1 || n === totalPaginas || Math.abs(n - pagina) <= 2)
@@ -853,7 +853,7 @@ function BuscarContent() {
               <button onClick={() => { setPagina(p => Math.min(totalPaginas, p + 1)); window.scrollTo(0,0) }}
                 disabled={pagina === totalPaginas}
                 style={{ border: '1.5px solid #e0e0e0', background: '#fff', color: pagina === totalPaginas ? '#ccc' : '#333', padding: '8px 14px', borderRadius: 4, fontSize: 13, cursor: pagina === totalPaginas ? 'default' : 'pointer' }}>
-                Siguiente →
+                Siguiente
               </button>
             </div>
           )}
