@@ -375,48 +375,37 @@ export default function Home() {
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6' }}>
       {verMapa && <MapaCompletoPropiedades onCerrar={() => setVerMapa(false)} />}
 
-      {/* MENÚ MÓVIL OVERLAY */}
+      {/* MENÚ MÓVIL DROPDOWN */}
       {mobileMenuOpen && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 400 }} onClick={() => setMobileMenuOpen(false)}>
-          <div style={{ position: 'absolute', top: 0, right: 0, width: 270, height: '100vh', background: '#fff', boxShadow: '-4px 0 24px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
-            <div style={{ background: '#006D77', padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: 20, fontWeight: 700, color: '#fff', letterSpacing: -1 }}>habitade<span style={{ color: '#83D4DB' }}>.</span></span>
-              <button onClick={() => setMobileMenuOpen(false)} style={{ all: 'unset', cursor: 'pointer', color: '#fff', fontSize: 24, lineHeight: 1 }}>×</button>
-            </div>
-            <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
-              {authReady && sesionActiva ? (<>
-                <div style={{ padding: '10px 20px 4px', fontSize: 11, fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: 0.5 }}>Mi cuenta</div>
-                {[
-                  { label: 'Mi panel', href: '/panel' },
-                  { label: 'Mis anuncios', href: '/panel?s=anuncios' },
-                  { label: 'Mensajes', href: '/panel?s=mensajes' },
-                  { label: 'Guardados', href: '/panel?s=guardados' },
-                  { label: 'Mi perfil', href: '/panel?s=perfil' },
-                ].map(item => (
-                  <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', padding: '13px 20px', fontSize: 14, color: '#333', textDecoration: 'none', borderBottom: '1px solid #f5f5f5' }}>
-                    {item.label}
-                  </a>
-                ))}
-                <button onClick={async () => { const { supabase: sb } = await import('../supabase'); await sb.auth.signOut(); window.location.href = '/' }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', padding: '14px 20px', fontSize: 14, color: '#e63946', cursor: 'pointer', borderTop: '1px solid #f0f0f0', marginTop: 8, boxSizing: 'border-box' }}>
-                  Cerrar sesión
-                </button>
-              </>) : authReady ? (
-                <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 10, borderTop: '1px solid #f0f0f0', marginTop: 8 }}>
-                  <a href="/login" style={{ display: 'block', textAlign: 'center', padding: '13px', fontSize: 15, fontWeight: 600, color: '#006D77', border: '1.5px solid #006D77', borderRadius: 8, textDecoration: 'none' }}>Iniciar sesión</a>
-                  <a href="/registro" style={{ display: 'block', textAlign: 'center', padding: '13px', fontSize: 15, fontWeight: 600, color: '#fff', background: '#006D77', borderRadius: 8, textDecoration: 'none' }}>Publicar gratis</a>
-                </div>
-              ) : null}
-              {/* Idioma */}
-              <div style={{ padding: '12px 20px', borderTop: '1px solid #f0f0f0', marginTop: 8 }}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 10 }}>Idioma</div>
-                <div style={{ display: 'flex', gap: 8 }}>
-                  {(['es', 'en', 'fr'] as const).map(l => (
-                    <button key={l} onClick={() => { setIdioma(l); setMobileMenuOpen(false) }} style={{ all: 'unset', padding: '8px 16px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: `1.5px solid ${idioma === l ? '#006D77' : '#e0e0e0'}`, color: idioma === l ? '#006D77' : '#666', background: idioma === l ? '#f0fafb' : '#fff' }}>
-                      {l.toUpperCase()}
-                    </button>
-                  ))}
-                </div>
+          <div style={{ position: 'absolute', top: 60, left: 0, right: 0, background: '#fff', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', borderTop: '1px solid #e8e8e8' }} onClick={e => e.stopPropagation()}>
+            {authReady && sesionActiva ? (<>
+              {[
+                { label: 'Mi panel', href: '/panel' },
+                { label: 'Mis anuncios', href: '/panel?s=anuncios' },
+                { label: 'Mensajes', href: '/panel?s=mensajes' },
+                { label: 'Guardados', href: '/panel?s=guardados' },
+                { label: 'Mi perfil', href: '/panel?s=perfil' },
+              ].map(item => (
+                <a key={item.href} href={item.href} style={{ display: 'block', padding: '14px 20px', fontSize: 14, color: '#222', textDecoration: 'none', borderBottom: '1px solid #f5f5f5' }}>
+                  {item.label}
+                </a>
+              ))}
+              <button onClick={async () => { const { supabase: sb } = await import('../supabase'); await sb.auth.signOut(); window.location.href = '/' }} style={{ all: 'unset', width: '100%', display: 'block', padding: '14px 20px', fontSize: 14, color: '#e63946', cursor: 'pointer', borderTop: '1px solid #f0f0f0', boxSizing: 'border-box' }}>
+                Cerrar sesión
+              </button>
+            </>) : authReady ? (
+              <div style={{ padding: '14px 20px', display: 'flex', gap: 10 }}>
+                <a href="/login" style={{ flex: 1, display: 'block', textAlign: 'center', padding: '11px', fontSize: 14, fontWeight: 600, color: '#006D77', border: '1.5px solid #006D77', borderRadius: 8, textDecoration: 'none' }}>Entrar</a>
+                <a href="/registro" style={{ flex: 1, display: 'block', textAlign: 'center', padding: '11px', fontSize: 14, fontWeight: 600, color: '#fff', background: '#006D77', borderRadius: 8, textDecoration: 'none' }}>Publicar gratis</a>
               </div>
+            ) : null}
+            <div style={{ padding: '10px 20px 14px', borderTop: '1px solid #f0f0f0', display: 'flex', gap: 8 }}>
+              {(['es', 'en', 'fr'] as const).map(l => (
+                <button key={l} onClick={() => { setIdioma(l); setMobileMenuOpen(false) }} style={{ all: 'unset', padding: '6px 14px', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: `1.5px solid ${idioma === l ? '#006D77' : '#e0e0e0'}`, color: idioma === l ? '#006D77' : '#888', background: idioma === l ? '#f0fafb' : '#fff' }}>
+                  {l.toUpperCase()}
+                </button>
+              ))}
             </div>
           </div>
         </div>
