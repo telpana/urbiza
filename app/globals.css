@@ -127,6 +127,27 @@ img { max-width: 100%; }
   }
 
   .zonas-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* ── BANNER ── */
+  .home-banner { min-height: 300px !important; }
+
+  /* ── HERO TEXT ── */
+  .home-hero-h1  { font-size: 20px !important; }
+  .home-hero-sub { font-size: 13px !important; margin-bottom: 16px !important; }
+
+  /* ── SECCIONES PROPS Y ZONAS ── */
+  .home-props-wrap    { padding: 20px 16px 0 !important; }
+  .home-zonas-section { padding: 24px 16px 24px !important; }
+
+  /* ── ACTION CARDS: reducir padding en móvil ── */
+  .home-actions-grid > a { padding: 20px 16px !important; }
+
+  /* ── FOOTER ── */
+  .footer-bottom {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {

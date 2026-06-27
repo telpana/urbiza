@@ -477,15 +477,15 @@ export default function Home() {
       </nav>
 
       {/* BANNER CON IMAGEN — imagen configurable desde panel de administración */}
-      <div style={{ position: 'relative', minHeight: 420, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
+      <div className="home-banner" style={{ position: 'relative', minHeight: 420, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
         <div className="banner-img" style={{ position: 'absolute', inset: 0, backgroundImage: `url(${bannerUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,78,87,0.72)' }} />
         <div style={{ position: 'relative', zIndex: 2, width: '100%', padding: '40px 20px 36px' }}>
         <div style={{ maxWidth: 720, margin: '0 auto' }}>
-          <h1 style={{ color: '#fff', fontSize: 26, fontWeight: 600, marginBottom: 6, textAlign: 'center', letterSpacing: -0.5 }}>
+          <h1 className="home-hero-h1" style={{ color: '#fff', fontSize: 26, fontWeight: 600, marginBottom: 6, textAlign: 'center', letterSpacing: -0.5 }}>
             {tr.hero.titulo}
           </h1>
-          <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, marginBottom: 22, textAlign: 'center' }}>
+          <p className="home-hero-sub" style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, marginBottom: 22, textAlign: 'center' }}>
             {tr.hero.subtitulo}
           </p>
           <div className="hero-search-box" style={{ background: '#fff', borderRadius: 8, padding: '18px 18px', boxShadow: '0 4px 24px rgba(0,0,0,0.15)' }}>
@@ -592,7 +592,7 @@ export default function Home() {
         }
       `}} />
       <div style={{ background: '#f4f5f6' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '36px 20px 0' }}>
+        <div className="home-props-wrap" style={{ maxWidth: 1100, margin: '0 auto', padding: '36px 20px 0' }}>
           {/* Destacadas rotando */}
           {(() => {
             const bgs = ['#e0f5f7','#ddf0e8','#e8eaf0','#f0ebe0','#e8f0e0','#f0e8f0']
@@ -686,7 +686,7 @@ export default function Home() {
       </div>
 
       {/* ZONAS MÁS BUSCADAS */}
-      <div style={{ background: '#fff', borderTop: '1px solid #e8e8e8', padding: '36px 20px 40px' }}>
+      <div className="home-zonas-section" style={{ background: '#fff', borderTop: '1px solid #e8e8e8', padding: '36px 20px 40px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 20 }}>Zonas más buscadas</h2>
           <div className="zonas-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 }}>
@@ -733,7 +733,7 @@ export default function Home() {
             </div>
           </div>
           {/* Links */}
-          <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
+          <div className="footer-bottom" style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
             <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
               {[
                 { label: 'Aviso legal', href: '/legal/aviso-legal' },
