@@ -786,9 +786,14 @@ function BuscarContent() {
                       {p.fotos.length}
                     </div>
                   )}
+                  {/* Corazón overlay — solo visible en móvil via CSS */}
+                  <button className="pc-fav-img" onClick={e => toggleFavorito(e, String(p.id))}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill={favoritosSet.has(String(p.id)) ? '#e63946' : 'none'} stroke={favoritosSet.has(String(p.id)) ? '#e63946' : '#555'} strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  </button>
                 </div>
                 <div className="pc-body" style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0 }}>
                   <div>
+                    <div className="pc-zona-text">{p.zona}</div>
                     <div className="pc-titulo" style={{ fontSize: 15, fontWeight: 600, color: '#006D77', marginBottom: 8 }}>
                       {p.titulo}
                     </div>

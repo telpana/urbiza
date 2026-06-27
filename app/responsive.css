@@ -175,6 +175,8 @@ img { max-width: 100%; }
    BUSCAR
 ════════════════════════════════ */
 .buscar-filtros-toggle { display: none; }
+.pc-fav-img   { display: none; }
+.pc-zona-text { display: none; }
 
 @media (max-width: 900px) {
   /* Layout: 1 columna */
@@ -191,82 +193,91 @@ img { max-width: 100%; }
   /* Botón filtros visible */
   .buscar-filtros-toggle { display: flex !important; }
 
-  /* Tarjetas de propiedad: estilo Idealista */
+  /* ── TARJETAS BUSCAR: estilo Idealista ── */
   .prop-card {
     flex-direction: column !important;
     min-height: unset !important;
     border-left: none !important;
-    border-bottom: 12px solid #f4f5f6 !important;
+    border-bottom: 10px solid #f0f1f2 !important;
     box-shadow: none !important;
   }
   .prop-card-img {
     width: 100% !important;
     min-width: unset !important;
-    height: 240px !important;
+    height: 230px !important;
   }
 
-  /* Badges en imagen */
-  .pc-badge {
+  /* Corazón flotante sobre imagen */
+  .pc-fav-img {
+    display: flex !important;
     position: absolute !important;
-    top: 10px !important;
+    bottom: 10px !important;
     right: 10px !important;
-    font-size: 10px !important;
-    font-weight: 700 !important;
-    padding: 3px 9px !important;
-    border-radius: 4px !important;
-    z-index: 1 !important;
-    letter-spacing: 0.3px !important;
+    width: 36px !important;
+    height: 36px !important;
+    background: rgba(255,255,255,0.92) !important;
+    border: none !important;
+    border-radius: 50% !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    z-index: 2 !important;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.18) !important;
+    padding: 0 !important;
+    all: unset !important;
+    display: flex !important;
+    position: absolute !important;
+    bottom: 10px !important;
+    right: 10px !important;
+    width: 36px !important;
+    height: 36px !important;
+    background: rgba(255,255,255,0.92) !important;
+    border-radius: 50% !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    z-index: 2 !important;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.18) !important;
   }
-  .pc-badge-dest { background: #006D77 !important; color: #fff !important; }
-  .pc-badge-visto { background: #17A6B4 !important; color: #fff !important; }
 
-  /* Cuerpo de la card */
-  .pc-body { padding: 14px 16px 16px !important; }
+  /* Cuerpo */
+  .pc-body { padding: 12px 14px 14px !important; justify-content: flex-start !important; }
 
-  /* Título: gris oscuro, no verde */
+  /* Zona encima del título */
+  .pc-zona-text {
+    display: block !important;
+    font-size: 11px !important;
+    color: #999 !important;
+    margin-bottom: 3px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.4px !important;
+  }
+
+  /* Título */
   .pc-titulo {
-    font-size: 14px !important;
+    font-size: 15px !important;
     font-weight: 500 !important;
-    color: #222 !important;
-    margin-bottom: 6px !important;
-    line-height: 1.4 !important;
-    white-space: normal !important;
+    color: #1a1a1a !important;
+    margin-bottom: 8px !important;
+    line-height: 1.35 !important;
   }
 
-  /* Precio: más grande y protagonista */
+  /* Precio protagonista */
   .pc-precio-wrap {
     font-size: 22px !important;
     font-weight: 800 !important;
     color: #111 !important;
-    margin-bottom: 0 !important;
-    display: flex !important;
-    align-items: baseline !important;
-    flex-wrap: wrap !important;
-    gap: 6px !important;
+    margin-bottom: 4px !important;
   }
-  .pc-precio-wrap span { font-size: 12px !important; }
+  .pc-precio-wrap > span { font-size: 11px !important; color: #bbb !important; margin-left: 6px !important; }
 
-  /* Ocultar precio DOP y descripción */
-  .pc-dop  { display: none !important; }
-  .pc-desc { display: none !important; }
+  /* Características */
+  .pc-feats { font-size: 13px !important; color: #666 !important; margin-top: 4px !important; margin-bottom: 0 !important; }
 
-  /* Características compactas */
-  .pc-feats {
-    font-size: 13px !important;
-    color: #555 !important;
-    margin-top: 6px !important;
-    margin-bottom: 12px !important;
-  }
-
-  /* Footer: zona + botones */
-  .pc-footer { padding-top: 10px !important; border-top: 1px solid #f0f0f0 !important; }
-  .pc-zona {
-    font-size: 12px !important;
-    color: #006D77 !important;
-    margin-bottom: 10px !important;
-  }
-  .pc-actions { gap: 8px !important; }
-  .pc-actions button { font-size: 13px !important; padding: 9px 0 !important; flex: 1 !important; text-align: center !important; border-radius: 6px !important; }
+  /* Ocultar DOP, descripción y footer completo */
+  .pc-dop    { display: none !important; }
+  .pc-desc   { display: none !important; }
+  .pc-footer { display: none !important; }
 
   /* Nav de buscar en móvil */
   .buscar-nav-links { display: none !important; }
