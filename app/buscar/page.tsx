@@ -583,7 +583,7 @@ function BuscarContent() {
               <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.publicar}</a>
             </>}
           </div>
-          <button className="buscar-mobile-hamburger" onClick={() => setMobileMenuOpen(true)} style={{ display: 'none', all: 'unset', cursor: 'pointer', padding: '6px 8px', borderRadius: 6, background: 'rgba(255,255,255,0.15)' }}>
+          <button className="buscar-mobile-hamburger" onClick={() => setMobileMenuOpen(true)} style={{ background: 'rgba(255,255,255,0.15)', cursor: 'pointer', padding: '6px 8px', borderRadius: 6, border: 'none' }}>
             <svg width="20" height="16" viewBox="0 0 20 16" fill="none"><rect y="0" width="20" height="2.5" rx="1.25" fill="white"/><rect y="6.5" width="20" height="2.5" rx="1.25" fill="white"/><rect y="13" width="20" height="2.5" rx="1.25" fill="white"/></svg>
           </button>
         </div>
