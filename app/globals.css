@@ -207,9 +207,17 @@ img { max-width: 100%; }
   .home-prop-card-zona { display: none !important; }
 
   /* ── SECCIONES PROPS Y ZONAS ── */
-  .home-props-wrap    { padding: 20px 0 0 !important; }
-  .home-section-hdr   { padding: 0 16px !important; }
+  .home-props-wrap    { padding: 12px 0 0 !important; }
   .home-zonas-section { padding: 24px 16px 24px !important; }
+
+  /* ── BLOQUE CARDS: pieza blanca unida de borde a borde ── */
+  .home-cards-section {
+    background: #fff !important;
+    margin-bottom: 8px !important;
+    border-top: 1px solid #e8e8e8 !important;
+    border-bottom: 1px solid #e8e8e8 !important;
+  }
+  .home-section-hdr { padding: 16px 16px 0 !important; }
 
   /* ── ACTION CARDS: reducir padding en móvil ── */
   .home-actions-grid > a { padding: 20px 16px !important; }
