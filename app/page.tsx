@@ -273,6 +273,7 @@ export default function Home() {
   const [sesionActiva, setSesionActiva] = useState(false)
   const [authReady, setAuthReady] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [noLeidosNav, setNoLeidosNav] = useState(0)
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
   const [tipoUsuario, setTipoUsuario] = useState<string>('')
   const [fotoUrl, setFotoUrl] = useState<string>('')
@@ -300,6 +301,12 @@ export default function Home() {
       if (usr?.tipo) setTipoUsuario(usr.tipo)
       if (usr?.nombre) setNombreUsuario(usr.nombre)
       setFotoUrl(usr?.foto_url || avatarMeta)
+      // Contar mensajes no leídos para el punto rojo
+      const { data: msgs } = await supabase.from('mensajes').select('id').eq('vendedor_id', data.user.id)
+      if (msgs) {
+        const leidos: Record<string, boolean> = JSON.parse(localStorage.getItem(`habitade_leidos_${data.user.id}`) || '{}')
+        setNoLeidosNav(msgs.filter((m: any) => !leidos[m.id]).length)
+      }
       setAuthReady(true)
     })
     // Load site config
@@ -377,36 +384,27 @@ export default function Home() {
 
       {/* MENÚ MÓVIL DROPDOWN */}
       {mobileMenuOpen && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 400, background: 'rgba(0,0,0,0.25)' }} onClick={() => setMobileMenuOpen(false)}>
+        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.25)' }} onClick={() => setMobileMenuOpen(false)}>
           <div style={{ position: 'absolute', top: 60, left: 0, right: 0, background: '#fff', boxShadow: '0 12px 32px rgba(0,0,0,0.15)', borderRadius: '0 0 16px 16px', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
-
-            {/* Explorar */}
-            <div style={{ padding: '6px 0' }}>
-              {[
-                { label: 'Comprar', href: '/buscar?operacion=venta', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
-                { label: 'Alquilar', href: '/buscar?operacion=alquiler', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> },
-              ].map(item => (
-                <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 20px', fontSize: 14, fontWeight: 500, color: '#222', textDecoration: 'none' }}>
-                  <span style={{ color: '#006D77', display: 'flex' }}>{item.icon}</span>
-                  {item.label}
-                </a>
-              ))}
-            </div>
 
             {authReady && sesionActiva ? (<>
               {/* Mi cuenta */}
-              <div style={{ borderTop: '1px solid #f0f0f0', padding: '4px 0' }}>
-                <div style={{ padding: '8px 20px 4px', fontSize: 10, fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: 1 }}>Mi cuenta</div>
+              <div style={{ padding: '4px 0' }}>
+                <div style={{ padding: '10px 20px 4px', fontSize: 10, fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: 1 }}>Mi cuenta</div>
                 {[
-                  { label: 'Mi panel', href: '/panel', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> },
-                  { label: 'Mis anuncios', href: '/panel?s=anuncios', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
-                  { label: 'Mensajes', href: '/panel?s=mensajes', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
-                  { label: 'Guardados', href: '/panel?s=guardados', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> },
-                  { label: 'Mi perfil', href: '/panel?s=perfil', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
+                  { label: 'Mi panel',     href: '/panel',             icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> },
+                  { label: 'Mis anuncios', href: '/panel?s=anuncios',  icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
+                  { label: 'Mensajes',     href: '/panel?s=mensajes',  icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, badge: noLeidosNav },
+                  { label: 'Guardados',    href: '/panel?s=guardados', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> },
+                  { label: 'Mi perfil',    href: '/panel?s=perfil',    icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
                 ].map(item => (
-                  <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 20px', fontSize: 14, color: '#333', textDecoration: 'none' }}>
-                    <span style={{ color: '#888', display: 'flex' }}>{item.icon}</span>
+                  <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 14, color: '#333', textDecoration: 'none' }}>
+                    <span style={{ color: '#888', display: 'flex', position: 'relative' }}>
+                      {item.icon}
+                      {(item as any).badge > 0 && <span style={{ position: 'absolute', top: -4, right: -5, width: 8, height: 8, background: '#e63946', borderRadius: '50%', border: '1.5px solid #fff' }} />}
+                    </span>
                     {item.label}
+                    {(item as any).badge > 0 && <span style={{ marginLeft: 'auto', background: '#e63946', color: '#fff', fontSize: 10, fontWeight: 700, borderRadius: 10, padding: '1px 6px', minWidth: 16, textAlign: 'center' }}>{(item as any).badge}</span>}
                   </a>
                 ))}
               </div>
@@ -439,7 +437,7 @@ export default function Home() {
       )}
 
       {/* NAV — BLANCO */}
-      <nav style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', height: 60, display: 'flex', alignItems: 'center', padding: '0 24px', position: 'sticky', top: 0, zIndex: 100 }}>
+      <nav style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', height: 60, display: 'flex', alignItems: 'center', padding: '0 24px', position: 'sticky', top: 0, zIndex: 900 }}>
         <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
           <a href="/" style={{ fontSize: 28, fontWeight: 700, color: '#006D77', letterSpacing: -2, marginRight: 32, textDecoration: 'none' }}>
             habitade<span style={{ color: '#17A6B4' }}>.</span>
