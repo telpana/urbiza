@@ -4,7 +4,7 @@ export type Idioma = typeof idiomas[number]
 export const t = {
   es: {
     nav: { comprar: 'Comprar', alquilar: 'Alquilar', obraNueva: 'Obra nueva', entrar: 'Entrar', publicar: '+ Publicar gratis', miCuenta: 'Mi cuenta', crearCuenta: 'Crear cuenta', verWeb: 'Ver web', cerrarSesion: 'Cerrar sesión' },
-    hero: { titulo: 'Encuentra tu próxima propiedad en República Dominicana', subtitulo: 'El portal inmobiliario líder del Caribe', buscar: 'Buscar', placeholder: 'Municipio, sector, barrio...' },
+    hero: { titulo: 'Encuentra tu próxima propiedad en República Dominicana', subtitulo: 'Miles de propiedades. Una sola búsqueda.', buscar: 'Buscar', placeholder: 'Municipio, sector, barrio...' },
     idioma: { es: 'Español', en: 'English', fr: 'Français' },
     tipos: { apartamento: 'Apartamento', casa: 'Casa', villa: 'Villa', oficina: 'Oficina', terreno: 'Terreno', local: 'Local comercial', edificio: 'Edificio' },
     secciones: {
@@ -149,7 +149,7 @@ export const t = {
   },
   en: {
     nav: { comprar: 'Buy', alquilar: 'Rent', obraNueva: 'New homes', entrar: 'Sign in', publicar: '+ List for free', miCuenta: 'My account', crearCuenta: 'Create account', verWeb: 'Ver web', cerrarSesion: 'Sign out' },
-    hero: { titulo: 'Find your next property in the Dominican Republic', subtitulo: 'The leading real estate portal in the Caribbean', buscar: 'Search', placeholder: 'City, neighborhood, area...' },
+    hero: { titulo: 'Find your next property in the Dominican Republic', subtitulo: 'Thousands of properties. One search.', buscar: 'Search', placeholder: 'City, neighborhood, area...' },
     idioma: { es: 'Español', en: 'English', fr: 'Français' },
     tipos: { apartamento: 'Apartment', casa: 'House', villa: 'Villa', oficina: 'Office', terreno: 'Land', local: 'Commercial space', edificio: 'Building' },
     secciones: {
@@ -294,7 +294,7 @@ export const t = {
   },
   fr: {
     nav: { comprar: 'Acheter', alquilar: 'Louer', obraNueva: 'Neuf', entrar: 'Connexion', publicar: '+ Publier gratuitement', miCuenta: 'Mon compte', crearCuenta: 'Créer un compte', verWeb: 'Ver web', cerrarSesion: 'Déconnexion' },
-    hero: { titulo: 'Trouvez votre prochaine propriété en République Dominicaine', subtitulo: 'Le premier portail immobilier des Caraïbes', buscar: 'Rechercher', placeholder: 'Ville, quartier, zone...' },
+    hero: { titulo: 'Trouvez votre prochaine propriété en République Dominicaine', subtitulo: 'Des milliers de biens. Une seule recherche.', buscar: 'Rechercher', placeholder: 'Ville, quartier, zone...' },
     idioma: { es: 'Español', en: 'English', fr: 'Français' },
     tipos: { apartamento: 'Appartement', casa: 'Maison', villa: 'Villa', oficina: 'Bureau', terreno: 'Terrain', local: 'Local commercial', edificio: 'Immeuble' },
     secciones: {
