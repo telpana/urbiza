@@ -426,6 +426,11 @@ img { max-width: 100%; }
   .galeria-thumbs      { display: none !important; }
   .galeria-titulo-bajo { display: block !important; }
 
+  /* Precio: menos padding arriba ya que el título está justo encima */
+  .propiedad-precio-wrap + div,
+  .propiedad-precio-bloque { padding-top: 8px !important; }
+  .propiedad-precio-bloque { padding: 10px 16px 14px !important; }
+
   /* Contenedor exterior sin padding en móvil */
   .propiedad-outer { padding: 0 0 32px !important; }
 
