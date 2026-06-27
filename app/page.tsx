@@ -474,7 +474,7 @@ export default function Home() {
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,78,87,0.72)' }} />
         <div style={{ position: 'relative', zIndex: 2, width: '100%', padding: '40px 20px 36px' }}>
         <div style={{ maxWidth: 720, margin: '0 auto' }}>
-          <h1 style={{ color: '#fff', fontSize: 26, fontWeight: 600, marginBottom: 6, textAlign: 'center', letterSpacing: -0.5 }}>
+          <h1 style={{ color: '#fff', fontSize: 20, fontWeight: 600, marginBottom: 6, textAlign: 'center', letterSpacing: -0.3, lineHeight: 1.35 }}>
             {tr.hero.titulo}
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, marginBottom: 22, textAlign: 'center' }}>
