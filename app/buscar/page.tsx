@@ -326,6 +326,8 @@ function BuscarContent() {
   const [operacion, setOperacion] = useState(operacionParam)
   const [query, setQuery] = useState(zonaParam)
   const [orden, setOrden] = useState('Relevancia')
+  const [pagina, setPagina] = useState(1)
+  const POR_PAGINA = 20
   const [precioMin, setPrecioMin] = useState('')
   const [precioMax, setPrecioMax] = useState('')
   const [m2Min, setM2Min] = useState('')
@@ -463,6 +465,11 @@ function BuscarContent() {
     if (orden === 'Recientes') return (b.created_at || '').localeCompare(a.created_at || '')
     return (b.created_at || '').localeCompare(a.created_at || '')
   })
+
+  useEffect(() => { setPagina(1) }, [query, tipo, orden, precioMin, precioMax, habMin, banosMin])
+
+  const totalPaginas = Math.ceil(filtradas.length / POR_PAGINA)
+  const filtradasPagina = filtradas.slice((pagina - 1) * POR_PAGINA, pagina * POR_PAGINA)
 
   const handleQueryChange = (val: string) => {
     setQuery(val)
@@ -761,7 +768,7 @@ function BuscarContent() {
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
-            {filtradas.map(p => (
+            {filtradasPagina.map(p => (
               <div key={p.id} className="prop-card" style={{ display: 'flex', background: '#fff', borderBottom: '8px solid #f4f5f6', borderLeft: p.dest ? '4px solid #006D77' : 'none', cursor: 'pointer', minHeight: 220, boxShadow: p.dest ? '0 2px 12px rgba(0,109,119,0.10)' : 'none' }}
                 onClick={() => window.location.href = `/propiedad/${p.id}`}
                 onMouseEnter={e => (e.currentTarget.style.background = '#fafefe')}
@@ -822,10 +829,31 @@ function BuscarContent() {
             )}
           </div>
 
-          {filtradas.length > 0 && (
-            <div style={{ textAlign: 'center', padding: '24px', background: '#f4f5f6' }}>
-              <button style={{ all: 'unset', border: '1.5px solid #006D77', color: '#006D77', background: '#fff', padding: '11px 36px', borderRadius: 4, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>
-                {Tb.verMas}
+          {totalPaginas > 1 && (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6, padding: '24px', background: '#f4f5f6', flexWrap: 'wrap' }}>
+              <button onClick={() => { setPagina(p => Math.max(1, p - 1)); window.scrollTo(0,0) }}
+                disabled={pagina === 1}
+                style={{ border: '1.5px solid #e0e0e0', background: '#fff', color: pagina === 1 ? '#ccc' : '#333', padding: '8px 14px', borderRadius: 4, fontSize: 13, cursor: pagina === 1 ? 'default' : 'pointer' }}>
+                ← Anterior
+              </button>
+              {Array.from({ length: totalPaginas }, (_, i) => i + 1)
+                .filter(n => n === 1 || n === totalPaginas || Math.abs(n - pagina) <= 2)
+                .reduce<(number | '...')[]>((acc, n, idx, arr) => {
+                  if (idx > 0 && n - (arr[idx - 1] as number) > 1) acc.push('...')
+                  acc.push(n)
+                  return acc
+                }, [])
+                .map((n, i) => n === '...'
+                  ? <span key={`dots-${i}`} style={{ padding: '0 4px', color: '#888' }}>…</span>
+                  : <button key={n} onClick={() => { setPagina(n as number); window.scrollTo(0,0) }}
+                      style={{ border: `1.5px solid ${pagina === n ? '#006D77' : '#e0e0e0'}`, background: pagina === n ? '#006D77' : '#fff', color: pagina === n ? '#fff' : '#333', padding: '8px 13px', borderRadius: 4, fontSize: 13, cursor: 'pointer', fontWeight: pagina === n ? 600 : 400 }}>
+                      {n}
+                    </button>
+                )}
+              <button onClick={() => { setPagina(p => Math.min(totalPaginas, p + 1)); window.scrollTo(0,0) }}
+                disabled={pagina === totalPaginas}
+                style={{ border: '1.5px solid #e0e0e0', background: '#fff', color: pagina === totalPaginas ? '#ccc' : '#333', padding: '8px 14px', borderRadius: 4, fontSize: 13, cursor: pagina === totalPaginas ? 'default' : 'pointer' }}>
+                Siguiente →
               </button>
             </div>
           )}
