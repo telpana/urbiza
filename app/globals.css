@@ -140,7 +140,7 @@ img { max-width: 100%; }
     display: flex !important;
     flex-direction: column !important;
     overflow-x: visible !important;
-    gap: 10px !important;
+    gap: 12px !important;
     padding: 0 16px !important;
     padding-bottom: 0 !important;
     scroll-snap-type: none !important;
@@ -150,15 +150,16 @@ img { max-width: 100%; }
   .home-ver-bottom {
     display: block !important;
     text-align: center !important;
-    padding: 10px 16px !important;
-    margin: 4px 16px 0 !important;
-    border: 1px solid #e0e0e0 !important;
+    padding: 11px 16px !important;
+    margin: 6px 16px 0 !important;
+    border: 1.5px solid #006D77 !important;
     border-radius: 8px !important;
     background: #fff !important;
     font-size: 13px !important;
-    font-weight: 500 !important;
+    font-weight: 600 !important;
     color: #006D77 !important;
     text-decoration: none !important;
+    letter-spacing: 0.1px !important;
   }
 
   .home-prop-card {
@@ -168,44 +169,48 @@ img { max-width: 100%; }
     max-width: 100% !important;
     align-items: stretch !important;
     height: auto !important;
-    border-radius: 10px !important;
-    border: 1px solid #ebebeb !important;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.07) !important;
+    border-radius: 12px !important;
+    border: 1px solid #e8e8e8 !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06) !important;
     overflow: hidden !important;
+    background: #fff !important;
   }
   .home-prop-card-img {
-    width: 110px !important;
-    min-width: 110px !important;
+    width: 125px !important;
+    min-width: 125px !important;
     height: auto !important;
-    min-height: 100px !important;
+    min-height: 105px !important;
     align-self: stretch !important;
     flex-shrink: 0 !important;
   }
   .home-prop-card-body {
     flex: 1 !important;
     min-width: 0 !important;
-    padding: 10px 12px !important;
+    padding: 12px 14px !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
+    gap: 3px !important;
   }
   .home-prop-card-body > div:first-child {
-    font-size: 15px !important;
+    font-size: 16px !important;
     font-weight: 700 !important;
-    margin-bottom: 2px !important;
+    color: #006D77 !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
   }
   .home-prop-card-body > div:nth-child(2) {
-    font-size: 12px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #222 !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
-    margin-bottom: 2px !important;
   }
   .home-prop-card-body > div:nth-child(3) {
     font-size: 11px !important;
+    color: #999 !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
