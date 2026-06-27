@@ -516,7 +516,7 @@ export default function Home() {
               <div style={{ display: 'flex', alignItems: 'center', padding: '0 12px', background: '#f9f9f9', borderRight: '1px solid #e0e0e0' }}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
               </div>
-              <div style={{ position: 'relative', flex: 1, minWidth: 0 }}>
+              <div style={{ position: 'relative', flex: 1, minWidth: 0, zIndex: 2000 }}>
                 <input
                   type="text"
                   value={queryHome}
@@ -526,7 +526,7 @@ export default function Home() {
                   style={{ width: '100%', padding: '12px 14px', fontSize: 14, border: 'none', outline: 'none', color: '#222', background: '#fff', boxSizing: 'border-box' }}
                 />
                 {mostrarSugHome && sugHome.length > 0 && (
-                  <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #e0e0e0', borderTop: 'none', borderRadius: '0 0 6px 6px', boxShadow: '0 4px 16px rgba(0,0,0,0.12)', zIndex: 500 }}>
+                  <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, background: '#fff', border: '1px solid #e0e0e0', borderTop: 'none', borderRadius: '0 0 6px 6px', boxShadow: '0 4px 16px rgba(0,0,0,0.12)', zIndex: 2000 }}>
                   {sugHome.map((s: string, i: number) => (
                     <div key={i} onMouseDown={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); p.set('zona', s); window.location.href = `/buscar?${p.toString()}` }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', fontSize: 14, color: '#333', cursor: 'pointer', borderBottom: i < sugHome.length - 1 ? '1px solid #f5f5f5' : 'none' }}
                       onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
