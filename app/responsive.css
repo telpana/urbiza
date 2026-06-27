@@ -191,17 +191,82 @@ img { max-width: 100%; }
   /* Botón filtros visible */
   .buscar-filtros-toggle { display: flex !important; }
 
-  /* Tarjetas de propiedad: imagen arriba, contenido abajo */
+  /* Tarjetas de propiedad: estilo Idealista */
   .prop-card {
     flex-direction: column !important;
     min-height: unset !important;
     border-left: none !important;
+    border-bottom: 12px solid #f4f5f6 !important;
+    box-shadow: none !important;
   }
   .prop-card-img {
     width: 100% !important;
     min-width: unset !important;
-    height: 220px !important;
+    height: 240px !important;
   }
+
+  /* Badges en imagen */
+  .pc-badge {
+    position: absolute !important;
+    top: 10px !important;
+    right: 10px !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    padding: 3px 9px !important;
+    border-radius: 4px !important;
+    z-index: 1 !important;
+    letter-spacing: 0.3px !important;
+  }
+  .pc-badge-dest { background: #006D77 !important; color: #fff !important; }
+  .pc-badge-visto { background: #17A6B4 !important; color: #fff !important; }
+
+  /* Cuerpo de la card */
+  .pc-body { padding: 14px 16px 16px !important; }
+
+  /* Título: gris oscuro, no verde */
+  .pc-titulo {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #222 !important;
+    margin-bottom: 6px !important;
+    line-height: 1.4 !important;
+    white-space: normal !important;
+  }
+
+  /* Precio: más grande y protagonista */
+  .pc-precio-wrap {
+    font-size: 22px !important;
+    font-weight: 800 !important;
+    color: #111 !important;
+    margin-bottom: 0 !important;
+    display: flex !important;
+    align-items: baseline !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+  }
+  .pc-precio-wrap span { font-size: 12px !important; }
+
+  /* Ocultar precio DOP y descripción */
+  .pc-dop  { display: none !important; }
+  .pc-desc { display: none !important; }
+
+  /* Características compactas */
+  .pc-feats {
+    font-size: 13px !important;
+    color: #555 !important;
+    margin-top: 6px !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Footer: zona + botones */
+  .pc-footer { padding-top: 10px !important; border-top: 1px solid #f0f0f0 !important; }
+  .pc-zona {
+    font-size: 12px !important;
+    color: #006D77 !important;
+    margin-bottom: 10px !important;
+  }
+  .pc-actions { gap: 8px !important; }
+  .pc-actions button { font-size: 13px !important; padding: 9px 0 !important; flex: 1 !important; text-align: center !important; border-radius: 6px !important; }
 
   /* Nav de buscar en móvil */
   .buscar-nav-links { display: none !important; }

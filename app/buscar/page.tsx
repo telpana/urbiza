@@ -778,8 +778,8 @@ function BuscarContent() {
                     ? <img src={p.fotos[0]} alt={p.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                     : <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                   }
-                  {p.dest && <div style={{ position: 'absolute', top: 8, right: 8, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>{Tb.destacado ?? 'DESTACADO'}</div>}
-                  {p.visitas && !p.dest && <div style={{ position: 'absolute', top: 8, right: 8, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>MÁS VISTO</div>}
+                  {p.dest && <div className="pc-badge pc-badge-dest">{Tb.destacado ?? 'DESTACADO'}</div>}
+                  {p.visitas && !p.dest && <div className="pc-badge pc-badge-visto">MÁS VISTO</div>}
                   {p.fotos && p.fotos.length > 0 && (
                     <div style={{ position: 'absolute', bottom: 10, left: 10, background: 'rgba(0,0,0,0.45)', color: '#fff', fontSize: 10, padding: '2px 8px', borderRadius: 3, display: 'flex', alignItems: 'center', gap: 4, zIndex: 1 }}>
                       <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
@@ -787,30 +787,30 @@ function BuscarContent() {
                     </div>
                   )}
                 </div>
-                <div style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0 }}>
+                <div className="pc-body" style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0 }}>
                   <div>
-                    <div style={{ fontSize: 15, fontWeight: 600, color: '#006D77', marginBottom: 8 }}>
+                    <div className="pc-titulo" style={{ fontSize: 15, fontWeight: 600, color: '#006D77', marginBottom: 8 }}>
                       {p.titulo}
                     </div>
-                    <div style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 2 }}>
+                    <div className="pc-precio-wrap" style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 2 }}>
                       US$ {p.precio.toLocaleString('en-US')}
                       {p.m2 > 0 && <span style={{ fontSize: 13, color: '#aaa', fontWeight: 400, marginLeft: 10 }}>US$ {Math.round(p.precio / p.m2).toLocaleString('en-US')}/m²</span>}
                     </div>
-                    <div style={{ fontSize: 12, color: '#aaa', marginBottom: 12 }}>{formatDOP(p.precio)}</div>
-                    <div style={{ fontSize: 13, color: '#444', marginBottom: 12 }}>
+                    <div className="pc-dop" style={{ fontSize: 12, color: '#aaa', marginBottom: 12 }}>{formatDOP(p.precio)}</div>
+                    <div className="pc-feats" style={{ fontSize: 13, color: '#444', marginBottom: 12 }}>
                       {p.hab > 0 && <span>{p.hab} hab. &nbsp;·&nbsp; </span>}
                       <span>{p.m2} m² &nbsp;·&nbsp; </span>
                       {p.banos > 0 && <span>{p.banos} baños &nbsp;·&nbsp; </span>}
                       {p.parqueos > 0 && <span>{p.parqueos} parqueo{p.parqueos > 1 ? 's' : ''}</span>}
                     </div>
-                    <div style={{ fontSize: 13, color: '#777', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginBottom: 14 }}>{p.desc}</div>
+                    <div className="pc-desc" style={{ fontSize: 13, color: '#777', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginBottom: 14 }}>{p.desc}</div>
                   </div>
-                  <div style={{ paddingTop: 12, borderTop: '1px solid #f0f0f0' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 4, background: '#f0fafb', border: '1px solid #c5e8ea', padding: '3px 10px', borderRadius: 20, marginBottom: 10, width: 'fit-content' }}>
+                  <div className="pc-footer" style={{ paddingTop: 12, borderTop: '1px solid #f0f0f0' }}>
+                    <div className="pc-zona" style={{ display: 'flex', alignItems: 'center', gap: 4, background: '#f0fafb', border: '1px solid #c5e8ea', padding: '3px 10px', borderRadius: 20, marginBottom: 10, width: 'fit-content' }}>
                       <svg width="9" height="9" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
                       <span style={{ color: '#006D77', fontSize: 12 }}>{p.zona}</span>
                     </div>
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                    <div className="pc-actions" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                       <button onClick={e => toggleFavorito(e, String(p.id))} style={{ all: 'unset', border: `1px solid ${favoritosSet.has(String(p.id)) ? '#006D77' : '#e0e0e0'}`, borderRadius: 4, padding: '6px 10px', cursor: 'pointer', color: favoritosSet.has(String(p.id)) ? '#006D77' : '#ccc', fontSize: 16, lineHeight: 1 }}>{favoritosSet.has(String(p.id)) ? '♥' : '♡'}</button>
                       <button onClick={e => { e.stopPropagation(); window.location.href = `/propiedad/${p.id}?tel=1` }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '7px 16px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>{Tb.verTelefono}</button>
                       <button onClick={e => { e.stopPropagation(); window.location.href = `/propiedad/${p.id}` }} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '7px 18px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer' }}>{Tb.contactar}</button>
