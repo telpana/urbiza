@@ -304,7 +304,6 @@ export default function Panel() {
                   if (data.ok) {
                     setUsuario((prev: any) => ({ ...prev, plan: 'profesional', tipo: 'profesional' }))
                     setVerificandoPago(false)
-                    return
                   }
                 } catch {}
               }
