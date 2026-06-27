@@ -421,32 +421,34 @@ img { max-width: 100%; }
   .prop-nav-desktop   { display: none !important; }
   .prop-nav-hamburger { display: flex !important; }
 
+  /* Contenedor exterior sin padding en móvil */
+  .propiedad-outer { padding: 0 0 32px !important; }
+
   .propiedad-layout {
     display: flex !important;
     flex-direction: column !important;
     align-items: stretch !important;
     gap: 0 !important;
-    padding: 0 !important;
   }
-  .propiedad-layout > *:first-child { order: 1; width: 100% !important; }
-  .propiedad-sidebar  {
-    order: 2;
-    position: static !important;
-    top: auto !important;
-    width: 100% !important;
-  }
-  .propiedad-mapa-col { order: 3; width: 100% !important; }
+  .propiedad-layout > *:first-child { order: 1; }
+  .propiedad-sidebar  { order: 2; position: static !important; top: auto !important; }
+  .propiedad-mapa-col { order: 3; }
 
-  /* Contenedor exterior sin padding lateral en móvil */
-  .propiedad-outer { padding: 0 !important; }
+  /* Galería: altura proporcional (16:10) y sin bordes redondeados */
+  .propiedad-galeria-wrap { border-radius: 0 !important; margin-bottom: 0 !important; }
+  .propiedad-galeria-main { height: 240px !important; }
 
-  /* Secciones internas: bordes rectos en móvil */
-  .propiedad-layout > * > div[style] {
-    border-radius: 0 !important;
-    margin-bottom: 8px !important;
+  /* Características: 2 columnas en móvil, centradas */
+  .propiedad-caract-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
   }
 
-  .propiedad-galeria { height: 260px !important; }
+  /* Amenidades: 2 columnas */
+  .propiedad-amenidades-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
 }
 
 /* ════════════════════════════════

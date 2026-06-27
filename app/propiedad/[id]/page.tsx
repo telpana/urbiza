@@ -124,8 +124,8 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
     )
   }
   return (
-    <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden', marginBottom: 16 }}>
-      <div style={{ height: 420, position: 'relative', background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div className="propiedad-galeria-wrap" style={{ background: '#fff', borderRadius: 8, overflow: 'hidden', marginBottom: 16 }}>
+      <div className="propiedad-galeria-main" style={{ height: 420, position: 'relative', background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {destacado && <div style={{ position: 'absolute', top: 8, right: 8, zIndex: 2, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>DESTACADO</div>}
         <img src={fotos[activa]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         <div style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 11, padding: '4px 10px', borderRadius: 20 }}>{activa + 1} / {fotos.length}</div>
@@ -422,7 +422,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
             {caracteristicas.length > 0 && (
               <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
                 <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 16 }}>{Tp.caracteristicas}</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+                <div className="propiedad-caract-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
                   {caracteristicas.map(c => (
                     c.icon === 'area' ? (
                       <div key={c.label} style={{ display: 'flex', flexDirection: 'column', padding: '10px 14px', background: '#f8f8f8', borderRadius: 6, cursor: 'pointer', userSelect: 'none' }} onClick={() => setVerConversion(v => !v)}>
@@ -477,7 +477,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
             {amenidadesArray.length > 0 && (
               <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
                 <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 14 }}>{Tp.amenidades}</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 }}>
+                <div className="propiedad-amenidades-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 8 }}>
                   {amenidadesArray.map((a: string) => (
                     <div key={a} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#444' }}>
                       <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
