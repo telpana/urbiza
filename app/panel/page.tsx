@@ -671,6 +671,20 @@ export default function Panel() {
             </div>
           )}
 
+          {/* AVISO PAGO FALLIDO */}
+          {!cargando && usuario?.plan === 'past_due' && (
+            <div style={{ background: '#fff1f0', border: '1px solid #ffa39e', borderRadius: 8, padding: '14px 18px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ fontSize: 20 }}>⚠️</span>
+                <div>
+                  <div style={{ fontSize: 13, fontWeight: 600, color: '#a8071a' }}>Pago fallido — tu cuenta se desactivará el {usuario.plan_activo_hasta ? new Date(usuario.plan_activo_hasta).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' }) : 'en breve'}</div>
+                  <div style={{ fontSize: 12, color: '#cf1322', marginTop: 2 }}>Si no se cobra antes de esa fecha, tus anuncios serán eliminados y la cuenta volverá al plan gratuito.</div>
+                </div>
+              </div>
+              <a href="/pago/profesional" style={{ background: '#e63946', color: '#fff', padding: '8px 16px', borderRadius: 6, fontSize: 12, fontWeight: 600, textDecoration: 'none', whiteSpace: 'nowrap' }}>Actualizar pago</a>
+            </div>
+          )}
+
           {/* AVISO TELÉFONO FALTANTE */}
           {!cargando && !perfilTelefono && seccion !== 'perfil' && (
             <div style={{ background: '#fff8e1', border: '1px solid #ffe082', borderRadius: 8, padding: '12px 18px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
