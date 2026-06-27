@@ -496,8 +496,17 @@ img { max-width: 100%; }
     gap: 12px !important;
   }
   .propiedad-caract-grid > div:last-child { border-bottom: none !important; }
-  /* Icono: tamaño fijo, no crece */
-  .propiedad-caract-grid > div > div:first-child {
+  /* Icono en chips normales: tamaño fijo, no crece */
+  .propiedad-caract-grid > div:not(.caract-area-item) > div:first-child {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    flex: none !important;
+    background: #e0f5f7 !important;
+    border-radius: 8px !important;
+  }
+  /* Icono en chip de área (está dentro del div row) */
+  .propiedad-caract-grid .caract-area-item > div:first-child > div:first-child {
     width: 36px !important;
     height: 36px !important;
     min-width: 36px !important;
@@ -506,7 +515,8 @@ img { max-width: 100%; }
     border-radius: 8px !important;
   }
   /* Contenido (label + valor): crece */
-  .propiedad-caract-grid > div > div:not(:first-child) { flex: 1 !important; }
+  .propiedad-caract-grid > div:not(.caract-area-item) > div:not(:first-child) { flex: 1 !important; }
+  .propiedad-caract-grid .caract-area-item > div:first-child > div:not(:first-child) { flex: 1 !important; }
 
   /* Amenidades: 2 columnas */
   .propiedad-amenidades-grid {
