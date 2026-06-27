@@ -670,8 +670,8 @@ export default function Home() {
       {/* ZONAS MÁS BUSCADAS */}
       <div style={{ background: '#fff', borderTop: '1px solid #e8e8e8', padding: '36px 20px 40px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 24 }}>Dónde busca todo el mundo en República Dominicana ahora mismo</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 20 }}>Zonas más buscadas</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 }}>
             {zonas.map((z) => (
               <div key={z.nombre + z.tipo} style={{ padding: '10px 0', borderBottom: '1px solid #f5f5f5' }}>
                 <a href={`/buscar?zona=${encodeURIComponent(z.nombre)}`} style={{ display: 'block', fontSize: 14, color: '#006D77', fontWeight: 500, textDecoration: 'none', marginBottom: 3 }}>{z.nombre}</a>
