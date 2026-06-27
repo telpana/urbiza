@@ -153,26 +153,47 @@ img { max-width: 100%; }
     flex-direction: row !important;
     min-width: unset !important;
     max-width: 100% !important;
-    min-height: 110px !important;
+    align-items: stretch !important;
     height: auto !important;
   }
   .home-prop-card-img {
     width: 110px !important;
     min-width: 110px !important;
-    height: 100% !important;
+    height: auto !important;
+    min-height: 100px !important;
+    align-self: stretch !important;
     flex-shrink: 0 !important;
   }
   .home-prop-card-body {
     flex: 1 !important;
+    min-width: 0 !important;
     padding: 10px 12px !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
-    overflow: hidden !important;
   }
-  .home-prop-card-body > div:first-child { font-size: 15px !important; margin-bottom: 2px !important; }
-  .home-prop-card-body > div:nth-child(2) { font-size: 12px !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
-  .home-prop-card-zona { display: flex !important; font-size: 11px !important; color: #888 !important; margin-top: 2px !important; }
+  .home-prop-card-body > div:first-child {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    margin-bottom: 2px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .home-prop-card-body > div:nth-child(2) {
+    font-size: 12px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    margin-bottom: 2px !important;
+  }
+  .home-prop-card-body > div:nth-child(3) {
+    font-size: 11px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .home-prop-card-zona { display: none !important; }
 
   /* ── SECCIONES PROPS Y ZONAS ── */
   .home-props-wrap    { padding: 20px 16px 0 !important; }
