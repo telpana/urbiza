@@ -380,8 +380,8 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
         </button>
       </nav>
 
-      {/* BREADCRUMB */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '8px 20px', fontSize: 12, color: '#aaa', display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+      {/* BREADCRUMB — desktop */}
+      <div className="prop-breadcrumb" style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '8px 20px', fontSize: 12, color: '#aaa', display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
         <a href="/" style={{ color: '#006D77', textDecoration: 'none' }}>Habitade</a>
         <span>›</span>
         <a href="/buscar" style={{ color: '#006D77', textDecoration: 'none' }}>República Dominicana</a>
@@ -389,6 +389,14 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
         <a href={`/buscar?operacion=${propiedad.operacion}`} style={{ color: '#006D77', textDecoration: 'none' }}>{propiedad.tipo}</a>
         <span>›</span>
         <span style={{ color: '#444' }}>{propiedad.titulo}</span>
+      </div>
+      {/* TÍTULO MÓVIL — encima de la galería */}
+      <div className="prop-titulo-mobile" style={{ display: 'none', background: '#fff', padding: '12px 16px 10px', borderBottom: '1px solid #f0f0f0' }}>
+        <h1 style={{ fontSize: 17, fontWeight: 700, color: '#111', margin: 0, lineHeight: 1.3 }}>{propiedad.titulo}</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#888', marginTop: 4 }}>
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          {propiedad.zona}
+        </div>
       </div>
 
       <div className="propiedad-outer" style={{ maxWidth: 1100, margin: '0 auto', padding: '20px 20px 40px' }}>
@@ -403,7 +411,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
             {/* TÍTULO Y PRECIO */}
             <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 10 }}>
-                <div>
+                <div className="prop-titulo-desktop">
                   <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>{propiedad.titulo}</h1>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#888' }}>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>

@@ -405,7 +405,8 @@ img { max-width: 100%; }
 /* ════════════════════════════════
    PROPIEDAD DETALLE
 ════════════════════════════════ */
-.prop-nav-hamburger { display: none; }
+.prop-nav-hamburger  { display: none; }
+.prop-titulo-mobile  { display: none; }
 
 /* Desktop: sidebar abarca las 2 filas, mapa en col-1 fila-2 */
 .propiedad-layout {
@@ -420,6 +421,9 @@ img { max-width: 100%; }
   .prop-nav-links     { display: none !important; }
   .prop-nav-desktop   { display: none !important; }
   .prop-nav-hamburger { display: flex !important; }
+  .prop-breadcrumb    { display: none !important; }
+  .prop-titulo-desktop { display: none !important; }
+  .prop-titulo-mobile  { display: block !important; }
 
   /* Contenedor exterior sin padding en móvil */
   .propiedad-outer { padding: 0 0 32px !important; }
