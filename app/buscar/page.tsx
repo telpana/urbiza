@@ -312,7 +312,7 @@ const zonasSugerencias = [
 ]
 
 function BuscarContent() {
-  const { tr } = useIdioma()
+  const { tr, idioma, setIdioma } = useIdioma()
   const Tb = tr.buscar
   const Tn = tr.nav
   const searchParams = useSearchParams()
@@ -341,6 +341,7 @@ function BuscarContent() {
   const [verMapa, setVerMapa] = useState(false)
   const [sesionActiva, setSesionActiva] = useState(false)
   const [authReady, setAuthReady] = useState(false)
+  const [noLeidosNav, setNoLeidosNav] = useState(0)
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
   const [tipoUsuario, setTipoUsuario] = useState<string>('')
   const [fotoUrl, setFotoUrl] = useState<string>('')
@@ -357,6 +358,11 @@ function BuscarContent() {
       if (!data.user) return
       setSesionActiva(true)
       setUserId(data.user.id)
+      const { data: msgs } = await supabase.from('mensajes').select('id').eq('vendedor_id', data.user.id)
+      if (msgs) {
+        const leidos: Record<string, boolean> = JSON.parse(localStorage.getItem(`habitade_leidos_${data.user.id}`) || '{}')
+        setNoLeidosNav(msgs.filter((m: any) => !leidos[m.id]).length)
+      }
       const { data: usr } = await supabase.from('usuarios').select('plan,tipo,foto_url').eq('id', data.user.id).single()
       if (usr?.plan) setPlanUsuario(usr.plan)
       if (usr?.tipo) setTipoUsuario(usr.tipo)
@@ -496,32 +502,47 @@ function BuscarContent() {
       {mobileMenuOpen && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.25)' }} onClick={() => setMobileMenuOpen(false)}>
           <div style={{ position: 'absolute', top: 54, left: 0, right: 0, background: '#fff', boxShadow: '0 12px 32px rgba(0,0,0,0.15)', borderRadius: '0 0 16px 16px', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
-            {authReady && sesionActiva ? (
+            {authReady && sesionActiva ? (<>
               <div style={{ padding: '4px 0' }}>
                 <div style={{ padding: '10px 20px 4px', fontSize: 10, fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: 1 }}>Mi cuenta</div>
                 {[
-                  { label: 'Mi panel', href: '/panel' },
-                  { label: 'Mis anuncios', href: '/panel?s=anuncios' },
-                  { label: 'Mensajes', href: '/panel?s=mensajes' },
-                  { label: 'Guardados', href: '/panel?s=guardados' },
-                  { label: 'Mi perfil', href: '/panel?s=perfil' },
+                  { label: 'Mi panel',     href: '/panel',             icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> },
+                  { label: 'Mis anuncios', href: '/panel?s=anuncios',  icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
+                  { label: 'Mensajes',     href: '/panel?s=mensajes',  icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, badge: noLeidosNav },
+                  { label: 'Guardados',    href: '/panel?s=guardados', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> },
+                  { label: 'Mi perfil',    href: '/panel?s=perfil',    icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
                 ].map(item => (
-                  <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 20px', fontSize: 14, color: '#333', textDecoration: 'none', borderBottom: '1px solid #f5f5f5' }}
-                    onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
+                  <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 14, color: '#333', textDecoration: 'none' }}>
+                    <span style={{ color: '#888', display: 'flex', position: 'relative' }}>
+                      {item.icon}
+                      {(item as any).badge > 0 && <span style={{ position: 'absolute', top: -4, right: -5, width: 8, height: 8, background: '#e63946', borderRadius: '50%', border: '1.5px solid #fff' }} />}
+                    </span>
                     {item.label}
+                    {(item as any).badge > 0 && <span style={{ marginLeft: 'auto', background: '#e63946', color: '#fff', fontSize: 10, fontWeight: 700, borderRadius: 10, padding: '1px 6px', minWidth: 16, textAlign: 'center' }}>{(item as any).badge}</span>}
                   </a>
                 ))}
-                <button onClick={async () => { const { supabase: sb } = await import('../../supabase'); await sb.auth.signOut(); window.location.href = '/' }} style={{ all: 'unset', display: 'flex', width: '100%', alignItems: 'center', padding: '13px 20px', fontSize: 14, color: '#e63946', cursor: 'pointer', borderTop: '1px solid #f0f0f0', boxSizing: 'border-box', marginTop: 4 }}>
+              </div>
+              <div style={{ borderTop: '1px solid #f0f0f0', padding: '4px 0 6px' }}>
+                <button onClick={async () => { const { supabase: sb } = await import('../../supabase'); await sb.auth.signOut(); window.location.href = '/' }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '11px 20px', fontSize: 14, color: '#e63946', cursor: 'pointer', boxSizing: 'border-box' }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                   Cerrar sesión
                 </button>
               </div>
-            ) : authReady && !sesionActiva ? (
-              <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <a href="/login" style={{ display: 'block', textAlign: 'center', padding: '12px', fontSize: 14, fontWeight: 600, color: '#006D77', border: '1.5px solid #006D77', borderRadius: 8, textDecoration: 'none' }}>Iniciar sesión</a>
-                <a href="/registro" style={{ display: 'block', textAlign: 'center', padding: '12px', fontSize: 14, fontWeight: 600, color: '#fff', background: '#006D77', borderRadius: 8, textDecoration: 'none' }}>Publicar gratis</a>
+            </>) : authReady ? (
+              <div style={{ padding: '14px 16px', display: 'flex', gap: 10 }}>
+                <a href="/login" style={{ flex: 1, display: 'block', textAlign: 'center', padding: '11px', fontSize: 14, fontWeight: 600, color: '#006D77', border: '1.5px solid #006D77', borderRadius: 8, textDecoration: 'none' }}>Entrar</a>
+                <a href="/registro" style={{ flex: 1, display: 'block', textAlign: 'center', padding: '11px', fontSize: 14, fontWeight: 600, color: '#fff', background: '#006D77', borderRadius: 8, textDecoration: 'none' }}>Publicar gratis</a>
               </div>
             ) : null}
+            <div style={{ borderTop: '1px solid #f0f0f0', padding: '12px 20px 16px', background: '#fafafa' }}>
+              <div style={{ display: 'flex', background: '#efefef', borderRadius: 8, overflow: 'hidden', padding: 3, gap: 2 }}>
+                {(['es', 'en', 'fr'] as const).map(l => (
+                  <button key={l} onClick={() => { setIdioma(l); setMobileMenuOpen(false) }} style={{ all: 'unset', padding: '6px 16px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: idioma === l ? '#fff' : 'transparent', color: idioma === l ? '#006D77' : '#999', boxShadow: idioma === l ? '0 1px 4px rgba(0,0,0,0.1)' : 'none', transition: 'all 0.15s' }}>
+                    {l.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}
