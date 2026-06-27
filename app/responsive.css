@@ -438,16 +438,43 @@ img { max-width: 100%; }
   .propiedad-galeria-wrap { border-radius: 0 !important; margin-bottom: 0 !important; }
   .propiedad-galeria-main { height: 240px !important; }
 
-  /* Características: 2 columnas en móvil, centradas */
+  /* Características: 2 columnas en móvil */
   .propiedad-caract-grid {
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 8px !important;
+    gap: 10px !important;
+  }
+  /* Cada chip de característica: icono centrado arriba, texto debajo */
+  .propiedad-caract-grid > div {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    padding: 14px 10px !important;
+    border-radius: 10px !important;
+    border: 1px solid #e8f4f5 !important;
+    background: #f8fdfd !important;
+    gap: 6px !important;
+  }
+  .propiedad-caract-grid > div > div:first-child {
+    width: 40px !important;
+    height: 40px !important;
+    background: #e0f5f7 !important;
+    border-radius: 10px !important;
+  }
+  .propiedad-caract-grid > div > div:last-child {
+    flex: unset !important;
   }
 
   /* Amenidades: 2 columnas */
   .propiedad-amenidades-grid {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 8px !important;
+  }
+  .propiedad-amenidades-grid > div {
+    background: #f8fdfd !important;
+    border: 1px solid #e8f4f5 !important;
+    border-radius: 8px !important;
+    padding: 8px 10px !important;
+    font-size: 12px !important;
   }
 }
 
