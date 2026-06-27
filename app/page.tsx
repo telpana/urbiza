@@ -268,6 +268,7 @@ export default function Home() {
   const [destReales, setDestReales] = useState<any[]>([])
   const [masVistasReales, setMasVistasReales] = useState<any[]>([])
   const [slideIdx, setSlideIdx] = useState(0)
+  const [masIdx, setMasIdx] = useState(0)
   const [novedadesSantoDomingo, setNovedadesSantoDomingo] = useState<any[]>([])
   const [novedadesPuntaCana, setNovedadesPuntaCana] = useState<any[]>([])
   const [novedadesSantiago, setNovedadesSantiago] = useState<any[]>([])
@@ -338,9 +339,15 @@ export default function Home() {
 
   useEffect(() => {
     if (destReales.length <= 3) return
-    const t = setInterval(() => setSlideIdx(i => (i + 3) % destReales.length), 5000)
+    const t = setInterval(() => setSlideIdx(i => (i + 1) % destReales.length), 4000)
     return () => clearInterval(t)
   }, [destReales.length])
+
+  useEffect(() => {
+    if (masVistasReales.length <= 3) return
+    const t = setInterval(() => setMasIdx(i => (i + 1) % masVistasReales.length), 4500)
+    return () => clearInterval(t)
+  }, [masVistasReales.length])
 
   const zonasRD = ['Piantini, Distrito Nacional', 'Naco, Distrito Nacional', 'Serrallés, Distrito Nacional', 'Bella Vista, Distrito Nacional', 'Arroyo Hondo, Distrito Nacional', 'Los Cacicazgos, Distrito Nacional', 'Gazcue, Distrito Nacional', 'Ciudad Colonial, Distrito Nacional', 'Evaristo Morales, Distrito Nacional', 'Miramar, Distrito Nacional', 'La Esperilla, Distrito Nacional', 'Urbanización Real, Distrito Nacional', 'Viejo Arroyo Hondo, Distrito Nacional', 'Los Prados, Distrito Nacional', 'Jardines del Norte, Distrito Nacional', 'Ensanche Naco, Distrito Nacional', 'Ensanche Ozama, Distrito Nacional', 'Villa Consuelo, Distrito Nacional', 'Cristo Rey, Distrito Nacional', 'Alma Rosa, Santo Domingo Este', 'Los Tres Brazos, Santo Domingo Este', 'Ensanche Isabelita, Santo Domingo Este', 'San Isidro, Santo Domingo Este', 'Los Mina, Santo Domingo Este', 'Bávaro, La Altagracia', 'Punta Cana, La Altagracia', 'Downtown Punta Cana, La Altagracia', 'Cap Cana, La Altagracia', 'Cabeza de Toro, La Altagracia', 'Los Corales, La Altagracia', 'Uvero Alto, La Altagracia', 'Macao, La Altagracia', 'Cortecito, La Altagracia', 'El Cortecito, La Altagracia', 'Higüey, La Altagracia', 'San Rafael del Yuma, La Altagracia', 'Los Jardines, Santiago', 'Cerros de Gurabo, Santiago', 'Reparto Conuco, Santiago', 'Bella Vista, Santiago', 'Villa Olga, Santiago', 'Pontezuela, Santiago', 'Urbanización Tropical, Santiago', 'Las Colinas, Santiago', 'El Dorado, Santiago', 'Las Terrenas, Samaná', 'Samaná', 'El Portillo, Samaná', 'Cosón, Samaná', 'Las Galeras, Samaná', 'El Limón, Samaná', 'Rancho Español, Samaná', 'Puerto Plata', 'Sosúa, Puerto Plata', 'Cabarete, Puerto Plata', 'Costámbar, Puerto Plata', 'Cofresí, Puerto Plata', 'Playa Dorada, Puerto Plata', 'La Romana', 'Casa de Campo, La Romana', 'Bayahíbe, La Romana', 'Dominicus, La Romana', 'Jarabacoa, La Vega', 'Constanza, La Vega', 'La Vega', 'San Pedro de Macorís', 'Juan Dolio, San Pedro de Macorís', 'Guayacanes, San Pedro de Macorís', 'Boca Chica, Santo Domingo', 'Andrés, Boca Chica', 'San Cristóbal', 'Baní, Peravia', 'Azua', 'Barahona', 'Monte Plata', 'Hato Mayor', 'El Seibo', 'Miches, El Seibo', 'Moca, Espaillat', 'San Francisco de Macorís, Duarte', 'Nagua, María Trinidad Sánchez', 'Monte Cristi', 'Dajabón', 'Pedernales', 'Neiba, Baoruco', 'San Juan de la Maguana']
   const handleQueryHome = (val: string) => {
@@ -586,20 +593,8 @@ export default function Home() {
             const visibles = total > 0 ? [src[slideIdx % total], src[(slideIdx+1) % total], src[(slideIdx+2) % total]].filter(Boolean) : []
             return (
               <div style={{ marginBottom: 32 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
-                  <div>
-                    <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Propiedades destacadas</h2>
-                    <a href="/buscar" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades →</a>
-                  </div>
-                  {total > 3 && (
-                    <div style={{ display: 'flex', gap: 6 }}>
-                      {Array.from({ length: Math.ceil(total / 3) }).map((_, i) => (
-                        <div key={i} onClick={() => setSlideIdx(i * 3)} style={{ width: 8, height: 8, borderRadius: '50%', background: Math.floor(slideIdx / 3) === i ? '#006D77' : '#ccc', cursor: 'pointer' }} />
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', borderRadius: 8, overflow: 'hidden', border: '1px solid #e8e8e8' }}>
+                <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 16 }}>Propiedades destacadas</h2>
+                <div style={{ display: 'flex', flexDirection: 'column', borderRadius: 8, overflow: 'hidden', border: '1px solid #e8e8e8', marginBottom: 10 }}>
                   {visibles.map((p: any, i: number) => (
                     <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', display: 'flex', borderBottom: i < visibles.length - 1 ? '1px solid #f0f0f0' : 'none', borderLeft: '3px solid #006D77' }}
                       onMouseEnter={e => (e.currentTarget.style.background = '#fafefe')}
@@ -622,6 +617,7 @@ export default function Home() {
                     </a>
                   ))}
                 </div>
+                <a href="/buscar?dest=1" style={{ display: 'block', textAlign: 'center', padding: '10px', fontSize: 13, color: '#006D77', fontWeight: 600, textDecoration: 'none', border: '1px solid #006D77', borderRadius: 6, background: '#f0fafb' }}>Ver todas las propiedades destacadas →</a>
               </div>
             )
           })()}
@@ -631,16 +627,13 @@ export default function Home() {
             const bgs = ['#f0ebe0','#e8f0e0','#f0e8f0']
             const src = masVistasReales.length > 0 ? masVistasReales : propiedadesDestacadas.filter(p => p.tipo === 'visitas').map((p,i) => ({ id: i, titulo: p.title, precio: p.price, zona: p.loc, habitaciones: null, m2: null }))
             if (src.length === 0) return null
+            const masTotal = src.length
+            const masVisibles = [src[masIdx % masTotal], src[(masIdx+1) % masTotal], src[(masIdx+2) % masTotal]].filter(Boolean)
             return (
               <div style={{ marginBottom: 32 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
-                  <div>
-                    <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Más vistos</h2>
-                    <a href="/buscar" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades →</a>
-                  </div>
-                </div>
-                <div style={{ display: 'flex', flexDirection: 'column', borderRadius: 8, overflow: 'hidden', border: '1px solid #e8e8e8' }}>
-                  {src.slice(0,3).map((p: any, i: number, arr) => (
+                <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 16 }}>Más vistos</h2>
+                <div style={{ display: 'flex', flexDirection: 'column', borderRadius: 8, overflow: 'hidden', border: '1px solid #e8e8e8', marginBottom: 10 }}>
+                  {masVisibles.map((p: any, i: number, arr) => (
                     <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', display: 'flex', borderBottom: i < arr.length - 1 ? '1px solid #f0f0f0' : 'none', borderLeft: '3px solid #17A6B4' }}
                       onMouseEnter={e => (e.currentTarget.style.background = '#fafefe')}
                       onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
@@ -662,6 +655,7 @@ export default function Home() {
                     </a>
                   ))}
                 </div>
+                <a href="/buscar?orden=visitas" style={{ display: 'block', textAlign: 'center', padding: '10px', fontSize: 13, color: '#17A6B4', fontWeight: 600, textDecoration: 'none', border: '1px solid #17A6B4', borderRadius: 6, background: '#f0fbfc' }}>Ver todas las propiedades más vistas →</a>
               </div>
             )
           })()}
