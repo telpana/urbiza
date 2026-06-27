@@ -278,7 +278,7 @@ export default function Home() {
   const [fotoUrl, setFotoUrl] = useState<string>('')
   const [nombreUsuario, setNombreUsuario] = useState<string>('')
   const [idiomaOpen, setIdiomaOpen] = useState(false)
-  const [bannerUrl, setBannerUrl] = useState('')
+  const [bannerUrl, setBannerUrl] = useState('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80')
   const [featureImgUrl, setFeatureImgUrl] = useState('')
   const [faviconUrl, setFaviconUrl] = useState('')
 
@@ -467,7 +467,7 @@ export default function Home() {
 
       {/* BANNER CON IMAGEN — imagen configurable desde panel de administración */}
       <div style={{ position: 'relative', minHeight: 420, display: 'flex', alignItems: 'center', overflow: 'hidden' }}>
-        {bannerUrl && <div style={{ position: 'absolute', inset: 0, backgroundImage: `url(${bannerUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />}
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: `url(${bannerUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,78,87,0.72)' }} />
         <div style={{ position: 'relative', zIndex: 2, width: '100%', padding: '40px 20px 36px' }}>
         <div style={{ maxWidth: 720, margin: '0 auto' }}>
