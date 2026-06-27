@@ -423,9 +423,9 @@ export default function Home() {
             { label: 'Comprar', href: '/buscar?operacion=venta' },
             { label: 'Alquilar', href: '/buscar?operacion=alquiler' },
           ].map((item) => (
-            <a key={item.label} href={item.href} style={{ padding: '0 14px', alignSelf: 'stretch', display: 'flex', alignItems: 'center', fontSize: 14, color: '#555', textDecoration: 'none', boxShadow: 'inset 0 -2.5px 0 transparent' }}
-              onMouseEnter={e => { e.currentTarget.style.color = '#006D77'; e.currentTarget.style.boxShadow = 'inset 0 -2.5px 0 #006D77' }}
-              onMouseLeave={e => { e.currentTarget.style.color = '#555'; e.currentTarget.style.boxShadow = 'inset 0 -2.5px 0 transparent' }}>
+            <a key={item.label} href={item.href} style={{ padding: '0 14px', height: 60, display: 'flex', alignItems: 'center', fontSize: 14, color: '#555', textDecoration: 'none', borderBottom: '2.5px solid transparent' }}
+              onMouseEnter={e => { e.currentTarget.style.color = '#006D77'; e.currentTarget.style.borderBottomColor = '#006D77' }}
+              onMouseLeave={e => { e.currentTarget.style.color = '#555'; e.currentTarget.style.borderBottomColor = 'transparent' }}>
               {item.label}
             </a>
           ))}
