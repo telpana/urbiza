@@ -529,7 +529,9 @@ export default function Home() {
                 />
                 {mostrarSugHome && sugHome.length > 0 && (() => {
                   const r = inputHomeRef.current?.getBoundingClientRect()
-                  return (
+                  return (<>
+                    {/* overlay transparente que bloquea compositing layers (Leaflet) */}
+                    <div style={{ position: 'fixed', inset: 0, zIndex: 9998 }} onMouseDown={() => setMostrarSugHome(false)} />
                     <div style={{ position: 'fixed', top: r ? r.bottom : 0, left: r ? r.left : 0, width: r ? r.width : '100%', background: '#fff', border: '1px solid #e0e0e0', borderRadius: '0 0 8px 8px', boxShadow: '0 8px 24px rgba(0,0,0,0.14)', zIndex: 9999, maxHeight: 280, overflowY: 'auto' }}>
                     {sugHome.map((s: string, i: number) => (
                       <div key={i} onMouseDown={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); p.set('zona', s); window.location.href = `/buscar?${p.toString()}` }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', fontSize: 14, color: '#333', cursor: 'pointer', borderBottom: i < sugHome.length - 1 ? '1px solid #f5f5f5' : 'none' }}
@@ -540,7 +542,7 @@ export default function Home() {
                       </div>
                     ))}
                     </div>
-                  )
+                  </>)
                 })()}
               </div>{/* fin input wrapper */}
               <select value={tipoInmueble} onChange={e => setTipoInmueble(e.target.value)} style={{ padding: '0 30px 0 12px', fontSize: 13, border: 'none', borderLeft: '1px solid #e0e0e0', outline: 'none', color: '#555', background: `#f9f9f9 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23888' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") no-repeat right 10px center`, appearance: 'none', WebkitAppearance: 'none', cursor: 'pointer' }}>
