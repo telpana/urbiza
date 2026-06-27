@@ -582,17 +582,17 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
               </div>
             </div>
 
-            <div style={{ display: 'flex', gap: 10, marginTop: 2 }}>
-              <button onClick={toggleGuardado} style={{ all: 'unset', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, border: `1.5px solid ${guardado ? '#006D77' : '#e0e0e0'}`, borderRadius: 8, padding: '11px', fontSize: 13, color: guardado ? '#006D77' : '#555', cursor: 'pointer', background: guardado ? '#e0f5f7' : '#fff', fontWeight: guardado ? 600 : 400, boxSizing: 'border-box' }}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill={guardado ? '#006D77' : 'none'} stroke={guardado ? '#006D77' : 'currentColor'} strokeWidth="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <div style={{ display: 'flex', gap: 0, marginTop: 12, borderTop: '1px solid #f0f0f0' }}>
+              <button onClick={toggleGuardado} style={{ all: 'unset', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '14px 8px', fontSize: 11, fontWeight: 600, color: guardado ? '#006D77' : '#888', cursor: 'pointer', boxSizing: 'border-box', borderRight: '1px solid #f0f0f0', transition: 'color 0.15s' }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill={guardado ? '#006D77' : 'none'} stroke={guardado ? '#006D77' : '#888'} strokeWidth="1.6"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                 {guardado ? Tp.guardado : Tp.guardar}
               </button>
               <button onClick={async () => {
                 const url = window.location.href.split('?')[0]
                 if (navigator.share) { navigator.share({ title: propiedad?.titulo || 'Propiedad en Habitade', url }) }
                 else { await navigator.clipboard.writeText(url); alert(Tp.enlaceCopiad) }
-              }} style={{ all: 'unset', flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, border: '1.5px solid #e0e0e0', borderRadius: 8, padding: '11px', fontSize: 13, color: '#555', cursor: 'pointer', background: '#fff', boxSizing: 'border-box' }}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              }} style={{ all: 'unset', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '14px 8px', fontSize: 11, fontWeight: 600, color: '#888', cursor: 'pointer', boxSizing: 'border-box' }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="1.6"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
                 {Tp.compartir}
               </button>
             </div>
