@@ -426,15 +426,21 @@ img { max-width: 100%; }
   .galeria-thumbs      { display: none !important; }
   .galeria-titulo-bajo { display: block !important; }
 
-  /* Galería: sin margen abajo para pegar el precio */
-  .propiedad-galeria-wrap { margin-bottom: 0 !important; }
+  /* Galería + título + precio: sección continua sin gaps ni radios */
+  .propiedad-galeria-wrap  { margin-bottom: 0 !important; border-radius: 0 !important; }
+  .propiedad-precio-bloque { border-radius: 0 !important; padding: 4px 16px 14px !important; margin-bottom: 8px !important; }
 
-  /* Precio: reducir padding y espacio */
-  .propiedad-precio-bloque { padding: 10px 16px 14px !important; margin-bottom: 8px !important; }
-
-  /* Conversión m²: ocultar en modo lista para evitar overlap */
-  .caract-chevron    { display: none !important; }
-  .caract-conversion { display: none !important; }
+  /* Chip de área: mantener columna para que la conversión quede debajo */
+  .propiedad-caract-grid .caract-area-item {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    background: #f8fdfd !important;
+    border: 1px solid #e8f4f5 !important;
+    border-radius: 8px !important;
+    padding: 10px 12px !important;
+  }
+  .caract-chevron { display: inline !important; }
+  .caract-conversion { display: flex !important; }
 
   /* Contenedor exterior sin padding en móvil */
   .propiedad-outer { padding: 0 0 32px !important; }

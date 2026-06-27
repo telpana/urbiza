@@ -438,7 +438,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                 <div className="propiedad-caract-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
                   {caracteristicas.map(c => (
                     c.icon === 'area' ? (
-                      <div key={c.label} style={{ display: 'flex', flexDirection: 'column', padding: '10px 14px', background: '#f8f8f8', borderRadius: 6, cursor: 'pointer', userSelect: 'none' }} onClick={() => setVerConversion(v => !v)}>
+                      <div key={c.label} className="caract-area-item" style={{ display: 'flex', flexDirection: 'column', padding: '10px 14px', background: '#f8f8f8', borderRadius: 6, cursor: 'pointer', userSelect: 'none' }} onClick={() => setVerConversion(v => !v)}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                           <div style={{ width: 36, height: 36, background: '#e0f5f7', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{iconosCar[c.icon]}</div>
                           <div style={{ flex: 1 }}>
