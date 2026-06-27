@@ -26,7 +26,7 @@ export default function Cookies() {
           </tr>
           <tr>
             <td style={{ padding: '10px 12px', borderBottom: '1px solid #f0f0f0' }}><strong>Autenticación</strong></td>
-            <td style={{ padding: '10px 12px', borderBottom: '1px solid #f0f0f0' }}>Recordar que has iniciado sesión entre visitas (Supabase Auth)</td>
+            <td style={{ padding: '10px 12px', borderBottom: '1px solid #f0f0f0' }}>Recordar que has iniciado sesión entre visitas</td>
             <td style={{ padding: '10px 12px', borderBottom: '1px solid #f0f0f0' }}>7 días</td>
           </tr>
           <tr>
@@ -43,12 +43,7 @@ export default function Cookies() {
       </table>
 
       <h2 style={{ fontSize: 16, fontWeight: 700, marginTop: 32, marginBottom: 8 }}>Cookies de terceros</h2>
-      <p>Utilizamos servicios de terceros que pueden instalar sus propias cookies:</p>
-      <ul style={{ paddingLeft: 20 }}>
-        <li><strong>Stripe</strong> — procesamiento seguro de pagos.</li>
-        <li><strong>Supabase</strong> — autenticación y gestión de sesión.</li>
-      </ul>
-      <p>Estos proveedores tienen sus propias políticas de privacidad y cookies, sobre las que Habitade no tiene control.</p>
+      <p>Utilizamos proveedores de servicios externos para el procesamiento de pagos y la gestión de autenticación. Estos proveedores pueden instalar sus propias cookies técnicas necesarias para prestar dichos servicios. Habitade no tiene control sobre las cookies de terceros y estos proveedores cuentan con sus propias políticas de privacidad.</p>
 
       <h2 style={{ fontSize: 16, fontWeight: 700, marginTop: 32, marginBottom: 8 }}>Control de cookies</h2>
       <p>Puedes configurar tu navegador para bloquear o eliminar cookies en cualquier momento. Ten en cuenta que deshabilitar las cookies esenciales puede impedir el correcto funcionamiento de la plataforma, incluyendo el inicio de sesión.</p>

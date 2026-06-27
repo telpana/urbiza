@@ -14,7 +14,7 @@ export default function Privacidad() {
         <li><strong>Datos de registro:</strong> nombre, correo electrónico, teléfono y tipo de usuario.</li>
         <li><strong>Datos de los anuncios:</strong> información de las propiedades publicadas, fotografías y datos de contacto asociados.</li>
         <li><strong>Datos de uso:</strong> páginas visitadas, búsquedas realizadas, clics e interacciones dentro de la plataforma.</li>
-        <li><strong>Datos de pago:</strong> procesados íntegramente por Stripe. Habitade no almacena datos de tarjetas bancarias.</li>
+        <li><strong>Datos de pago:</strong> procesados íntegramente por nuestro proveedor de pagos externo. Habitade no almacena datos de tarjetas bancarias.</li>
       </ul>
 
       <h2 style={{ fontSize: 16, fontWeight: 700, marginTop: 32, marginBottom: 8 }}>3. Finalidad del tratamiento</h2>
