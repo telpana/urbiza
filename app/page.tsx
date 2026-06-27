@@ -586,10 +586,6 @@ export default function Home() {
       <style dangerouslySetInnerHTML={{__html:`
         .sc-wrap { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
         .sc-wrap > a { display: block; }
-        @media (max-width: 768px) {
-          .sc-wrap { display: flex !important; overflow-x: auto !important; gap: 12px !important; padding-bottom: 12px !important; -webkit-overflow-scrolling: touch; scroll-snap-type: x mandatory; }
-          .sc-wrap > a { min-width: 240px !important; max-width: 240px !important; flex-shrink: 0 !important; scroll-snap-align: start; }
-        }
       `}} />
       <div style={{ background: '#f4f5f6' }}>
         <div className="home-props-wrap" style={{ maxWidth: 1100, margin: '0 auto', padding: '36px 20px 0' }}>
