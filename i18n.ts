@@ -143,7 +143,7 @@ export const t = {
       planes: {
         titulo: 'Pásate a PRO y publica sin límites', desc: 'Has usado tus {n} anuncios gratuitos.',
         ventajas: ['Anuncios ilimitados', 'Estadísticas avanzadas', 'Apareces antes en búsquedas', 'Badge Profesional en tus anuncios', 'Soporte prioritario'],
-        suscribirse: 'Suscribirse por US$9.99/mes', primer_mes: 'El primer mes gratis con código promocional',
+        suscribirse: 'Suscribirse por US$9.99/mes',
       },
     },
   },
@@ -288,7 +288,7 @@ export const t = {
       planes: {
         titulo: 'Go PRO and post without limits', desc: "You've used your {n} free listings.",
         ventajas: ['Unlimited listings', 'Advanced statistics', 'Appear higher in searches', 'Professional badge on your listings', 'Priority support'],
-        suscribirse: 'Subscribe for US$9.99/month', primer_mes: 'First month free with a promo code',
+        suscribirse: 'Subscribe for US$9.99/month',
       },
     },
   },
@@ -433,7 +433,7 @@ export const t = {
       planes: {
         titulo: 'Passez PRO et publiez sans limites', desc: 'Vous avez utilisé vos {n} annonces gratuites.',
         ventajas: ['Annonces illimitées', 'Statistiques avancées', 'Apparaissez en haut des recherches', 'Badge Professionnel sur vos annonces', 'Support prioritaire'],
-        suscribirse: "S'abonner pour 9,99 US$/mois", primer_mes: 'Premier mois gratuit avec un code promo',
+        suscribirse: "S'abonner pour 9,99 US$/mois",
       },
     },
   },

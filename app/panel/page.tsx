@@ -809,10 +809,9 @@ export default function Panel() {
                   </div>
                   <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 8 }}>Activa tu suscripción para publicar</h2>
                   <p style={{ fontSize: 14, color: '#888', marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
-                    Con el plan Profesional publicas anuncios ilimitados por solo US$9.99/mes. El primer mes es gratis si tienes código promocional.
+                    Con el plan Profesional publicas anuncios ilimitados por solo US$9.99/mes.
                   </p>
-                  <div style={{ display: 'flex', gap: 10, maxWidth: 400, margin: '0 auto 16px' }}>
-                    <input type="text" placeholder="Código promocional (opcional)" style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 14px', fontSize: 13, outline: 'none' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                  <div style={{ maxWidth: 400, margin: '0 auto 16px' }}>
                     <a href="/pago/profesional" style={{ background: '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
                       Activar — US$9.99/mes
                     </a>
@@ -1309,7 +1308,6 @@ export default function Panel() {
                 <a href="/pago/profesional" style={{ display: 'block', background: '#006D77', color: '#fff', padding: '14px', borderRadius: 6, fontSize: 15, fontWeight: 700, cursor: 'pointer', textDecoration: 'none' }}>
                   {Tpanel.planes.suscribirse}
                 </a>
-                <div style={{ fontSize: 12, color: '#aaa', marginTop: 12 }}>{Tpanel.planes.primer_mes}</div>
               </div>
             </div>
           )}
