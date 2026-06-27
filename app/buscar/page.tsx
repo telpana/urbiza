@@ -596,11 +596,13 @@ function BuscarContent() {
 
         {/* TABS COMPRAR / ALQUILAR */}
         <div className="buscar-op-tabs">
-          {[{ val: 'venta', label: 'Comprar' }, { val: 'alquiler', label: 'Alquilar' }].map(t => (
-            <button key={t.val} className={`buscar-op-tab${operacion === t.val ? ' active' : ''}`} onClick={() => setOperacion(t.val)}>
-              {t.label}
-            </button>
-          ))}
+          <div className="buscar-op-tabs-inner">
+            {[{ val: 'venta', label: 'Comprar' }, { val: 'alquiler', label: 'Alquilar' }].map(t => (
+              <button key={t.val} className={`buscar-op-tab${operacion === t.val ? ' active' : ''}`} onClick={() => setOperacion(t.val)}>
+                {t.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="buscar-mobile-actionbar">

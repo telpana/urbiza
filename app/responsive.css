@@ -213,28 +213,35 @@ img { max-width: 100%; }
   }
   .buscar-op-tabs {
     display: flex !important;
-    border-top: 1px solid #eee !important;
+    padding: 10px 16px !important;
     border-bottom: 1px solid #eee !important;
+    background: #fff !important;
+  }
+  .buscar-op-tabs-inner {
+    display: flex !important;
+    flex: 1 !important;
+    background: #eef0f0 !important;
+    border-radius: 10px !important;
+    padding: 3px !important;
+    gap: 3px !important;
   }
   .buscar-op-tab {
     all: unset !important;
     flex: 1 !important;
     text-align: center !important;
-    padding: 14px 0 12px !important;
-    font-size: 15px !important;
+    padding: 10px 0 !important;
+    font-size: 14px !important;
     font-weight: 500 !important;
-    color: #888 !important;
+    color: #777 !important;
     cursor: pointer !important;
-    border-bottom: 3px solid transparent !important;
-    letter-spacing: 0.1px !important;
+    border-radius: 8px !important;
+    transition: all 0.18s !important;
   }
   .buscar-op-tab.active {
-    color: #006D77 !important;
+    background: #006D77 !important;
+    color: #fff !important;
     font-weight: 700 !important;
-    border-bottom-color: #006D77 !important;
-  }
-  .buscar-op-tab:first-child {
-    border-right: 1px solid #eee !important;
+    box-shadow: 0 2px 8px rgba(0,109,119,0.25) !important;
   }
 
   .buscar-mobile-actionbar {
