@@ -198,6 +198,7 @@ export default function Panel() {
   const [amenidadesSeleccionadas, setAmenidadesSeleccionadas] = useState<string[]>([])
   type FotoItem = { id: string; src: string; file?: File }
   const [fotosLista, setFotosLista] = useState<FotoItem[]>([])
+  const [fotoDragOver, setFotoDragOver] = useState<number | null>(null)
   const [pubTitulo, setPubTitulo] = useState('')
   const [pubPrecio, setPubPrecio] = useState('')
   const [pubM2, setPubM2] = useState('')
@@ -929,21 +930,25 @@ export default function Panel() {
                   </label>
                   {fotosLista.length > 0 && (
                     <>
-                      <div style={{ fontSize: 11, color: '#aaa', marginTop: 10, marginBottom: 6 }}>Usa las flechas para reordenar · La primera es la foto principal</div>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
+                      <div style={{ fontSize: 11, color: '#aaa', marginTop: 10, marginBottom: 6 }}>Arrastra para reordenar · La primera es la foto principal</div>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }} onDragOver={e => e.preventDefault()}>
                         {fotosLista.map((item, i) => (
-                          <div key={item.id} style={{ position: 'relative', borderRadius: 6, overflow: 'hidden', background: '#e8e8e8', border: i === 0 ? '2px solid #006D77' : '2px solid #e0e0e0' }}>
-                            <div style={{ aspectRatio: '4/3', position: 'relative' }}>
-                              <img src={item.src} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                          <div
+                            key={item.id}
+                            draggable
+                            onDragStart={e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', String(i)) }}
+                            onDragEnter={e => { e.preventDefault(); setFotoDragOver(i) }}
+                            onDragOver={e => { e.preventDefault() }}
+                            onDragLeave={() => setFotoDragOver(null)}
+                            onDrop={e => { e.preventDefault(); const desde = Number(e.dataTransfer.getData('text/plain')); if (!isNaN(desde) && desde !== i) moverFoto(desde, i); setFotoDragOver(null) }}
+                            onDragEnd={() => setFotoDragOver(null)}
+                            style={{ position: 'relative', borderRadius: 6, border: fotoDragOver === i ? '2px dashed #006D77' : i === 0 ? '2px solid #006D77' : '2px solid #e0e0e0', cursor: 'grab', userSelect: 'none' }}
+                          >
+                            <div style={{ aspectRatio: '4/3', position: 'relative', overflow: 'hidden', borderRadius: 4 }}>
+                              <img src={item.src} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }} />
                               {i === 0 && <div style={{ position: 'absolute', bottom: 4, left: 4, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>PORTADA</div>}
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '4px 4px', background: '#f5f5f5', gap: 2 }}>
-                              <div style={{ display: 'flex', gap: 2 }}>
-                                <button onClick={() => i > 0 && moverFoto(i, i - 1)} disabled={i === 0} title="Mover izquierda" style={{ background: i === 0 ? '#e0e0e0' : '#006D77', border: 'none', color: '#fff', width: 22, height: 22, borderRadius: 4, cursor: i === 0 ? 'default' : 'pointer', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>‹</button>
-                                <button onClick={() => i < fotosLista.length - 1 && moverFoto(i, i + 1)} disabled={i === fotosLista.length - 1} title="Mover derecha" style={{ background: i === fotosLista.length - 1 ? '#e0e0e0' : '#006D77', border: 'none', color: '#fff', width: 22, height: 22, borderRadius: 4, cursor: i === fotosLista.length - 1 ? 'default' : 'pointer', fontSize: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>›</button>
-                              </div>
-                              <button onClick={() => quitarFoto(i)} title="Eliminar" style={{ background: '#e63946', border: 'none', color: '#fff', width: 22, height: 22, borderRadius: 4, cursor: 'pointer', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
-                            </div>
+                            <button onClick={() => quitarFoto(i)} title="Eliminar" style={{ position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', border: 'none', color: '#fff', width: 20, height: 20, borderRadius: '50%', cursor: 'pointer', fontSize: 13, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>×</button>
                           </div>
                         ))}
                       </div>
