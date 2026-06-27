@@ -445,10 +445,10 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                             <div style={{ fontSize: 11, color: '#aaa', marginBottom: 2 }}>{c.label}</div>
                             <div style={{ fontSize: 14, fontWeight: 600, color: '#222' }}>{c.val}</div>
                           </div>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5" style={{ flexShrink: 0, transform: verConversion ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}><polyline points="6 9 12 15 18 9"/></svg>
+                          <svg className="caract-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5" style={{ flexShrink: 0, transform: verConversion ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}><polyline points="6 9 12 15 18 9"/></svg>
                         </div>
                         {verConversion && (
-                          <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', gap: 6 }}>
+                          <div className="caract-conversion" style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', gap: 6 }}>
                             {esTerreno && (
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
                                 <span style={{ color: '#888' }}>Tareas</span>

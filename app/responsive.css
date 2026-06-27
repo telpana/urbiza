@@ -426,10 +426,15 @@ img { max-width: 100%; }
   .galeria-thumbs      { display: none !important; }
   .galeria-titulo-bajo { display: block !important; }
 
-  /* Precio: menos padding arriba ya que el título está justo encima */
-  .propiedad-precio-wrap + div,
-  .propiedad-precio-bloque { padding-top: 8px !important; }
-  .propiedad-precio-bloque { padding: 10px 16px 14px !important; }
+  /* Galería: sin margen abajo para pegar el precio */
+  .propiedad-galeria-wrap { margin-bottom: 0 !important; }
+
+  /* Precio: reducir padding y espacio */
+  .propiedad-precio-bloque { padding: 10px 16px 14px !important; margin-bottom: 8px !important; }
+
+  /* Conversión m²: ocultar en modo lista para evitar overlap */
+  .caract-chevron    { display: none !important; }
+  .caract-conversion { display: none !important; }
 
   /* Contenedor exterior sin padding en móvil */
   .propiedad-outer { padding: 0 0 32px !important; }
