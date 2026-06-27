@@ -617,7 +617,7 @@ export default function Home() {
                     </a>
                   ))}
                 </div>
-                <a href="/buscar?dest=1" style={{ display: 'block', textAlign: 'center', padding: '10px', fontSize: 13, color: '#006D77', fontWeight: 600, textDecoration: 'none', border: '1px solid #006D77', borderRadius: 6, background: '#f0fafb' }}>Ver todas las propiedades destacadas →</a>
+                <a href="/buscar?dest=1" style={{ display: 'block', textAlign: 'center', padding: '10px', fontSize: 13, color: '#006D77', fontWeight: 600, textDecoration: 'none', border: '1px solid #006D77', borderRadius: 6, background: '#f0fafb' }}>Ver todas las propiedades destacadas</a>
               </div>
             )
           })()}
@@ -642,7 +642,7 @@ export default function Home() {
                           ? <img src={p.fotos[0]} alt={p.titulo ?? p.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                           : <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         }
-                        <div style={{ position: 'absolute', top: 5, left: 5, background: '#17A6B4', color: '#fff', fontSize: 8, fontWeight: 700, padding: '1px 5px', borderRadius: 3 }}>VISTO</div>
+                        <div style={{ position: 'absolute', top: 5, left: 5, background: '#17A6B4', color: '#fff', fontSize: 8, fontWeight: 700, padding: '1px 5px', borderRadius: 3 }}>MÁS VISTO</div>
                       </div>
                       <div style={{ flex: 1, padding: '10px 14px', display: 'flex', flexDirection: 'column', justifyContent: 'center', minWidth: 0 }}>
                         <div style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 2 }}>US$ {(p.precio ?? p.price ?? 0).toLocaleString('en-US')}</div>
@@ -655,7 +655,7 @@ export default function Home() {
                     </a>
                   ))}
                 </div>
-                <a href="/buscar?orden=visitas" style={{ display: 'block', textAlign: 'center', padding: '10px', fontSize: 13, color: '#17A6B4', fontWeight: 600, textDecoration: 'none', border: '1px solid #17A6B4', borderRadius: 6, background: '#f0fbfc' }}>Ver todas las propiedades más vistas →</a>
+                <a href="/buscar?orden=visitas" style={{ display: 'block', textAlign: 'center', padding: '10px', fontSize: 13, color: '#17A6B4', fontWeight: 600, textDecoration: 'none', border: '1px solid #17A6B4', borderRadius: 6, background: '#f0fbfc' }}>Ver todas las propiedades más vistas</a>
               </div>
             )
           })()}
