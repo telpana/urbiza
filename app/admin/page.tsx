@@ -172,6 +172,10 @@ export default function Admin() {
     if (cfg.banner_url) setBannerUrl(cfg.banner_url)
     if (cfg.favicon_url) setFaviconUrl(cfg.favicon_url)
     if (cfg.feature_img_url) setFeatureImgUrl(cfg.feature_img_url)
+    if (cfg.instagram_url) setInstagramUrl(cfg.instagram_url)
+    if (cfg.facebook_url) setFacebookUrl(cfg.facebook_url)
+    if (cfg.tiktok_url) setTiktokUrl(cfg.tiktok_url)
+    if (cfg.whatsapp_url) setWhatsappUrl(cfg.whatsapp_url)
   }, [authHeader])
 
   const subirConfig = async (clave: string, file: File) => {
@@ -771,7 +775,11 @@ export default function Admin() {
                     <input value={r.val} onChange={e => r.set(e.target.value)} type="text" placeholder={r.placeholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 14px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} />
                   </div>
                 ))}
-                <button onClick={() => { setRedesGuardadas(true); setTimeout(() => setRedesGuardadas(false), 3000) }} style={{ all: 'unset', background: C.verde, color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 8 }}>
+                <button onClick={async () => {
+                  const pares = [['instagram_url', instagramUrl], ['facebook_url', facebookUrl], ['tiktok_url', tiktokUrl], ['whatsapp_url', whatsappUrl]]
+                  await Promise.all(pares.map(([clave, valor]) => fetch('/api/admin/config', { method: 'POST', headers: { ...authHeader(), 'Content-Type': 'application/json' }, body: JSON.stringify({ clave, valor }) })))
+                  setRedesGuardadas(true); setTimeout(() => setRedesGuardadas(false), 3000)
+                }} style={{ all: 'unset', background: C.verde, color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 8 }}>
                   {redesGuardadas ? '✓ Guardado' : 'Guardar enlaces'}
                 </button>
               </Card>
