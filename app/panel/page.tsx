@@ -196,8 +196,9 @@ export default function Panel() {
   const [hiloLoading, setHiloLoading] = useState(false)
   const hiloBottomRef = useRef<HTMLDivElement>(null)
   const [amenidadesSeleccionadas, setAmenidadesSeleccionadas] = useState<string[]>([])
-  const [pubFotos, setPubFotos] = useState<File[]>([])
-  const [pubFotosPrev, setPubFotosPrev] = useState<string[]>([])
+  type FotoItem = { id: string; src: string; file?: File }
+  const [fotosLista, setFotosLista] = useState<FotoItem[]>([])
+  const [fotoDragIdx, setFotoDragIdx] = useState<number | null>(null)
   const [pubTitulo, setPubTitulo] = useState('')
   const [pubPrecio, setPubPrecio] = useState('')
   const [pubM2, setPubM2] = useState('')
@@ -215,7 +216,7 @@ export default function Panel() {
   const [pubError, setPubError] = useState('')
   const [pubExito, setPubExito] = useState(false)
   const [anuncioEditando, setAnuncioEditando] = useState<any>(null)
-  const [fotosExistentes, setFotosExistentes] = useState<string[]>([])
+  const [fotosExistentes, setFotosExistentes] = useState<string[]>([]) // legacy, unused after unification
   const [fotoPerfilUrl, setFotoPerfilUrl] = useState<string | null>(null)
   const [fotoPerfilFile, setFotoPerfilFile] = useState<File | null>(null)
   const [perfilNombre, setPerfilNombre] = useState('')
@@ -372,18 +373,25 @@ export default function Panel() {
 
   const handleFotos = (files: FileList | null) => {
     if (!files) return
-    const nuevas = Array.from(files).slice(0, 20 - pubFotos.length)
-    setPubFotos(prev => [...prev, ...nuevas])
+    const nuevas = Array.from(files).slice(0, 20 - fotosLista.length)
     nuevas.forEach(f => {
       const reader = new FileReader()
-      reader.onload = e => setPubFotosPrev(prev => [...prev, e.target?.result as string])
+      reader.onload = e => setFotosLista(prev => [...prev, { id: `new-${Date.now()}-${Math.random()}`, src: e.target?.result as string, file: f }])
       reader.readAsDataURL(f)
     })
   }
 
   const quitarFoto = (idx: number) => {
-    setPubFotos(prev => prev.filter((_, i) => i !== idx))
-    setPubFotosPrev(prev => prev.filter((_, i) => i !== idx))
+    setFotosLista(prev => prev.filter((_, i) => i !== idx))
+  }
+
+  const moverFoto = (desde: number, hasta: number) => {
+    setFotosLista(prev => {
+      const arr = [...prev]
+      const [item] = arr.splice(desde, 1)
+      arr.splice(hasta, 0, item)
+      return arr
+    })
   }
 
   const guardarPerfil = async () => {
@@ -488,8 +496,7 @@ export default function Panel() {
     const sector = partes[0] || ''
     const provincia = partes.slice(1).join(', ') || ''
     setAnuncioEditando(raw)
-    setFotosExistentes(Array.isArray(raw.fotos) ? raw.fotos : [])
-    setPubFotos([]); setPubFotosPrev([])
+    setFotosLista((Array.isArray(raw.fotos) ? raw.fotos : []).map((src: string, i: number) => ({ id: `ex-${i}`, src })))
     setPubTitulo(raw.titulo || '')
     setPubPrecio(String(raw.precio || ''))
     setPubM2(raw.m2 ? String(raw.m2) : '')
@@ -516,24 +523,27 @@ export default function Panel() {
   const publicarAnuncio = async () => {
     if (!anuncioEditando && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis) { setSeccion('planes'); return }
     if (!pubTitulo || !pubPrecio || !pubProvincia) { setPubError(Tpanel.publicar.err_campos); return }
-    if (pubFotos.length === 0 && fotosExistentes.length === 0) { setPubError(Tpanel.publicar.err_fotos); return }
+    if (fotosLista.length === 0) { setPubError(Tpanel.publicar.err_fotos); return }
     setPubLoading(true)
     setPubError('')
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setPubError('Debes iniciar sesión para publicar'); setPubLoading(false); return }
 
-    // Subir fotos nuevas a Supabase Storage
-    const fotosNuevas: string[] = []
-    for (const foto of pubFotos) {
-      const ext = foto.name.split('.').pop()
-      const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-      const { data: uploadData, error: uploadErr } = await supabase.storage.from('propiedades').upload(path, foto, { upsert: true })
-      if (!uploadErr && uploadData) {
-        const { data: urlData } = supabase.storage.from('propiedades').getPublicUrl(uploadData.path)
-        fotosNuevas.push(urlData.publicUrl)
+    // Subir fotos en el orden actual y conservar URLs existentes
+    const todasFotos: string[] = []
+    for (const item of fotosLista) {
+      if (item.file) {
+        const ext = item.file.name.split('.').pop()
+        const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+        const { data: uploadData, error: uploadErr } = await supabase.storage.from('propiedades').upload(path, item.file, { upsert: true })
+        if (!uploadErr && uploadData) {
+          const { data: urlData } = supabase.storage.from('propiedades').getPublicUrl(uploadData.path)
+          todasFotos.push(urlData.publicUrl)
+        }
+      } else {
+        todasFotos.push(item.src)
       }
     }
-    const todasFotos = [...fotosExistentes, ...fotosNuevas]
 
     const campos = {
       titulo: pubTitulo,
@@ -568,8 +578,7 @@ export default function Panel() {
     setPubTitulo(''); setPubPrecio(''); setPubM2(''); setPubDesc('')
     setPubProvincia(''); setPubSector(''); setPubHab('1'); setPubBanos('1')
     setPubParqueos(''); setPubPlanta(''); setPubAnio('')
-    setPubFotos([]); setPubFotosPrev([])
-    setFotosExistentes([]); setAnuncioEditando(null)
+    setFotosLista([]); setAnuncioEditando(null)
     setAmenidadesSeleccionadas([])
     setTimeout(() => { setSeccion('anuncios'); setPubExito(false) }, 1200)
   }
@@ -919,23 +928,27 @@ export default function Panel() {
                     <div style={{ fontSize: 13, color: '#555', marginBottom: 2 }}>Pulsa para seleccionar fotos</div>
                     <div style={{ fontSize: 11, color: '#aaa' }}>JPG, PNG — máximo 20 fotos, 5MB cada una</div>
                   </label>
-                  {(fotosExistentes.length > 0 || pubFotosPrev.length > 0) && (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8, marginTop: 12 }}>
-                      {fotosExistentes.map((src, i) => (
-                        <div key={`ex-${i}`} style={{ position: 'relative', aspectRatio: '4/3', borderRadius: 6, overflow: 'hidden', background: '#e8e8e8' }}>
-                          <img src={src} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          <button onClick={() => setFotosExistentes(prev => prev.filter((_, j) => j !== i))} style={{ all: 'unset', position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', color: '#fff', width: 20, height: 20, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 12, lineHeight: 1 }}>×</button>
-                          {i === 0 && <div style={{ position: 'absolute', bottom: 4, left: 4, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>PORTADA</div>}
-                        </div>
-                      ))}
-                      {pubFotosPrev.map((src, i) => (
-                        <div key={`new-${i}`} style={{ position: 'relative', aspectRatio: '4/3', borderRadius: 6, overflow: 'hidden', background: '#e8e8e8' }}>
-                          <img src={src} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          <button onClick={() => quitarFoto(i)} style={{ all: 'unset', position: 'absolute', top: 4, right: 4, background: 'rgba(0,0,0,0.6)', color: '#fff', width: 20, height: 20, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 12, lineHeight: 1 }}>×</button>
-                          {fotosExistentes.length === 0 && i === 0 && <div style={{ position: 'absolute', bottom: 4, left: 4, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>PORTADA</div>}
-                        </div>
-                      ))}
-                    </div>
+                  {fotosLista.length > 0 && (
+                    <>
+                      <div style={{ fontSize: 11, color: '#aaa', marginTop: 10, marginBottom: 6 }}>Arrastra para reordenar · La primera es la foto principal</div>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }}>
+                        {fotosLista.map((item, i) => (
+                          <div
+                            key={item.id}
+                            draggable
+                            onDragStart={() => setFotoDragIdx(i)}
+                            onDragOver={e => { e.preventDefault() }}
+                            onDrop={e => { e.preventDefault(); if (fotoDragIdx !== null && fotoDragIdx !== i) moverFoto(fotoDragIdx, i); setFotoDragIdx(null) }}
+                            onDragEnd={() => setFotoDragIdx(null)}
+                            style={{ position: 'relative', aspectRatio: '4/3', borderRadius: 6, overflow: 'hidden', background: '#e8e8e8', cursor: 'grab', opacity: fotoDragIdx === i ? 0.4 : 1, border: i === 0 ? '2px solid #006D77' : '2px solid transparent', transition: 'opacity 0.15s, border-color 0.15s' }}
+                          >
+                            <img src={item.src} style={{ width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none', userSelect: 'none' }} />
+                            <button onClick={() => quitarFoto(i)} style={{ background: 'rgba(0,0,0,0.6)', border: 'none', color: '#fff', width: 20, height: 20, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 12, lineHeight: 1, position: 'absolute', top: 4, right: 4 }}>×</button>
+                            {i === 0 && <div style={{ position: 'absolute', bottom: 4, left: 4, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>PORTADA</div>}
+                          </div>
+                        ))}
+                      </div>
+                    </>
                   )}
                 </div>
 
@@ -945,7 +958,7 @@ export default function Panel() {
                   <button onClick={publicarAnuncio} disabled={pubLoading} style={{ all: 'unset', flex: 1, background: pubLoading ? '#aaa' : '#006D77', color: '#fff', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: pubLoading ? 'default' : 'pointer', textAlign: 'center' }}>
                     {pubLoading ? (anuncioEditando ? Tpanel.publicar.guardando : Tpanel.publicar.publicando) : (anuncioEditando ? Tpanel.publicar.guardar : Tpanel.publicar.publicar)}
                   </button>
-                  {anuncioEditando && <button onClick={() => { setAnuncioEditando(null); setFotosExistentes([]); setSeccion('anuncios') }} style={{ all: 'unset', border: '1.5px solid #e0e0e0', color: '#555', padding: '12px 20px', borderRadius: 6, fontSize: 14, cursor: 'pointer' }}>{Tpanel.publicar.cancelar}</button>}
+                  {anuncioEditando && <button onClick={() => { setAnuncioEditando(null); setFotosLista([]); setSeccion('anuncios') }} style={{ all: 'unset', border: '1.5px solid #e0e0e0', color: '#555', padding: '12px 20px', borderRadius: 6, fontSize: 14, cursor: 'pointer' }}>{Tpanel.publicar.cancelar}</button>}
                 </div>
               </div>
               ))}
