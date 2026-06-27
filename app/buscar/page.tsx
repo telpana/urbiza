@@ -590,6 +590,15 @@ function BuscarContent() {
         </div>
       </nav>
 
+      {/* TABS COMPRAR / ALQUILAR */}
+      <div className="buscar-tabs">
+        {[{ val: 'venta', label: 'Comprar' }, { val: 'alquiler', label: 'Alquilar' }].map(t => (
+          <button key={t.val} className={`buscar-tab${operacion === t.val ? ' active' : ''}`} onClick={() => setOperacion(t.val)}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
       {/* BARRA MÓVIL: título + 3 botones estilo Idealista */}
       <div className="buscar-mobile-topbar">
         <div className="buscar-mobile-count">{cargando ? '...' : tituloPagina}</div>
