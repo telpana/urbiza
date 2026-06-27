@@ -430,17 +430,30 @@ img { max-width: 100%; }
   .propiedad-galeria-wrap  { margin-bottom: 0 !important; border-radius: 0 !important; }
   .propiedad-precio-bloque { border-radius: 0 !important; padding: 4px 16px 14px !important; margin-bottom: 8px !important; }
 
-  /* Chip de área: mantener columna para que la conversión quede debajo */
+  /* Chip de área: columna igual al resto pero con conversión debajo */
   .propiedad-caract-grid .caract-area-item {
     flex-direction: column !important;
     align-items: stretch !important;
-    background: #f8fdfd !important;
-    border: 1px solid #e8f4f5 !important;
-    border-radius: 8px !important;
-    padding: 10px 12px !important;
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid #f0f0f0 !important;
+    border-radius: 0 !important;
+    padding: 0 4px !important;
   }
+  /* Fila principal del área (icono + label + valor) */
+  .propiedad-caract-grid .caract-area-item > div:first-child {
+    padding: 12px 0 !important;
+  }
+  /* Conversión: indentada al nivel del texto */
   .caract-chevron { display: inline !important; }
-  .caract-conversion { display: flex !important; }
+  .caract-conversion {
+    display: flex !important;
+    margin-left: 48px !important;
+    padding-bottom: 12px !important;
+    border-top: none !important;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
 
   /* Contenedor exterior sin padding en móvil */
   .propiedad-outer { padding: 0 0 32px !important; }
