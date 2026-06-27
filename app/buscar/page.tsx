@@ -590,18 +590,19 @@ function BuscarContent() {
         </div>
       </nav>
 
-      {/* TABS COMPRAR / ALQUILAR */}
-      <div className="buscar-tabs">
-        {[{ val: 'venta', label: 'Comprar' }, { val: 'alquiler', label: 'Alquilar' }].map(t => (
-          <button key={t.val} className={`buscar-tab${operacion === t.val ? ' active' : ''}`} onClick={() => setOperacion(t.val)}>
-            {t.label}
-          </button>
-        ))}
-      </div>
-
-      {/* BARRA MÓVIL: título + 3 botones estilo Idealista */}
+      {/* BARRA MÓVIL: título + tabs + 3 botones estilo Idealista */}
       <div className="buscar-mobile-topbar">
         <div className="buscar-mobile-count">{cargando ? '...' : tituloPagina}</div>
+
+        {/* TABS COMPRAR / ALQUILAR */}
+        <div className="buscar-op-tabs">
+          {[{ val: 'venta', label: 'Comprar' }, { val: 'alquiler', label: 'Alquilar' }].map(t => (
+            <button key={t.val} className={`buscar-op-tab${operacion === t.val ? ' active' : ''}`} onClick={() => setOperacion(t.val)}>
+              {t.label}
+            </button>
+          ))}
+        </div>
+
         <div className="buscar-mobile-actionbar">
           <button className="bma-btn" onClick={() => setFiltrosOpen(v => !v)}>
             <svg width="14" height="12" viewBox="0 0 14 12" fill="none"><rect y="0" width="14" height="2" rx="1" fill="currentColor"/><rect x="2" y="5" width="10" height="2" rx="1" fill="currentColor"/><rect x="4" y="10" width="6" height="2" rx="1" fill="currentColor"/></svg>
