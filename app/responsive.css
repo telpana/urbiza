@@ -174,9 +174,10 @@ img { max-width: 100%; }
 /* ════════════════════════════════
    BUSCAR
 ════════════════════════════════ */
-.buscar-filtros-toggle  { display: none; }
-.buscar-mobile-topbar   { display: none; }
-.buscar-filtros-apply   { display: none; }
+.buscar-filtros-toggle   { display: none; }
+.buscar-mobile-topbar    { display: none; }
+.buscar-filtros-apply    { display: none; }
+.filtros-mobile-header   { display: none; }
 .pc-fav-img   { display: none; }
 .pc-zona-text { display: none; }
 
@@ -227,17 +228,37 @@ img { max-width: 100%; }
   }
   .bma-btn:last-child { border-right: none !important; }
 
-  /* Panel de filtros: full-screen sheet en móvil */
-  .buscar-filtros-panel.open {
+  /* Sidebar oculto por defecto en móvil */
+  .buscar-filtros { display: none !important; }
+
+  /* Cuando está abierto: el sidebar se convierte en overlay full-screen */
+  .buscar-filtros.filtros-open {
+    display: block !important;
     position: fixed !important;
-    inset: 0 !important;
-    z-index: 700 !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 800 !important;
     overflow-y: auto !important;
     background: #fff !important;
-    display: block !important;
-    padding: 0 !important;
+    isolation: auto !important;
+    border-right: none !important;
   }
-  .buscar-filtros-panel.open > * { padding-left: 16px !important; padding-right: 16px !important; }
+  .buscar-filtros.filtros-open .buscar-filtros-panel { display: block !important; padding: 0 16px 80px !important; }
+
+  /* Cabecera del panel en móvil */
+  .filtros-mobile-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 14px 16px !important;
+    border-bottom: 1px solid #e8e8e8 !important;
+    position: sticky !important;
+    top: 0 !important;
+    background: #fff !important;
+    z-index: 1 !important;
+  }
 
   /* Botón "Ver X propiedades" al fondo del panel */
   .buscar-filtros-apply {

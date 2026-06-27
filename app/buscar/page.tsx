@@ -641,8 +641,14 @@ function BuscarContent() {
       <div className="buscar-layout" style={{ display: 'grid', gridTemplateColumns: '280px 1fr', minHeight: 'calc(100vh - 90px)' }}>
 
         {/* SIDEBAR */}
-        <div className="buscar-filtros" style={{ background: '#fff', borderRight: '1px solid #e8e8e8', isolation: 'isolate' }}>
+        <div className={`buscar-filtros${filtrosOpen ? ' filtros-open' : ''}`} style={{ background: '#fff', borderRight: '1px solid #e8e8e8', isolation: 'isolate' }}>
           <div className={`buscar-filtros-panel${filtrosOpen ? ' open' : ''}`} style={{ padding: '14px' }}>
+
+          {/* Cabecera móvil del panel de filtros */}
+          <div className="filtros-mobile-header">
+            <span style={{ fontWeight: 700, fontSize: 16, color: '#111' }}>Filtros</span>
+            <button onClick={() => setFiltrosOpen(false)} style={{ all: 'unset', cursor: 'pointer', fontSize: 22, color: '#555', lineHeight: 1, padding: '4px 8px' }}>×</button>
+          </div>
 
           {/* MAPA MINI LIMPIO */}
           <div className="buscar-mapa-mini" style={{ border: '1px solid #e0e0e0', borderRadius: 6, overflow: 'hidden', marginBottom: 14 }}>
