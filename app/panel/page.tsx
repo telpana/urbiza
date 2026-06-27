@@ -183,6 +183,8 @@ export default function Panel() {
   const [seccion, setSeccion] = useState('anuncios')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [filtroTipo, setFiltroTipo] = useState('')
+  const [filtroProvincia, setFiltroProvincia] = useState('')
+  const [provinciaOpen, setProvinciaOpen] = useState(false)
   const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
   const [planInfo, setPlanInfo] = useState<any>(null)
   const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
@@ -600,7 +602,12 @@ export default function Panel() {
     fotos: a.fotos,
   }))
 
-  const anunciosFiltrados = anunciosAMostrar.filter((a: any) => !filtroTipo || a.tipo === filtroTipo)
+  const provinciasDisponibles = [...new Set(anunciosAMostrar.map((a: any) => { const p = (a.zona || '').split(','); return p[p.length - 1].trim() }).filter(Boolean))] as string[]
+  const anunciosFiltrados = anunciosAMostrar.filter((a: any) => {
+    if (filtroTipo && a.tipo !== filtroTipo) return false
+    if (filtroProvincia && !(a.zona || '').endsWith(filtroProvincia)) return false
+    return true
+  })
   const noLeidos = mensajesReales.filter((m: any) => !mensajesLeidos[m.id]).length
   const tipoUsuario: string = usuario?.plan === 'profesional'
     ? 'profesional'
@@ -732,13 +739,31 @@ export default function Panel() {
                 ))}
               </div>
 
-              {/* Filtro por tipo */}
-              <div style={{ display: 'flex', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
-                {[{ val: '', label: Tpanel.anuncios.filtroTodos }, ...['Apartamento', 'Casa', 'Villa', 'Edificio', 'Oficina', 'Terreno', 'Local comercial'].map(t => ({ val: t, label: t }))].map(({ val, label }) => (
-                  <button key={val} onClick={() => setFiltroTipo(val)} style={{ all: 'unset', border: `1px solid ${filtroTipo === val ? '#006D77' : '#e0e0e0'}`, borderRadius: 20, padding: '5px 14px', fontSize: 12, color: filtroTipo === val ? '#006D77' : '#666', background: filtroTipo === val ? '#f0fafb' : '#fff', cursor: 'pointer', fontWeight: filtroTipo === val ? 600 : 400 }}>
-                    {label}
-                  </button>
-                ))}
+              {/* Filtro por tipo + provincia */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', flex: 1 }}>
+                  {[{ val: '', label: Tpanel.anuncios.filtroTodos }, ...['Apartamento', 'Casa', 'Villa', 'Edificio', 'Oficina', 'Terreno', 'Local comercial'].map(t => ({ val: t, label: t }))].map(({ val, label }) => (
+                    <button key={val} onClick={() => setFiltroTipo(val)} style={{ all: 'unset', border: `1px solid ${filtroTipo === val ? '#006D77' : '#e0e0e0'}`, borderRadius: 20, padding: '5px 14px', fontSize: 12, color: filtroTipo === val ? '#006D77' : '#666', background: filtroTipo === val ? '#f0fafb' : '#fff', cursor: 'pointer', fontWeight: filtroTipo === val ? 600 : 400 }}>
+                      {label}
+                    </button>
+                  ))}
+                </div>
+                {provinciasDisponibles.length > 0 && (
+                  <div style={{ position: 'relative' }}>
+                    <button onClick={() => setProvinciaOpen(v => !v)} style={{ all: 'unset', border: `1px solid ${filtroProvincia ? '#006D77' : '#e0e0e0'}`, borderRadius: 20, padding: '5px 14px', fontSize: 12, color: filtroProvincia ? '#006D77' : '#666', background: filtroProvincia ? '#f0fafb' : '#fff', cursor: 'pointer', fontWeight: filtroProvincia ? 600 : 400, display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
+                      {filtroProvincia || 'Provincias'}
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: provinciaOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    {provinciaOpen && (
+                      <div style={{ position: 'absolute', right: 0, top: '110%', background: '#fff', border: '1px solid #e0e0e0', borderRadius: 8, boxShadow: '0 4px 16px rgba(0,0,0,0.1)', zIndex: 50, minWidth: 180, overflow: 'hidden' }}>
+                        <button onClick={() => { setFiltroProvincia(''); setProvinciaOpen(false) }} style={{ all: 'unset', display: 'block', width: '100%', padding: '10px 16px', fontSize: 13, color: !filtroProvincia ? '#006D77' : '#333', fontWeight: !filtroProvincia ? 600 : 400, cursor: 'pointer', borderBottom: '1px solid #f5f5f5', boxSizing: 'border-box' }}>Todas las provincias</button>
+                        {provinciasDisponibles.map(p => (
+                          <button key={p} onClick={() => { setFiltroProvincia(p); setProvinciaOpen(false) }} style={{ all: 'unset', display: 'block', width: '100%', padding: '10px 16px', fontSize: 13, color: filtroProvincia === p ? '#006D77' : '#333', fontWeight: filtroProvincia === p ? 600 : 400, cursor: 'pointer', borderBottom: '1px solid #f5f5f5', boxSizing: 'border-box' }}>{p}</button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Lista anuncios */}
