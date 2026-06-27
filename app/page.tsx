@@ -278,7 +278,10 @@ export default function Home() {
   const [fotoUrl, setFotoUrl] = useState<string>('')
   const [nombreUsuario, setNombreUsuario] = useState<string>('')
   const [idiomaOpen, setIdiomaOpen] = useState(false)
-  const [bannerUrl, setBannerUrl] = useState('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80')
+  const [bannerUrl, setBannerUrl] = useState(() =>
+    (typeof window !== 'undefined' && localStorage.getItem('hb_banner')) ||
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80'
+  )
   const [featureImgUrl, setFeatureImgUrl] = useState('')
   const [faviconUrl, setFaviconUrl] = useState('')
 
@@ -297,7 +300,7 @@ export default function Home() {
     })
     // Load site config
     fetch('/api/admin/config').then(r => r.json()).then(cfg => {
-      if (cfg.banner_url) setBannerUrl(cfg.banner_url)
+      if (cfg.banner_url) { setBannerUrl(cfg.banner_url); localStorage.setItem('hb_banner', cfg.banner_url) }
       if (cfg.feature_img_url) setFeatureImgUrl(cfg.feature_img_url)
       if (cfg.favicon_url) {
         setFaviconUrl(cfg.favicon_url)
