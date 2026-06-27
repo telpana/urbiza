@@ -203,7 +203,7 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona }: {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
         <div>
           <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>{titulo}</h2>
-          <a href={`/buscar?zona=${encodeURIComponent(zona)}`} style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>{subtitulo} →</a>
+          <a href={`/buscar?zona=${encodeURIComponent(zona)}`} style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>{subtitulo}</a>
         </div>
       </div>
       <div className="novedades-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, paddingBottom: 32 }}>
@@ -462,7 +462,7 @@ export default function Home() {
         </div>
 
         {/* Móvil: hamburger */}
-        <button className="nav-mobile-hamburger" onClick={() => setMobileMenuOpen(true)} style={{ background: 'none', cursor: 'pointer', padding: '8px', borderRadius: 6, border: '1.5px solid #e0e0e0' }}>
+        <button className="nav-mobile-hamburger" onClick={() => setMobileMenuOpen(true)} style={{ display: 'none', background: 'none', cursor: 'pointer', padding: '8px', borderRadius: 6, border: '1.5px solid #e0e0e0' }}>
           <svg width="20" height="16" viewBox="0 0 20 16" fill="none"><rect y="0" width="20" height="2.5" rx="1.25" fill="#006D77"/><rect y="6.5" width="20" height="2.5" rx="1.25" fill="#006D77"/><rect y="13" width="20" height="2.5" rx="1.25" fill="#006D77"/></svg>
         </button>
       </nav>
@@ -596,7 +596,7 @@ export default function Home() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
                   <div>
                     <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Propiedades destacadas</h2>
-                    <a href="/buscar?dest=1" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades →</a>
+                    <a href="/buscar?dest=1" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades</a>
                   </div>
                 </div>
                 <div className="sc-wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
@@ -639,7 +639,7 @@ export default function Home() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
                   <div>
                     <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Más vistos</h2>
-                    <a href="/buscar?orden=visitas" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades →</a>
+                    <a href="/buscar?orden=visitas" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades</a>
                   </div>
                 </div>
                 <div className="sc-wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
