@@ -935,14 +935,14 @@ export default function Panel() {
                         {fotosLista.map((item, i) => (
                           <div
                             key={item.id}
-                            draggable
-                            onDragStart={() => setFotoDragIdx(i)}
-                            onDragOver={e => { e.preventDefault() }}
-                            onDrop={e => { e.preventDefault(); if (fotoDragIdx !== null && fotoDragIdx !== i) moverFoto(fotoDragIdx, i); setFotoDragIdx(null) }}
+                            draggable={true}
+                            onDragStart={e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', String(i)); setFotoDragIdx(i) }}
+                            onDragOver={e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move' }}
+                            onDrop={e => { e.preventDefault(); const desde = Number(e.dataTransfer.getData('text/plain')); if (!isNaN(desde) && desde !== i) moverFoto(desde, i); setFotoDragIdx(null) }}
                             onDragEnd={() => setFotoDragIdx(null)}
-                            style={{ position: 'relative', aspectRatio: '4/3', borderRadius: 6, overflow: 'hidden', background: '#e8e8e8', cursor: 'grab', opacity: fotoDragIdx === i ? 0.4 : 1, border: i === 0 ? '2px solid #006D77' : '2px solid transparent', transition: 'opacity 0.15s, border-color 0.15s' }}
+                            style={{ position: 'relative', aspectRatio: '4/3', borderRadius: 6, overflow: 'hidden', background: '#e8e8e8', cursor: 'grab', opacity: fotoDragIdx === i ? 0.35 : 1, border: i === 0 ? '2px solid #006D77' : fotoDragIdx !== null && fotoDragIdx !== i ? '2px dashed #aaa' : '2px solid transparent', transition: 'opacity 0.1s' }}
                           >
-                            <img src={item.src} style={{ width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none', userSelect: 'none' }} />
+                            <img src={item.src} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none', userSelect: 'none', display: 'block' }} />
                             <button onClick={() => quitarFoto(i)} style={{ background: 'rgba(0,0,0,0.6)', border: 'none', color: '#fff', width: 20, height: 20, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 12, lineHeight: 1, position: 'absolute', top: 4, right: 4 }}>×</button>
                             {i === 0 && <div style={{ position: 'absolute', bottom: 4, left: 4, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>PORTADA</div>}
                           </div>
