@@ -28,6 +28,14 @@ body {
 * { box-sizing: border-box; }
 img { max-width: 100%; }
 
+@keyframes banner-zoom {
+  from { transform: scale(1.08); }
+  to   { transform: scale(1); }
+}
+.banner-img {
+  animation: banner-zoom 6s ease-out forwards;
+}
+
 /* ── DEFAULTS (desktop) ── */
 .nav-mobile-hamburger    { display: none; }
 .buscar-mobile-hamburger { display: none; }
