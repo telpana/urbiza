@@ -491,7 +491,7 @@ export default function Home() {
       </nav>
 
       {/* BANNER CON IMAGEN — imagen configurable desde panel de administración */}
-      <div className="home-banner" style={{ position: 'relative', minHeight: 420, display: 'flex', alignItems: 'center' }}>
+      <div className="home-banner" style={{ position: 'relative', minHeight: 420, display: 'flex', alignItems: 'center', zIndex: 10 }}>
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
           <div className="banner-img" style={{ position: 'absolute', inset: 0, backgroundImage: `url(${bannerUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
         </div>
