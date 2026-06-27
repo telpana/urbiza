@@ -462,7 +462,7 @@ export default function Home() {
         </div>
 
         {/* Móvil: hamburger */}
-        <button className="nav-mobile-hamburger" onClick={() => setMobileMenuOpen(true)} style={{ display: 'none', all: 'unset', cursor: 'pointer', padding: '8px', borderRadius: 6, border: '1.5px solid #e0e0e0' }}>
+        <button className="nav-mobile-hamburger" onClick={() => setMobileMenuOpen(true)} style={{ background: 'none', cursor: 'pointer', padding: '8px', borderRadius: 6, border: '1.5px solid #e0e0e0' }}>
           <svg width="20" height="16" viewBox="0 0 20 16" fill="none"><rect y="0" width="20" height="2.5" rx="1.25" fill="#006D77"/><rect y="6.5" width="20" height="2.5" rx="1.25" fill="#006D77"/><rect y="13" width="20" height="2.5" rx="1.25" fill="#006D77"/></svg>
         </button>
       </nav>
@@ -474,7 +474,7 @@ export default function Home() {
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,78,87,0.72)' }} />
         <div style={{ position: 'relative', zIndex: 2, width: '100%', padding: '40px 20px 36px' }}>
         <div style={{ maxWidth: 720, margin: '0 auto' }}>
-          <h1 style={{ color: '#fff', fontSize: 20, fontWeight: 600, marginBottom: 6, textAlign: 'center', letterSpacing: -0.3, lineHeight: 1.35 }}>
+          <h1 style={{ color: '#fff', fontSize: 26, fontWeight: 600, marginBottom: 6, textAlign: 'center', letterSpacing: -0.5 }}>
             {tr.hero.titulo}
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: 14, marginBottom: 22, textAlign: 'center' }}>
@@ -593,31 +593,36 @@ export default function Home() {
             const visibles = total > 0 ? [src[slideIdx % total], src[(slideIdx+1) % total], src[(slideIdx+2) % total]].filter(Boolean) : []
             return (
               <div style={{ marginBottom: 32 }}>
-                <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 16 }}>Propiedades destacadas</h2>
-                <div style={{ display: 'flex', flexDirection: 'column', borderRadius: 8, overflow: 'hidden', border: '1px solid #e8e8e8', marginBottom: 10 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
+                  <div>
+                    <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Propiedades destacadas</h2>
+                    <a href="/buscar?dest=1" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades →</a>
+                  </div>
+                </div>
+                <div className="sc-wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
                   {visibles.map((p: any, i: number) => (
-                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', display: 'flex', borderBottom: i < visibles.length - 1 ? '1px solid #f0f0f0' : 'none', borderLeft: '3px solid #006D77' }}
-                      onMouseEnter={e => (e.currentTarget.style.background = '#fafefe')}
-                      onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
-                      <div style={{ width: 110, minWidth: 110, height: 90, background: bgs[i % bgs.length], position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '2px solid #006D77', display: 'block' }}
+                      onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
+                      onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
+                      <div style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                         {Array.isArray(p.fotos) && p.fotos.length > 0
                           ? <img src={p.fotos[0]} alt={p.titulo ?? p.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-                          : <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                          : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         }
-                        <div style={{ position: 'absolute', top: 5, left: 5, background: '#006D77', color: '#fff', fontSize: 8, fontWeight: 700, padding: '1px 5px', borderRadius: 3 }}>DEST.</div>
-                      </div>
-                      <div style={{ flex: 1, padding: '10px 14px', display: 'flex', flexDirection: 'column', justifyContent: 'center', minWidth: 0 }}>
-                        <div style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 2 }}>US$ {(p.precio ?? p.price ?? 0).toLocaleString('en-US')}</div>
-                        <div style={{ fontSize: 12, color: '#444', marginBottom: 3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.titulo ?? p.title}</div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                          <span style={{ fontSize: 11, color: '#888' }}>{[p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ') || p.feats || ''}</span>
-                          {(p.zona || p.loc) && <span style={{ fontSize: 10, color: '#006D77', background: '#e8f7f8', padding: '1px 6px', borderRadius: 10 }}>{(p.zona || p.loc || '').split(',')[0]}</span>}
+                        <div style={{ position: 'absolute', top: 8, right: 8, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>DESTACADO</div>
+                        <div style={{ position: 'absolute', bottom: 10, right: 10, display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.92)', padding: '3px 9px', borderRadius: 20, fontSize: 11, color: '#006D77', border: '1px solid #c5e8ea', zIndex: 1 }}>
+                          <svg width="9" height="9" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                          {(p.zona || p.loc || '').split(',')[0]}
                         </div>
+                      </div>
+                      <div style={{ padding: '14px 16px' }}>
+                        <div style={{ fontSize: 19, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio ?? p.price ?? 0).toLocaleString('en-US')}</div>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 3 }}>{p.titulo ?? p.title}</div>
+                        <div style={{ fontSize: 12, color: '#888' }}>{[p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ') || p.feats || ''}</div>
                       </div>
                     </a>
                   ))}
                 </div>
-                <a href="/buscar?dest=1" style={{ display: 'block', textAlign: 'center', padding: '10px', fontSize: 13, color: '#006D77', fontWeight: 600, textDecoration: 'none', border: '1px solid #006D77', borderRadius: 6, background: '#f0fafb' }}>Ver todas las propiedades destacadas</a>
               </div>
             )
           })()}
@@ -631,31 +636,36 @@ export default function Home() {
             const masVisibles = [src[masIdx % masTotal], src[(masIdx+1) % masTotal], src[(masIdx+2) % masTotal]].filter(Boolean)
             return (
               <div style={{ marginBottom: 32 }}>
-                <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 16 }}>Más vistos</h2>
-                <div style={{ display: 'flex', flexDirection: 'column', borderRadius: 8, overflow: 'hidden', border: '1px solid #e8e8e8', marginBottom: 10 }}>
-                  {masVisibles.map((p: any, i: number, arr) => (
-                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', display: 'flex', borderBottom: i < arr.length - 1 ? '1px solid #f0f0f0' : 'none', borderLeft: '3px solid #17A6B4' }}
-                      onMouseEnter={e => (e.currentTarget.style.background = '#fafefe')}
-                      onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
-                      <div style={{ width: 110, minWidth: 110, height: 90, background: bgs[i % bgs.length], position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
+                  <div>
+                    <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Más vistos</h2>
+                    <a href="/buscar?orden=visitas" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades →</a>
+                  </div>
+                </div>
+                <div className="sc-wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
+                  {masVisibles.map((p: any, i: number) => (
+                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '1px solid #ebebeb', display: 'block' }}
+                      onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
+                      onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
+                      <div style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                         {Array.isArray(p.fotos) && p.fotos.length > 0
                           ? <img src={p.fotos[0]} alt={p.titulo ?? p.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-                          : <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                          : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         }
-                        <div style={{ position: 'absolute', top: 5, left: 5, background: '#17A6B4', color: '#fff', fontSize: 8, fontWeight: 700, padding: '1px 5px', borderRadius: 3 }}>MÁS VISTO</div>
-                      </div>
-                      <div style={{ flex: 1, padding: '10px 14px', display: 'flex', flexDirection: 'column', justifyContent: 'center', minWidth: 0 }}>
-                        <div style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 2 }}>US$ {(p.precio ?? p.price ?? 0).toLocaleString('en-US')}</div>
-                        <div style={{ fontSize: 12, color: '#444', marginBottom: 3, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.titulo ?? p.title}</div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                          <span style={{ fontSize: 11, color: '#888' }}>{[p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ') || p.feats || ''}</span>
-                          {(p.zona || p.loc) && <span style={{ fontSize: 10, color: '#006D77', background: '#e8f7f8', padding: '1px 6px', borderRadius: 10 }}>{(p.zona || p.loc || '').split(',')[0]}</span>}
+                        <div style={{ position: 'absolute', top: 8, right: 8, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>MÁS VISTO</div>
+                        <div style={{ position: 'absolute', bottom: 10, right: 10, display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.92)', padding: '3px 9px', borderRadius: 20, fontSize: 11, color: '#006D77', border: '1px solid #c5e8ea', zIndex: 1 }}>
+                          <svg width="9" height="9" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                          {(p.zona || p.loc || '').split(',')[0]}
                         </div>
+                      </div>
+                      <div style={{ padding: '14px 16px' }}>
+                        <div style={{ fontSize: 19, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio ?? p.price ?? 0).toLocaleString('en-US')}</div>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 3 }}>{p.titulo ?? p.title}</div>
+                        <div style={{ fontSize: 12, color: '#888' }}>{[p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ') || p.feats || ''}</div>
                       </div>
                     </a>
                   ))}
                 </div>
-                <a href="/buscar?orden=visitas" style={{ display: 'block', textAlign: 'center', padding: '10px', fontSize: 13, color: '#17A6B4', fontWeight: 600, textDecoration: 'none', border: '1px solid #17A6B4', borderRadius: 6, background: '#f0fbfc' }}>Ver todas las propiedades más vistas</a>
               </div>
             )
           })()}
