@@ -410,7 +410,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                     {propiedad.zona}
                   </div>
                 </div>
-                <div style={{ textAlign: 'right' }}>
+                <div className="propiedad-precio-wrap" style={{ textAlign: 'right' }}>
                   <div style={{ fontSize: 28, fontWeight: 700, color: '#006D77' }}>US$ {precio.toLocaleString('en-US')}</div>
                   <div style={{ fontSize: 13, color: '#aaa' }}>{formatDOP(precio)}</div>
                   {m2 > 0 && <div style={{ fontSize: 12, color: '#aaa', marginTop: 2 }}>US$ {Math.round(precio / m2).toLocaleString('en-US')}/m²</div>}

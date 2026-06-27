@@ -438,6 +438,12 @@ img { max-width: 100%; }
   .propiedad-galeria-wrap { border-radius: 0 !important; margin-bottom: 0 !important; }
   .propiedad-galeria-main { height: 240px !important; }
 
+  /* Precio: alineado a la izquierda en móvil */
+  .propiedad-precio-wrap {
+    text-align: left !important;
+    width: 100% !important;
+  }
+
   /* Características: modo lista en móvil */
   .propiedad-caract-grid {
     display: flex !important;
@@ -456,14 +462,17 @@ img { max-width: 100%; }
     gap: 12px !important;
   }
   .propiedad-caract-grid > div:last-child { border-bottom: none !important; }
+  /* Icono: tamaño fijo, no crece */
   .propiedad-caract-grid > div > div:first-child {
-    width: 34px !important;
-    height: 34px !important;
-    flex-shrink: 0 !important;
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    flex: none !important;
     background: #e0f5f7 !important;
     border-radius: 8px !important;
   }
-  .propiedad-caract-grid > div > div { flex: 1 !important; }
+  /* Contenido (label + valor): crece */
+  .propiedad-caract-grid > div > div:not(:first-child) { flex: 1 !important; }
 
   /* Amenidades: 2 columnas */
   .propiedad-amenidades-grid {
