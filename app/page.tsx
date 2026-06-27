@@ -609,24 +609,21 @@ export default function Home() {
                 </div>
                 <div className="sc-wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
                   {visibles.map((p: any, i: number) => (
-                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '2px solid #006D77', display: 'block' }}
+                    <a key={p.id} href={`/propiedad/${p.id}`} className="home-prop-card" style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '2px solid #006D77', display: 'block' }}
                       onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
-                      <div style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                      <div className="home-prop-card-img" style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                         {Array.isArray(p.fotos) && p.fotos.length > 0
                           ? <img src={p.fotos[0]} alt={p.titulo ?? p.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                           : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         }
                         <div style={{ position: 'absolute', top: 8, right: 8, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>DESTACADO</div>
-                        <div style={{ position: 'absolute', bottom: 10, right: 10, display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.92)', padding: '3px 9px', borderRadius: 20, fontSize: 11, color: '#006D77', border: '1px solid #c5e8ea', zIndex: 1 }}>
-                          <svg width="9" height="9" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                          {(p.zona || p.loc || '').split(',')[0]}
-                        </div>
                       </div>
-                      <div style={{ padding: '14px 16px' }}>
+                      <div className="home-prop-card-body" style={{ padding: '14px 16px' }}>
                         <div style={{ fontSize: 19, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio ?? p.price ?? 0).toLocaleString('en-US')}</div>
                         <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 3 }}>{p.titulo ?? p.title}</div>
                         <div style={{ fontSize: 12, color: '#888' }}>{[p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ') || p.feats || ''}</div>
+                        <div className="home-prop-card-zona" style={{ display: 'none' }}>{(p.zona || p.loc || '').split(',')[0]}</div>
                       </div>
                     </a>
                   ))}
@@ -652,24 +649,21 @@ export default function Home() {
                 </div>
                 <div className="sc-wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
                   {masVisibles.map((p: any, i: number) => (
-                    <a key={p.id} href={`/propiedad/${p.id}`} style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '1px solid #ebebeb', display: 'block' }}
+                    <a key={p.id} href={`/propiedad/${p.id}`} className="home-prop-card" style={{ textDecoration: 'none', background: '#fff', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', border: '1px solid #ebebeb', display: 'block' }}
                       onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,109,119,0.12)')}
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
-                      <div style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                      <div className="home-prop-card-img" style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                         {Array.isArray(p.fotos) && p.fotos.length > 0
                           ? <img src={p.fotos[0]} alt={p.titulo ?? p.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                           : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         }
                         <div style={{ position: 'absolute', top: 8, right: 8, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>MÁS VISTO</div>
-                        <div style={{ position: 'absolute', bottom: 10, right: 10, display: 'flex', alignItems: 'center', gap: 4, background: 'rgba(255,255,255,0.92)', padding: '3px 9px', borderRadius: 20, fontSize: 11, color: '#006D77', border: '1px solid #c5e8ea', zIndex: 1 }}>
-                          <svg width="9" height="9" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                          {(p.zona || p.loc || '').split(',')[0]}
-                        </div>
                       </div>
-                      <div style={{ padding: '14px 16px' }}>
+                      <div className="home-prop-card-body" style={{ padding: '14px 16px' }}>
                         <div style={{ fontSize: 19, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio ?? p.price ?? 0).toLocaleString('en-US')}</div>
                         <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 3 }}>{p.titulo ?? p.title}</div>
                         <div style={{ fontSize: 12, color: '#888' }}>{[p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ') || p.feats || ''}</div>
+                        <div className="home-prop-card-zona" style={{ display: 'none' }}>{(p.zona || p.loc || '').split(',')[0]}</div>
                       </div>
                     </a>
                   ))}

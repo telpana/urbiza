@@ -132,8 +132,43 @@ img { max-width: 100%; }
   .home-banner { min-height: 300px !important; }
 
   /* ── HERO TEXT ── */
-  .home-hero-h1  { font-size: 20px !important; }
+  .home-hero-h1  { font-size: 17px !important; }
   .home-hero-sub { font-size: 13px !important; margin-bottom: 16px !important; }
+
+  /* ── CARDS DESTACADAS / MÁS VISTOS: lista vertical ── */
+  .sc-wrap {
+    display: flex !important;
+    flex-direction: column !important;
+    overflow-x: visible !important;
+    gap: 10px !important;
+    padding-bottom: 0 !important;
+    scroll-snap-type: none !important;
+  }
+  .sc-wrap > a { scroll-snap-align: none !important; }
+  .home-prop-card {
+    display: flex !important;
+    flex-direction: row !important;
+    min-width: unset !important;
+    max-width: 100% !important;
+    height: 90px !important;
+  }
+  .home-prop-card-img {
+    width: 110px !important;
+    min-width: 110px !important;
+    height: 100% !important;
+    flex-shrink: 0 !important;
+  }
+  .home-prop-card-body {
+    flex: 1 !important;
+    padding: 10px 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+  }
+  .home-prop-card-body > div:first-child { font-size: 15px !important; margin-bottom: 2px !important; }
+  .home-prop-card-body > div:nth-child(2) { font-size: 12px !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; }
+  .home-prop-card-zona { display: flex !important; font-size: 11px !important; color: #888 !important; margin-top: 2px !important; }
 
   /* ── SECCIONES PROPS Y ZONAS ── */
   .home-props-wrap    { padding: 20px 16px 0 !important; }
