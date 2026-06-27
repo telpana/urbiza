@@ -542,10 +542,10 @@ export default function Home() {
       <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8' }}>
         <div className="home-actions-grid" style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
           <a href="#" onClick={e => { e.preventDefault(); setVerMapa(true) }}
-            style={{ display: 'flex', gap: 20, padding: '28px 32px', textDecoration: 'none', borderRight: '1px solid #e8e8e8', alignItems: 'center', transition: 'background 0.15s' }}
+            style={{ display: 'flex', gap: 20, padding: '28px 32px', textDecoration: 'none', borderRight: '1px solid #e8e8e8', alignItems: 'stretch', transition: 'background 0.15s' }}
             onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = '#f8fdfd'}
             onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'}>
-            <div style={{ width: 120, height: 86, borderRadius: 8, flexShrink: 0, overflow: 'hidden', border: '1.5px solid #c5e8ea' }}>
+            <div style={{ width: 120, minHeight: 86, borderRadius: 8, flexShrink: 0, overflow: 'hidden', border: '1.5px solid #c5e8ea' }}>
               <MapaMiniHome />
             </div>
             <div>
@@ -555,10 +555,10 @@ export default function Home() {
             </div>
           </a>
           <a href="/registro"
-            style={{ display: 'flex', gap: 20, padding: '28px 32px', textDecoration: 'none', alignItems: 'center', transition: 'background 0.15s' }}
+            style={{ display: 'flex', gap: 20, padding: '28px 32px', textDecoration: 'none', alignItems: 'stretch', transition: 'background 0.15s' }}
             onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = '#f8fdfd'}
             onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'}>
-            <div style={{ width: 120, height: 86, borderRadius: 8, flexShrink: 0, background: '#006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ width: 120, minHeight: 86, borderRadius: 8, flexShrink: 0, background: '#006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
               {featureImgUrl
                 ? <img src={featureImgUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 : <svg width="40" height="64" viewBox="0 0 44 72" fill="none">
