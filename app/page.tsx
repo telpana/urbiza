@@ -601,7 +601,7 @@ export default function Home() {
             const visibles = total > 0 ? [src[slideIdx % total], src[(slideIdx+1) % total], src[(slideIdx+2) % total]].filter(Boolean) : []
             return (
               <div style={{ marginBottom: 32 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
+                <div className="home-section-hdr" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
                   <div>
                     <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Propiedades destacadas</h2>
                     <a href="/buscar?dest=1" className="home-ver-top" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades</a>
@@ -628,7 +628,7 @@ export default function Home() {
                     </a>
                   ))}
                 </div>
-                <a href="/buscar?dest=1" className="home-ver-bottom" style={{ display: 'none', fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none', marginTop: 12 }}>Ver todas las propiedades →</a>
+                <a href="/buscar?dest=1" className="home-ver-bottom" style={{ display: 'none', fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades</a>
               </div>
             )
           })()}
@@ -642,7 +642,7 @@ export default function Home() {
             const masVisibles = [src[masIdx % masTotal], src[(masIdx+1) % masTotal], src[(masIdx+2) % masTotal]].filter(Boolean)
             return (
               <div style={{ marginBottom: 32 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
+                <div className="home-section-hdr" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
                   <div>
                     <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Más vistos</h2>
                     <a href="/buscar?orden=visitas" className="home-ver-top" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades</a>
@@ -669,7 +669,7 @@ export default function Home() {
                     </a>
                   ))}
                 </div>
-                <a href="/buscar?orden=visitas" className="home-ver-bottom" style={{ display: 'none', fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none', marginTop: 12 }}>Ver todas las propiedades →</a>
+                <a href="/buscar?orden=visitas" className="home-ver-bottom" style={{ display: 'none', fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades</a>
               </div>
             )
           })()}

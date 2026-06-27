@@ -140,13 +140,24 @@ img { max-width: 100%; }
     display: flex !important;
     flex-direction: column !important;
     overflow-x: visible !important;
-    gap: 10px !important;
+    gap: 0 !important;
     padding-bottom: 0 !important;
     scroll-snap-type: none !important;
   }
   .sc-wrap > a { scroll-snap-align: none !important; }
+  .home-prop-card { border-radius: 0 !important; border-left: none !important; border-right: none !important; border-top: none !important; border-bottom: 1px solid #e8e8e8 !important; }
   .home-ver-top    { display: none !important; }
-  .home-ver-bottom { display: block !important; }
+  .home-ver-bottom {
+    display: block !important;
+    text-align: center !important;
+    padding: 13px 16px !important;
+    border-top: 1px solid #e8e8e8 !important;
+    background: #fff !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #006D77 !important;
+    text-decoration: none !important;
+  }
 
   .home-prop-card {
     display: flex !important;
@@ -196,7 +207,8 @@ img { max-width: 100%; }
   .home-prop-card-zona { display: none !important; }
 
   /* ── SECCIONES PROPS Y ZONAS ── */
-  .home-props-wrap    { padding: 20px 16px 0 !important; }
+  .home-props-wrap    { padding: 20px 0 0 !important; }
+  .home-section-hdr   { padding: 0 16px !important; }
   .home-zonas-section { padding: 24px 16px 24px !important; }
 
   /* ── ACTION CARDS: reducir padding en móvil ── */
