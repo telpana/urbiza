@@ -377,36 +377,63 @@ export default function Home() {
 
       {/* MENÚ MÓVIL DROPDOWN */}
       {mobileMenuOpen && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 400 }} onClick={() => setMobileMenuOpen(false)}>
-          <div style={{ position: 'absolute', top: 60, left: 0, right: 0, background: '#fff', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', borderTop: '1px solid #e8e8e8' }} onClick={e => e.stopPropagation()}>
-            {authReady && sesionActiva ? (<>
+        <div style={{ position: 'fixed', inset: 0, zIndex: 400, background: 'rgba(0,0,0,0.25)' }} onClick={() => setMobileMenuOpen(false)}>
+          <div style={{ position: 'absolute', top: 60, left: 0, right: 0, background: '#fff', boxShadow: '0 12px 32px rgba(0,0,0,0.15)', borderRadius: '0 0 16px 16px', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
+
+            {/* Explorar */}
+            <div style={{ padding: '6px 0' }}>
               {[
-                { label: 'Mi panel', href: '/panel' },
-                { label: 'Mis anuncios', href: '/panel?s=anuncios' },
-                { label: 'Mensajes', href: '/panel?s=mensajes' },
-                { label: 'Guardados', href: '/panel?s=guardados' },
-                { label: 'Mi perfil', href: '/panel?s=perfil' },
+                { label: 'Comprar', href: '/buscar?operacion=venta', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
+                { label: 'Alquilar', href: '/buscar?operacion=alquiler', icon: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg> },
               ].map(item => (
-                <a key={item.href} href={item.href} style={{ display: 'block', padding: '14px 20px', fontSize: 14, color: '#222', textDecoration: 'none', borderBottom: '1px solid #f5f5f5' }}>
+                <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 20px', fontSize: 14, fontWeight: 500, color: '#222', textDecoration: 'none' }}>
+                  <span style={{ color: '#006D77', display: 'flex' }}>{item.icon}</span>
                   {item.label}
                 </a>
               ))}
-              <button onClick={async () => { const { supabase: sb } = await import('../supabase'); await sb.auth.signOut(); window.location.href = '/' }} style={{ all: 'unset', width: '100%', display: 'block', padding: '14px 20px', fontSize: 14, color: '#e63946', cursor: 'pointer', borderTop: '1px solid #f0f0f0', boxSizing: 'border-box' }}>
-                Cerrar sesión
-              </button>
+            </div>
+
+            {authReady && sesionActiva ? (<>
+              {/* Mi cuenta */}
+              <div style={{ borderTop: '1px solid #f0f0f0', padding: '4px 0' }}>
+                <div style={{ padding: '8px 20px 4px', fontSize: 10, fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: 1 }}>Mi cuenta</div>
+                {[
+                  { label: 'Mi panel', href: '/panel', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> },
+                  { label: 'Mis anuncios', href: '/panel?s=anuncios', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
+                  { label: 'Mensajes', href: '/panel?s=mensajes', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
+                  { label: 'Guardados', href: '/panel?s=guardados', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> },
+                  { label: 'Mi perfil', href: '/panel?s=perfil', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
+                ].map(item => (
+                  <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '11px 20px', fontSize: 14, color: '#333', textDecoration: 'none' }}>
+                    <span style={{ color: '#888', display: 'flex' }}>{item.icon}</span>
+                    {item.label}
+                  </a>
+                ))}
+              </div>
+              <div style={{ borderTop: '1px solid #f0f0f0', padding: '4px 0 6px' }}>
+                <button onClick={async () => { const { supabase: sb } = await import('../supabase'); await sb.auth.signOut(); window.location.href = '/' }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '11px 20px', fontSize: 14, color: '#e63946', cursor: 'pointer', boxSizing: 'border-box' }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  Cerrar sesión
+                </button>
+              </div>
             </>) : authReady ? (
-              <div style={{ padding: '14px 20px', display: 'flex', gap: 10 }}>
+              <div style={{ borderTop: '1px solid #f0f0f0', padding: '14px 20px', display: 'flex', gap: 10 }}>
                 <a href="/login" style={{ flex: 1, display: 'block', textAlign: 'center', padding: '11px', fontSize: 14, fontWeight: 600, color: '#006D77', border: '1.5px solid #006D77', borderRadius: 8, textDecoration: 'none' }}>Entrar</a>
                 <a href="/registro" style={{ flex: 1, display: 'block', textAlign: 'center', padding: '11px', fontSize: 14, fontWeight: 600, color: '#fff', background: '#006D77', borderRadius: 8, textDecoration: 'none' }}>Publicar gratis</a>
               </div>
             ) : null}
-            <div style={{ padding: '10px 20px 14px', borderTop: '1px solid #f0f0f0', display: 'flex', gap: 8 }}>
-              {(['es', 'en', 'fr'] as const).map(l => (
-                <button key={l} onClick={() => { setIdioma(l); setMobileMenuOpen(false) }} style={{ all: 'unset', padding: '6px 14px', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: `1.5px solid ${idioma === l ? '#006D77' : '#e0e0e0'}`, color: idioma === l ? '#006D77' : '#888', background: idioma === l ? '#f0fafb' : '#fff' }}>
-                  {l.toUpperCase()}
-                </button>
-              ))}
+
+            {/* Idioma */}
+            <div style={{ borderTop: '1px solid #f0f0f0', padding: '12px 20px 16px', display: 'flex', gap: 0, background: '#fafafa' }}>
+              <div style={{ display: 'flex', background: '#efefef', borderRadius: 8, overflow: 'hidden', padding: 3, gap: 2 }}>
+                {(['es', 'en', 'fr'] as const).map(l => (
+                  <button key={l} onClick={() => { setIdioma(l); setMobileMenuOpen(false) }} style={{ all: 'unset', padding: '6px 16px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: idioma === l ? '#fff' : 'transparent', color: idioma === l ? '#006D77' : '#999', boxShadow: idioma === l ? '0 1px 4px rgba(0,0,0,0.1)' : 'none', transition: 'all 0.15s' }}>
+                    {l.toUpperCase()}
+                  </button>
+                ))}
+              </div>
             </div>
+
           </div>
         </div>
       )}
