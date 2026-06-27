@@ -605,6 +605,7 @@ export default function Panel() {
     favoritos: a.favoritos || 0,
     mensajes: mensajesReales.filter((m: any) => m.propiedad_id === a.id).length,
     destacado: a.destacado && (!a.destacado_hasta || new Date(a.destacado_hasta) > new Date()),
+    destacado_hasta: a.destacado_hasta || null,
     vence: '30 días',
     bg: '#e0f5f7',
     fotos: a.fotos,
@@ -794,12 +795,12 @@ export default function Panel() {
                   const estado = estadosAnuncios[a.id] || a.estado
                   return (
                     <div key={a.id} style={{ background: '#fff', borderRadius: 8, padding: '16px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', gap: 16 }}>
-                      <div style={{ width: 90, height: 65, borderRadius: 6, background: a.bg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                      <div style={{ width: 90, height: 65, borderRadius: 6, background: a.bg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', border: a.destacado ? '2px solid #f59e0b' : '2px solid transparent' }}>
                         {Array.isArray(a.fotos) && a.fotos[0]
                           ? <img src={a.fotos[0]} alt={a.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                           : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
                         }
-                        {a.destacado && <div style={{ position: 'absolute', top: 4, left: 4, background: '#006D77', color: '#fff', fontSize: 8, fontWeight: 700, padding: '1px 5px', borderRadius: 3, zIndex: 1 }}>{Tpanel.anuncios.dest}</div>}
+                        {a.destacado && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: 'linear-gradient(to bottom, rgba(245,158,11,0.85), transparent)', padding: '3px 5px', fontSize: 8, fontWeight: 700, color: '#fff', letterSpacing: 0.5 }}>★ DESTACADO</div>}
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 15, fontWeight: 600, color: '#006D77', marginBottom: 3, display: 'block', textDecoration: 'none' }} onMouseEnter={e => (e.currentTarget.style.textDecoration='underline')} onMouseLeave={e => (e.currentTarget.style.textDecoration='none')}>{a.titulo}</a>
@@ -814,7 +815,13 @@ export default function Panel() {
                         {estado === 'activo' ? `● ${Tpanel.anuncios.estado.activo}` : `○ ${Tpanel.anuncios.estado.pausado}`}
                       </span>
                       <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                        <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}><svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Destacar</button>
+                        {a.destacado
+                          ? <div style={{ border: '1px solid #f59e0b', color: '#92400e', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 4, background: '#fffbeb', whiteSpace: 'nowrap' }} title={a.destacado_hasta ? `Vence el ${new Date(a.destacado_hasta).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}` : ''}>
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                              Destacado{a.destacado_hasta ? ` · hasta ${new Date(a.destacado_hasta).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}` : ''}
+                            </div>
+                          : <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}><svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Destacar</button>
+                        }
                         <button onClick={() => handleEditar(a)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>{Tpanel.anuncios.editar}</button>
                         <button onClick={() => eliminarAnuncio(a.id)} style={{ all: 'unset', border: '1px solid #fca5a5', color: '#dc2626', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer', fontWeight: 500 }}>{Tpanel.anuncios.eliminar}</button>
                       </div>
