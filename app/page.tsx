@@ -175,15 +175,18 @@ const propiedadesSantiago = [
 ]
 
 const zonas = [
-  { nombre: 'Santo Domingo', tipo: 'Apartamentos · venta y alquiler', operacion: 'venta', color: '#006D77', bg: 'linear-gradient(135deg,#e0f5f7 0%,#c5eaed 100%)', emoji: '🏙️' },
-  { nombre: 'Punta Cana', tipo: 'Villas y apartamentos frente al mar', operacion: 'venta', color: '#1a7a5e', bg: 'linear-gradient(135deg,#ddf0e8 0%,#b8e5d0 100%)', emoji: '🌴' },
-  { nombre: 'Santiago', tipo: 'Casas y apartamentos en venta', operacion: 'venta', color: '#5a4a8a', bg: 'linear-gradient(135deg,#ede8f5 0%,#d8ceee 100%)', emoji: '⛰️' },
-  { nombre: 'Las Terrenas', tipo: 'Villas y casas en alquiler', operacion: 'alquiler', color: '#b56a00', bg: 'linear-gradient(135deg,#fdf0e0 0%,#f5ddb8 100%)', emoji: '🏖️' },
-  { nombre: 'Cap Cana', tipo: 'Villas de lujo exclusivas', operacion: 'venta', color: '#006D77', bg: 'linear-gradient(135deg,#e8f4f0 0%,#c8e8e0 100%)', emoji: '⛵' },
-  { nombre: 'Bávaro', tipo: 'Apartamentos turísticos', operacion: 'venta', color: '#1a6a8a', bg: 'linear-gradient(135deg,#e0eef7 0%,#b8d8ee 100%)', emoji: '🌊' },
-  { nombre: 'Puerto Plata', tipo: 'Casas y villas en la costa norte', operacion: 'venta', color: '#7a3a8a', bg: 'linear-gradient(135deg,#f5e8f5 0%,#e8c8ee 100%)', emoji: '🏔️' },
-  { nombre: 'La Romana', tipo: 'Propiedades de inversión', operacion: 'venta', color: '#8a5a1a', bg: 'linear-gradient(135deg,#f5ece0 0%,#eedad8 100%)', emoji: '🏌️' },
-  { nombre: 'Jarabacoa', tipo: 'Casas de montaña y naturaleza', operacion: 'venta', color: '#2a6a3a', bg: 'linear-gradient(135deg,#e0f0e0 0%,#c0e0c8 100%)', emoji: '🌿' },
+  { nombre: 'Santo Domingo', tipo: 'Apartamentos en venta' },
+  { nombre: 'Punta Cana', tipo: 'Villas en venta' },
+  { nombre: 'Santiago', tipo: 'Casas en venta' },
+  { nombre: 'La Romana', tipo: 'Propiedades en venta' },
+  { nombre: 'Puerto Plata', tipo: 'Apartamentos en venta' },
+  { nombre: 'Las Terrenas', tipo: 'Villas en alquiler' },
+  { nombre: 'Samaná', tipo: 'Casas en venta' },
+  { nombre: 'Bávaro', tipo: 'Apartamentos en venta' },
+  { nombre: 'Cap Cana', tipo: 'Villas en venta' },
+  { nombre: 'Jarabacoa', tipo: 'Casas en venta' },
+  { nombre: 'San Pedro de Macorís', tipo: 'Apartamentos en venta' },
+  { nombre: 'La Vega', tipo: 'Casas en venta' },
 ]
 
 const bgsNovedad = ['#e0f5f7','#ddf0e8','#e8eaf0','#f0ebe0']
@@ -665,23 +668,15 @@ export default function Home() {
       </div>
 
       {/* ZONAS MÁS BUSCADAS */}
-      <div style={{ background: '#f8f9fa', borderTop: '1px solid #e8e8e8', padding: '36px 20px 40px' }}>
+      <div style={{ background: '#fff', borderTop: '1px solid #e8e8e8', padding: '36px 20px 40px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ marginBottom: 24 }}>
-            <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Busca por zona</h2>
-            <p style={{ fontSize: 13, color: '#888', margin: 0 }}>Descubre propiedades en las zonas más populares de República Dominicana</p>
-          </div>
-          <div className="zonas-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 20 }}>Zonas más buscadas</h2>
+          <div className="zonas-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 }}>
             {zonas.map((z) => (
-              <a key={z.nombre} href={`/buscar?zona=${encodeURIComponent(z.nombre)}&operacion=${z.operacion}`}
-                style={{ textDecoration: 'none', background: z.bg, borderRadius: 10, padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: 6, border: '1px solid rgba(0,0,0,0.06)', transition: 'transform 0.15s, box-shadow 0.15s' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 6px 20px rgba(0,0,0,0.1)' }}
-                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.transform = 'none'; (e.currentTarget as HTMLAnchorElement).style.boxShadow = 'none' }}>
-                <span style={{ fontSize: 22 }}>{z.emoji}</span>
-                <div style={{ fontSize: 15, fontWeight: 700, color: z.color }}>{z.nombre}</div>
-                <div style={{ fontSize: 11, color: '#555', lineHeight: 1.4 }}>{z.tipo}</div>
-                <div style={{ marginTop: 4, fontSize: 11, fontWeight: 600, color: z.color, opacity: 0.8 }}>Ver propiedades →</div>
-              </a>
+              <div key={z.nombre + z.tipo} style={{ padding: '10px 0', borderBottom: '1px solid #f5f5f5' }}>
+                <a href={`/buscar?zona=${encodeURIComponent(z.nombre)}`} style={{ display: 'block', fontSize: 14, color: '#006D77', fontWeight: 500, textDecoration: 'none', marginBottom: 3 }}>{z.nombre}</a>
+                <div style={{ fontSize: 12, color: '#888' }}>{z.tipo}</div>
+              </div>
             ))}
           </div>
         </div>
