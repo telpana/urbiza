@@ -78,7 +78,7 @@ export const t = {
         editar: 'Editar', eliminar: 'Eliminar', destacar: '⭐ Destacar',
         confirmarEliminar: '¿Seguro que quieres eliminar este anuncio? Esta acción no se puede deshacer.',
         estado: { activo: 'Activo', pausado: 'Pausado' }, dest: 'DEST.',
-        visitas: 'visitas', guardados: 'guardados',
+        visitas: 'visitas', guardados: 'Guardados',
         kpi_visitas: 'Visitas al anuncio', kpi_tel: 'Tel. visualizados',
         kpi_visitas_sub: 'personas que lo abrieron', kpi_tel_sub: 'veces que vieron tu teléfono', kpi_guardados_sub: 'personas que lo guardaron',
         sinAnunciosDesc: 'Miles de compradores buscan propiedades en Habitade cada día. Publica gratis y empieza a recibir contactos hoy mismo.',
