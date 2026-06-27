@@ -795,11 +795,12 @@ export default function Panel() {
                   const estado = estadosAnuncios[a.id] || a.estado
                   return (
                     <div key={a.id} style={{ background: '#fff', borderRadius: 8, padding: '16px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', gap: 16 }}>
-                      <div style={{ width: 90, height: 65, borderRadius: 6, background: a.bg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', border: a.destacado ? '2px solid #006D77' : '2px solid transparent' }}>
+                      <div style={{ width: 90, height: 65, borderRadius: 6, background: a.bg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', outline: a.destacado ? '3px solid #006D77' : 'none' }}>
                         {Array.isArray(a.fotos) && a.fotos[0]
                           ? <img src={a.fotos[0]} alt={a.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                           : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
                         }
+                        {a.destacado && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 5, background: '#006D77' }} />}
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
