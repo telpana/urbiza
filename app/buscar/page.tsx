@@ -494,15 +494,11 @@ function BuscarContent() {
 
       {/* MENÚ MÓVIL OVERLAY */}
       {mobileMenuOpen && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 400 }} onClick={() => setMobileMenuOpen(false)}>
-          <div style={{ position: 'absolute', top: 0, right: 0, width: 260, height: '100vh', background: '#fff', boxShadow: '-4px 0 24px rgba(0,0,0,0.18)', display: 'flex', flexDirection: 'column' }} onClick={e => e.stopPropagation()}>
-            <div style={{ background: '#006D77', padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: 20, fontWeight: 700, color: '#fff', letterSpacing: -1 }}>habitade<span style={{ color: '#83D4DB' }}>.</span></span>
-              <button onClick={() => setMobileMenuOpen(false)} style={{ all: 'unset', cursor: 'pointer', color: '#fff', fontSize: 22, lineHeight: 1 }}>×</button>
-            </div>
-            <div style={{ flex: 1, overflowY: 'auto', padding: '8px 0' }}>
-              {sesionActiva ? (<>
-                <div style={{ padding: '10px 20px 4px', fontSize: 11, fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: 0.5 }}>Mi cuenta</div>
+        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.25)' }} onClick={() => setMobileMenuOpen(false)}>
+          <div style={{ position: 'absolute', top: 54, left: 0, right: 0, background: '#fff', boxShadow: '0 12px 32px rgba(0,0,0,0.15)', borderRadius: '0 0 16px 16px', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
+            {authReady && sesionActiva ? (
+              <div style={{ padding: '4px 0' }}>
+                <div style={{ padding: '10px 20px 4px', fontSize: 10, fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: 1 }}>Mi cuenta</div>
                 {[
                   { label: 'Mi panel', href: '/panel' },
                   { label: 'Mis anuncios', href: '/panel?s=anuncios' },
@@ -516,22 +512,22 @@ function BuscarContent() {
                     {item.label}
                   </a>
                 ))}
-                <button onClick={async () => { const { supabase: sb } = await import('../../supabase'); await sb.auth.signOut(); window.location.href = '/' }} style={{ all: 'unset', display: 'flex', width: '100%', alignItems: 'center', padding: '13px 20px', fontSize: 14, color: '#e63946', cursor: 'pointer', borderTop: '1px solid #f0f0f0', boxSizing: 'border-box', marginTop: 8 }}>
+                <button onClick={async () => { const { supabase: sb } = await import('../../supabase'); await sb.auth.signOut(); window.location.href = '/' }} style={{ all: 'unset', display: 'flex', width: '100%', alignItems: 'center', padding: '13px 20px', fontSize: 14, color: '#e63946', cursor: 'pointer', borderTop: '1px solid #f0f0f0', boxSizing: 'border-box', marginTop: 4 }}>
                   Cerrar sesión
                 </button>
-              </>) : (<>
-                <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 10, borderTop: '1px solid #f0f0f0', marginTop: 8 }}>
-                  <a href="/login" style={{ display: 'block', textAlign: 'center', padding: '12px', fontSize: 14, fontWeight: 600, color: '#006D77', border: '1.5px solid #006D77', borderRadius: 8, textDecoration: 'none' }}>Iniciar sesión</a>
-                  <a href="/registro" style={{ display: 'block', textAlign: 'center', padding: '12px', fontSize: 14, fontWeight: 600, color: '#fff', background: '#006D77', borderRadius: 8, textDecoration: 'none' }}>Publicar gratis</a>
-                </div>
-              </>)}
-            </div>
+              </div>
+            ) : authReady && !sesionActiva ? (
+              <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <a href="/login" style={{ display: 'block', textAlign: 'center', padding: '12px', fontSize: 14, fontWeight: 600, color: '#006D77', border: '1.5px solid #006D77', borderRadius: 8, textDecoration: 'none' }}>Iniciar sesión</a>
+                <a href="/registro" style={{ display: 'block', textAlign: 'center', padding: '12px', fontSize: 14, fontWeight: 600, color: '#fff', background: '#006D77', borderRadius: 8, textDecoration: 'none' }}>Publicar gratis</a>
+              </div>
+            ) : null}
           </div>
         </div>
       )}
 
       {/* NAV */}
-      <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', position: 'sticky', top: 0, zIndex: 100 }}>
+      <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', position: 'sticky', top: 0, zIndex: 900 }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', marginRight: 28 }}>
             habitade<span style={{ color: '#83D4DB' }}>.</span>
