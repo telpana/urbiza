@@ -349,6 +349,7 @@ function BuscarContent() {
   const [pisosMin, setPisosMin] = useState(0)
   const [favoritosSet, setFavoritosSet] = useState<Set<string>>(new Set())
   const [userId, setUserId] = useState<string | null>(null)
+  const [sortOpen, setSortOpen] = useState(false)
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -589,17 +590,43 @@ function BuscarContent() {
         </div>
       </nav>
 
-      {/* BARRA MÓVIL FILTROS */}
-      <div className="buscar-filtros-toggle" style={{ display: 'none', background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '10px 16px', gap: 10, alignItems: 'center' }}>
-        <button onClick={() => setFiltrosOpen(v => !v)} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 8, background: filtrosOpen ? '#006D77' : '#f4f5f6', color: filtrosOpen ? '#fff' : '#333', padding: '8px 16px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: '1px solid #e0e0e0' }}>
-          <svg width="14" height="12" viewBox="0 0 14 12" fill="none"><rect y="0" width="14" height="2" rx="1" fill="currentColor"/><rect x="2" y="5" width="10" height="2" rx="1" fill="currentColor"/><rect x="4" y="10" width="6" height="2" rx="1" fill="currentColor"/></svg>
-          Filtros
-        </button>
-        <span style={{ fontSize: 12, color: '#777' }}>{filtradas.length} resultados</span>
+      {/* BARRA MÓVIL: título + 3 botones estilo Idealista */}
+      <div className="buscar-mobile-topbar">
+        <div className="buscar-mobile-count">{cargando ? '...' : tituloPagina}</div>
+        <div className="buscar-mobile-actionbar">
+          <button className="bma-btn" onClick={() => setFiltrosOpen(v => !v)}>
+            <svg width="14" height="12" viewBox="0 0 14 12" fill="none"><rect y="0" width="14" height="2" rx="1" fill="currentColor"/><rect x="2" y="5" width="10" height="2" rx="1" fill="currentColor"/><rect x="4" y="10" width="6" height="2" rx="1" fill="currentColor"/></svg>
+            Filtrar
+          </button>
+          <button className="bma-btn" onClick={() => setSortOpen(v => !v)}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
+            {ordenes.find(o => o.val === orden)?.label ?? orden}
+          </button>
+          <button className="bma-btn" onClick={() => setVerMapa(true)}>
+            <svg width="13" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            Mapa
+          </button>
+        </div>
       </div>
 
+      {/* OVERLAY ORDENAR (móvil) */}
+      {sortOpen && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 800, background: 'rgba(0,0,0,0.35)' }} onClick={() => setSortOpen(false)}>
+          <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, background: '#fff', borderRadius: '16px 16px 0 0', padding: '8px 0 32px' }} onClick={e => e.stopPropagation()}>
+            <div style={{ width: 36, height: 4, background: '#e0e0e0', borderRadius: 2, margin: '8px auto 16px' }} />
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#aaa', textTransform: 'uppercase', letterSpacing: 0.5, padding: '0 20px 10px' }}>Ordenar por</div>
+            {ordenes.map(o => (
+              <button key={o.val} onClick={() => { setOrden(o.val); setSortOpen(false) }} style={{ all: 'unset', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', padding: '14px 20px', fontSize: 15, color: orden === o.val ? '#006D77' : '#222', fontWeight: orden === o.val ? 600 : 400, cursor: 'pointer', boxSizing: 'border-box', borderBottom: '1px solid #f5f5f5' }}>
+                {o.label}
+                {orden === o.val && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* BREADCRUMB */}
-      <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '8px 20px', fontSize: 12, color: '#aaa', display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+      <div className="buscar-breadcrumb" style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '8px 20px', fontSize: 12, color: '#aaa', display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
         <a href="/" style={{ color: '#006D77', textDecoration: 'none' }}>Habitade</a>
         <span>›</span>
         <a href="/buscar" style={{ color: '#006D77', textDecoration: 'none' }}>República Dominicana</a>
@@ -748,12 +775,19 @@ function BuscarContent() {
             </label>
           </div>
 
+          {/* Botón aplicar filtros — solo móvil */}
+          <div className="buscar-filtros-apply">
+            <button onClick={() => setFiltrosOpen(false)} style={{ all: 'unset', display: 'block', width: '100%', background: '#006D77', color: '#fff', textAlign: 'center', padding: '14px', borderRadius: 8, fontSize: 15, fontWeight: 700, cursor: 'pointer', boxSizing: 'border-box' }}>
+              Ver {filtradas.length} propiedades
+            </button>
+          </div>
+
           </div>{/* fin buscar-filtros-panel */}
         </div>{/* fin buscar-filtros */}
 
         {/* RESULTADOS */}
         <div className="buscar-lista">
-          <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 16px' }}>
+          <div className="buscar-titulo-sort" style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 16px' }}>
             <h1 style={{ fontSize: 17, fontWeight: 600, color: '#111', margin: '0 0 8px' }}>
               {cargando ? `${tr.hero.buscar}...` : tituloPagina}
             </h1>
