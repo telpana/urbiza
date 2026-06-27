@@ -800,7 +800,7 @@ export default function Panel() {
                           ? <img src={a.fotos[0]} alt={a.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                           : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
                         }
-                        {a.destacado && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: 'linear-gradient(to bottom, rgba(245,158,11,0.85), transparent)', padding: '3px 5px', fontSize: 8, fontWeight: 700, color: '#fff', letterSpacing: 0.5 }}>★ DESTACADO</div>}
+                        {a.destacado && <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: 'linear-gradient(to bottom, rgba(245,158,11,0.85), transparent)', padding: '3px 5px', fontSize: 8, fontWeight: 700, color: '#fff', letterSpacing: 0.5 }}>DESTACADO</div>}
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 15, fontWeight: 600, color: '#006D77', marginBottom: 3, display: 'block', textDecoration: 'none' }} onMouseEnter={e => (e.currentTarget.style.textDecoration='underline')} onMouseLeave={e => (e.currentTarget.style.textDecoration='none')}>{a.titulo}</a>
