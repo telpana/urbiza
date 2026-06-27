@@ -145,7 +145,7 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
 
 export default function Propiedad({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
-  const { tr } = useIdioma()
+  const { tr, idioma, setIdioma } = useIdioma()
   const Tp = tr.propiedad
   const Tn = tr.nav
   const searchParams = useSearchParams()
@@ -162,6 +162,8 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   const [sesionActiva, setSesionActiva] = useState(false)
   const [authReady, setAuthReady] = useState(false)
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [noLeidosNav, setNoLeidosNav] = useState(0)
   const [fotoUrlNav, setFotoUrlNav] = useState<string>('')
   const [guardado, setGuardado] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
@@ -186,6 +188,11 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
       if (foto) setFotoUrlNav(foto)
       const { data: fav } = await supabase.from('favoritos').select('id').eq('usuario_id', data.user.id).eq('propiedad_id', id).maybeSingle()
       if (fav) setGuardado(true)
+      const { data: msgs } = await supabase.from('mensajes').select('id').eq('vendedor_id', data.user.id)
+      if (msgs) {
+        const leidos: Record<string, boolean> = JSON.parse(localStorage.getItem(`habitade_leidos_${data.user.id}`) || '{}')
+        setNoLeidosNav(msgs.filter((m: any) => !leidos[m.id]).length)
+      }
     })
   }, [id])
 
@@ -294,17 +301,68 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6' }}>
 
+      {/* MENÚ MÓVIL DROPDOWN */}
+      {mobileMenuOpen && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.25)' }} onClick={() => setMobileMenuOpen(false)}>
+          <div style={{ position: 'absolute', top: 54, left: 0, right: 0, background: '#fff', boxShadow: '0 12px 32px rgba(0,0,0,0.15)', borderRadius: '0 0 16px 16px', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
+            {authReady && sesionActiva ? (<>
+              <div style={{ padding: '4px 0' }}>
+                <div style={{ padding: '10px 20px 4px', fontSize: 10, fontWeight: 700, color: '#bbb', textTransform: 'uppercase', letterSpacing: 1 }}>Mi cuenta</div>
+                {[
+                  { label: 'Mi panel',     href: '/panel',             icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> },
+                  { label: 'Mis anuncios', href: '/panel?s=anuncios',  icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
+                  { label: 'Mensajes',     href: '/panel?s=mensajes',  icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, badge: noLeidosNav },
+                  { label: 'Guardados',    href: '/panel?s=guardados', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> },
+                  { label: 'Mi perfil',    href: '/panel?s=perfil',    icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
+                ].map(item => (
+                  <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 14, color: '#333', textDecoration: 'none' }}>
+                    <span style={{ color: '#888', display: 'flex', position: 'relative' }}>
+                      {item.icon}
+                      {(item as any).badge > 0 && <span style={{ position: 'absolute', top: -4, right: -5, width: 8, height: 8, background: '#e63946', borderRadius: '50%', border: '1.5px solid #fff' }} />}
+                    </span>
+                    {item.label}
+                    {(item as any).badge > 0 && <span style={{ marginLeft: 'auto', background: '#e63946', color: '#fff', fontSize: 10, fontWeight: 700, borderRadius: 10, padding: '1px 6px', minWidth: 16, textAlign: 'center' }}>{(item as any).badge}</span>}
+                  </a>
+                ))}
+              </div>
+              <div style={{ borderTop: '1px solid #f0f0f0', padding: '4px 0 6px' }}>
+                <button onClick={async () => { const { supabase: sb } = await import('../../../supabase'); await sb.auth.signOut(); window.location.href = '/' }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '11px 20px', fontSize: 14, color: '#e63946', cursor: 'pointer', boxSizing: 'border-box' }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  Cerrar sesión
+                </button>
+              </div>
+            </>) : authReady ? (
+              <div style={{ padding: '14px 16px', display: 'flex', gap: 10 }}>
+                <a href="/login" style={{ flex: 1, display: 'block', textAlign: 'center', padding: '11px', fontSize: 14, fontWeight: 600, color: '#006D77', border: '1.5px solid #006D77', borderRadius: 8, textDecoration: 'none' }}>Entrar</a>
+                <a href="/registro" style={{ flex: 1, display: 'block', textAlign: 'center', padding: '11px', fontSize: 14, fontWeight: 600, color: '#fff', background: '#006D77', borderRadius: 8, textDecoration: 'none' }}>Publicar gratis</a>
+              </div>
+            ) : null}
+            <div style={{ borderTop: '1px solid #f0f0f0', padding: '12px 20px 16px', background: '#fafafa' }}>
+              <div style={{ display: 'flex', background: '#efefef', borderRadius: 8, overflow: 'hidden', padding: 3, gap: 2 }}>
+                {(['es', 'en', 'fr'] as const).map(l => (
+                  <button key={l} onClick={() => { setIdioma(l); setMobileMenuOpen(false) }} style={{ all: 'unset', padding: '6px 16px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: idioma === l ? '#fff' : 'transparent', color: idioma === l ? '#006D77' : '#999', boxShadow: idioma === l ? '0 1px 4px rgba(0,0,0,0.1)' : 'none', transition: 'all 0.15s' }}>
+                    {l.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* NAV */}
-      <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', position: 'sticky', top: 0, zIndex: 100 }}>
+      <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', position: 'sticky', top: 0, zIndex: 900 }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', marginRight: 28 }}>
             habitade<span style={{ color: '#83D4DB' }}>.</span>
           </a>
-          {[{ label: Tn.comprar, href: '/buscar?operacion=venta' }, { label: Tn.alquilar, href: '/buscar?operacion=alquiler' }].map(item => (
-            <a key={item.label} href={item.href} style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>{item.label}</a>
-          ))}
+          <div className="prop-nav-links">
+            {[{ label: Tn.comprar, href: '/buscar?operacion=venta' }, { label: Tn.alquilar, href: '/buscar?operacion=alquiler' }].map(item => (
+              <a key={item.label} href={item.href} style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>{item.label}</a>
+            ))}
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: 8, visibility: authReady ? 'visible' : 'hidden', minWidth: 180, justifyContent: 'flex-end', flexShrink: 0 }}>
+        <div className="prop-nav-desktop" style={{ display: 'flex', gap: 8, visibility: authReady ? 'visible' : 'hidden', minWidth: 180, justifyContent: 'flex-end', flexShrink: 0 }}>
           {sesionActiva
             ? <a href="/panel" style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>
                 {fotoUrlNav
@@ -317,6 +375,9 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
           }
           {!sesionActiva && <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.publicar}</a>}
         </div>
+        <button className="prop-nav-hamburger" onClick={() => setMobileMenuOpen(v => !v)} style={{ display: 'none', background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 6, padding: '6px 8px', cursor: 'pointer' }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
       </nav>
 
       {/* BREADCRUMB */}
@@ -331,7 +392,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
       </div>
 
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '20px 20px 40px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 24, alignItems: 'start' }}>
+        <div className="propiedad-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 24, alignItems: 'start' }}>
 
           {/* COLUMNA IZQUIERDA */}
           <div>
@@ -429,22 +490,10 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
               </div>
             )}
 
-            {/* MAPA */}
-            <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
-              <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 14 }}>{Tp.ubicacion}</h2>
-              <div style={{ height: 300, borderRadius: 6, overflow: 'hidden', border: '1px solid #e8e8e8' }}>
-                <MapaUbicacion zona={propiedad.zona || ''} />
-              </div>
-              <div style={{ fontSize: 13, color: '#888', marginTop: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                {propiedad.zona}
-              </div>
-            </div>
-
           </div>
 
           {/* SIDEBAR VENDEDOR */}
-          <div style={{ position: 'sticky', top: 70 }}>
+          <div className="propiedad-sidebar" style={{ position: 'sticky', top: 70 }}>
             <div style={{ background: '#fff', borderRadius: 8, overflow: 'hidden', marginBottom: 16, boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>
               <div style={{ background: '#006D77', padding: '16px 18px', display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 46, height: 46, borderRadius: '50%', background: '#004E57', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: '#83D4DB', flexShrink: 0, overflow: 'hidden' }}>
@@ -531,6 +580,19 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
               }} style={{ all: 'unset', flex: 1, border: '1px solid #e0e0e0', borderRadius: 6, padding: '10px', fontSize: 12, color: '#555', cursor: 'pointer', textAlign: 'center', background: '#fff' }}>{Tp.compartir}</button>
             </div>
           </div>
+
+          {/* MAPA — tercer elemento del grid para poder reordenarlo en móvil */}
+          <div className="propiedad-mapa-col" style={{ background: '#fff', borderRadius: 8, padding: '20px 24px' }}>
+            <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 14 }}>{Tp.ubicacion}</h2>
+            <div style={{ height: 300, borderRadius: 6, overflow: 'hidden', border: '1px solid #e8e8e8' }}>
+              <MapaUbicacion zona={propiedad.zona || ''} />
+            </div>
+            <div style={{ fontSize: 13, color: '#888', marginTop: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              {propiedad.zona}
+            </div>
+          </div>
+
         </div>
       </div>
 

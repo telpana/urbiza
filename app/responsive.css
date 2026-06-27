@@ -405,10 +405,31 @@ img { max-width: 100%; }
 /* ════════════════════════════════
    PROPIEDAD DETALLE
 ════════════════════════════════ */
+.prop-nav-hamburger { display: none; }
+
+/* Desktop: sidebar abarca las 2 filas, mapa en col-1 fila-2 */
+.propiedad-layout {
+  grid-template-columns: 1fr 320px;
+  grid-template-rows: auto auto;
+}
+.propiedad-layout > *:first-child { grid-column: 1; grid-row: 1; }
+.propiedad-sidebar               { grid-column: 2; grid-row: 1 / span 2; }
+.propiedad-mapa-col              { grid-column: 1; grid-row: 2; }
+
 @media (max-width: 768px) {
-  .propiedad-layout { grid-template-columns: 1fr !important; }
+  .prop-nav-links     { display: none !important; }
+  .prop-nav-desktop   { display: none !important; }
+  .prop-nav-hamburger { display: flex !important; }
+
+  .propiedad-layout {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .propiedad-layout > *:first-child { order: 1; }
+  .propiedad-sidebar  { order: 2; position: static !important; top: auto !important; }
+  .propiedad-mapa-col { order: 3; }
+
   .propiedad-galeria { height: 250px !important; }
-  .propiedad-sidebar { position: static !important; top: auto !important; }
 }
 
 /* ════════════════════════════════
