@@ -111,7 +111,7 @@ function MapaUbicacion({ zona }: { zona: string }) {
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />
 }
 
-function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolean }) {
+function GaleriaFotos({ fotos, destacado, titulo, zona }: { fotos: string[], destacado: boolean, titulo?: string, zona?: string }) {
   const [activa, setActiva] = useState(0)
   if (fotos.length === 0) {
     return (
@@ -128,9 +128,19 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
       <div className="propiedad-galeria-main" style={{ height: 420, position: 'relative', background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {destacado && <div style={{ position: 'absolute', top: 8, right: 8, zIndex: 2, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>DESTACADO</div>}
         <img src={fotos[activa]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        <div style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 11, padding: '4px 10px', borderRadius: 20 }}>{activa + 1} / {fotos.length}</div>
-        {activa > 0 && <button onClick={() => setActiva(a => a - 1)} style={{ all: 'unset', position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.9)', width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 20, color: '#333' }}>‹</button>}
-        {activa < fotos.length - 1 && <button onClick={() => setActiva(a => a + 1)} style={{ all: 'unset', position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.9)', width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 20, color: '#333' }}>›</button>}
+        {/* Overlay título — solo visible en móvil vía CSS */}
+        {titulo && (
+          <div className="galeria-titulo-overlay" style={{ display: 'none', position: 'absolute', bottom: 0, left: 0, right: 0, padding: '40px 16px 14px', background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)', zIndex: 3 }}>
+            <div style={{ fontSize: 17, fontWeight: 700, color: '#fff', lineHeight: 1.3, textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>{titulo}</div>
+            {zona && <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', marginTop: 3, display: 'flex', alignItems: 'center', gap: 4 }}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="rgba(255,255,255,0.8)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+              {zona}
+            </div>}
+          </div>
+        )}
+        <div style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 11, padding: '4px 10px', borderRadius: 20, zIndex: 4 }}>{activa + 1} / {fotos.length}</div>
+        {activa > 0 && <button onClick={() => setActiva(a => a - 1)} style={{ all: 'unset', position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.9)', width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 20, color: '#333', zIndex: 4 }}>‹</button>}
+        {activa < fotos.length - 1 && <button onClick={() => setActiva(a => a + 1)} style={{ all: 'unset', position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.9)', width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 20, color: '#333', zIndex: 4 }}>›</button>}
       </div>
       {fotos.length > 1 && (
         <div style={{ display: 'flex', gap: 6, padding: '10px 12px', background: '#f9f9f9', overflowX: 'auto' }}>
@@ -390,14 +400,6 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
         <span>›</span>
         <span style={{ color: '#444' }}>{propiedad.titulo}</span>
       </div>
-      {/* TÍTULO MÓVIL — encima de la galería */}
-      <div className="prop-titulo-mobile" style={{ display: 'none', background: '#fff', padding: '12px 16px 10px', borderBottom: '1px solid #f0f0f0' }}>
-        <h1 style={{ fontSize: 17, fontWeight: 700, color: '#111', margin: 0, lineHeight: 1.3 }}>{propiedad.titulo}</h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#888', marginTop: 4 }}>
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-          {propiedad.zona}
-        </div>
-      </div>
 
       <div className="propiedad-outer" style={{ maxWidth: 1100, margin: '0 auto', padding: '20px 20px 40px' }}>
         <div className="propiedad-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 24, alignItems: 'start' }}>
@@ -406,7 +408,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
           <div>
 
             {/* GALERÍA */}
-            <GaleriaFotos fotos={fotos} destacado={propiedad.destacado} />
+            <GaleriaFotos fotos={fotos} destacado={propiedad.destacado} titulo={propiedad.titulo} zona={propiedad.zona} />
 
             {/* TÍTULO Y PRECIO */}
             <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
