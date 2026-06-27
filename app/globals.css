@@ -132,7 +132,7 @@ img { max-width: 100%; }
   .home-banner { min-height: 300px !important; }
 
   /* ── HERO TEXT ── */
-  .home-hero-h1  { font-size: 17px !important; }
+  .home-hero-h1  { font-size: 19px !important; }
   .home-hero-sub { font-size: 13px !important; margin-bottom: 16px !important; }
 
   /* ── CARDS DESTACADAS / MÁS VISTOS: lista vertical ── */
@@ -145,12 +145,16 @@ img { max-width: 100%; }
     scroll-snap-type: none !important;
   }
   .sc-wrap > a { scroll-snap-align: none !important; }
+  .home-ver-top    { display: none !important; }
+  .home-ver-bottom { display: block !important; }
+
   .home-prop-card {
     display: flex !important;
     flex-direction: row !important;
     min-width: unset !important;
     max-width: 100% !important;
-    height: 90px !important;
+    min-height: 110px !important;
+    height: auto !important;
   }
   .home-prop-card-img {
     width: 110px !important;

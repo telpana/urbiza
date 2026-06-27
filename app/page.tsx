@@ -604,7 +604,7 @@ export default function Home() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
                   <div>
                     <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Propiedades destacadas</h2>
-                    <a href="/buscar?dest=1" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades</a>
+                    <a href="/buscar?dest=1" className="home-ver-top" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades</a>
                   </div>
                 </div>
                 <div className="sc-wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
@@ -628,6 +628,7 @@ export default function Home() {
                     </a>
                   ))}
                 </div>
+                <a href="/buscar?dest=1" className="home-ver-bottom" style={{ display: 'none', fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none', marginTop: 12 }}>Ver todas las propiedades →</a>
               </div>
             )
           })()}
@@ -644,7 +645,7 @@ export default function Home() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
                   <div>
                     <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Más vistos</h2>
-                    <a href="/buscar?orden=visitas" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades</a>
+                    <a href="/buscar?orden=visitas" className="home-ver-top" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades</a>
                   </div>
                 </div>
                 <div className="sc-wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
@@ -668,6 +669,7 @@ export default function Home() {
                     </a>
                   ))}
                 </div>
+                <a href="/buscar?orden=visitas" className="home-ver-bottom" style={{ display: 'none', fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none', marginTop: 12 }}>Ver todas las propiedades →</a>
               </div>
             )
           })()}
