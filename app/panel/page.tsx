@@ -644,7 +644,7 @@ export default function Panel() {
           <div style={{ position: 'absolute', top: 54, left: 0, right: 0, background: '#fff', boxShadow: '0 12px 32px rgba(0,0,0,0.15)', borderRadius: '0 0 16px 16px', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
             <div style={{ padding: '4px 0' }}>
               {menuItems.filter(item => item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)).map(item => (
-                <button key={item.id} onClick={() => { setSeccion(item.id); setPanelNavOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '13px 20px', fontSize: 14, color: seccion === item.id ? '#006D77' : '#333', background: seccion === item.id ? '#f0fafa' : 'transparent', cursor: 'pointer', boxSizing: 'border-box' }}>
+                <button key={item.id} onClick={() => { const dest = item.id === 'publicar' && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis ? 'planes' : item.id; setSeccion(dest); setPanelNavOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '13px 20px', fontSize: 14, color: seccion === item.id ? '#006D77' : '#333', background: seccion === item.id ? '#f0fafa' : 'transparent', cursor: 'pointer', boxSizing: 'border-box' }}>
                   <span style={{ color: seccion === item.id ? '#006D77' : '#888', display: 'flex' }}>{item.icon}</span>
                   {item.label}
                 </button>
