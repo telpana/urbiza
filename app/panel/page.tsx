@@ -1326,31 +1326,35 @@ export default function Panel() {
                   </div>
                 ))}
               </div>
-              <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', marginBottom: 16 }}>
-                <div style={{ fontSize: 15, fontWeight: 700, color: '#111', marginBottom: 16 }}>{Tpanel.estadisticas.anuncio}</div>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                      {[Tpanel.estadisticas.anuncio, Tpanel.estadisticas.visitasCol, Tpanel.estadisticas.telVistosCol, Tpanel.estadisticas.mensajesCol, Tpanel.estadisticas.guardadosCol].map(h => (
-                        <th key={h} style={{ textAlign: 'left', fontSize: 12, color: '#aaa', fontWeight: 500, padding: '0 0 10px' }}>{h}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {anunciosAMostrar.length === 0 ? (
-                      <tr><td colSpan={5} style={{ textAlign: 'center', padding: '24px', color: '#aaa', fontSize: 13 }}>{Tpanel.anuncios.publicarPrimero}</td></tr>
-                    ) : anunciosAMostrar.map((a: any) => (
-                      <tr key={a.id} style={{ borderBottom: '1px solid #f8f8f8' }}>
-                        <td style={{ padding: '10px 0', fontSize: 13, color: '#333', fontWeight: 500, maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.titulo}</td>
-                        <td style={{ padding: '10px 0', fontSize: 13, color: '#006D77', fontWeight: 500 }}>{a.clics.toLocaleString()}</td>
-                        <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.telVistos}</td>
-                        <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.mensajes}</td>
-                        <td style={{ padding: '10px 0', fontSize: 13, color: '#666' }}>{a.favoritos}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              {anunciosAMostrar.length === 0 ? (
+                <div style={{ background: '#fff', borderRadius: 8, padding: '36px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center', color: '#aaa', fontSize: 13 }}>
+                  {Tpanel.anuncios.publicarPrimero}
+                </div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {anunciosAMostrar.map((a: any) => (
+                    <div key={a.id} style={{ background: '#fff', borderRadius: 10, padding: '16px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
+                      <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 14, fontWeight: 600, color: '#111', textDecoration: 'none', display: 'block', marginBottom: 14 }}
+                        onMouseEnter={e => (e.currentTarget.style.color = '#006D77')} onMouseLeave={e => (e.currentTarget.style.color = '#111')}>
+                        {a.titulo}
+                      </a>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, textAlign: 'center' }}>
+                        {[
+                          { val: a.clics?.toLocaleString() ?? '0', label: Tpanel.estadisticas.visitasCol, color: '#006D77' },
+                          { val: a.telVistos ?? '0', label: 'Tel.', color: '#10b981' },
+                          { val: a.mensajes ?? '0', label: Tpanel.estadisticas.mensajesCol, color: '#f59e0b' },
+                          { val: a.favoritos ?? '0', label: Tpanel.estadisticas.guardadosCol, color: '#e63946' },
+                        ].map(s => (
+                          <div key={s.label} style={{ background: '#f8fdfd', borderRadius: 8, padding: '10px 6px' }}>
+                            <div style={{ fontSize: 20, fontWeight: 700, color: s.color, lineHeight: 1 }}>{s.val}</div>
+                            <div style={{ fontSize: 10, color: '#aaa', marginTop: 4, fontWeight: 500 }}>{s.label}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
