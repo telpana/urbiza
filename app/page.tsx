@@ -538,21 +538,14 @@ export default function Home() {
                     {/* overlay transparente que bloquea compositing layers (Leaflet) */}
                     <div style={{ position: 'fixed', inset: 0, zIndex: 9998, willChange: 'transform' }} onMouseDown={() => setMostrarSugHome(false)} />
                     <div style={{ position: 'fixed', top: r ? r.bottom : 0, left: r ? r.left : 0, width: r ? r.width : '100%', background: '#fff', border: '1px solid #e0e0e0', borderRadius: '0 0 8px 8px', boxShadow: '0 8px 24px rgba(0,0,0,0.14)', zIndex: 9999, maxHeight: 280, overflowY: 'auto', willChange: 'transform' }}>
-                    {sugHome.map((s: string, i: number) => {
-                      const esProv = PROVINCIAS_SET.has(s)
-                      return (
-                        <div key={i} onMouseDown={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); p.set('zona', s); window.location.href = `/buscar?${p.toString()}` }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', fontSize: 14, color: '#333', cursor: 'pointer', borderBottom: i < sugHome.length - 1 ? '1px solid #f5f5f5' : 'none' }}
-                          onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
-                          onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                          {esProv
-                            ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                            : <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                          }
-                          <span style={{ flex: 1 }}>{s}</span>
-                          {esProv && <span style={{ background: '#e0f5f7', color: '#006D77', fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 6, flexShrink: 0 }}>Provincia</span>}
-                        </div>
-                      )
-                    })}
+                    {sugHome.map((s: string, i: number) => (
+                      <div key={i} onMouseDown={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); p.set('zona', s); window.location.href = `/buscar?${p.toString()}` }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', fontSize: 14, color: '#333', cursor: 'pointer', borderBottom: i < sugHome.length - 1 ? '1px solid #f5f5f5' : 'none' }}
+                        onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
+                        onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        {s}
+                      </div>
+                    ))}
                     </div>
                   </>)
                 })()}
