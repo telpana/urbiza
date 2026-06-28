@@ -311,6 +311,14 @@ const zonasSugerencias = [
   'Azua, Azua', 'Barahona, Barahona', 'Pedernales, Pedernales',
 ]
 
+const PROVINCIAS_SET = new Set([
+  'Punta Cana', 'La Altagracia', 'Bávaro', 'Distrito Nacional', 'Santo Domingo',
+  'Santiago', 'Puerto Plata', 'Samaná', 'Las Terrenas', 'La Romana',
+  'San Pedro de Macorís', 'La Vega', 'María Trinidad Sánchez', 'El Seibo',
+  'Hato Mayor', 'San Cristóbal', 'Peravia', 'Espaillat', 'Duarte',
+  'Monseñor Nouel', 'Valverde', 'Monte Cristi', 'Dajabón', 'Azua', 'Barahona', 'Pedernales',
+])
+
 function BuscarContent() {
   const { tr, idioma, setIdioma } = useIdioma()
   const Tb = tr.buscar
@@ -481,7 +489,10 @@ function BuscarContent() {
   const handleQueryChange = (val: string) => {
     setQuery(val)
     if (val.length >= 2) {
-      setSugerencias(zonasSugerencias.filter(z => normalize(z).includes(normalize(val))).slice(0, 6))
+      const nv = normalize(val)
+      const prov = zonasSugerencias.filter(z => PROVINCIAS_SET.has(z) && normalize(z).includes(nv)).slice(0, 3)
+      const zonas = zonasSugerencias.filter(z => !PROVINCIAS_SET.has(z) && normalize(z).includes(nv)).slice(0, 5)
+      setSugerencias([...prov, ...zonas])
       setMostrarSugerencias(true)
     } else {
       setSugerencias([])
@@ -581,15 +592,22 @@ function BuscarContent() {
           </div>
           {mostrarSugerencias && sugerencias.length > 0 && (
             <div style={{ position: 'absolute', top: 38, left: 0, right: 0, background: '#fff', borderRadius: 4, boxShadow: '0 4px 12px rgba(0,0,0,0.15)', zIndex: 200, overflow: 'hidden' }}>
-              {sugerencias.map(s => (
-                <div key={s} onClick={() => { setQuery(s); setMostrarSugerencias(false); window.location.href = `/buscar?zona=${encodeURIComponent(s)}&operacion=${operacion}` }}
-                  style={{ padding: '9px 14px', fontSize: 13, color: '#333', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, borderBottom: '1px solid #f0f0f0' }}
-                  onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
-                  onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
-                  {s}
-                </div>
-              ))}
+              {sugerencias.map(s => {
+                const esProv = PROVINCIAS_SET.has(s)
+                return (
+                  <div key={s} onClick={() => { setQuery(s); setMostrarSugerencias(false); window.location.href = `/buscar?zona=${encodeURIComponent(s)}&operacion=${operacion}` }}
+                    style={{ padding: '9px 14px', fontSize: 13, color: '#333', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8, borderBottom: '1px solid #f0f0f0' }}
+                    onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
+                    onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                    {esProv
+                      ? <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                      : <svg width="11" height="11" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+                    }
+                    <span style={{ flex: 1 }}>{s}</span>
+                    {esProv && <span style={{ background: '#e0f5f7', color: '#006D77', fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 6, flexShrink: 0 }}>Provincia</span>}
+                  </div>
+                )
+              })}
             </div>
           )}
         </div>

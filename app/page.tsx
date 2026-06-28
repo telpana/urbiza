@@ -367,11 +367,16 @@ export default function Home() {
   }, [masVistasReales.length])
 
   const zonasRD = ['Piantini, Distrito Nacional', 'Naco, Distrito Nacional', 'Serrallés, Distrito Nacional', 'Bella Vista, Distrito Nacional', 'Arroyo Hondo, Distrito Nacional', 'Los Cacicazgos, Distrito Nacional', 'Gazcue, Distrito Nacional', 'Ciudad Colonial, Distrito Nacional', 'Evaristo Morales, Distrito Nacional', 'Miramar, Distrito Nacional', 'La Esperilla, Distrito Nacional', 'Urbanización Real, Distrito Nacional', 'Viejo Arroyo Hondo, Distrito Nacional', 'Los Prados, Distrito Nacional', 'Jardines del Norte, Distrito Nacional', 'Ensanche Naco, Distrito Nacional', 'Ensanche Ozama, Distrito Nacional', 'Villa Consuelo, Distrito Nacional', 'Cristo Rey, Distrito Nacional', 'Alma Rosa, Santo Domingo Este', 'Los Tres Brazos, Santo Domingo Este', 'Ensanche Isabelita, Santo Domingo Este', 'San Isidro, Santo Domingo Este', 'Los Mina, Santo Domingo Este', 'Bávaro, La Altagracia', 'Punta Cana, La Altagracia', 'Downtown Punta Cana, La Altagracia', 'Cap Cana, La Altagracia', 'Cabeza de Toro, La Altagracia', 'Los Corales, La Altagracia', 'Uvero Alto, La Altagracia', 'Macao, La Altagracia', 'Cortecito, La Altagracia', 'El Cortecito, La Altagracia', 'Higüey, La Altagracia', 'San Rafael del Yuma, La Altagracia', 'Los Jardines, Santiago', 'Cerros de Gurabo, Santiago', 'Reparto Conuco, Santiago', 'Bella Vista, Santiago', 'Villa Olga, Santiago', 'Pontezuela, Santiago', 'Urbanización Tropical, Santiago', 'Las Colinas, Santiago', 'El Dorado, Santiago', 'Las Terrenas, Samaná', 'Samaná', 'El Portillo, Samaná', 'Cosón, Samaná', 'Las Galeras, Samaná', 'El Limón, Samaná', 'Rancho Español, Samaná', 'Puerto Plata', 'Sosúa, Puerto Plata', 'Cabarete, Puerto Plata', 'Costámbar, Puerto Plata', 'Cofresí, Puerto Plata', 'Playa Dorada, Puerto Plata', 'La Romana', 'Casa de Campo, La Romana', 'Bayahíbe, La Romana', 'Dominicus, La Romana', 'Jarabacoa, La Vega', 'Constanza, La Vega', 'La Vega', 'San Pedro de Macorís', 'Juan Dolio, San Pedro de Macorís', 'Guayacanes, San Pedro de Macorís', 'Boca Chica, Santo Domingo', 'Andrés, Boca Chica', 'San Cristóbal', 'Baní, Peravia', 'Azua', 'Barahona', 'Monte Plata', 'Hato Mayor', 'El Seibo', 'Miches, El Seibo', 'Moca, Espaillat', 'San Francisco de Macorís, Duarte', 'Nagua, María Trinidad Sánchez', 'Monte Cristi', 'Dajabón', 'Pedernales', 'Neiba, Baoruco', 'San Juan de la Maguana']
+  const PROVINCIAS_LIST = ['Punta Cana', 'La Altagracia', 'Bávaro', 'Distrito Nacional', 'Santo Domingo', 'Santiago', 'Puerto Plata', 'Samaná', 'Las Terrenas', 'La Romana', 'San Pedro de Macorís', 'La Vega', 'María Trinidad Sánchez', 'El Seibo', 'Hato Mayor', 'San Cristóbal', 'Peravia', 'Espaillat', 'Duarte', 'Monseñor Nouel', 'Valverde', 'Monte Cristi', 'Dajabón', 'Azua', 'Barahona', 'Pedernales']
+  const PROVINCIAS_SET = new Set(PROVINCIAS_LIST)
   const handleQueryHome = (val: string) => {
     setQueryHome(val)
     if (val.length >= 2) {
       const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
-      setSugHome(zonasRD.filter(z => norm(z).includes(norm(val))).slice(0, 6))
+      const nv = norm(val)
+      const prov = PROVINCIAS_LIST.filter(p => norm(p).includes(nv)).slice(0, 3)
+      const zonas = zonasRD.filter(z => norm(z).includes(nv) && !PROVINCIAS_SET.has(z)).slice(0, 5)
+      setSugHome([...prov, ...zonas])
       setMostrarSugHome(true)
     } else {
       setSugHome([])
@@ -533,14 +538,21 @@ export default function Home() {
                     {/* overlay transparente que bloquea compositing layers (Leaflet) */}
                     <div style={{ position: 'fixed', inset: 0, zIndex: 9998, willChange: 'transform' }} onMouseDown={() => setMostrarSugHome(false)} />
                     <div style={{ position: 'fixed', top: r ? r.bottom : 0, left: r ? r.left : 0, width: r ? r.width : '100%', background: '#fff', border: '1px solid #e0e0e0', borderRadius: '0 0 8px 8px', boxShadow: '0 8px 24px rgba(0,0,0,0.14)', zIndex: 9999, maxHeight: 280, overflowY: 'auto', willChange: 'transform' }}>
-                    {sugHome.map((s: string, i: number) => (
-                      <div key={i} onMouseDown={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); p.set('zona', s); window.location.href = `/buscar?${p.toString()}` }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', fontSize: 14, color: '#333', cursor: 'pointer', borderBottom: i < sugHome.length - 1 ? '1px solid #f5f5f5' : 'none' }}
-                        onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
-                        onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-                        {s}
-                      </div>
-                    ))}
+                    {sugHome.map((s: string, i: number) => {
+                      const esProv = PROVINCIAS_SET.has(s)
+                      return (
+                        <div key={i} onMouseDown={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); p.set('zona', s); window.location.href = `/buscar?${p.toString()}` }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '11px 16px', fontSize: 14, color: '#333', cursor: 'pointer', borderBottom: i < sugHome.length - 1 ? '1px solid #f5f5f5' : 'none' }}
+                          onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
+                          onMouseLeave={e => e.currentTarget.style.background = '#fff'}>
+                          {esProv
+                            ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                            : <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                          }
+                          <span style={{ flex: 1 }}>{s}</span>
+                          {esProv && <span style={{ background: '#e0f5f7', color: '#006D77', fontSize: 10, fontWeight: 700, padding: '2px 7px', borderRadius: 6, flexShrink: 0 }}>Provincia</span>}
+                        </div>
+                      )
+                    })}
                     </div>
                   </>)
                 })()}
