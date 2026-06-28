@@ -624,24 +624,43 @@ export default function Admin() {
               <Card style={{ overflow: 'auto' }}>
                 {cobrosLoading ? <div style={{ padding: 24, color: '#aaa', fontSize: 13 }}>Cargando...</div> : (
                   <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
-                    <thead style={{ background: '#fafafa', borderBottom: '1px solid #f0f0f0' }}>
-                      <tr><Th>Nombre</Th><Th>Email</Th><Th>Tipo</Th><Th>ID Stripe</Th><Th>Vence</Th></tr>
+                    <thead>
+                      <tr style={{ borderBottom: '1.5px solid #f0f0f0', background: '#fafafa' }}>
+                        {['Nombre','Email','Tipo','ID Stripe','Vence'].map((h, i) => (
+                          <th key={i} style={{ textAlign: 'left', fontSize: 11, color: '#999', fontWeight: 600, padding: '12px 16px', textTransform: 'uppercase', letterSpacing: 0.4 }}>{h}</th>
+                        ))}
+                      </tr>
                     </thead>
                     <tbody>
                       {cobros.length === 0 && <tr><td colSpan={5} style={{ padding: 24, fontSize: 13, color: '#aaa', textAlign: 'center' }}>Sin suscripciones activas</td></tr>}
-                      {cobros.map((u: any) => (
-                        <tr key={u.id} style={{ borderBottom: '1px solid #f8f8f8' }}>
-                          <Td><span style={{ fontWeight: 500 }}>{u.nombre}</span></Td>
-                          <Td><span style={{ fontSize: 12, color: '#666' }}>{u.email}</span></Td>
-                          <Td><Badge txt={u.tipo || 'particular'} color="#555" bg="#f0f0f0" /></Td>
-                          <Td><span style={{ fontSize: 11, color: '#aaa', fontFamily: 'monospace' }}>{u.stripe_subscription_id || '—'}</span></Td>
-                          <Td>
-                            {u.plan_activo_hasta
-                              ? <Badge txt={fmtFecha(u.plan_activo_hasta)} color={new Date(u.plan_activo_hasta) > new Date() ? '#065f46' : '#991b1b'} bg={new Date(u.plan_activo_hasta) > new Date() ? '#d1fae5' : '#fee2e2'} />
-                              : <span style={{ color: '#aaa', fontSize: 12 }}>—</span>}
-                          </Td>
-                        </tr>
-                      ))}
+                      {cobros.map((u: any) => {
+                        const inicial = (u.nombre || u.email || '?')[0].toUpperCase()
+                        return (
+                          <tr key={u.id} style={{ borderBottom: '1px solid #f5f5f5' }}
+                            onMouseEnter={e => (e.currentTarget.style.background = '#fafcfc')}
+                            onMouseLeave={e => (e.currentTarget.style.background = '')}>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                                <div style={{ width: 30, height: 30, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                  {u.foto_url
+                                    ? <img src={u.foto_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} referrerPolicy="no-referrer" />
+                                    : <span style={{ fontSize: 12, fontWeight: 700, color: '#006D77' }}>{inicial}</span>
+                                  }
+                                </div>
+                                <span style={{ fontWeight: 500, fontSize: 13 }}>{u.nombre || '—'}</span>
+                              </div>
+                            </td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 12, color: '#666' }}>{u.email}</span></td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><Badge txt={u.tipo || 'particular'} color="#555" bg="#f0f0f0" /></td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 11, color: '#aaa', fontFamily: 'monospace' }}>{u.stripe_subscription_id || '—'}</span></td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
+                              {u.plan_activo_hasta
+                                ? <Badge txt={fmtFecha(u.plan_activo_hasta)} color={new Date(u.plan_activo_hasta) > new Date() ? '#065f46' : '#991b1b'} bg={new Date(u.plan_activo_hasta) > new Date() ? '#d1fae5' : '#fee2e2'} />
+                                : <span style={{ color: '#aaa', fontSize: 12 }}>—</span>}
+                            </td>
+                          </tr>
+                        )
+                      })}
                     </tbody>
                   </table>
                 )}
