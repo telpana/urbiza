@@ -30,8 +30,9 @@ export const metadata: Metadata = {
   creator: 'Habitade',
   publisher: 'Habitade',
   robots: {
-    index: false, // cambiar a true cuando abra el sitio
-    follow: false,
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
   },
   openGraph: {
     type: 'website',

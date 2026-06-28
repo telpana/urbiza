@@ -5,7 +5,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        disallow: '/', // quitar esto y poner allow cuando el sitio abra
+        allow: '/',
+        disallow: ['/panel', '/admin', '/api/'],
       },
     ],
     sitemap: 'https://www.habitade.com/sitemap.xml',

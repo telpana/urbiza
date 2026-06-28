@@ -11,15 +11,14 @@ const base = 'https://www.habitade.com'
 const zonas = [
   'santo-domingo', 'punta-cana', 'santiago', 'las-terrenas',
   'bavaro', 'cap-cana', 'la-romana', 'sosua', 'cabarete',
-  'naco', 'piantini', 'bella-vista', 'arroyo-hondo',
+  'naco', 'piantini', 'bella-vista',
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Propiedades activas
   const { data: propiedades } = await supabase
     .from('propiedades')
     .select('id, updated_at')
-    .eq('activo', true)
+    .eq('estado', 'activo')
     .limit(1000)
 
   const propUrls: MetadataRoute.Sitemap = (propiedades || []).map((p: any) => ({
@@ -29,27 +28,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  // Páginas estáticas principales
   const staticUrls: MetadataRoute.Sitemap = [
     { url: base, lastModified: new Date(), changeFrequency: 'daily', priority: 1.0 },
-    { url: `${base}/buscar?operacion=venta`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
-    { url: `${base}/buscar?operacion=alquiler`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
+    { url: `${base}/buscar?operacion=Venta`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
+    { url: `${base}/buscar?operacion=Alquiler`, lastModified: new Date(), changeFrequency: 'daily', priority: 0.9 },
     { url: `${base}/registro`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.5 },
-    { url: `${base}/login`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.4 },
-    // Páginas de zona
-    ...zonas.map(zona => ({
-      url: `${base}/propiedades/${zona}`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.85,
-    })),
-    // Búsquedas por tipo
-    ...['apartamento', 'casa', 'villa', 'terreno', 'local'].map(tipo => ({
-      url: `${base}/buscar?tipo=${tipo}&operacion=venta`,
-      lastModified: new Date(),
-      changeFrequency: 'daily' as const,
-      priority: 0.8,
-    })),
+    ...zonas.map(zona => ([
+      { url: `${base}/comprar/${zona}`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.9 },
+      { url: `${base}/alquiler/${zona}`, lastModified: new Date(), changeFrequency: 'daily' as const, priority: 0.9 },
+    ])).flat(),
   ]
 
   return [...staticUrls, ...propUrls]
