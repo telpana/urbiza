@@ -542,6 +542,7 @@ export default function Panel() {
   const publicarAnuncio = async () => {
     if (!anuncioEditando && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis) { setSeccion('planes'); return }
     if (!pubTitulo || !pubPrecio || !pubProvincia || !pubM2) { setPubError(Tpanel.publicar.err_campos); return }
+    if (!pubDesc.trim()) { setPubError(Tpanel.publicar.err_desc); return }
     if (fotosLista.length === 0) { setPubError(Tpanel.publicar.err_fotos); return }
     setPubLoading(true)
     setPubError('')
@@ -1041,7 +1042,7 @@ export default function Panel() {
                 )}
 
                 <div style={{ marginBottom: 16 }}>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.descripcion}</label>
+                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.descripcion} <span style={{ color: '#e63946' }}>*</span></label>
                   <textarea rows={4} value={pubDesc} onChange={e => setPubDesc(e.target.value)} placeholder="Describe tu propiedad con detalle — ubicación, acabados, amenidades, accesos..." style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'vertical', fontFamily: 'sans-serif', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                 </div>
 

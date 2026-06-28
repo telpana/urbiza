@@ -98,7 +98,7 @@ export const t = {
         publicar: 'Publicar anuncio', guardar: 'Guardar cambios', publicando: 'Publicando...', guardando: 'Guardando...', cancelar: 'Cancelar edición',
         venta: 'Venta', alquiler: 'Alquiler',
         verificandoPago: 'Verificando tu pago...', verificandoSecs: 'Esto solo toma unos segundos',
-        err_campos: 'El título, precio y provincia son obligatorios', err_fotos: 'Debes subir al menos una foto del inmueble',
+        err_campos: 'El título, precio y provincia son obligatorios', err_fotos: 'Debes subir al menos una foto del inmueble', err_desc: 'La descripción es obligatoria',
         err_sesion: 'Debes iniciar sesión para publicar', ok: '¡Anuncio publicado correctamente!', okEdit: '¡Anuncio actualizado correctamente!',
       },
       mensajes: {
@@ -243,7 +243,7 @@ export const t = {
         publicar: 'Post listing', guardar: 'Save changes', publicando: 'Posting...', guardando: 'Saving...', cancelar: 'Cancel editing',
         venta: 'Sale', alquiler: 'Rent',
         verificandoPago: 'Verifying your payment...', verificandoSecs: 'This only takes a few seconds',
-        err_campos: 'Title, price and province are required', err_fotos: 'You must upload at least one photo',
+        err_campos: 'Title, price and province are required', err_fotos: 'You must upload at least one photo', err_desc: 'Description is required',
         err_sesion: 'You must be signed in to post a listing', ok: 'Listing posted successfully!', okEdit: 'Listing updated successfully!',
       },
       mensajes: {
@@ -388,7 +388,7 @@ export const t = {
         publicar: "Publier l'annonce", guardar: 'Enregistrer les modifications', publicando: 'Publication...', guardando: 'Enregistrement...', cancelar: "Annuler la modification",
         venta: 'Vente', alquiler: 'Location',
         verificandoPago: 'Vérification du paiement...', verificandoSecs: 'Cela ne prend que quelques secondes',
-        err_campos: 'Le titre, le prix et la province sont obligatoires', err_fotos: 'Vous devez télécharger au moins une photo',
+        err_campos: 'Le titre, le prix et la province sont obligatoires', err_fotos: 'Vous devez télécharger au moins une photo', err_desc: 'La description est obligatoire',
         err_sesion: 'Vous devez être connecté pour publier une annonce', ok: 'Annonce publiée avec succès !', okEdit: 'Annonce mise à jour avec succès !',
       },
       mensajes: {
