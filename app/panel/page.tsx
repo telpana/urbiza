@@ -1013,7 +1013,7 @@ export default function Panel() {
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.superficie} *</label>
                     <input type="text" value={pubM2} onChange={e => { const raw = e.target.value.replace(/\D/g, '').slice(0, 8); setPubM2(raw ? raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '') }} placeholder="Ej: 150" inputMode="numeric" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
-                  {!['Edificio', 'Terreno'].includes(pubTipo) && (
+                  {!['Edificio', 'Terreno', 'Local comercial'].includes(pubTipo) && (
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.habitaciones}</label>
                       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -1025,7 +1025,7 @@ export default function Panel() {
                   )}
                 </div>
 
-                {!['Edificio', 'Terreno'].includes(pubTipo) && (
+                {pubTipo !== 'Edificio' && (
                   <div className="pub-form-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 16 }}>
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.banos}</label>
