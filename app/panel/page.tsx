@@ -1492,7 +1492,7 @@ export default function Panel() {
                 {anunciosReales.length === 0 ? (
                   <div style={{ background: '#f8f9fa', borderRadius: 10, padding: '24px', fontSize: 13, color: '#888', textAlign: 'center', border: '1.5px dashed #e0e0e0' }}>
                     Aún no tienes anuncios publicados.{' '}
-                    <a href="#" onClick={e => { e.preventDefault(); setSeccion('publicar') }} style={{ color: '#006D77', fontWeight: 600 }}>Publica uno →</a>
+                    <a href="#" onClick={e => { e.preventDefault(); setSeccion('publicar') }} style={{ color: '#006D77', fontWeight: 600 }}>Publica uno</a>
                   </div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
