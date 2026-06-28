@@ -13,6 +13,7 @@ const menuItems = [
   { id: 'banner', label: 'Banner inicio', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg> },
   { id: 'favicon', label: 'Favicon e img', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg> },
   { id: 'redes', label: 'Redes sociales', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> },
+  { id: 'codigos', label: 'Códigos promo', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> },
 ]
 
 function fmtFecha(iso: string) {
@@ -56,6 +57,11 @@ export default function Admin() {
   const [tiktokUrl, setTiktokUrl] = useState('')
   const [whatsappUrl, setWhatsappUrl] = useState('')
   const [redesGuardadas, setRedesGuardadas] = useState(false)
+  const [codigos, setCodigos] = useState<any[]>([])
+  const [codigosLoading, setCodigosLoading] = useState(false)
+  const [nuevoCodigo, setNuevoCodigo] = useState('')
+  const [nuevoMaxUsos, setNuevoMaxUsos] = useState('')
+  const [codigoCreando, setCodigoCreando] = useState(false)
 
   const authHeader = useCallback((t?: string) => ({
     'Authorization': `Bearer ${t || token}`,
@@ -204,6 +210,13 @@ export default function Admin() {
     setDestacadosLoading(false)
   }, [authHeader])
 
+  const cargarCodigos = useCallback(async () => {
+    setCodigosLoading(true)
+    const res = await fetch('/api/admin/codigos-promo', { headers: authHeader() })
+    if (res.ok) setCodigos(await res.json())
+    setCodigosLoading(false)
+  }, [authHeader])
+
   useEffect(() => {
     if (!authed) return
     cargarConfig()
@@ -211,6 +224,7 @@ export default function Admin() {
     if (seccion === 'usuarios') cargarUsuarios()
     if (seccion === 'cobros') { cargarCobros(); cargarIngresos() }
     if (seccion === 'destacados') cargarDestacados()
+    if (seccion === 'codigos') cargarCodigos()
 
     // AEI: carga inicial + polling cada 20s para detectar nuevas solicitudes
     if (seccion === 'aei') {
@@ -218,7 +232,7 @@ export default function Admin() {
       const id = setInterval(cargarAei, 20000)
       return () => clearInterval(id)
     }
-  }, [seccion, authed, cargarAei, cargarPropiedades, cargarUsuarios, cargarCobros, cargarIngresos, cargarDestacados, cargarConfig])
+  }, [seccion, authed, cargarAei, cargarPropiedades, cargarUsuarios, cargarCobros, cargarIngresos, cargarDestacados, cargarConfig, cargarCodigos])
 
   // ─── PANTALLA DE CARGA ───────────────────────────────────────────────
   if (authed === null) return (
@@ -867,6 +881,94 @@ export default function Admin() {
                 }} style={{ all: 'unset', background: C.verde, color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 8 }}>
                   {redesGuardadas ? '✓ Guardado' : 'Guardar enlaces'}
                 </button>
+              </Card>
+            </Seccion>
+          )}
+
+          {seccion === 'codigos' && (
+            <Seccion titulo="Códigos promocionales" desc="Crea códigos que dan 30 días gratis de plan Pro antes del primer cobro">
+              {/* Crear código */}
+              <Card style={{ padding: 24, marginBottom: 20 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 16 }}>Nuevo código</div>
+                <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end', flexWrap: 'wrap' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 6 }}>CÓDIGO</label>
+                    <input value={nuevoCodigo} onChange={e => setNuevoCodigo(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))} placeholder="PROMO30" maxLength={20}
+                      style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 14px', fontSize: 14, outline: 'none', letterSpacing: 1, width: 160, fontWeight: 600 }} />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 6 }}>MÁX. USOS <span style={{ fontWeight: 400, color: '#aaa' }}>(vacío = ilimitado)</span></label>
+                    <input value={nuevoMaxUsos} onChange={e => setNuevoMaxUsos(e.target.value.replace(/\D/g, ''))} placeholder="ej: 50" type="number" min="1"
+                      style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 14px', fontSize: 14, outline: 'none', width: 120 }} />
+                  </div>
+                  <button disabled={!nuevoCodigo || codigoCreando} onClick={async () => {
+                    if (!nuevoCodigo) return
+                    setCodigoCreando(true)
+                    const res = await fetch('/api/admin/codigos-promo', {
+                      method: 'POST',
+                      headers: { ...authHeader(), 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ codigo: nuevoCodigo, usos_maximos: nuevoMaxUsos ? Number(nuevoMaxUsos) : null })
+                    })
+                    if (res.ok) { setNuevoCodigo(''); setNuevoMaxUsos(''); cargarCodigos() }
+                    else { const d = await res.json(); alert(d.error || 'Error') }
+                    setCodigoCreando(false)
+                  }} style={{ all: 'unset', background: nuevoCodigo ? C.verde : '#d1d5db', color: '#fff', padding: '9px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: nuevoCodigo ? 'pointer' : 'default' }}>
+                    {codigoCreando ? 'Creando...' : '+ Crear código'}
+                  </button>
+                </div>
+              </Card>
+
+              {/* Lista códigos */}
+              <Card>
+                {codigosLoading ? (
+                  <div style={{ padding: 32, textAlign: 'center', color: '#aaa', fontSize: 13 }}>Cargando...</div>
+                ) : codigos.length === 0 ? (
+                  <div style={{ padding: 32, textAlign: 'center', color: '#aaa', fontSize: 13 }}>No hay códigos creados aún</div>
+                ) : (
+                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
+                        {['CÓDIGO', 'USOS', 'MÁX.', 'ESTADO', 'CREADO', ''].map(h => (
+                          <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, color: '#999', fontWeight: 600, letterSpacing: 0.5 }}>{h}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {codigos.map((c: any) => (
+                        <tr key={c.id} style={{ borderBottom: '1px solid #f9f9f9' }}>
+                          <td style={{ padding: '12px 16px' }}>
+                            <span style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: 14, color: '#111', background: '#f4f5f6', padding: '3px 10px', borderRadius: 6, letterSpacing: 1 }}>{c.codigo}</span>
+                          </td>
+                          <td style={{ padding: '12px 16px', fontSize: 14, color: '#333', fontWeight: 600 }}>{c.usos_actuales ?? 0}</td>
+                          <td style={{ padding: '12px 16px', fontSize: 13, color: '#888' }}>{c.usos_maximos ?? '∞'}</td>
+                          <td style={{ padding: '12px 16px' }}>
+                            <span style={{ background: c.activo ? '#d1fae5' : '#fee2e2', color: c.activo ? '#065f46' : '#991b1b', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 10 }}>
+                              {c.activo ? 'Activo' : 'Desactivado'}
+                            </span>
+                          </td>
+                          <td style={{ padding: '12px 16px', fontSize: 12, color: '#aaa' }}>{new Date(c.created_at).toLocaleDateString('es-ES')}</td>
+                          <td style={{ padding: '12px 16px' }}>
+                            <div style={{ display: 'flex', gap: 8 }}>
+                              <button onClick={async () => {
+                                await fetch('/api/admin/codigos-promo', { method: 'PATCH', headers: { ...authHeader(), 'Content-Type': 'application/json' }, body: JSON.stringify({ id: c.id, activo: !c.activo }) })
+                                cargarCodigos()
+                              }} style={{ all: 'unset', fontSize: 12, color: c.activo ? '#92400e' : '#065f46', border: `1px solid ${c.activo ? '#fde68a' : '#a7f3d0'}`, padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}>
+                                {c.activo ? 'Desactivar' : 'Activar'}
+                              </button>
+                              <button onClick={async () => {
+                                if (!confirm(`¿Eliminar código ${c.codigo}?`)) return
+                                await fetch('/api/admin/codigos-promo', { method: 'DELETE', headers: { ...authHeader(), 'Content-Type': 'application/json' }, body: JSON.stringify({ id: c.id }) })
+                                cargarCodigos()
+                              }} style={{ all: 'unset', fontSize: 12, color: '#dc2626', border: '1px solid #fecaca', padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}>
+                                Eliminar
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </Card>
             </Seccion>
           )}
