@@ -1346,7 +1346,7 @@ export default function Panel() {
                       <tr style={{ borderBottom: '2px solid #f0f0f0' }}>
                         <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: 12, fontWeight: 600, color: '#888' }}>Anuncio</th>
                         <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>{Tpanel.estadisticas.visitasCol}</th>
-                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>Tel.</th>
+                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>Teléfono</th>
                         <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>{Tpanel.estadisticas.mensajesCol}</th>
                         <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>{Tpanel.estadisticas.guardadosCol}</th>
                       </tr>
