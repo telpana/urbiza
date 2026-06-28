@@ -188,6 +188,73 @@ img { max-width: 100%; }
   .estadisticas-tabla-desktop { display: none !important; }
   .estadisticas-cards-mobile { display: flex !important; }
 
+  /* Mi plan — upgrade card */
+  .plan-upgrade-card {
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+  .plan-upgrade-hero {
+    background: linear-gradient(145deg, #004E57 0%, #006D77 60%, #17A6B4 100%) !important;
+    border-radius: 16px !important;
+    padding: 32px 24px 28px !important;
+    margin-bottom: 20px !important;
+    text-align: center !important;
+  }
+  .plan-upgrade-badge {
+    background: rgba(255,255,255,0.15) !important;
+    border: 1px solid rgba(255,255,255,0.25) !important;
+    color: rgba(255,255,255,0.85) !important;
+    margin-bottom: 14px !important;
+  }
+  .plan-upgrade-title {
+    color: #fff !important;
+    font-size: 20px !important;
+    margin-bottom: 10px !important;
+  }
+  .plan-upgrade-price {
+    color: #fff !important;
+    font-size: 48px !important;
+    margin-bottom: 0 !important;
+  }
+  .plan-upgrade-price span {
+    color: rgba(255,255,255,0.65) !important;
+    font-size: 16px !important;
+  }
+  .plan-upgrade-features {
+    background: #fff !important;
+    border-radius: 14px !important;
+    padding: 20px 20px !important;
+    margin: 0 0 16px !important;
+    max-width: 100% !important;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.06) !important;
+    gap: 14px !important;
+  }
+  .plan-upgrade-features > div {
+    font-size: 14px !important;
+    color: #333 !important;
+    border-bottom: 1px solid #f5f5f5 !important;
+    padding-bottom: 12px !important;
+  }
+  .plan-upgrade-features > div:last-child {
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+  }
+  .plan-upgrade-cta {
+    display: block !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    background: linear-gradient(135deg, #006D77, #17A6B4) !important;
+    box-shadow: 0 6px 20px rgba(0,109,119,0.35) !important;
+    letter-spacing: 0.2px !important;
+  }
+
   /* Mi perfil */
   .perfil-fields-grid { grid-template-columns: 1fr !important; }
   .perfil-avatar-row { flex-direction: column !important; align-items: center !important; text-align: center; }
