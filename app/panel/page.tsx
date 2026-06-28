@@ -822,38 +822,56 @@ export default function Panel() {
                 {anunciosFiltrados.map(a => {
                   const estado = estadosAnuncios[a.id] || a.estado
                   return (
-                    <div key={a.id} style={{ background: '#fff', borderRadius: 8, padding: '16px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', alignItems: 'center', gap: 16, borderLeft: a.destacado ? '4px solid #006D77' : '4px solid transparent' }}>
-                      <div style={{ width: 90, height: 65, borderRadius: 6, background: a.bg, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
-                        {Array.isArray(a.fotos) && a.fotos[0]
-                          ? <img src={a.fotos[0]} alt={a.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-                          : <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-                        }
-                      </div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 3 }}>
-                          <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 15, fontWeight: 600, color: '#006D77', textDecoration: 'none' }} onMouseEnter={e => (e.currentTarget.style.textDecoration='underline')} onMouseLeave={e => (e.currentTarget.style.textDecoration='none')}>{a.titulo}</a>
-                          {a.destacado && <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, letterSpacing: 0.5, whiteSpace: 'nowrap' }}>DESTACADO</span>}
+                    <div key={a.id} className="anuncio-card" style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderLeft: a.destacado ? '4px solid #006D77' : '4px solid transparent', overflow: 'hidden' }}>
+                      {/* Fila principal */}
+                      <div className="anuncio-card-body" style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '14px 16px' }}>
+                        <div style={{ width: 84, height: 62, borderRadius: 6, background: '#e8f4f5', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+                          {Array.isArray(a.fotos) && a.fotos[0]
+                            ? <img src={a.fotos[0]} alt={a.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                            : <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                          }
                         </div>
-                        <div style={{ fontSize: 13, color: '#888', marginBottom: 6 }}>{a.zona} · {a.tipo} · US$ {a.precio.toLocaleString('en-US')}</div>
-                        <div style={{ display: 'flex', gap: 16, fontSize: 12, color: '#aaa', flexWrap: 'wrap' }}>
-                          <span>👁 {a.clics} {Tpanel.anuncios.visitas}</span>
-                          <span>📞 {a.telVistos} {Tpanel.estadisticas.telVistosCol.toLowerCase()}</span>
-                          <span>❤️ {a.favoritos} {Tpanel.anuncios.guardados}</span>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 2, flexWrap: 'wrap' }}>
+                            <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 14, fontWeight: 700, color: '#111', textDecoration: 'none', lineHeight: 1.3 }} onMouseEnter={e => (e.currentTarget.style.color='#006D77')} onMouseLeave={e => (e.currentTarget.style.color='#111')}>{a.titulo}</a>
+                            {a.destacado && <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 6, letterSpacing: 0.4, whiteSpace: 'nowrap', flexShrink: 0 }}>DEST.</span>}
+                          </div>
+                          <div style={{ fontSize: 12, color: '#888', marginBottom: 6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.zona} · {a.tipo} · <span style={{ color: '#006D77', fontWeight: 600 }}>US$ {a.precio.toLocaleString('en-US')}</span></div>
+                          <div style={{ display: 'flex', gap: 12, fontSize: 11, color: '#aaa' }}>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                              {a.clics ?? a.visitas ?? 0}
+                            </span>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                              {a.tel_vistos ?? a.telVistos ?? 0}
+                            </span>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="#e63946" stroke="#e63946" strokeWidth="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                              {a.favoritos ?? 0}
+                            </span>
+                          </div>
                         </div>
+                        <span className="anuncio-card-status" style={{ background: estado === 'activo' ? '#e0f5f0' : '#f5f5f5', color: estado === 'activo' ? '#065f46' : '#888', fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 10, flexShrink: 0, whiteSpace: 'nowrap' }}>
+                          {estado === 'activo' ? `● ${Tpanel.anuncios.estado.activo}` : `○ ${Tpanel.anuncios.estado.pausado}`}
+                        </span>
                       </div>
-                      <span style={{ background: estado === 'activo' ? '#e0f5f0' : '#f5f5f5', color: estado === 'activo' ? '#065f46' : '#888', fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 10, flexShrink: 0 }}>
-                        {estado === 'activo' ? `● ${Tpanel.anuncios.estado.activo}` : `○ ${Tpanel.anuncios.estado.pausado}`}
-                      </span>
-                      <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                      {/* Fila de acciones */}
+                      <div className="anuncio-card-actions" style={{ display: 'flex', gap: 8, padding: '0 16px 12px', flexWrap: 'wrap', alignItems: 'center' }}>
                         {a.destacado
-                          ? <div style={{ border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 4, background: '#f0fafb', whiteSpace: 'nowrap' }} title={a.destacado_hasta ? `Vence el ${new Date(a.destacado_hasta).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}` : ''}>
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                          ? <div style={{ border: '1px solid #006D77', color: '#006D77', padding: '5px 11px', borderRadius: 6, fontSize: 12, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 4, background: '#f0fafb', whiteSpace: 'nowrap' }} title={a.destacado_hasta ? `Vence el ${new Date(a.destacado_hasta).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}` : ''}>
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                               Destacado{a.destacado_hasta ? ` · hasta ${new Date(a.destacado_hasta).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}` : ''}
                             </div>
-                          : <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '6px 12px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}><svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Destacar</button>
+                          : <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '5px 11px', borderRadius: 6, fontSize: 12, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                              Destacar
+                            </button>
                         }
-                        <button onClick={() => handleEditar(a)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer' }}>{Tpanel.anuncios.editar}</button>
-                        <button onClick={() => eliminarAnuncio(a.id)} style={{ all: 'unset', border: '1px solid #fca5a5', color: '#dc2626', padding: '6px 12px', borderRadius: 4, fontSize: 12, cursor: 'pointer', fontWeight: 500 }}>{Tpanel.anuncios.eliminar}</button>
+                        <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
+                          <button onClick={() => handleEditar(a)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '5px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>{Tpanel.anuncios.editar}</button>
+                          <button onClick={() => eliminarAnuncio(a.id)} style={{ all: 'unset', border: '1px solid #fca5a5', color: '#dc2626', padding: '5px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer', fontWeight: 500 }}>{Tpanel.anuncios.eliminar}</button>
+                        </div>
                       </div>
                     </div>
                   )
