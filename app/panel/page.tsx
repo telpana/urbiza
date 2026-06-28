@@ -1405,7 +1405,7 @@ export default function Panel() {
                             { val: fmtStat(a.favoritos), label: Tpanel.estadisticas.guardadosCol },
                           ].map((s, i) => (
                             <div key={s.label} style={{ padding: '12px 6px', textAlign: 'center', borderRight: i < 3 ? '1px solid #e8f5f6' : 'none' }}>
-                              <div style={{ fontSize: 22, fontWeight: 800, color: '#006D77', lineHeight: 1 }}>{s.val}</div>
+                              <div style={{ fontSize: 18, fontWeight: 400, color: '#006D77', lineHeight: 1 }}>{s.val}</div>
                               <div style={{ fontSize: 10, color: '#999', marginTop: 4, fontWeight: 500, textTransform: 'uppercase', letterSpacing: 0.3 }}>{s.label}</div>
                             </div>
                           ))}
