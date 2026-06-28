@@ -1397,16 +1397,16 @@ export default function Panel() {
                             {a.titulo}
                           </a>
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderTop: '1px solid #f0f0f0' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', background: '#f8fdfd', borderTop: '1px solid #e8f5f6' }}>
                           {[
                             { val: fmtStat(a.clics), label: Tpanel.estadisticas.visitasCol },
                             { val: fmtStat(a.telVistos), label: 'Tel.' },
                             { val: fmtStat(a.mensajes), label: Tpanel.estadisticas.mensajesCol },
                             { val: fmtStat(a.favoritos), label: Tpanel.estadisticas.guardadosCol },
                           ].map((s, i) => (
-                            <div key={s.label} style={{ padding: '10px 6px', textAlign: 'center', borderRight: i < 3 ? '1px solid #f0f0f0' : 'none' }}>
-                              <div style={{ fontSize: 20, fontWeight: 800, color: '#111', lineHeight: 1 }}>{s.val}</div>
-                              <div style={{ fontSize: 10, color: '#aaa', marginTop: 3, fontWeight: 500 }}>{s.label}</div>
+                            <div key={s.label} style={{ padding: '12px 6px', textAlign: 'center', borderRight: i < 3 ? '1px solid #e8f5f6' : 'none' }}>
+                              <div style={{ fontSize: 22, fontWeight: 800, color: '#006D77', lineHeight: 1 }}>{s.val}</div>
+                              <div style={{ fontSize: 10, color: '#999', marginTop: 4, fontWeight: 500, textTransform: 'uppercase', letterSpacing: 0.3 }}>{s.label}</div>
                             </div>
                           ))}
                         </div>
