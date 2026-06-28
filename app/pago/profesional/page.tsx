@@ -32,7 +32,7 @@ export default function PagoProfesional() {
     <main style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', fontFamily: 'sans-serif', background: '#f4f5f6' }}>
       <div style={{ textAlign: 'center' }}>
         <div style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 8 }}>
-          {error ? '⚠️ Error' : 'Redirigiendo a Stripe...'}
+          {error ? 'Error' : 'Procesando pago...'}
         </div>
         {error
           ? <>
