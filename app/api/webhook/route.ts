@@ -17,7 +17,7 @@ async function bajarAPlaGratis(subscriptionId: string) {
   const { data: usuario } = await supabase.from('usuarios').select('id').eq('stripe_subscription_id', subscriptionId).single()
   if (!usuario) return
   await supabase.from('propiedades').delete().eq('usuario_id', usuario.id)
-  await supabase.from('usuarios').update({ plan: 'gratis', stripe_subscription_id: null, plan_activo_hasta: null }).eq('id', usuario.id)
+  await supabase.from('usuarios').update({ plan: 'gratis', tipo: 'particular', stripe_subscription_id: null, plan_activo_hasta: null }).eq('id', usuario.id)
   console.log('[webhook] usuario bajado a gratis y anuncios eliminados:', usuario.id)
 }
 
@@ -40,6 +40,7 @@ export async function POST(req: Request) {
     if (userId && subscriptionId) {
       const { error } = await supabase.from('usuarios').update({
         plan: 'profesional',
+        tipo: 'profesional',
         stripe_subscription_id: subscriptionId,
         plan_activo_hasta: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
       }).eq('id', userId)
@@ -54,6 +55,7 @@ export async function POST(req: Request) {
     if (subscriptionId) {
       await supabase.from('usuarios').update({
         plan: 'profesional',
+        tipo: 'profesional',
         plan_activo_hasta: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
       }).eq('stripe_subscription_id', subscriptionId)
       console.log('[webhook] plan renovado para suscripción', subscriptionId)
