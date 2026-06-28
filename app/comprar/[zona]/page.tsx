@@ -1,7 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import { zonasMeta, slugToZona, slugs } from '../../lib/zonas'
+import { zonasMeta, slugToZona, slugs, zonaGrupos } from '../../lib/zonas'
 
 const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -45,12 +45,13 @@ export default async function ComprarZonaPage({ params }: { params: Promise<{ zo
 
   const nombreZona = slugToZona[zona] || meta.nombre
 
+  const subZonas = zonaGrupos[zona] || [nombreZona]
   const { data: propiedades } = await sb
     .from('propiedades')
     .select('id, titulo, precio, tipo, habitaciones, m2, fotos, zona')
     .eq('estado', 'activo')
     .eq('operacion', 'Venta')
-    .ilike('zona', `%${nombreZona}%`)
+    .or(subZonas.map(s => `zona.ilike.%${s}%`).join(','))
     .order('destacado', { ascending: false })
     .limit(24)
 
