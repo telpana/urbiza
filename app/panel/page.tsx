@@ -1739,8 +1739,8 @@ export default function Panel() {
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>{Tpanel.perfil.titulo}</h1>
               <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24, paddingBottom: 20, borderBottom: '1px solid #f0f0f0' }}>
-                  <div style={{ position: 'relative' }}>
+                <div className="perfil-avatar-row" style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24, paddingBottom: 20, borderBottom: '1px solid #f0f0f0' }}>
+                  <div style={{ position: 'relative', flexShrink: 0 }}>
                     <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, fontWeight: 700, color: '#006D77', overflow: 'hidden' }}>
                       {fotoPerfilUrl ? <img src={fotoPerfilUrl} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity 0.25s' }} /> : (perfilNombre || usuario?.nombre || 'U').split(' ').map((n: string) => n[0]).join('').slice(0,2).toUpperCase()}
                     </div>
@@ -1774,7 +1774,7 @@ export default function Panel() {
                     <div style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>Pulsa el icono para cambiar tu foto</div>
                   </div>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                <div className="perfil-fields-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.nombre} <span style={{ color: '#e53e3e' }}>*</span></label>
                     <input value={perfilNombre} onChange={e => setPerfilNombre(e.target.value)} maxLength={25} style={{ width: '100%', border: `1.5px solid ${!perfilNombre ? '#e53e3e' : '#e0e0e0'}`, borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor= perfilNombre ? '#e0e0e0' : '#e53e3e'} />
@@ -1814,7 +1814,7 @@ export default function Panel() {
                     </div>
                   )}
                 </div>
-                <button onClick={guardarPerfil} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 20 }}>
+                <button className="perfil-save-btn" onClick={guardarPerfil} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 20 }}>
                   {Tpanel.perfil.guardar}
                 </button>
 

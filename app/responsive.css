@@ -183,6 +183,11 @@ img { max-width: 100%; }
   .pub-form-grid-3 { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
   .pub-amenidades-grid { grid-template-columns: repeat(2, 1fr) !important; }
   .pub-fotos-grid { grid-template-columns: repeat(3, 1fr) !important; }
+
+  /* Mi perfil */
+  .perfil-fields-grid { grid-template-columns: 1fr !important; }
+  .perfil-avatar-row { flex-direction: column !important; align-items: center !important; text-align: center; }
+  .perfil-save-btn { display: block !important; width: 100% !important; text-align: center !important; box-sizing: border-box !important; margin-top: 16px !important; }
 }
 
 @media (max-width: 480px) {
