@@ -1,19 +1,15 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { verifyToken } from '../verify/route'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-function authed(req: Request) {
-  const auth = req.headers.get('authorization')
-  return auth === `Bearer ${process.env.ADMIN_SECRET}`
-}
-
 // GET — listar todos los códigos
 export async function GET(req: Request) {
-  if (!authed(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!verifyToken(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
   const { data, error } = await supabase
     .from('codigos_promo')
     .select('*')
@@ -24,7 +20,7 @@ export async function GET(req: Request) {
 
 // POST — crear código
 export async function POST(req: Request) {
-  if (!authed(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!verifyToken(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
   const { codigo, usos_maximos } = await req.json()
   if (!codigo) return NextResponse.json({ error: 'Código requerido' }, { status: 400 })
 
@@ -40,7 +36,7 @@ export async function POST(req: Request) {
 
 // PATCH — activar/desactivar
 export async function PATCH(req: Request) {
-  if (!authed(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!verifyToken(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
   const { id, activo } = await req.json()
   const { error } = await supabase.from('codigos_promo').update({ activo }).eq('id', id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
@@ -49,7 +45,7 @@ export async function PATCH(req: Request) {
 
 // DELETE — eliminar
 export async function DELETE(req: Request) {
-  if (!authed(req)) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  if (!verifyToken(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
   const { id } = await req.json()
   const { error } = await supabase.from('codigos_promo').delete().eq('id', id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
