@@ -172,6 +172,20 @@ img { max-width: 100%; }
   .anuncio-card-status { display: none !important; }
   .anuncio-card-actions { padding: 0 12px 10px !important; border-top: 1px solid #f5f5f5 !important; padding-top: 10px !important; }
 
+  /* Planes destacar — scroll horizontal */
+  .planes-destacado-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    gap: 10px !important;
+    padding-bottom: 8px !important;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+  .planes-destacado-grid > * {
+    flex: 0 0 160px !important;
+    scroll-snap-align: start;
+  }
+
   /* Formulario publicar */
   .pub-form-card { padding: 16px !important; }
   .pub-form-grid-2 { grid-template-columns: 1fr !important; gap: 12px !important; }

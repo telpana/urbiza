@@ -1391,7 +1391,7 @@ export default function Panel() {
                   <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>1</div>
                   <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>Elige la duración</span>
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+                <div className="planes-destacado-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
                   {planesDestacado.map(p => {
                     const sel = planSeleccionado === String(p.dias)
                     return (
