@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, use } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../../supabase'
 import { useIdioma } from '../../../IdiomaContext'
+import NavUserMenu from '../../../components/NavUserMenu'
 
 const USD_TO_DOP = 59.5
 function formatDOP(usd: number) {
@@ -360,24 +361,18 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
           <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', marginRight: 28 }}>
             habitade<span style={{ color: '#83D4DB' }}>.</span>
           </a>
-          <div className="prop-nav-links">
+          <div className="prop-nav-links" style={{ display: 'flex' }}>
             {[{ label: Tn.comprar, href: '/buscar?operacion=venta' }, { label: Tn.alquilar, href: '/buscar?operacion=alquiler' }].map(item => (
               <a key={item.label} href={item.href} style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>{item.label}</a>
             ))}
           </div>
         </div>
-        <div className="prop-nav-desktop" style={{ display: 'flex', gap: 8, visibility: authReady ? 'visible' : 'hidden', minWidth: 180, justifyContent: 'flex-end', flexShrink: 0 }}>
-          {sesionActiva
-            ? <a href="/panel" style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 600, whiteSpace: 'nowrap' }}>
-                {fotoUrlNav
-                  ? <img src={fotoUrlNav} style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'cover', border: '1.5px solid rgba(255,255,255,0.5)' }} />
-                  : <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#83D4DB', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 700, color: '#004E57' }}>👤</div>
-                }
-                {Tn.miCuenta}
-              </a>
-            : <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.entrar}</a>
-          }
-          {!sesionActiva && <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.publicar}</a>}
+        <div className="prop-nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: 8, visibility: authReady ? 'visible' : 'hidden', justifyContent: 'flex-end', flexShrink: 0 }}>
+          <NavUserMenu dark={true} />
+          {authReady && !sesionActiva && <>
+            <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.entrar}</a>
+            <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.publicar}</a>
+          </>}
         </div>
         <button className="prop-nav-hamburger" onClick={() => setMobileMenuOpen(v => !v)} style={{ display: 'none', background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 6, padding: '6px 8px', cursor: 'pointer' }}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
