@@ -651,7 +651,10 @@ export default function Admin() {
                               </div>
                             </td>
                             <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 12, color: '#666' }}>{u.email}</span></td>
-                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><Badge txt={u.tipo || 'particular'} color="#555" bg="#f0f0f0" /></td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
+                              <Badge txt={u.plan || 'profesional'} color="#065f46" bg="#d1fae5" />
+                              {u.tipo && u.tipo !== 'particular' && <Badge txt={u.tipo} color="#555" bg="#f0f0f0" />}
+                            </td>
                             <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 11, color: '#aaa', fontFamily: 'monospace' }}>{u.stripe_subscription_id || '—'}</span></td>
                             <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
                               {u.plan_activo_hasta
