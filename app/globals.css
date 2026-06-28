@@ -319,7 +319,11 @@ img { max-width: 100%; }
   .tipo-grid  { grid-template-columns: 1fr !important; }
 }
 
-/* iOS Safari: texto gris en inputs */
+/* ══════════════════════════════════
+   iOS SAFARI FIXES GLOBALES
+══════════════════════════════════ */
+
+/* Texto gris en inputs */
 input, textarea, select {
   color: #111;
   -webkit-text-fill-color: #111;
@@ -327,4 +331,31 @@ input, textarea, select {
 input::placeholder, textarea::placeholder {
   color: #aaa;
   -webkit-text-fill-color: #aaa;
+}
+
+/* Select: quitar estilo nativo iOS (bordes redondeados azules) */
+select {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Quitar destello azul/gris al tocar botones y links en iOS */
+a, button, [role="button"], input, select, textarea, label {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Evitar zoom automático en iOS cuando el input tiene font-size < 16px */
+@media (max-width: 768px) {
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
+
+/* Evitar que el modo oscuro del sistema rompa colores de inputs */
+@media (prefers-color-scheme: dark) {
+  input, textarea, select {
+    background-color: #fff;
+    color: #111;
+    -webkit-text-fill-color: #111;
+  }
 }
