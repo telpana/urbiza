@@ -1345,30 +1345,40 @@ export default function Panel() {
                     <thead>
                       <tr style={{ borderBottom: '2px solid #f0f0f0' }}>
                         <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: 12, fontWeight: 600, color: '#888' }}>Anuncio</th>
-                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#006D77' }}>{Tpanel.estadisticas.visitasCol}</th>
-                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#10b981' }}>Tel.</th>
-                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#f59e0b' }}>{Tpanel.estadisticas.mensajesCol}</th>
-                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#e63946' }}>{Tpanel.estadisticas.guardadosCol}</th>
+                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>{Tpanel.estadisticas.visitasCol}</th>
+                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>Tel.</th>
+                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>{Tpanel.estadisticas.mensajesCol}</th>
+                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>{Tpanel.estadisticas.guardadosCol}</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {anunciosAMostrar.map((a: any) => (
-                        <tr key={a.id} style={{ borderBottom: '1px solid #f5f5f5' }}
-                          onMouseEnter={e => (e.currentTarget.style.background = '#fafafa')}
-                          onMouseLeave={e => (e.currentTarget.style.background = '')}>
-                          <td style={{ padding: '12px 16px' }}>
-                            <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 13, fontWeight: 600, color: '#111', textDecoration: 'none' }}
-                              onMouseEnter={e => (e.currentTarget.style.color = '#006D77')} onMouseLeave={e => (e.currentTarget.style.color = '#111')}>
-                              {a.titulo}
-                            </a>
-                            <div style={{ fontSize: 11, color: '#aaa', marginTop: 2 }}>{a.zona}</div>
-                          </td>
-                          <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#006D77', padding: '12px 10px' }}>{fmtStat(a.clics)}</td>
-                          <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#10b981', padding: '12px 10px' }}>{fmtStat(a.telVistos)}</td>
-                          <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#f59e0b', padding: '12px 10px' }}>{fmtStat(a.mensajes)}</td>
-                          <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#e63946', padding: '12px 10px' }}>{fmtStat(a.favoritos)}</td>
-                        </tr>
-                      ))}
+                      {anunciosAMostrar.map((a: any) => {
+                        const foto = Array.isArray(a.fotos) && a.fotos.length > 0 ? a.fotos[0] : null
+                        return (
+                          <tr key={a.id} style={{ borderBottom: '1px solid #f5f5f5' }}
+                            onMouseEnter={e => (e.currentTarget.style.background = '#fafafa')}
+                            onMouseLeave={e => (e.currentTarget.style.background = '')}>
+                            <td style={{ padding: '10px 16px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                                <div style={{ width: 56, height: 42, borderRadius: 6, overflow: 'hidden', flexShrink: 0, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                  {foto ? <img src={foto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>}
+                                </div>
+                                <div>
+                                  <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 13, fontWeight: 600, color: '#111', textDecoration: 'none' }}
+                                    onMouseEnter={e => (e.currentTarget.style.color = '#006D77')} onMouseLeave={e => (e.currentTarget.style.color = '#111')}>
+                                    {a.titulo}
+                                  </a>
+                                  <div style={{ fontSize: 11, color: '#aaa', marginTop: 2 }}>{a.zona}</div>
+                                </div>
+                              </div>
+                            </td>
+                            <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#333', padding: '10px' }}>{fmtStat(a.clics)}</td>
+                            <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#333', padding: '10px' }}>{fmtStat(a.telVistos)}</td>
+                            <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#333', padding: '10px' }}>{fmtStat(a.mensajes)}</td>
+                            <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#333', padding: '10px' }}>{fmtStat(a.favoritos)}</td>
+                          </tr>
+                        )
+                      })}
                     </tbody>
                   </table>
                 </div>
