@@ -11,14 +11,15 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-const SEMANA_MS = 7 * 24 * 60 * 60 * 1000
+const DIAS_GRACIA = 15
 
+// Stripe agotó reintentos — borrar todo
 async function bajarAPlaGratis(subscriptionId: string) {
   const { data: usuario } = await supabase.from('usuarios').select('id').eq('stripe_subscription_id', subscriptionId).single()
   if (!usuario) return
-  await supabase.from('propiedades').update({ estado: 'pausado' }).eq('usuario_id', usuario.id)
-  await supabase.from('usuarios').update({ plan: 'gratis', tipo: 'particular', stripe_subscription_id: null, plan_activo_hasta: new Date().toISOString() }).eq('id', usuario.id)
-  console.log('[webhook] usuario bajado a gratis, anuncios pausados:', usuario.id)
+  await supabase.from('propiedades').delete().eq('usuario_id', usuario.id)
+  await supabase.from('usuarios').update({ plan: 'gratis', tipo: 'particular', stripe_subscription_id: null, plan_activo_hasta: null }).eq('id', usuario.id)
+  console.log('[webhook] suscripción cancelada, anuncios borrados:', usuario.id)
 }
 
 export async function POST(req: Request) {
@@ -48,34 +49,44 @@ export async function POST(req: Request) {
     }
   }
 
-  // Renovación mensual cobrada con éxito
+  // Renovación mensual cobrada con éxito → reactivar propiedades pausadas
   if (event.type === 'invoice.paid') {
     const invoice = event.data.object as Stripe.Invoice
     const subscriptionId = invoice.subscription as string
     if (subscriptionId) {
-      await supabase.from('usuarios').update({
-        plan: 'profesional',
-        tipo: 'profesional',
-        plan_activo_hasta: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
-      }).eq('stripe_subscription_id', subscriptionId)
-      console.log('[webhook] plan renovado para suscripción', subscriptionId)
+      const { data: usuario } = await supabase.from('usuarios').select('id').eq('stripe_subscription_id', subscriptionId).single()
+      if (usuario) {
+        await supabase.from('usuarios').update({
+          plan: 'profesional',
+          tipo: 'profesional',
+          plan_activo_hasta: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        }).eq('id', usuario.id)
+        // Reactivar propiedades que estaban pausadas por fallo de pago
+        await supabase.from('propiedades').update({ estado: 'activo' }).eq('usuario_id', usuario.id).eq('estado', 'pausado')
+        console.log('[webhook] plan renovado y anuncios reactivados:', usuario.id)
+      }
     }
   }
 
-  // Fallo de pago → 7 días de gracia
+  // Fallo de pago → pausar anuncios y dar 15 días de gracia
   if (event.type === 'invoice.payment_failed') {
     const invoice = event.data.object as Stripe.Invoice
     const subscriptionId = invoice.subscription as string
     if (subscriptionId) {
-      await supabase.from('usuarios').update({
-        plan: 'past_due',
-        plan_activo_hasta: new Date(Date.now() + SEMANA_MS).toISOString()
-      }).eq('stripe_subscription_id', subscriptionId)
-      console.log('[webhook] pago fallido, 7 días de gracia para suscripción', subscriptionId)
+      const { data: usuario } = await supabase.from('usuarios').select('id').eq('stripe_subscription_id', subscriptionId).single()
+      if (usuario) {
+        await supabase.from('usuarios').update({
+          plan: 'past_due',
+          plan_activo_hasta: new Date(Date.now() + DIAS_GRACIA * 24 * 60 * 60 * 1000).toISOString()
+        }).eq('id', usuario.id)
+        // Ocultar anuncios inmediatamente
+        await supabase.from('propiedades').update({ estado: 'pausado' }).eq('usuario_id', usuario.id).eq('estado', 'activo')
+        console.log('[webhook] pago fallido, anuncios pausados 15 días de gracia:', usuario.id)
+      }
     }
   }
 
-  // Stripe cancela la suscripción tras agotar reintentos → borrar todo y gratis
+  // Stripe cancela la suscripción tras agotar reintentos → borrar todo
   if (event.type === 'customer.subscription.deleted') {
     const subscription = event.data.object as Stripe.Subscription
     await bajarAPlaGratis(subscription.id)

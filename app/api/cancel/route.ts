@@ -56,7 +56,7 @@ export async function POST(req: Request) {
 
     // Degradar cuenta a particular, sin AEI ni suscripción
     await supabase.from('usuarios').update({
-      plan: 'particular',
+      plan: 'gratis',
       tipo: 'particular',
       plan_activo_hasta: null,
       stripe_subscription_id: null,

@@ -870,6 +870,21 @@ export default function Panel() {
                 )}
               </div>
 
+              {/* Banner pago fallido */}
+              {usuario?.plan === 'past_due' && (
+                <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 10, padding: '16px 20px', marginBottom: 8, display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c2410c" strokeWidth="2" style={{ flexShrink: 0, marginTop: 1 }}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: '#c2410c', marginBottom: 3 }}>Tus anuncios no son visibles temporalmente</div>
+                    <div style={{ fontSize: 13, color: '#7c2d12', lineHeight: 1.5 }}>
+                      Hubo un problema con tu último pago. Estamos intentando cobrarlo de nuevo. En cuanto se resuelva, tus anuncios vuelven a publicarse automáticamente.<br/>
+                      <span style={{ fontWeight: 600 }}>Si no se resuelve en 15 días, tus anuncios serán eliminados.</span>
+                    </div>
+                    <button onClick={() => setSeccion('plan')} style={{ all: 'unset', marginTop: 10, background: '#c2410c', color: '#fff', padding: '7px 16px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'inline-block' }}>Actualizar método de pago</button>
+                  </div>
+                </div>
+              )}
+
               {/* Lista anuncios */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {anunciosFiltrados.length === 0 && !cargando && (
@@ -1826,15 +1841,14 @@ export default function Panel() {
                         <div style={{ width: 52, height: 52, borderRadius: '50%', background: '#fee2e2', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#dc2626" strokeWidth="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
                         </div>
-                        <div style={{ fontSize: 18, fontWeight: 700, color: '#111', textAlign: 'center', marginBottom: 6 }}>¿Seguro que quieres darte de baja?</div>
-                        <div style={{ fontSize: 13, color: '#666', textAlign: 'center', marginBottom: 20 }}>Esta acción es <strong>permanente e irreversible</strong>. En el momento en que confirmes:</div>
+                        <div style={{ fontSize: 18, fontWeight: 700, color: '#111', textAlign: 'center', marginBottom: 6 }}>¿Seguro que quieres cancelar tu plan Pro?</div>
+                        <div style={{ fontSize: 13, color: '#666', textAlign: 'center', marginBottom: 20 }}>Vas a perder todas tus ventajas Pro. Esta acción es <strong>inmediata e irreversible</strong>.</div>
                         <div style={{ background: '#fef2f2', border: '1px solid #fecaca', borderRadius: 8, padding: '14px 16px', marginBottom: 20 }}>
                           {[
-                            { icon: '🏠', text: 'Todos tus anuncios publicados serán eliminados' },
-                            { icon: '💬', text: 'Todos tus mensajes e historial de conversaciones desaparecerán' },
-                            { icon: '❤️', text: 'Tus propiedades guardadas como favoritos se borrarán' },
-                            { icon: '🏅', text: 'Perderás tu badge y número AEI verificado' },
-                            { icon: '📊', text: 'No podrás publicar nuevos anuncios hasta volver a suscribirte' },
+                            { icon: '🏠', text: 'Todos tus anuncios se eliminarán en el momento' },
+                            { icon: '💬', text: 'Perderás todos tus mensajes e historial de contactos' },
+                            { icon: '🏅', text: 'Perderás tu badge PRO y número AEI verificado' },
+                            { icon: '👤', text: 'Tu cuenta pasará a ser Particular — no podrás publicar nuevos anuncios' },
                           ].map(item => (
                             <div key={item.text} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginBottom: 10, fontSize: 13, color: '#7f1d1d' }}>
                               <span style={{ flexShrink: 0, fontSize: 15 }}>{item.icon}</span>
