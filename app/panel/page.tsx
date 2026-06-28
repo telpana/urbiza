@@ -1566,7 +1566,9 @@ export default function Panel() {
           {/* PLANES PRO — pantalla para particulares que llegan al límite */}
           {!cargando && seccion === 'planes' && (
             <div style={{ maxWidth: 480, margin: '0 auto', textAlign: 'center' }}>
-              <div style={{ fontSize: 48, marginBottom: 16 }}>🚀</div>
+              <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'linear-gradient(135deg, #006D77, #17A6B4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px' }}>
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </div>
               <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 8 }}>{Tpanel.planes.titulo}</h1>
               <p style={{ fontSize: 15, color: '#888', marginBottom: 32 }}>{Tpanel.planes.desc.replace('{n}', String(anunciosGratis))}</p>
               <div style={{ background: '#fff', borderRadius: 10, padding: '32px 28px', boxShadow: '0 2px 16px rgba(0,109,119,0.12)', border: '2px solid #006D77', position: 'relative' }}>
