@@ -87,6 +87,13 @@ const amenidades = [
   { id: 'ascensor', label: 'Ascensor' },
 ]
 
+function fmtStat(n: number | string | undefined): string {
+  const v = Number(n ?? 0)
+  if (v >= 1_000_000) return (v / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M'
+  if (v >= 1_000) return (v / 1_000).toFixed(1).replace(/\.0$/, '') + 'K'
+  return String(v)
+}
+
 function getAvatar(nombre: string) {
   return (nombre || '?').split(' ').map((n: string) => n[0] || '').join('').slice(0, 2).toUpperCase()
 }
@@ -1315,9 +1322,9 @@ export default function Panel() {
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>{Tpanel.estadisticas.titulo}</h1>
               <div className="kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
                 {[
-                  { label: Tpanel.estadisticas.visitas, val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: Tpanel.anuncios.kpi_visitas_sub, color: '#006D77' },
-                  { label: Tpanel.estadisticas.telVistos, val: anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0).toLocaleString(), sub: Tpanel.anuncios.kpi_tel_sub, color: '#10b981' },
-                  { label: Tpanel.estadisticas.mensajes, val: mensajesReales.length.toString(), sub: `${noLeidos} ${Tpanel.mensajes.noLeidos}`, color: '#f59e0b' },
+                  { label: Tpanel.estadisticas.visitas, val: fmtStat(anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0)), sub: Tpanel.anuncios.kpi_visitas_sub, color: '#006D77' },
+                  { label: Tpanel.estadisticas.telVistos, val: fmtStat(anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0)), sub: Tpanel.anuncios.kpi_tel_sub, color: '#10b981' },
+                  { label: Tpanel.estadisticas.mensajes, val: fmtStat(mensajesReales.length), sub: `${noLeidos} ${Tpanel.mensajes.noLeidos}`, color: '#f59e0b' },
                 ].map(s => (
                   <div key={s.label} style={{ background: '#fff', borderRadius: 8, padding: '16px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderTop: `3px solid ${s.color}` }}>
                     <div style={{ fontSize: 11, color: '#888', marginBottom: 6 }}>{s.label}</div>
@@ -1340,10 +1347,10 @@ export default function Panel() {
                       </a>
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, textAlign: 'center' }}>
                         {[
-                          { val: a.clics?.toLocaleString() ?? '0', label: Tpanel.estadisticas.visitasCol, color: '#006D77' },
-                          { val: a.telVistos ?? '0', label: 'Tel.', color: '#10b981' },
-                          { val: a.mensajes ?? '0', label: Tpanel.estadisticas.mensajesCol, color: '#f59e0b' },
-                          { val: a.favoritos ?? '0', label: Tpanel.estadisticas.guardadosCol, color: '#e63946' },
+                          { val: fmtStat(a.clics), label: Tpanel.estadisticas.visitasCol, color: '#006D77' },
+                          { val: fmtStat(a.telVistos), label: 'Tel.', color: '#10b981' },
+                          { val: fmtStat(a.mensajes), label: Tpanel.estadisticas.mensajesCol, color: '#f59e0b' },
+                          { val: fmtStat(a.favoritos), label: Tpanel.estadisticas.guardadosCol, color: '#e63946' },
                         ].map(s => (
                           <div key={s.label} style={{ background: '#f8fdfd', borderRadius: 8, padding: '10px 6px' }}>
                             <div style={{ fontSize: 20, fontWeight: 700, color: s.color, lineHeight: 1 }}>{s.val}</div>
