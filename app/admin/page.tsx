@@ -1,5 +1,5 @@
 ﻿'use client'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 
 const C = { verde: '#006D77', azul: '#17A6B4', oscuro: '#004E57', bg: '#f4f5f6' }
 
@@ -59,9 +59,9 @@ export default function Admin() {
   const [redesGuardadas, setRedesGuardadas] = useState(false)
   const [codigos, setCodigos] = useState<any[]>([])
   const [codigosLoading, setCodigosLoading] = useState(false)
-  const [nuevoCodigo, setNuevoCodigo] = useState('')
-  const [nuevoMaxUsos, setNuevoMaxUsos] = useState('')
   const [codigoCreando, setCodigoCreando] = useState(false)
+  const refCodigo = useRef<HTMLInputElement>(null)
+  const refMaxUsos = useRef<HTMLInputElement>(null)
 
   const authHeader = useCallback((t?: string) => ({
     'Authorization': `Bearer ${t || token}`,
@@ -893,26 +893,31 @@ export default function Admin() {
                 <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end', flexWrap: 'wrap' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 6 }}>CÓDIGO</label>
-                    <input value={nuevoCodigo} onChange={e => setNuevoCodigo(e.target.value.toUpperCase())} placeholder="PROMO30" maxLength={20}
+                    <input ref={refCodigo} placeholder="PROMO30" maxLength={20} autoCapitalize="characters" autoCorrect="off" autoComplete="off"
                       style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 14px', fontSize: 14, outline: 'none', letterSpacing: 1, width: 160, fontWeight: 600 }} />
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 6 }}>MÁX. USOS <span style={{ fontWeight: 400, color: '#aaa' }}>(vacío = ilimitado)</span></label>
-                    <input value={nuevoMaxUsos} onChange={e => setNuevoMaxUsos(e.target.value.replace(/\D/g, ''))} placeholder="ej: 50" type="number" min="1"
+                    <input ref={refMaxUsos} placeholder="ej: 50" type="number" min="1"
                       style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 14px', fontSize: 14, outline: 'none', width: 120 }} />
                   </div>
-                  <button disabled={!nuevoCodigo || codigoCreando} onClick={async () => {
-                    if (!nuevoCodigo) return
+                  <button disabled={codigoCreando} onClick={async () => {
+                    const codigo = refCodigo.current?.value?.trim().toUpperCase()
+                    const maxUsos = refMaxUsos.current?.value
+                    if (!codigo) { refCodigo.current?.focus(); return }
                     setCodigoCreando(true)
                     const res = await fetch('/api/admin/codigos-promo', {
                       method: 'POST',
                       headers: { ...authHeader(), 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ codigo: nuevoCodigo, usos_maximos: nuevoMaxUsos ? Number(nuevoMaxUsos) : null })
+                      body: JSON.stringify({ codigo, usos_maximos: maxUsos ? Number(maxUsos) : null })
                     })
-                    if (res.ok) { setNuevoCodigo(''); setNuevoMaxUsos(''); cargarCodigos() }
-                    else { const d = await res.json(); alert(d.error || 'Error') }
+                    if (res.ok) {
+                      if (refCodigo.current) refCodigo.current.value = ''
+                      if (refMaxUsos.current) refMaxUsos.current.value = ''
+                      cargarCodigos()
+                    } else { const d = await res.json(); alert(d.error || 'Error') }
                     setCodigoCreando(false)
-                  }} style={{ all: 'unset', background: nuevoCodigo ? C.verde : '#d1d5db', color: '#fff', padding: '9px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: nuevoCodigo ? 'pointer' : 'default' }}>
+                  }} style={{ all: 'unset', background: C.verde, color: '#fff', padding: '9px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: codigoCreando ? 'default' : 'pointer' }}>
                     {codigoCreando ? 'Creando...' : '+ Crear código'}
                   </button>
                 </div>
