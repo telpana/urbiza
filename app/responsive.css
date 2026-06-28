@@ -188,6 +188,13 @@ img { max-width: 100%; }
   .perfil-fields-grid { grid-template-columns: 1fr !important; }
   .perfil-avatar-row { flex-direction: column !important; align-items: center !important; text-align: center; }
   .perfil-save-btn { display: block !important; width: 100% !important; text-align: center !important; box-sizing: border-box !important; margin-top: 16px !important; }
+
+  /* Cursos AEI */
+  .cursos-desc { margin-bottom: 16px !important; }
+  .cursos-banner { flex-direction: column !important; padding: 20px !important; gap: 16px !important; }
+  .cursos-banner-btn { display: block !important; text-align: center !important; box-sizing: border-box !important; white-space: normal !important; flex-shrink: unset !important; }
+  .cursos-cta-btn { display: block !important; width: 100% !important; text-align: center !important; box-sizing: border-box !important; padding: 14px !important; border-radius: 8px !important; }
+  .cursos-cta-note { display: none !important; }
 }
 
 @media (max-width: 480px) {

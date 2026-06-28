@@ -1843,16 +1843,16 @@ export default function Panel() {
                 <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111' }}>Cursos AEI</h1>
                 <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 10px', borderRadius: 10 }}>En colaboración con AEI</span>
               </div>
-              <p style={{ fontSize: 14, color: '#888', marginBottom: 28 }}>Formación oficial de la Asociación de Agentes y Empresas Inmobiliarias de República Dominicana</p>
+              <p className="cursos-desc" style={{ fontSize: 14, color: '#888', marginBottom: 28 }}>Formación oficial de la Asociación de Agentes y Empresas Inmobiliarias de República Dominicana</p>
 
               {/* Banner AEI */}
-              <div style={{ background: 'linear-gradient(135deg, #1a3a5c 0%, #004E57 100%)', borderRadius: 10, padding: '28px 32px', marginBottom: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
+              <div className="cursos-banner" style={{ background: 'linear-gradient(135deg, #1a3a5c 0%, #004E57 100%)', borderRadius: 10, padding: '28px 32px', marginBottom: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
                 <div>
                   <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: 600, letterSpacing: 1, marginBottom: 8 }}>ASOCIACIÓN OFICIAL</div>
                   <div style={{ fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 8 }}>Certifícate como agente inmobiliario profesional</div>
                   <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>La AEI es la asociación oficial de agentes inmobiliarios de RD. Con tu certificación aparecerá el badge AEI verificado en todos tus anuncios de Habitade.</div>
                 </div>
-                <a href="https://aei.com.do" target="_blank" rel="noopener noreferrer" style={{ all: 'unset', background: '#fff', color: '#1a3a5c', padding: '12px 24px', borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                <a href="https://aei.com.do" target="_blank" rel="noopener noreferrer" className="cursos-banner-btn" style={{ all: 'unset', background: '#fff', color: '#1a3a5c', padding: '12px 24px', borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}>
                   Visitar AEI
                 </a>
               </div>
@@ -1862,10 +1862,10 @@ export default function Panel() {
                   Accede a toda la oferta formativa oficial de la AEI directamente en su web.<br/>
                   Al completar cualquier curso recibirás tu certificación y el badge AEI verificado aparecerá en todos tus anuncios de Habitade.
                 </div>
-                <a href="https://aei.com.do" target="_blank" rel="noopener noreferrer" style={{ all: 'unset', background: '#1a3a5c', color: '#fff', padding: '13px 32px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'inline-block' }}>
+                <a href="https://aei.com.do" target="_blank" rel="noopener noreferrer" className="cursos-cta-btn" style={{ all: 'unset', background: '#1a3a5c', color: '#fff', padding: '13px 32px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'inline-block' }}>
                   Ver todos los cursos en AEI
                 </a>
-                <div style={{ fontSize: 12, color: '#aaa', marginTop: 14 }}>
+                <div className="cursos-cta-note" style={{ fontSize: 12, color: '#aaa', marginTop: 14 }}>
                   Serás redirigido a la web oficial de la Asociación de Agentes y Empresas Inmobiliarias de República Dominicana.
                 </div>
               </div>
