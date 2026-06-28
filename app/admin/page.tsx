@@ -711,7 +711,15 @@ export default function Admin() {
                         return (
                           <tr key={p.id} style={{ borderBottom: '1px solid #f5f5f5' }} onMouseEnter={e => (e.currentTarget.style.background = '#fafcfc')} onMouseLeave={e => (e.currentTarget.style.background = '')}>
                             <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
-                              <a href={`/propiedad/${p.id}`} target="_blank" rel="noreferrer" style={{ color: C.verde, fontWeight: 500, textDecoration: 'none', fontSize: 13 }}>{p.titulo}</a>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                <div style={{ width: 54, height: 40, borderRadius: 6, overflow: 'hidden', flexShrink: 0, background: '#e8f5f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                  {Array.isArray(p.fotos) && p.fotos[0]
+                                    ? <img src={p.fotos[0]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                  }
+                                </div>
+                                <a href={`/propiedad/${p.id}`} target="_blank" rel="noreferrer" style={{ color: C.verde, fontWeight: 500, textDecoration: 'none', fontSize: 13 }}>{p.titulo}</a>
+                              </div>
                             </td>
                             <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 12, color: '#666' }}>{p.zona}</span></td>
                             <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><Badge txt={p.tipo} color="#555" bg="#f0f0f0" /></td>

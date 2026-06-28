@@ -12,7 +12,7 @@ export async function GET(req: Request) {
 
   const ahora = new Date().toISOString()
   const { data } = await sb.from('propiedades')
-    .select('id,titulo,zona,tipo,precio,destacado_hasta,destacado_dias,created_at,usuarios(nombre,email)')
+    .select('id,titulo,zona,tipo,precio,fotos,destacado_hasta,destacado_dias,created_at,usuarios(nombre,email)')
     .eq('destacado', true)
     .gt('destacado_hasta', ahora)
     .order('destacado_hasta', { ascending: true })
