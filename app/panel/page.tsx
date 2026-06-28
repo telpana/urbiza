@@ -1369,16 +1369,20 @@ export default function Panel() {
           {!cargando && seccion === 'destacar' && (
             <div>
               {/* Hero */}
-              <div style={{ background: 'linear-gradient(135deg, #006D77 0%, #17A6B4 100%)', borderRadius: 12, padding: '24px 28px', marginBottom: 28, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
-                <div>
-                  <h1 style={{ fontSize: 20, fontWeight: 700, margin: 0 }}>Destacar anuncio</h1>
-                  <p style={{ fontSize: 13, opacity: 0.85, margin: '4px 0 0' }}>Aparece primero en las búsquedas y consigue hasta 10x más visitas</p>
+              <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 50%, #17A6B4 100%)', borderRadius: 16, padding: '28px 24px', marginBottom: 28, color: '#fff', overflow: 'hidden', position: 'relative' }}>
+                <div style={{ position: 'absolute', top: -30, right: -30, width: 140, height: 140, background: 'rgba(255,255,255,0.05)', borderRadius: '50%' }} />
+                <div style={{ position: 'absolute', bottom: -20, right: 60, width: 80, height: 80, background: 'rgba(255,255,255,0.05)', borderRadius: '50%' }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, opacity: 0.85, textTransform: 'uppercase' }}>Destacar anuncio</span>
                 </div>
-                <div style={{ display: 'flex', gap: 10, flexShrink: 0 }}>
-                  {[{ n: '10x', label: 'más visitas' }, { n: 'TOP', label: 'posición' }].map(s => (
-                    <div key={s.n} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.15)', borderRadius: 8, padding: '10px 16px' }}>
-                      <div style={{ fontSize: 18, fontWeight: 700 }}>{s.n}</div>
-                      <div style={{ fontSize: 11, opacity: 0.8 }}>{s.label}</div>
+                <h1 style={{ fontSize: 22, fontWeight: 800, margin: '0 0 6px', lineHeight: 1.2 }}>Más visitas,<br/>más contactos</h1>
+                <p style={{ fontSize: 13, opacity: 0.75, margin: '0 0 20px', lineHeight: 1.5 }}>Aparece en las primeras posiciones y multiplica tu visibilidad</p>
+                <div style={{ display: 'flex', gap: 10 }}>
+                  {[{ n: '10x', label: 'más visitas' }, { n: 'TOP', label: 'posición' }, { n: '#1', label: 'en búsquedas' }].map(s => (
+                    <div key={s.n} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.12)', borderRadius: 10, padding: '10px 14px', backdropFilter: 'blur(4px)' }}>
+                      <div style={{ fontSize: 17, fontWeight: 800, letterSpacing: -0.5 }}>{s.n}</div>
+                      <div style={{ fontSize: 10, opacity: 0.75, marginTop: 2 }}>{s.label}</div>
                     </div>
                   ))}
                 </div>
@@ -1386,42 +1390,64 @@ export default function Panel() {
 
               {/* Paso 1: elegir plan */}
               <div style={{ marginBottom: 28 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#006D77', letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 12 }}>1 · Elige la duración</div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
-                  {planesDestacado.map(p => (
-                    <div key={p.dias} onClick={() => setPlanSeleccionado(String(p.dias))} style={{ background: '#fff', borderRadius: 10, padding: '22px 16px', textAlign: 'center', cursor: 'pointer', border: `2px solid ${planSeleccionado === String(p.dias) ? '#006D77' : '#e0e0e0'}`, position: 'relative', boxShadow: planSeleccionado === String(p.dias) ? '0 0 0 3px rgba(0,109,119,0.08)' : '0 1px 4px rgba(0,0,0,0.05)', transition: 'border-color 0.15s' }}>
-                      {p.popular && <div style={{ position: 'absolute', top: -10, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 12px', borderRadius: 10, whiteSpace: 'nowrap' }}>MÁS POPULAR</div>}
-                      <div style={{ fontSize: 28, fontWeight: 800, color: '#111', marginBottom: 2 }}>US$ {p.precio}</div>
-                      <div style={{ fontSize: 13, color: '#888', marginBottom: 14 }}>{p.label}</div>
-                      <div style={{ fontSize: 11, color: '#006D77', lineHeight: 1.8 }}>✓ Posición prioritaria<br/>✓ Badge Destacado<br/>✓ Más visibilidad</div>
-                    </div>
-                  ))}
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                  <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>1</div>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>Elige la duración</span>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+                  {planesDestacado.map(p => {
+                    const sel = planSeleccionado === String(p.dias)
+                    return (
+                      <div key={p.dias} onClick={() => setPlanSeleccionado(String(p.dias))} style={{ borderRadius: 12, padding: '20px 14px', textAlign: 'center', cursor: 'pointer', position: 'relative', transition: 'all 0.15s',
+                        background: p.popular ? (sel ? '#006D77' : '#f0fafb') : '#fff',
+                        border: `2px solid ${sel ? '#006D77' : p.popular ? '#83D4DB' : '#e8e8e8'}`,
+                        boxShadow: sel ? '0 4px 16px rgba(0,109,119,0.2)' : '0 1px 4px rgba(0,0,0,0.05)' }}>
+                        {p.popular && <div style={{ position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)', background: sel ? '#004E57' : '#006D77', color: '#fff', fontSize: 9, fontWeight: 800, padding: '3px 12px', borderRadius: 10, whiteSpace: 'nowrap', letterSpacing: 0.5 }}>MÁS POPULAR</div>}
+                        <div style={{ fontSize: 11, color: sel && p.popular ? 'rgba(255,255,255,0.7)' : '#aaa', marginBottom: 4, fontWeight: 500 }}>{p.label}</div>
+                        <div style={{ fontSize: 26, fontWeight: 800, color: sel && p.popular ? '#fff' : sel ? '#006D77' : '#111', lineHeight: 1, marginBottom: 14 }}>
+                          <span style={{ fontSize: 13, fontWeight: 600, verticalAlign: 'top', marginTop: 4, display: 'inline-block' }}>US$</span>{p.precio}
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 5, alignItems: 'center' }}>
+                          {['Posición top', 'Badge destacado', 'Más visibilidad'].map(f => (
+                            <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: sel && p.popular ? 'rgba(255,255,255,0.85)' : '#555' }}>
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={sel && p.popular ? '#fff' : '#006D77'} strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+                              {f}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
 
               {/* Paso 2: seleccionar anuncio */}
               <div style={{ marginBottom: 28 }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: '#006D77', letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 12 }}>2 · Selecciona tu anuncio</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                  <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>2</div>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>Selecciona tu anuncio</span>
+                </div>
                 {anunciosReales.length === 0 ? (
-                  <div style={{ background: '#f4f5f6', borderRadius: 8, padding: '20px', fontSize: 13, color: '#888', textAlign: 'center' }}>
-                    Aún no tienes anuncios publicados. <a href="#" onClick={e => { e.preventDefault(); setSeccion('publicar') }} style={{ color: '#006D77', fontWeight: 600 }}>Publica uno →</a>
+                  <div style={{ background: '#f8f9fa', borderRadius: 10, padding: '24px', fontSize: 13, color: '#888', textAlign: 'center', border: '1.5px dashed #e0e0e0' }}>
+                    Aún no tienes anuncios publicados.{' '}
+                    <a href="#" onClick={e => { e.preventDefault(); setSeccion('publicar') }} style={{ color: '#006D77', fontWeight: 600 }}>Publica uno →</a>
                   </div>
                 ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {anunciosReales.map((a: any) => {
                       const sel = anuncioADestacar?.id === a.id
                       return (
-                        <div key={a.id} onClick={() => setAnuncioADestacar(a)} style={{ display: 'flex', alignItems: 'center', gap: 14, background: '#fff', border: `2px solid ${sel ? '#006D77' : '#e8e8e8'}`, borderRadius: 10, padding: '12px 16px', cursor: 'pointer', transition: 'border-color 0.15s', boxShadow: sel ? '0 0 0 3px rgba(0,109,119,0.08)' : 'none' }}>
+                        <div key={a.id} onClick={() => setAnuncioADestacar(a)} style={{ display: 'flex', alignItems: 'center', gap: 12, background: sel ? '#f0fafb' : '#fff', border: `2px solid ${sel ? '#006D77' : '#e8e8e8'}`, borderRadius: 10, padding: '12px 14px', cursor: 'pointer', transition: 'all 0.15s' }}>
                           {a.fotos?.[0]
-                            ? <img src={a.fotos[0]} alt="" style={{ width: 60, height: 44, objectFit: 'cover', borderRadius: 6, flexShrink: 0 }} />
-                            : <div style={{ width: 60, height: 44, background: '#e0f5f7', borderRadius: 6, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
+                            ? <img src={a.fotos[0]} alt="" style={{ width: 56, height: 40, objectFit: 'cover', borderRadius: 6, flexShrink: 0 }} />
+                            : <div style={{ width: 56, height: 40, background: '#e0f5f7', borderRadius: 6, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
                           }
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: 13, fontWeight: 600, color: '#111', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.titulo}</div>
-                            <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>US$ {a.precio?.toLocaleString('en-US')} · {a.zona}</div>
+                            <div style={{ fontSize: 13, fontWeight: 600, color: sel ? '#006D77' : '#111', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.titulo}</div>
+                            <div style={{ fontSize: 11, color: '#aaa', marginTop: 2 }}>US$ {a.precio?.toLocaleString('en-US')} · {a.zona}</div>
                           </div>
-                          {a.destacado && a.destacado_hasta && (() => { const dias = Math.ceil((new Date(a.destacado_hasta).getTime() - Date.now()) / 86400000); return dias > 0 ? <span style={{ fontSize: 10, fontWeight: 700, background: dias <= 3 ? '#fee2e2' : '#e0f5f7', color: dias <= 3 ? '#991b1b' : '#006D77', padding: '2px 8px', borderRadius: 10, flexShrink: 0, whiteSpace: 'nowrap' }}>⏱ {dias}d restantes</span> : null })()}
-                          <div style={{ width: 18, height: 18, borderRadius: '50%', border: `2px solid ${sel ? '#006D77' : '#ccc'}`, background: sel ? '#006D77' : '#fff', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          {a.destacado && a.destacado_hasta && (() => { const dias = Math.ceil((new Date(a.destacado_hasta).getTime() - Date.now()) / 86400000); return dias > 0 ? <span style={{ fontSize: 10, fontWeight: 700, background: dias <= 3 ? '#fee2e2' : '#e0f5f7', color: dias <= 3 ? '#991b1b' : '#006D77', padding: '2px 8px', borderRadius: 8, flexShrink: 0, whiteSpace: 'nowrap' }}>{dias}d</span> : null })()}
+                          <div style={{ width: 20, height: 20, borderRadius: '50%', border: `2px solid ${sel ? '#006D77' : '#ddd'}`, background: sel ? '#006D77' : '#fff', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}>
                             {sel && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
                           </div>
                         </div>
@@ -1442,7 +1468,8 @@ export default function Panel() {
                 })
                 const data = await res.json()
                 if (data.url) window.location.href = data.url
-              }} style={{ all: 'unset', background: planSeleccionado && anuncioADestacar ? '#006D77' : '#d1d5db', color: '#fff', padding: '14px 36px', borderRadius: 8, fontSize: 15, fontWeight: 700, cursor: planSeleccionado && anuncioADestacar ? 'pointer' : 'default', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+              }} style={{ all: 'unset', width: '100%', background: planSeleccionado && anuncioADestacar ? 'linear-gradient(135deg, #006D77, #17A6B4)' : '#e0e0e0', color: '#fff', padding: '15px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: planSeleccionado && anuncioADestacar ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxSizing: 'border-box', transition: 'opacity 0.15s', boxShadow: planSeleccionado && anuncioADestacar ? '0 4px 16px rgba(0,109,119,0.3)' : 'none' }}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                 {Tpanel.destacar.pagar}
               </button>
             </div>
