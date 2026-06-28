@@ -893,7 +893,7 @@ export default function Admin() {
                 <div style={{ display: 'flex', gap: 12, alignItems: 'flex-end', flexWrap: 'wrap' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 6 }}>CÓDIGO</label>
-                    <input value={nuevoCodigo} onChange={e => setNuevoCodigo(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, ''))} placeholder="PROMO30" maxLength={20}
+                    <input value={nuevoCodigo} onChange={e => setNuevoCodigo(e.target.value.toUpperCase())} placeholder="PROMO30" maxLength={20}
                       style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 14px', fontSize: 14, outline: 'none', letterSpacing: 1, width: 160, fontWeight: 600 }} />
                   </div>
                   <div>
