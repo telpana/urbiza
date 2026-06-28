@@ -1030,7 +1030,7 @@ export default function Panel() {
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.banos}</label>
                       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                        {[['1','1'], ['2','2'], ['3','3+']].map(([val, lbl]) => (
+                        {([...(['Local comercial', 'Oficina'].includes(pubTipo) ? [['0','0']] : []), ['1','1'], ['2','2'], ['3','3+']]).map(([val, lbl]) => (
                           <button key={val} type="button" onClick={() => setPubBanos(val)} style={{ padding: '8px 16px', borderRadius: 20, border: `1.5px solid ${pubBanos === val ? '#006D77' : '#e0e0e0'}`, background: pubBanos === val ? '#006D77' : '#fff', color: pubBanos === val ? '#fff' : '#555', fontSize: 13, fontWeight: pubBanos === val ? 600 : 400, cursor: 'pointer', transition: 'all 0.15s' }}>{lbl}</button>
                         ))}
                       </div>
