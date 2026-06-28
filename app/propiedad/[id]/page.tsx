@@ -213,11 +213,15 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
     const cargar = async () => {
       const { data, error } = await supabase
         .from('propiedades')
-        .select('*, usuarios(*)')
+        .select('*')
         .eq('id', id)
         .single()
       if (error) console.error('[propiedad]', error)
-      if (data) setPropiedad(data)
+      if (data) {
+        const res = await fetch(`/api/vendedor?id=${data.usuario_id}`)
+        const vendedor = res.ok ? await res.json() : {}
+        setPropiedad({ ...data, usuarios: vendedor })
+      }
       setCargando(false)
     }
     cargar()
