@@ -6,7 +6,6 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-// Fallback por si el webhook de Stripe no disparó customer.subscription.deleted
 export async function GET(req: Request) {
   const auth = req.headers.get('authorization')
   if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
@@ -14,16 +13,18 @@ export async function GET(req: Request) {
   }
 
   let procesados = 0
+  const ahora = new Date().toISOString()
 
-  // Usuarios past_due cuya gracia de 15 días ya venció → borrar todo
+  // Usuarios past_due o gratis (ex-pro) cuyo plan_activo_hasta ya venció → borrar anuncios pausados
   const { data: vencidos } = await supabase
     .from('usuarios')
     .select('id')
-    .eq('plan', 'past_due')
-    .lt('plan_activo_hasta', new Date().toISOString())
+    .in('plan', ['past_due', 'gratis'])
+    .lt('plan_activo_hasta', ahora)
+    .not('plan_activo_hasta', 'is', null)
 
   for (const u of vencidos || []) {
-    await supabase.from('propiedades').delete().eq('usuario_id', u.id)
+    await supabase.from('propiedades').delete().eq('usuario_id', u.id).eq('estado', 'pausado')
     await supabase.from('usuarios').update({
       plan: 'gratis',
       tipo: 'particular',
@@ -31,7 +32,7 @@ export async function GET(req: Request) {
       plan_activo_hasta: null,
     }).eq('id', u.id)
     procesados++
-    console.log('[cron/cleanup] past_due expirado, anuncios borrados:', u.id)
+    console.log('[cron/cleanup] 15 días vencidos, anuncios pausados borrados:', u.id)
   }
 
   return NextResponse.json({ ok: true, procesados })

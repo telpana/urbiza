@@ -13,13 +13,17 @@ const supabase = createClient(
 
 const DIAS_GRACIA = 15
 
-// Stripe agotó reintentos — borrar todo
+// Stripe agotó reintentos — dejar en gratis, el cron borra a los 15 días
 async function bajarAPlaGratis(subscriptionId: string) {
-  const { data: usuario } = await supabase.from('usuarios').select('id').eq('stripe_subscription_id', subscriptionId).single()
+  const { data: usuario } = await supabase.from('usuarios').select('id, plan, plan_activo_hasta').eq('stripe_subscription_id', subscriptionId).single()
   if (!usuario) return
-  await supabase.from('propiedades').delete().eq('usuario_id', usuario.id)
-  await supabase.from('usuarios').update({ plan: 'gratis', tipo: 'particular', stripe_subscription_id: null, plan_activo_hasta: null }).eq('id', usuario.id)
-  console.log('[webhook] suscripción cancelada, anuncios borrados:', usuario.id)
+  // Si ya está en past_due, respetar el plan_activo_hasta del invoice.payment_failed (15 días desde el fallo)
+  // Si no, poner fecha de hoy para que el cron limpie pronto
+  const vencimiento = usuario.plan === 'past_due' && usuario.plan_activo_hasta
+    ? usuario.plan_activo_hasta
+    : new Date().toISOString()
+  await supabase.from('usuarios').update({ plan: 'gratis', tipo: 'particular', stripe_subscription_id: null, plan_activo_hasta: vencimiento }).eq('id', usuario.id)
+  console.log('[webhook] suscripción cancelada, anuncios se borran vía cron en:', vencimiento)
 }
 
 export async function POST(req: Request) {
