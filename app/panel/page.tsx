@@ -1394,23 +1394,34 @@ export default function Panel() {
                 <div className="planes-destacado-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
                   {planesDestacado.map(p => {
                     const sel = planSeleccionado === String(p.dias)
+                    const tc = sel && p.popular
                     return (
-                      <div key={p.dias} onClick={() => setPlanSeleccionado(String(p.dias))} style={{ borderRadius: 12, padding: '20px 14px', textAlign: 'center', cursor: 'pointer', position: 'relative', transition: 'all 0.15s',
-                        background: p.popular ? (sel ? '#006D77' : '#f0fafb') : '#fff',
+                      <div key={p.dias} onClick={() => setPlanSeleccionado(String(p.dias))} style={{ borderRadius: 12, padding: '14px 16px', cursor: 'pointer', position: 'relative', transition: 'all 0.15s', display: 'flex', alignItems: 'center', gap: 14,
+                        background: tc ? '#006D77' : p.popular ? '#f0fafb' : '#fff',
                         border: `2px solid ${sel ? '#006D77' : p.popular ? '#83D4DB' : '#e8e8e8'}`,
-                        boxShadow: sel ? '0 4px 16px rgba(0,109,119,0.2)' : '0 1px 4px rgba(0,0,0,0.05)' }}>
-                        {p.popular && <div style={{ position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)', background: sel ? '#004E57' : '#006D77', color: '#fff', fontSize: 9, fontWeight: 800, padding: '3px 12px', borderRadius: 10, whiteSpace: 'nowrap', letterSpacing: 0.5 }}>MÁS POPULAR</div>}
-                        <div style={{ fontSize: 11, color: sel && p.popular ? 'rgba(255,255,255,0.7)' : '#aaa', marginBottom: 4, fontWeight: 500 }}>{p.label}</div>
-                        <div style={{ fontSize: 26, fontWeight: 800, color: sel && p.popular ? '#fff' : sel ? '#006D77' : '#111', lineHeight: 1, marginBottom: 14 }}>
-                          <span style={{ fontSize: 13, fontWeight: 600, verticalAlign: 'top', marginTop: 4, display: 'inline-block' }}>US$</span>{p.precio}
+                        boxShadow: sel ? '0 4px 14px rgba(0,109,119,0.18)' : '0 1px 4px rgba(0,0,0,0.05)' }}>
+                        {p.popular && <div style={{ position: 'absolute', top: -10, left: 16, background: sel ? '#004E57' : '#006D77', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 10px', borderRadius: 8, whiteSpace: 'nowrap', letterSpacing: 0.5 }}>MÁS POPULAR</div>}
+                        {/* Izquierda: días + features */}
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: tc ? 'rgba(255,255,255,0.7)' : '#888', marginBottom: 6 }}>{p.label}</div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                            {['Posición top', 'Badge destacado', 'Más visibilidad'].map(f => (
+                              <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: tc ? 'rgba(255,255,255,0.85)' : '#666' }}>
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={tc ? '#fff' : '#006D77'} strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                {f}
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'flex-start', width: '100%' }}>
-                          {['Posición top', 'Badge destacado', 'Más visibilidad'].map(f => (
-                            <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: sel && p.popular ? 'rgba(255,255,255,0.85)' : '#555', whiteSpace: 'nowrap' }}>
-                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={sel && p.popular ? '#fff' : '#006D77'} strokeWidth="3" style={{ flexShrink: 0 }}><polyline points="20 6 9 17 4 12"/></svg>
-                              {f}
-                            </div>
-                          ))}
+                        {/* Derecha: precio + radio */}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
+                          <div style={{ textAlign: 'right' }}>
+                            <div style={{ fontSize: 10, fontWeight: 600, color: tc ? 'rgba(255,255,255,0.6)' : '#aaa', marginBottom: 1 }}>US$</div>
+                            <div style={{ fontSize: 22, fontWeight: 800, color: tc ? '#fff' : sel ? '#006D77' : '#111', lineHeight: 1 }}>{p.precio}</div>
+                          </div>
+                          <div style={{ width: 20, height: 20, borderRadius: '50%', border: `2px solid ${sel ? (tc ? '#fff' : '#006D77') : '#ddd'}`, background: sel ? (tc ? '#fff' : '#006D77') : '#fff', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            {sel && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={tc ? '#006D77' : '#fff'} strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
+                          </div>
                         </div>
                       </div>
                     )
