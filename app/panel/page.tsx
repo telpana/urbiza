@@ -252,6 +252,10 @@ export default function Panel() {
   const [verificandoPago, setVerificandoPago] = useState(false)
   const [modalBaja, setModalBaja] = useState(false)
   const [bajando, setBajando] = useState(false)
+  const [codigoPromo, setCodigoPromo] = useState('')
+  const [promoExpanded, setPromoExpanded] = useState(false)
+  const [promoLoading, setPromoLoading] = useState(false)
+  const [promoError, setPromoError] = useState('')
 
   // Leer sección desde URL (?s=mensajes, ?s=anuncios, etc.)
   useEffect(() => {
@@ -634,6 +638,29 @@ export default function Panel() {
     : (usuario?.tipo && !['profesional', 'cancelando'].includes(usuario.tipo) ? usuario.tipo : 'particular')
   const anunciosGratis = 2
   const anunciosUsados = anunciosReales.length
+  const suscripcionVencida = usuario?.plan === 'gratis' && usuario?.plan_activo_hasta && new Date(usuario.plan_activo_hasta) < new Date()
+
+  const handleSuscribirse = async () => {
+    setPromoError('')
+    setPromoLoading(true)
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      const body: any = { userId: user?.id, email: user?.email, tipo: 'profesional' }
+      if (codigoPromo.trim()) body.codigoPromo = codigoPromo.trim().toUpperCase()
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      })
+      const data = await res.json()
+      if (data.url) window.location.href = data.url
+      else setPromoError(data.error || 'Error procesando el pago')
+    } catch {
+      setPromoError('Error de conexión. Inténtalo de nuevo.')
+    } finally {
+      setPromoLoading(false)
+    }
+  }
 
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
@@ -1580,9 +1607,19 @@ export default function Panel() {
                     </div>
                   ))}
                 </div>
-                <a href="/pago/profesional" style={{ display: 'block', background: '#006D77', color: '#fff', padding: '14px', borderRadius: 6, fontSize: 15, fontWeight: 700, cursor: 'pointer', textDecoration: 'none' }}>
-                  {Tpanel.planes.suscribirse}
-                </a>
+                <button onClick={handleSuscribirse} disabled={promoLoading} style={{ display: 'block', width: '100%', background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '14px', borderRadius: 6, fontSize: 15, fontWeight: 700, cursor: promoLoading ? 'default' : 'pointer', border: 'none' }}>
+                  {promoLoading ? 'Procesando...' : Tpanel.planes.suscribirse}
+                </button>
+                <div style={{ marginTop: 14, textAlign: 'center' }}>
+                  {!promoExpanded ? (
+                    <button onClick={() => setPromoExpanded(true)} style={{ all: 'unset', fontSize: 12, color: '#006D77', cursor: 'pointer', textDecoration: 'underline' }}>¿Tienes un código promocional?</button>
+                  ) : (
+                    <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center' }}>
+                      <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }} placeholder="CÓDIGO PROMO" maxLength={32} style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '8px 12px', fontSize: 13, width: 160, outline: 'none', textAlign: 'center', letterSpacing: 1 }} />
+                    </div>
+                  )}
+                  {promoError && <div style={{ fontSize: 12, color: '#dc2626', marginTop: 6 }}>{promoError}</div>}
+                </div>
               </div>
             </div>
           )}
@@ -1652,6 +1689,18 @@ export default function Panel() {
             </div>
           )}
 
+          {/* BANNER SUSCRIPCIÓN VENCIDA */}
+          {!cargando && suscripcionVencida && seccion !== 'plan' && (
+            <div style={{ background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: 10, padding: '16px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92400e" strokeWidth="2" style={{ flexShrink: 0 }}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: '#92400e' }}>Tu suscripción ha vencido</div>
+                <div style={{ fontSize: 13, color: '#78350f', marginTop: 2 }}>Reactiva tu plan para volver a publicar tus anuncios. Tus propiedades están pausadas hasta que renueves.</div>
+              </div>
+              <button onClick={() => setSeccion('plan')} style={{ all: 'unset', background: '#92400e', color: '#fff', padding: '8px 18px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>Reactivar plan</button>
+            </div>
+          )}
+
           {/* MI PLAN */}
           {!cargando && seccion === 'plan' && (
             <div>
@@ -1675,7 +1724,19 @@ export default function Panel() {
                       </div>
                     ))}
                   </div>
-                  <a className="plan-upgrade-cta" href="/pago/profesional" style={{ background: '#006D77', color: '#fff', padding: '12px 32px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer', textDecoration: 'none', display: 'inline-block' }}>{Tpanel.planes.suscribirse}</a>
+                  <button className="plan-upgrade-cta" onClick={handleSuscribirse} disabled={promoLoading} style={{ background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '12px 32px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: promoLoading ? 'default' : 'pointer', border: 'none', display: 'inline-block' }}>
+                    {promoLoading ? 'Procesando...' : Tpanel.planes.suscribirse}
+                  </button>
+                  <div style={{ marginTop: 14 }}>
+                    {!promoExpanded ? (
+                      <button onClick={() => setPromoExpanded(true)} style={{ all: 'unset', fontSize: 12, color: '#006D77', cursor: 'pointer', textDecoration: 'underline' }}>¿Tienes un código promocional?</button>
+                    ) : (
+                      <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center' }}>
+                        <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }} placeholder="CÓDIGO PROMO" maxLength={32} style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '8px 12px', fontSize: 13, width: 160, outline: 'none', textAlign: 'center', letterSpacing: 1 }} />
+                      </div>
+                    )}
+                    {promoError && <div style={{ fontSize: 12, color: '#dc2626', marginTop: 6 }}>{promoError}</div>}
+                  </div>
                 </div>
               ) : (() => {
                 const fmt = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })

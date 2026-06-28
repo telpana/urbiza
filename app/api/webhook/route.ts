@@ -16,9 +16,9 @@ const SEMANA_MS = 7 * 24 * 60 * 60 * 1000
 async function bajarAPlaGratis(subscriptionId: string) {
   const { data: usuario } = await supabase.from('usuarios').select('id').eq('stripe_subscription_id', subscriptionId).single()
   if (!usuario) return
-  await supabase.from('propiedades').delete().eq('usuario_id', usuario.id)
-  await supabase.from('usuarios').update({ plan: 'gratis', tipo: 'particular', stripe_subscription_id: null, plan_activo_hasta: null }).eq('id', usuario.id)
-  console.log('[webhook] usuario bajado a gratis y anuncios eliminados:', usuario.id)
+  await supabase.from('propiedades').update({ estado: 'pausado' }).eq('usuario_id', usuario.id)
+  await supabase.from('usuarios').update({ plan: 'gratis', tipo: 'particular', stripe_subscription_id: null, plan_activo_hasta: new Date().toISOString() }).eq('id', usuario.id)
+  console.log('[webhook] usuario bajado a gratis, anuncios pausados:', usuario.id)
 }
 
 export async function POST(req: Request) {

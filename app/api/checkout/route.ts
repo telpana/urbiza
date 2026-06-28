@@ -1,15 +1,36 @@
-﻿import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { createClient } from '@supabase/supabase-js'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2026-05-27.dahlia',
 })
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
 const PRECIOS: Record<string, string> = {
   'profesional': 'price_1TjQ7N2W2OvWvCK3IFRRmZBY',
   '15': 'price_1TjIsm2W2OvWvCK3yycPzPR6',
   '30': 'price_1TjItK2W2OvWvCK3K2TW7Hf6',
   '60': 'price_1TjIts2W2OvWvCK3OG28wLg9',
+}
+
+async function validarCodigoPromo(codigo: string): Promise<{ ok: boolean; error?: string }> {
+  const { data, error } = await supabase
+    .from('codigos_promo')
+    .select('id, activo, usos_actuales, usos_maximos')
+    .eq('codigo', codigo)
+    .single()
+
+  if (error || !data) return { ok: false, error: 'Código promocional no válido' }
+  if (!data.activo) return { ok: false, error: 'Este código ya no está activo' }
+  if (data.usos_maximos && data.usos_actuales >= data.usos_maximos) return { ok: false, error: 'Este código ha alcanzado el límite de usos' }
+
+  await supabase.from('codigos_promo').update({ usos_actuales: data.usos_actuales + 1 }).eq('id', data.id)
+  return { ok: true }
 }
 
 export async function POST(req: Request) {
@@ -33,6 +54,14 @@ export async function POST(req: Request) {
     const esDestacado = ['15', '30', '60'].includes(tipo)
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
+    // Validar código promo antes de crear sesión
+    if (codigoPromo && !esDestacado) {
+      const validacion = await validarCodigoPromo(codigoPromo)
+      if (!validacion.ok) {
+        return NextResponse.json({ error: validacion.error }, { status: 400 })
+      }
+    }
+
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
       payment_method_types: ['card'],
       mode: esDestacado ? 'payment' : 'subscription',
@@ -44,6 +73,7 @@ export async function POST(req: Request) {
     }
 
     if (codigoPromo && !esDestacado) {
+      sessionParams.subscription_data = { trial_period_days: 30 }
       sessionParams.discounts = [{ coupon: codigoPromo }]
     }
 
