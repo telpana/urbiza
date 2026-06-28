@@ -74,7 +74,7 @@ export const t = {
         publicaAhora: 'Publica tu primera propiedad gratis →', filtroTodos: 'Todos',
         limiteAlcanzado: 'Has alcanzado el límite gratuito',
         limiteDesc: 'Has usado tus {n} anuncios gratuitos. ¿Quieres publicar más? Hazte PRO y publica anuncios ilimitados.',
-        haztePro: 'Hazte PRO →',
+        haztePro: 'Hazte PRO',
         editar: 'Editar', eliminar: 'Eliminar', destacar: '⭐ Destacar',
         confirmarEliminar: '¿Seguro que quieres eliminar este anuncio? Esta acción no se puede deshacer.',
         estado: { activo: 'Activo', pausado: 'Pausado' }, dest: 'DEST.',

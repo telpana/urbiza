@@ -760,12 +760,12 @@ export default function Panel() {
 
               {/* Aviso límite particular */}
               {tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis && (
-                <div style={{ background: '#fff8e1', border: '1.5px solid #f59e0b', borderRadius: 8, padding: '16px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+                <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 60%, #17A6B4 100%)', borderRadius: 12, padding: '20px 24px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
                   <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: '#92400e', marginBottom: 4 }}>{Tpanel.anuncios.limiteAlcanzado}</div>
-                    <div style={{ fontSize: 13, color: '#78350f' }}>{Tpanel.anuncios.limiteDesc.replace('{n}', String(anunciosGratis))}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 4 }}>{Tpanel.anuncios.limiteAlcanzado}</div>
+                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', lineHeight: 1.5 }}>{Tpanel.anuncios.limiteDesc.replace('{n}', String(anunciosGratis))}</div>
                   </div>
-                  <button onClick={() => setSeccion('planes')} style={{ all: 'unset', background: '#f59e0b', color: '#fff', padding: '10px 20px', borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                  <button onClick={() => setSeccion('planes')} style={{ all: 'unset', background: '#fff', color: '#006D77', padding: '10px 20px', borderRadius: 20, fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}>
                     {Tpanel.anuncios.haztePro}
                   </button>
                 </div>
