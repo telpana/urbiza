@@ -487,31 +487,66 @@ export default function Admin() {
                 <input value={propQ} onChange={e => setPropQ(e.target.value)} onKeyDown={e => e.key === 'Enter' && cargarPropiedades(propQ)} placeholder="Buscar por título..." style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 14px', fontSize: 13, outline: 'none' }} />
                 <button onClick={() => cargarPropiedades(propQ)} style={{ all: 'unset', background: C.verde, color: '#fff', padding: '9px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>Buscar</button>
               </div>
-              <Card style={{ overflow: 'hidden' }}>
+              <Card style={{ overflow: 'auto' }}>
                 {propLoading ? <div style={{ padding: 24, color: '#aaa', fontSize: 13 }}>Cargando...</div> : (
-                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead style={{ background: '#fafafa', borderBottom: '1px solid #f0f0f0' }}>
-                      <tr><Th>Título</Th><Th>Zona</Th><Th>Precio</Th><Th>Tipo</Th><Th>Estado</Th><Th>Publicado</Th><Th>Usuario</Th><Th></Th></tr>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 900 }}>
+                    <thead>
+                      <tr style={{ borderBottom: '1.5px solid #f0f0f0', background: '#fafafa' }}>
+                        <th style={{ textAlign: 'left', fontSize: 11, color: '#999', fontWeight: 600, padding: '12px 16px', textTransform: 'uppercase', letterSpacing: 0.4 }}>Anuncio</th>
+                        <th style={{ textAlign: 'left', fontSize: 11, color: '#999', fontWeight: 600, padding: '12px 16px', textTransform: 'uppercase', letterSpacing: 0.4 }}>Zona</th>
+                        <th style={{ textAlign: 'left', fontSize: 11, color: '#999', fontWeight: 600, padding: '12px 16px', textTransform: 'uppercase', letterSpacing: 0.4 }}>Precio</th>
+                        <th style={{ textAlign: 'left', fontSize: 11, color: '#999', fontWeight: 600, padding: '12px 16px', textTransform: 'uppercase', letterSpacing: 0.4 }}>Tipo</th>
+                        <th style={{ textAlign: 'left', fontSize: 11, color: '#999', fontWeight: 600, padding: '12px 16px', textTransform: 'uppercase', letterSpacing: 0.4 }}>Estado</th>
+                        <th style={{ textAlign: 'left', fontSize: 11, color: '#999', fontWeight: 600, padding: '12px 16px', textTransform: 'uppercase', letterSpacing: 0.4 }}>Publicado</th>
+                        <th style={{ textAlign: 'left', fontSize: 11, color: '#999', fontWeight: 600, padding: '12px 16px', textTransform: 'uppercase', letterSpacing: 0.4 }}>Usuario</th>
+                        <th style={{ padding: '12px 16px' }}></th>
+                      </tr>
                     </thead>
                     <tbody>
-                      {propiedades.length === 0 && <tr><td colSpan={8} style={{ padding: '24px', fontSize: 13, color: '#aaa', textAlign: 'center' }}>Sin resultados</td></tr>}
-                      {propiedades.map((p: any) => (
-                        <tr key={p.id} style={{ borderBottom: '1px solid #f8f8f8' }} onMouseEnter={e => (e.currentTarget.style.background = '#fafafa')} onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
-                          <Td><a href={`/propiedad/${p.id}`} target="_blank" rel="noreferrer" style={{ color: C.verde, fontWeight: 500, textDecoration: 'none', fontSize: 13 }}>{p.titulo}</a>{p.destacado && <Badge txt="DEST." color="#006D77" bg="#e0f5f7" />}</Td>
-                          <Td><span style={{ fontSize: 12, color: '#666' }}>{p.zona}</span></Td>
-                          <Td><span style={{ fontWeight: 600 }}>US$ {(p.precio || 0).toLocaleString('en-US')}</span></Td>
-                          <Td><Badge txt={p.tipo} color="#555" bg="#f0f0f0" /></Td>
-                          <Td><Badge txt={p.estado} color={p.estado === 'activo' ? '#065f46' : '#92400e'} bg={p.estado === 'activo' ? '#d1fae5' : '#fef3c7'} /></Td>
-                          <Td><span style={{ fontSize: 12, color: '#aaa' }}>{fmtFecha(p.created_at)}</span></Td>
-                          <Td><span style={{ fontSize: 12 }}>{(p.usuarios as any)?.nombre || '—'}</span></Td>
-                          <Td>
-                            <div style={{ display: 'flex', gap: 6 }}>
-                              <Btn onClick={() => toggleEstado(p.id, p.estado)} variant="ghost" small>{p.estado === 'activo' ? 'Desactivar' : 'Activar'}</Btn>
-                              <Btn onClick={() => eliminarPropiedad(p.id)} variant="danger" small>Eliminar</Btn>
-                            </div>
-                          </Td>
-                        </tr>
-                      ))}
+                      {propiedades.length === 0 && <tr><td colSpan={8} style={{ padding: '32px', fontSize: 13, color: '#aaa', textAlign: 'center' }}>Sin resultados</td></tr>}
+                      {propiedades.map((p: any) => {
+                        const foto = Array.isArray(p.fotos) && p.fotos.length > 0 ? p.fotos[0] : null
+                        return (
+                          <tr key={p.id} style={{ borderBottom: '1px solid #f5f5f5' }}
+                            onMouseEnter={e => (e.currentTarget.style.background = '#fafcfc')}
+                            onMouseLeave={e => (e.currentTarget.style.background = '')}>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                                <div style={{ width: 54, height: 40, borderRadius: 6, overflow: 'hidden', flexShrink: 0, background: '#e8f5f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                  {foto
+                                    ? <img src={foto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                                  }
+                                </div>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                                  <a href={`/propiedad/${p.id}`} target="_blank" rel="noreferrer" style={{ color: C.verde, fontWeight: 500, textDecoration: 'none', fontSize: 13 }}
+                                    onMouseEnter={e => (e.currentTarget.style.textDecoration = 'underline')}
+                                    onMouseLeave={e => (e.currentTarget.style.textDecoration = 'none')}>
+                                    {p.titulo}
+                                  </a>
+                                  {p.destacado && (
+                                    <svg width="13" height="13" viewBox="0 0 24 24" fill="#006D77" stroke="none" title="Destacado">
+                                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                                    </svg>
+                                  )}
+                                </div>
+                              </div>
+                            </td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 12, color: '#666' }}>{p.zona}</span></td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 13, fontWeight: 600, color: '#111' }}>US$ {(p.precio || 0).toLocaleString('en-US')}</span></td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><Badge txt={p.tipo} color="#555" bg="#f0f0f0" /></td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><Badge txt={p.estado} color={p.estado === 'activo' ? '#065f46' : '#92400e'} bg={p.estado === 'activo' ? '#d1fae5' : '#fef3c7'} /></td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 12, color: '#aaa', whiteSpace: 'nowrap' }}>{fmtFecha(p.created_at)}</span></td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 12, color: '#444' }}>{(p.usuarios as any)?.nombre || '—'}</span></td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
+                              <div style={{ display: 'flex', gap: 6 }}>
+                                <Btn onClick={() => toggleEstado(p.id, p.estado)} variant="ghost" small>{p.estado === 'activo' ? 'Desactivar' : 'Activar'}</Btn>
+                                <Btn onClick={() => eliminarPropiedad(p.id)} variant="danger" small>Eliminar</Btn>
+                              </div>
+                            </td>
+                          </tr>
+                        )
+                      })}
                     </tbody>
                   </table>
                 )}
