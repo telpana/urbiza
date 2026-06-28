@@ -630,6 +630,14 @@ img { max-width: 100%; }
 /* ════════════════════════════════
    AUTH (registro/login)
 ════════════════════════════════ */
+.login-nav-hamburger { display: none; }
+
+@media (max-width: 768px) {
+  .login-nav-links { display: none !important; }
+  .login-nav-cta   { display: none !important; }
+  .login-nav-hamburger { display: flex !important; }
+}
+
 @media (max-width: 480px) {
   .auth-card { padding: 24px 16px !important; margin: 16px !important; }
   .tipo-grid { grid-template-columns: 1fr !important; }
