@@ -213,7 +213,7 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: any[], onCerrar:
       <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div style={{ fontSize: 15, fontWeight: 600, color: '#111' }}>{propiedades.length} propiedades en el mapa</div>
         <button onClick={onCerrar} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '8px 18px', borderRadius: 4, fontSize: 13, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
-          ← Volver a listado
+          Volver a listado
         </button>
       </div>
       <div ref={mapRef} style={{ flex: 1 }} />
