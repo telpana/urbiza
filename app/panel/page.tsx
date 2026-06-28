@@ -963,9 +963,9 @@ export default function Panel() {
                   )}
                 </div>
               ) : (
-              <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
+              <div className="pub-form-card" style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                <div className="pub-form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.operacion}</label>
                     <select value={pubOperacion} onChange={e => setPubOperacion(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
@@ -1015,7 +1015,7 @@ export default function Panel() {
                 </div>
 
                 {!['Edificio', 'Terreno'].includes(pubTipo) && (
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 16 }}>
+                  <div className="pub-form-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 16 }}>
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.banos}</label>
                       <select value={pubBanos} onChange={e => setPubBanos(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
@@ -1041,7 +1041,7 @@ export default function Panel() {
                 {/* AMENIDADES */}
                 <div style={{ marginBottom: 16 }}>
                   <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 10 }}>{Tpanel.publicar.amenidades}</label>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+                  <div className="pub-amenidades-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
                     {amenidades.map(a => (
                       <div key={a.id} onClick={() => toggleAmenidad(a.id)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', border: `1.5px solid ${amenidadesSeleccionadas.includes(a.id) ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, cursor: 'pointer', background: amenidadesSeleccionadas.includes(a.id) ? '#f0fafb' : '#fff' }}>
                         {amenidadesSeleccionadas.includes(a.id) && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
@@ -1065,7 +1065,7 @@ export default function Panel() {
                   {fotosLista.length > 0 && (
                     <>
                       <div style={{ fontSize: 11, color: '#aaa', marginTop: 10, marginBottom: 6 }}>Arrastra para reordenar · La primera es la foto principal</div>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }} onDragOver={e => e.preventDefault()}>
+                      <div className="pub-fotos-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }} onDragOver={e => e.preventDefault()}>
                         {fotosLista.map((item, i) => (
                           <div
                             key={item.id}

@@ -171,6 +171,13 @@ img { max-width: 100%; }
   .anuncio-card-body { padding: 12px !important; gap: 10px !important; }
   .anuncio-card-status { display: none !important; }
   .anuncio-card-actions { padding: 0 12px 10px !important; border-top: 1px solid #f5f5f5 !important; padding-top: 10px !important; }
+
+  /* Formulario publicar */
+  .pub-form-card { padding: 16px !important; }
+  .pub-form-grid-2 { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .pub-form-grid-3 { grid-template-columns: 1fr 1fr !important; gap: 12px !important; }
+  .pub-amenidades-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .pub-fotos-grid { grid-template-columns: repeat(3, 1fr) !important; }
 }
 
 @media (max-width: 480px) {
