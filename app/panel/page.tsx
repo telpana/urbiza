@@ -194,6 +194,7 @@ export default function Panel() {
   const [filtroTipo, setFiltroTipo] = useState('')
   const [filtroProvincia, setFiltroProvincia] = useState('')
   const [provinciaOpen, setProvinciaOpen] = useState(false)
+  const [tipoOpen, setTipoOpen] = useState(false)
   const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
   const [planInfo, setPlanInfo] = useState<any>(null)
   const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
@@ -777,27 +778,57 @@ export default function Panel() {
               </div>
 
               {/* Filtro por tipo + provincia */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', flex: 1 }}>
-                  {[{ val: '', label: Tpanel.anuncios.filtroTodos }, ...['Apartamento', 'Casa', 'Villa', 'Edificio', 'Oficina', 'Terreno', 'Local comercial'].map(t => ({ val: t, label: t }))].map(({ val, label }) => (
-                    <button key={val} onClick={() => setFiltroTipo(val)} style={{ all: 'unset', border: `1px solid ${filtroTipo === val ? '#006D77' : '#e0e0e0'}`, borderRadius: 20, padding: '5px 14px', fontSize: 12, color: filtroTipo === val ? '#006D77' : '#666', background: filtroTipo === val ? '#f0fafb' : '#fff', cursor: 'pointer', fontWeight: filtroTipo === val ? 600 : 400 }}>
-                      {label}
-                    </button>
-                  ))}
-                </div>
-                {provinciasDisponibles.length > 0 && (
-                  <div style={{ position: 'relative' }}>
-                    <button onClick={() => setProvinciaOpen(v => !v)} style={{ all: 'unset', border: `1px solid ${filtroProvincia ? '#006D77' : '#e0e0e0'}`, borderRadius: 20, padding: '5px 14px', fontSize: 12, color: filtroProvincia ? '#006D77' : '#666', background: filtroProvincia ? '#f0fafb' : '#fff', cursor: 'pointer', fontWeight: filtroProvincia ? 600 : 400, display: 'flex', alignItems: 'center', gap: 6, whiteSpace: 'nowrap' }}>
-                      {filtroProvincia || 'Provincias'}
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: provinciaOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}><polyline points="6 9 12 15 18 9"/></svg>
-                    </button>
-                    {provinciaOpen && (
-                      <div style={{ position: 'absolute', right: 0, top: '110%', background: '#fff', border: '1px solid #e0e0e0', borderRadius: 8, boxShadow: '0 4px 16px rgba(0,0,0,0.1)', zIndex: 50, minWidth: 180, overflow: 'hidden' }}>
-                        <button onClick={() => { setFiltroProvincia(''); setProvinciaOpen(false) }} style={{ all: 'unset', display: 'block', width: '100%', padding: '10px 16px', fontSize: 13, color: !filtroProvincia ? '#006D77' : '#333', fontWeight: !filtroProvincia ? 600 : 400, cursor: 'pointer', borderBottom: '1px solid #f5f5f5', boxSizing: 'border-box' }}>Todas las provincias</button>
-                        {provinciasDisponibles.map(p => (
-                          <button key={p} onClick={() => { setFiltroProvincia(p); setProvinciaOpen(false) }} style={{ all: 'unset', display: 'block', width: '100%', padding: '10px 16px', fontSize: 13, color: filtroProvincia === p ? '#006D77' : '#333', fontWeight: filtroProvincia === p ? 600 : 400, cursor: 'pointer', borderBottom: '1px solid #f5f5f5', boxSizing: 'border-box' }}>{p}</button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+                {/* Desplegable tipo */}
+                <div style={{ position: 'relative' }}>
+                  <button onClick={() => { setTipoOpen(v => !v); setProvinciaOpen(false) }} style={{ all: 'unset', border: `1.5px solid ${filtroTipo ? '#006D77' : '#e0e0e0'}`, borderRadius: 8, padding: '7px 14px', fontSize: 13, color: filtroTipo ? '#006D77' : '#555', background: filtroTipo ? '#f0fafb' : '#fff', cursor: 'pointer', fontWeight: filtroTipo ? 600 : 400, display: 'flex', alignItems: 'center', gap: 7, whiteSpace: 'nowrap', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                    {filtroTipo || 'Tipo de vivienda'}
+                    {filtroTipo && <span onClick={e => { e.stopPropagation(); setFiltroTipo('') }} style={{ display: 'flex', alignItems: 'center', marginLeft: 2, opacity: 0.5 }}>×</span>}
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: tipoOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s', marginLeft: 2 }}><polyline points="6 9 12 15 18 9"/></svg>
+                  </button>
+                  {tipoOpen && (
+                    <>
+                      <div style={{ position: 'fixed', inset: 0, zIndex: 49 }} onClick={() => setTipoOpen(false)} />
+                      <div style={{ position: 'absolute', left: 0, top: 'calc(100% + 6px)', background: '#fff', border: '1px solid #e8e8e8', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', zIndex: 50, minWidth: 200, overflow: 'hidden' }}>
+                        {[{ val: '', label: 'Todos los tipos' }, ...['Apartamento', 'Casa', 'Villa', 'Edificio', 'Oficina', 'Terreno', 'Local comercial'].map(t => ({ val: t, label: t }))].map(({ val, label }, i, arr) => (
+                          <button key={val} onClick={() => { setFiltroTipo(val); setTipoOpen(false) }} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 16px', fontSize: 13, color: filtroTipo === val ? '#006D77' : '#333', fontWeight: filtroTipo === val ? 600 : 400, background: filtroTipo === val ? '#f0fafb' : 'transparent', cursor: 'pointer', borderBottom: i < arr.length - 1 ? '1px solid #f5f5f5' : 'none', boxSizing: 'border-box' }}>
+                            {filtroTipo === val && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
+                            {filtroTipo !== val && <span style={{ width: 12 }} />}
+                            {label}
+                          </button>
                         ))}
                       </div>
+                    </>
+                  )}
+                </div>
+                {/* Desplegable provincia */}
+                {provinciasDisponibles.length > 0 && (
+                  <div style={{ position: 'relative' }}>
+                    <button onClick={() => { setProvinciaOpen(v => !v); setTipoOpen(false) }} style={{ all: 'unset', border: `1.5px solid ${filtroProvincia ? '#006D77' : '#e0e0e0'}`, borderRadius: 8, padding: '7px 14px', fontSize: 13, color: filtroProvincia ? '#006D77' : '#555', background: filtroProvincia ? '#f0fafb' : '#fff', cursor: 'pointer', fontWeight: filtroProvincia ? 600 : 400, display: 'flex', alignItems: 'center', gap: 7, whiteSpace: 'nowrap', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
+                      {filtroProvincia || 'Provincia'}
+                      {filtroProvincia && <span onClick={e => { e.stopPropagation(); setFiltroProvincia('') }} style={{ display: 'flex', alignItems: 'center', marginLeft: 2, opacity: 0.5 }}>×</span>}
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: provinciaOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s', marginLeft: 2 }}><polyline points="6 9 12 15 18 9"/></svg>
+                    </button>
+                    {provinciaOpen && (
+                      <>
+                        <div style={{ position: 'fixed', inset: 0, zIndex: 49 }} onClick={() => setProvinciaOpen(false)} />
+                        <div style={{ position: 'absolute', left: 0, top: 'calc(100% + 6px)', background: '#fff', border: '1px solid #e8e8e8', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', zIndex: 50, minWidth: 200, maxHeight: 260, overflowY: 'auto', overflow: 'hidden' }}>
+                          <button onClick={() => { setFiltroProvincia(''); setProvinciaOpen(false) }} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 16px', fontSize: 13, color: !filtroProvincia ? '#006D77' : '#333', fontWeight: !filtroProvincia ? 600 : 400, background: !filtroProvincia ? '#f0fafb' : 'transparent', cursor: 'pointer', borderBottom: '1px solid #f5f5f5', boxSizing: 'border-box' }}>
+                            {!filtroProvincia && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
+                            {filtroProvincia && <span style={{ width: 12 }} />}
+                            Todas las provincias
+                          </button>
+                          {provinciasDisponibles.map(p => (
+                            <button key={p} onClick={() => { setFiltroProvincia(p); setProvinciaOpen(false) }} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 16px', fontSize: 13, color: filtroProvincia === p ? '#006D77' : '#333', fontWeight: filtroProvincia === p ? 600 : 400, background: filtroProvincia === p ? '#f0fafb' : 'transparent', cursor: 'pointer', borderBottom: '1px solid #f5f5f5', boxSizing: 'border-box' }}>
+                              {filtroProvincia === p && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
+                              {filtroProvincia !== p && <span style={{ width: 12 }} />}
+                              {p}
+                            </button>
+                          ))}
+                        </div>
+                      </>
                     )}
                   </div>
                 )}
