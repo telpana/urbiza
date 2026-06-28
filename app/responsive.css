@@ -259,6 +259,11 @@ img { max-width: 100%; }
   .pub-select-desktop { display: none !important; }
   .pub-pills-mobile { display: flex !important; }
 
+  /* Publicar — baños fila entera, parqueos+planta juntos abajo */
+  .pub-form-grid-3 { grid-template-columns: 1fr 1fr !important; }
+  .pub-form-grid-3 > div:first-child { grid-column: 1 / -1 !important; }
+  .pub-parqueos-col, .pub-planta-col { grid-column: auto !important; }
+
   /* Mi perfil */
   .perfil-fields-grid { grid-template-columns: 1fr !important; }
   .perfil-avatar-row { flex-direction: column !important; align-items: center !important; text-align: center; }
