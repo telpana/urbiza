@@ -867,7 +867,8 @@ export default function Panel() {
                             <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 14, fontWeight: 700, color: '#111', textDecoration: 'none', lineHeight: 1.3 }} onMouseEnter={e => (e.currentTarget.style.color='#006D77')} onMouseLeave={e => (e.currentTarget.style.color='#111')}>{a.titulo}</a>
                             {a.destacado && <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 6, letterSpacing: 0.4, whiteSpace: 'nowrap', flexShrink: 0 }}>DEST.</span>}
                           </div>
-                          <div style={{ fontSize: 12, color: '#888', marginBottom: 6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.zona} · {a.tipo} · <span style={{ color: '#006D77', fontWeight: 600 }}>US$ {a.precio.toLocaleString('en-US')}</span></div>
+                          <div style={{ fontSize: 12, color: '#aaa', marginBottom: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.zona} · {a.tipo}</div>
+                          <div style={{ fontSize: 16, fontWeight: 700, color: '#006D77', marginBottom: 5 }}>US$ {a.precio.toLocaleString('en-US')}</div>
                           <div style={{ display: 'flex', gap: 12, fontSize: 11, color: '#aaa' }}>
                             <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
                               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
