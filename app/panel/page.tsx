@@ -1388,24 +1388,24 @@ export default function Panel() {
                   {anunciosAMostrar.map((a: any) => {
                     const foto = Array.isArray(a.fotos) && a.fotos.length > 0 ? a.fotos[0] : null
                     return (
-                      <div key={a.id} style={{ background: '#fff', borderRadius: 10, padding: '14px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
-                        <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 12 }}>
-                          <div style={{ width: 64, height: 50, borderRadius: 7, overflow: 'hidden', flexShrink: 0, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            {foto ? <img src={foto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>}
+                      <div key={a.id} style={{ background: '#fff', borderRadius: 12, boxShadow: '0 1px 8px rgba(0,0,0,0.07)', overflow: 'hidden', borderLeft: '4px solid #006D77' }}>
+                        <div style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '14px 14px 12px' }}>
+                          <div style={{ width: 62, height: 48, borderRadius: 7, overflow: 'hidden', flexShrink: 0, background: '#e8f8f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            {foto ? <img src={foto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>}
                           </div>
-                          <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 13, fontWeight: 600, color: '#111', textDecoration: 'none', flex: 1, lineHeight: 1.3 }}>
+                          <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 14, fontWeight: 700, color: '#111', textDecoration: 'none', flex: 1, lineHeight: 1.3 }}>
                             {a.titulo}
                           </a>
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6, textAlign: 'center' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', borderTop: '1px solid #f0f0f0' }}>
                           {[
-                            { val: fmtStat(a.clics), label: Tpanel.estadisticas.visitasCol, color: '#006D77' },
-                            { val: fmtStat(a.telVistos), label: 'Tel.', color: '#10b981' },
-                            { val: fmtStat(a.mensajes), label: Tpanel.estadisticas.mensajesCol, color: '#f59e0b' },
-                            { val: fmtStat(a.favoritos), label: Tpanel.estadisticas.guardadosCol, color: '#e63946' },
-                          ].map(s => (
-                            <div key={s.label} style={{ background: '#f8fdfd', borderRadius: 8, padding: '8px 4px' }}>
-                              <div style={{ fontSize: 18, fontWeight: 700, color: s.color, lineHeight: 1 }}>{s.val}</div>
+                            { val: fmtStat(a.clics), label: Tpanel.estadisticas.visitasCol },
+                            { val: fmtStat(a.telVistos), label: 'Tel.' },
+                            { val: fmtStat(a.mensajes), label: Tpanel.estadisticas.mensajesCol },
+                            { val: fmtStat(a.favoritos), label: Tpanel.estadisticas.guardadosCol },
+                          ].map((s, i) => (
+                            <div key={s.label} style={{ padding: '10px 6px', textAlign: 'center', borderRight: i < 3 ? '1px solid #f0f0f0' : 'none' }}>
+                              <div style={{ fontSize: 20, fontWeight: 800, color: '#111', lineHeight: 1 }}>{s.val}</div>
                               <div style={{ fontSize: 10, color: '#aaa', marginTop: 3, fontWeight: 500 }}>{s.label}</div>
                             </div>
                           ))}
