@@ -292,24 +292,32 @@ export default function Home() {
   const [faviconUrl, setFaviconUrl] = useState('')
 
   useEffect(() => {
-    supabase.auth.getUser().then(async ({ data }) => {
-      if (!data.user) { setAuthReady(true); return }
+    const initAuth = async (user: any) => {
+      if (!user) { setAuthReady(true); setSesionActiva(false); return }
       setSesionActiva(true)
-      const meta = data.user.user_metadata || {}
+      const meta = user.user_metadata || {}
       const avatarMeta = meta.avatar_url || meta.picture || ''
-      const { data: usr } = await supabase.from('usuarios').select('plan,tipo,foto_url,nombre').eq('id', data.user.id).single()
+      const { data: usr } = await supabase.from('usuarios').select('plan,tipo,foto_url,nombre').eq('id', user.id).single()
       if (usr?.plan) setPlanUsuario(usr.plan)
       if (usr?.tipo) setTipoUsuario(usr.tipo)
       if (usr?.nombre) setNombreUsuario(usr.nombre)
       setFotoUrl(usr?.foto_url || avatarMeta)
-      // Contar mensajes no leídos para el punto rojo
-      const { data: msgs } = await supabase.from('mensajes').select('id').eq('vendedor_id', data.user.id)
+      const { data: msgs } = await supabase.from('mensajes').select('id').eq('vendedor_id', user.id)
       if (msgs) {
-        const leidos: Record<string, boolean> = JSON.parse(localStorage.getItem(`habitade_leidos_${data.user.id}`) || '{}')
+        const leidos: Record<string, boolean> = JSON.parse(localStorage.getItem(`habitade_leidos_${user.id}`) || '{}')
         setNoLeidosNav(msgs.filter((m: any) => !leidos[m.id]).length)
       }
       setAuthReady(true)
+    }
+    supabase.auth.getUser().then(({ data }) => initAuth(data.user))
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) initAuth(session.user)
+      else { setSesionActiva(false); setAuthReady(true) }
     })
+    return () => subscription.unsubscribe()
+  }, [])
+
+  useEffect(() => {
     // Load site config
     fetch('/api/admin/config').then(r => r.json()).then(cfg => {
       if (cfg.banner_url) { setBannerUrl(cfg.banner_url); localStorage.setItem('hb_banner', cfg.banner_url) }
