@@ -592,9 +592,9 @@ export default function Home() {
             style={{ display: 'flex', gap: 20, padding: '28px 32px', textDecoration: 'none', alignItems: 'stretch', transition: 'background 0.15s' }}
             onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = '#f8fdfd'}
             onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'}>
-            <div style={{ width: 120, minHeight: 86, borderRadius: 8, flexShrink: 0, background: featureImgUrl ? '#f4f5f6' : '#006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ width: 120, minHeight: 86, borderRadius: 8, flexShrink: 0, background: '#006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
               {featureImgUrl
-                ? <img src={featureImgUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                ? <img src={featureImgUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 : <svg width="40" height="64" viewBox="0 0 44 72" fill="none">
                     <rect x="4" y="4" width="36" height="64" rx="5" fill="#fff"/>
                     <rect x="8" y="12" width="28" height="40" rx="2" fill="#e0f5f7"/>
