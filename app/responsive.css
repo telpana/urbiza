@@ -190,10 +190,31 @@ img { max-width: 100%; }
   .perfil-save-btn { display: block !important; width: 100% !important; text-align: center !important; box-sizing: border-box !important; margin-top: 16px !important; }
 
   /* Cursos AEI */
-  .cursos-desc { margin-bottom: 16px !important; }
-  .cursos-banner { flex-direction: column !important; padding: 20px !important; gap: 16px !important; }
-  .cursos-banner-btn { display: block !important; text-align: center !important; box-sizing: border-box !important; white-space: normal !important; flex-shrink: unset !important; }
-  .cursos-cta-btn { display: block !important; width: 100% !important; text-align: center !important; box-sizing: border-box !important; padding: 14px !important; border-radius: 8px !important; }
+  .cursos-banner { flex-direction: column !important; padding: 20px 18px !important; gap: 0 !important; }
+  .cursos-banner-btn {
+    display: block !important;
+    margin-top: 18px !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+    white-space: normal !important;
+    flex-shrink: unset !important;
+    padding: 12px !important;
+    background: rgba(255,255,255,0.15) !important;
+    color: #fff !important;
+    border: 1.5px solid rgba(255,255,255,0.4) !important;
+    border-radius: 8px !important;
+  }
+  .cursos-info-card { text-align: left !important; padding: 18px !important; }
+  .cursos-info-text { font-size: 14px !important; line-height: 1.7 !important; }
+  .cursos-cta-btn {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+    padding: 14px !important;
+    border-radius: 8px !important;
+    font-size: 15px !important;
+  }
   .cursos-cta-note { display: none !important; }
 }
 

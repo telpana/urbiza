@@ -1857,8 +1857,8 @@ export default function Panel() {
                 </a>
               </div>
 
-              <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center' }}>
-                <div style={{ fontSize: 15, color: '#555', lineHeight: 1.8, marginBottom: 20 }}>
+              <div className="cursos-info-card" style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center' }}>
+                <div className="cursos-info-text" style={{ fontSize: 15, color: '#555', lineHeight: 1.8, marginBottom: 20 }}>
                   Accede a toda la oferta formativa oficial de la AEI directamente en su web.<br/>
                   Al completar cualquier curso recibirás tu certificación y el badge AEI verificado aparecerá en todos tus anuncios de Habitade.
                 </div>
