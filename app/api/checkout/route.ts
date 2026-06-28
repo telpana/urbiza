@@ -74,7 +74,6 @@ export async function POST(req: Request) {
 
     if (codigoPromo && !esDestacado) {
       sessionParams.subscription_data = { trial_period_days: 30 }
-      sessionParams.discounts = [{ coupon: codigoPromo }]
     }
 
     const session = await stripe.checkout.sessions.create(sessionParams)
