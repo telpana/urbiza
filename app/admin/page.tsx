@@ -569,9 +569,21 @@ export default function Admin() {
                     </thead>
                     <tbody>
                       {usuarios.length === 0 && <tr><td colSpan={7} style={{ padding: 24, fontSize: 13, color: '#aaa', textAlign: 'center' }}>Sin resultados</td></tr>}
-                      {usuarios.map((u: any) => (
-                        <tr key={u.id} style={{ borderBottom: '1px solid #f8f8f8' }} onMouseEnter={e => (e.currentTarget.style.background = '#fafafa')} onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
-                          <Td><span style={{ fontWeight: 500 }}>{u.nombre}</span></Td>
+                      {usuarios.map((u: any) => {
+                        const inicial = (u.nombre || u.email || '?')[0].toUpperCase()
+                        return (
+                        <tr key={u.id} style={{ borderBottom: '1px solid #f8f8f8' }} onMouseEnter={e => (e.currentTarget.style.background = '#fafcfc')} onMouseLeave={e => (e.currentTarget.style.background = '')}>
+                          <Td>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+                              <div style={{ width: 30, height: 30, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                {u.foto_url
+                                  ? <img src={u.foto_url} style={{ width: '100%', height: '100%', objectFit: 'cover' }} referrerPolicy="no-referrer" />
+                                  : <span style={{ fontSize: 12, fontWeight: 700, color: '#006D77' }}>{inicial}</span>
+                                }
+                              </div>
+                              <span style={{ fontWeight: 500 }}>{u.nombre || '—'}</span>
+                            </div>
+                          </Td>
                           <Td><span style={{ fontSize: 12, color: '#666' }}>{u.email}</span></Td>
                           <Td><Badge txt={u.tipo || 'particular'} color="#555" bg="#f0f0f0" /></Td>
                           <Td><Badge txt={u.plan || 'gratis'} color={u.plan === 'profesional' ? '#065f46' : '#555'} bg={u.plan === 'profesional' ? '#d1fae5' : '#f0f0f0'} /></Td>
@@ -588,7 +600,7 @@ export default function Admin() {
                             <Btn onClick={() => eliminarUsuario(u.id, u.nombre || u.email)} variant="danger" small>Eliminar</Btn>
                           </Td>
                         </tr>
-                      ))}
+                      )})}
                     </tbody>
                   </table>
                 )}

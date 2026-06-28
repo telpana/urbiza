@@ -19,9 +19,9 @@ export async function GET(req: Request) {
     return query
   }
 
-  let { data, error } = await buildQuery('id,nombre,email,tipo,plan,numero_aei,aei_aprobado,inmobiliaria,created_at,plan_activo_hasta')
+  let { data, error } = await buildQuery('id,nombre,email,tipo,plan,numero_aei,aei_aprobado,inmobiliaria,foto_url,created_at,plan_activo_hasta')
   if (error) {
-    const fallback = await buildQuery('id,nombre,email,tipo,plan,numero_aei,inmobiliaria,created_at,plan_activo_hasta')
+    const fallback = await buildQuery('id,nombre,email,tipo,plan,numero_aei,inmobiliaria,foto_url,created_at,plan_activo_hasta')
     data = fallback.data
   }
   return NextResponse.json(data ?? [])
