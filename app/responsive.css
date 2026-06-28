@@ -255,10 +255,6 @@ img { max-width: 100%; }
     letter-spacing: 0.2px !important;
   }
 
-  /* Publicar — pills vs select */
-  .pub-select-desktop { display: none !important; }
-  .pub-pills-mobile { display: flex !important; }
-
   /* Publicar — baños fila entera, parqueos+planta juntos abajo */
   .pub-form-grid-3 { grid-template-columns: 1fr 1fr !important; }
   .pub-form-grid-3 > div:first-child { grid-column: 1 / -1 !important; }
