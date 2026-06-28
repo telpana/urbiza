@@ -184,6 +184,10 @@ img { max-width: 100%; }
   .pub-amenidades-grid { grid-template-columns: repeat(2, 1fr) !important; }
   .pub-fotos-grid { grid-template-columns: repeat(3, 1fr) !important; }
 
+  /* Estadísticas */
+  .estadisticas-tabla-desktop { display: none !important; }
+  .estadisticas-cards-mobile { display: flex !important; }
+
   /* Mi perfil */
   .perfil-fields-grid { grid-template-columns: 1fr !important; }
   .perfil-avatar-row { flex-direction: column !important; align-items: center !important; text-align: center; }

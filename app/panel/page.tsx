@@ -1337,31 +1337,74 @@ export default function Panel() {
                 <div style={{ background: '#fff', borderRadius: 8, padding: '36px 24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center', color: '#aaa', fontSize: 13 }}>
                   {Tpanel.anuncios.publicarPrimero}
                 </div>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  {anunciosAMostrar.map((a: any) => (
-                    <div key={a.id} style={{ background: '#fff', borderRadius: 10, padding: '16px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
-                      <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 14, fontWeight: 600, color: '#111', textDecoration: 'none', display: 'block', marginBottom: 14 }}
-                        onMouseEnter={e => (e.currentTarget.style.color = '#006D77')} onMouseLeave={e => (e.currentTarget.style.color = '#111')}>
-                        {a.titulo}
-                      </a>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8, textAlign: 'center' }}>
-                        {[
-                          { val: fmtStat(a.clics), label: Tpanel.estadisticas.visitasCol, color: '#006D77' },
-                          { val: fmtStat(a.telVistos), label: 'Tel.', color: '#10b981' },
-                          { val: fmtStat(a.mensajes), label: Tpanel.estadisticas.mensajesCol, color: '#f59e0b' },
-                          { val: fmtStat(a.favoritos), label: Tpanel.estadisticas.guardadosCol, color: '#e63946' },
-                        ].map(s => (
-                          <div key={s.label} style={{ background: '#f8fdfd', borderRadius: 8, padding: '10px 6px' }}>
-                            <div style={{ fontSize: 20, fontWeight: 700, color: s.color, lineHeight: 1 }}>{s.val}</div>
-                            <div style={{ fontSize: 10, color: '#aaa', marginTop: 4, fontWeight: 500 }}>{s.label}</div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
+              ) : (<>
+
+                {/* DESKTOP: tabla */}
+                <div className="estadisticas-tabla-desktop" style={{ background: '#fff', borderRadius: 10, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <thead>
+                      <tr style={{ borderBottom: '2px solid #f0f0f0' }}>
+                        <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: 12, fontWeight: 600, color: '#888' }}>Anuncio</th>
+                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#006D77' }}>{Tpanel.estadisticas.visitasCol}</th>
+                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#10b981' }}>Tel.</th>
+                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#f59e0b' }}>{Tpanel.estadisticas.mensajesCol}</th>
+                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#e63946' }}>{Tpanel.estadisticas.guardadosCol}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {anunciosAMostrar.map((a: any) => (
+                        <tr key={a.id} style={{ borderBottom: '1px solid #f5f5f5' }}
+                          onMouseEnter={e => (e.currentTarget.style.background = '#fafafa')}
+                          onMouseLeave={e => (e.currentTarget.style.background = '')}>
+                          <td style={{ padding: '12px 16px' }}>
+                            <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 13, fontWeight: 600, color: '#111', textDecoration: 'none' }}
+                              onMouseEnter={e => (e.currentTarget.style.color = '#006D77')} onMouseLeave={e => (e.currentTarget.style.color = '#111')}>
+                              {a.titulo}
+                            </a>
+                            <div style={{ fontSize: 11, color: '#aaa', marginTop: 2 }}>{a.zona}</div>
+                          </td>
+                          <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#006D77', padding: '12px 10px' }}>{fmtStat(a.clics)}</td>
+                          <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#10b981', padding: '12px 10px' }}>{fmtStat(a.telVistos)}</td>
+                          <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#f59e0b', padding: '12px 10px' }}>{fmtStat(a.mensajes)}</td>
+                          <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#e63946', padding: '12px 10px' }}>{fmtStat(a.favoritos)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
-              )}
+
+                {/* MÓVIL: cards con foto */}
+                <div className="estadisticas-cards-mobile" style={{ display: 'none', flexDirection: 'column', gap: 10 }}>
+                  {anunciosAMostrar.map((a: any) => {
+                    const foto = Array.isArray(a.fotos) && a.fotos.length > 0 ? a.fotos[0] : null
+                    return (
+                      <div key={a.id} style={{ background: '#fff', borderRadius: 10, padding: '14px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
+                        <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 12 }}>
+                          <div style={{ width: 64, height: 50, borderRadius: 7, overflow: 'hidden', flexShrink: 0, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            {foto ? <img src={foto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>}
+                          </div>
+                          <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 13, fontWeight: 600, color: '#111', textDecoration: 'none', flex: 1, lineHeight: 1.3 }}>
+                            {a.titulo}
+                          </a>
+                        </div>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 6, textAlign: 'center' }}>
+                          {[
+                            { val: fmtStat(a.clics), label: Tpanel.estadisticas.visitasCol, color: '#006D77' },
+                            { val: fmtStat(a.telVistos), label: 'Tel.', color: '#10b981' },
+                            { val: fmtStat(a.mensajes), label: Tpanel.estadisticas.mensajesCol, color: '#f59e0b' },
+                            { val: fmtStat(a.favoritos), label: Tpanel.estadisticas.guardadosCol, color: '#e63946' },
+                          ].map(s => (
+                            <div key={s.label} style={{ background: '#f8fdfd', borderRadius: 8, padding: '8px 4px' }}>
+                              <div style={{ fontSize: 18, fontWeight: 700, color: s.color, lineHeight: 1 }}>{s.val}</div>
+                              <div style={{ fontSize: 10, color: '#aaa', marginTop: 3, fontWeight: 500 }}>{s.label}</div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </>)}
             </div>
           )}
 
