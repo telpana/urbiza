@@ -1015,7 +1015,10 @@ export default function Panel() {
                   {!['Edificio', 'Terreno'].includes(pubTipo) && (
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.habitaciones}</label>
-                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                      <select className="pub-select-desktop" value={pubHab} onChange={e => setPubHab(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
+                        <option value="0">{Tpanel.publicar.estudio}</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4+</option>
+                      </select>
+                      <div className="pub-pills-mobile" style={{ display: 'none', gap: 8, flexWrap: 'wrap' }}>
                         {[['0', Tpanel.publicar.estudio], ['1','1'], ['2','2'], ['3','3'], ['4','4+']].map(([val, lbl]) => (
                           <button key={val} type="button" onClick={() => setPubHab(val)} style={{ padding: '8px 16px', borderRadius: 20, border: `1.5px solid ${pubHab === val ? '#006D77' : '#e0e0e0'}`, background: pubHab === val ? '#006D77' : '#fff', color: pubHab === val ? '#fff' : '#555', fontSize: 13, fontWeight: pubHab === val ? 600 : 400, cursor: 'pointer', transition: 'all 0.15s' }}>{lbl}</button>
                         ))}
@@ -1028,7 +1031,10 @@ export default function Panel() {
                   <div className="pub-form-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 16 }}>
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.banos}</label>
-                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                      <select className="pub-select-desktop" value={pubBanos} onChange={e => setPubBanos(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
+                        <option value="1">1</option><option value="2">2</option><option value="3">3+</option>
+                      </select>
+                      <div className="pub-pills-mobile" style={{ display: 'none', gap: 8, flexWrap: 'wrap' }}>
                         {[['1','1'], ['2','2'], ['3','3+']].map(([val, lbl]) => (
                           <button key={val} type="button" onClick={() => setPubBanos(val)} style={{ padding: '8px 16px', borderRadius: 20, border: `1.5px solid ${pubBanos === val ? '#006D77' : '#e0e0e0'}`, background: pubBanos === val ? '#006D77' : '#fff', color: pubBanos === val ? '#fff' : '#555', fontSize: 13, fontWeight: pubBanos === val ? 600 : 400, cursor: 'pointer', transition: 'all 0.15s' }}>{lbl}</button>
                         ))}
