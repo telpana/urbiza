@@ -111,11 +111,14 @@ img { max-width: 100%; }
 ════════════════════════════════ */
 .panel-hamburger { display: none; }
 .panel-sidebar-overlay { display: none; }
+.panel-nav-hamburger-right { display: none; }
 
 @media (max-width: 900px) {
-  /* Sidebar oculto, hamburger visible */
+  /* Sidebar oculto, hamburger derecho visible */
   .panel-sidebar { display: none !important; }
-  .panel-hamburger {
+  .panel-hamburger { display: none !important; }
+  .panel-nav-right { display: none !important; }
+  .panel-nav-hamburger-right {
     display: flex !important;
     align-items: center;
     justify-content: center;

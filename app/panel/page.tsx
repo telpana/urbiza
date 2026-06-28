@@ -190,6 +190,7 @@ export default function Panel() {
   const menuItems = getMenuItems(Tpanel)
   const [seccion, setSeccion] = useState('anuncios')
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [panelNavOpen, setPanelNavOpen] = useState(false)
   const [filtroTipo, setFiltroTipo] = useState('')
   const [filtroProvincia, setFiltroProvincia] = useState('')
   const [provinciaOpen, setProvinciaOpen] = useState(false)
@@ -627,6 +628,30 @@ export default function Panel() {
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
 
+      {/* MENÚ MÓVIL NAV DROPDOWN */}
+      {panelNavOpen && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.25)' }} onClick={() => setPanelNavOpen(false)}>
+          <div style={{ position: 'absolute', top: 54, left: 0, right: 0, background: '#fff', boxShadow: '0 12px 32px rgba(0,0,0,0.15)', borderRadius: '0 0 16px 16px', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
+            <div style={{ padding: '4px 0' }}>
+              {menuItems.filter(item => item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)).map(item => (
+                <button key={item.id} onClick={() => { setSeccion(item.id); setPanelNavOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '13px 20px', fontSize: 14, color: seccion === item.id ? '#006D77' : '#333', background: seccion === item.id ? '#f0fafa' : 'transparent', cursor: 'pointer', boxSizing: 'border-box' }}>
+                  <span style={{ color: seccion === item.id ? '#006D77' : '#888', display: 'flex' }}>{item.icon}</span>
+                  {item.label}
+                </button>
+              ))}
+            </div>
+            <div style={{ borderTop: '1px solid #f0f0f0', padding: '4px 0 6px' }}>
+              <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 20px', fontSize: 14, color: '#333', textDecoration: 'none' }}>
+                <span style={{ color: '#888', display: 'flex' }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                </span>
+                Ir a la web
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* NAV */}
       <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
@@ -638,7 +663,7 @@ export default function Panel() {
           </a>
           <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 10px', borderRadius: 10 }}>MI PANEL</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+        <div className="panel-nav-right" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#004E57', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: '#83D4DB', overflow: 'hidden' }}>
               {fotoPerfilUrl ? <img src={fotoPerfilUrl} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity 0.25s' }} /> : (perfilNombre || usuario?.nombre || 'U').split(' ').map((n: string) => n[0]).join('').slice(0,2).toUpperCase()}
@@ -657,6 +682,9 @@ export default function Panel() {
             {Tn.verWeb}
           </a>
         </div>
+        <button className="panel-nav-hamburger-right" onClick={() => setPanelNavOpen(v => !v)} style={{ display: 'none', background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 6, padding: '6px 8px', cursor: 'pointer' }}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
       </nav>
 
       <div style={{ display: 'flex' }}>
