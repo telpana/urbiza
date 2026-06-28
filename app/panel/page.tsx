@@ -1025,7 +1025,7 @@ export default function Panel() {
                   )}
                 </div>
 
-                {pubTipo !== 'Edificio' && (
+                {!['Edificio', 'Terreno'].includes(pubTipo) && (
                   <div className="pub-form-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 16 }}>
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.banos}</label>
