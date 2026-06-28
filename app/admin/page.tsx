@@ -694,8 +694,12 @@ export default function Admin() {
               <Card style={{ overflow: 'auto' }}>
                 {destacadosLoading ? <div style={{ padding: 24, color: '#aaa', fontSize: 13 }}>Cargando...</div> : (
                   <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 620 }}>
-                    <thead style={{ background: '#fafafa', borderBottom: '1px solid #f0f0f0' }}>
-                      <tr><Th>Anuncio</Th><Th>Zona</Th><Th>Tipo</Th><Th>Propietario</Th><Th>Destac. hasta</Th></tr>
+                    <thead>
+                      <tr style={{ borderBottom: '1.5px solid #f0f0f0', background: '#fafafa' }}>
+                        {['Anuncio','Zona','Tipo','Propietario','Destac. hasta'].map((h, i) => (
+                          <th key={i} style={{ textAlign: 'left', fontSize: 11, color: '#999', fontWeight: 600, padding: '12px 16px', textTransform: 'uppercase', letterSpacing: 0.4 }}>{h}</th>
+                        ))}
+                      </tr>
                     </thead>
                     <tbody>
                       {destacadosActivos.length === 0 && (
@@ -705,22 +709,22 @@ export default function Admin() {
                         const hasta = new Date(p.destacado_hasta)
                         const diasRestantes = Math.ceil((hasta.getTime() - Date.now()) / 86400000)
                         return (
-                          <tr key={p.id} style={{ borderBottom: '1px solid #f8f8f8' }} onMouseEnter={e => (e.currentTarget.style.background = '#fafafa')} onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
-                            <Td>
+                          <tr key={p.id} style={{ borderBottom: '1px solid #f5f5f5' }} onMouseEnter={e => (e.currentTarget.style.background = '#fafcfc')} onMouseLeave={e => (e.currentTarget.style.background = '')}>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
                               <a href={`/propiedad/${p.id}`} target="_blank" rel="noreferrer" style={{ color: C.verde, fontWeight: 500, textDecoration: 'none', fontSize: 13 }}>{p.titulo}</a>
-                            </Td>
-                            <Td><span style={{ fontSize: 12, color: '#666' }}>{p.zona}</span></Td>
-                            <Td><Badge txt={p.tipo} color="#555" bg="#f0f0f0" /></Td>
-                            <Td>
+                            </td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 12, color: '#666' }}>{p.zona}</span></td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><Badge txt={p.tipo} color="#555" bg="#f0f0f0" /></td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
                               <div style={{ fontSize: 13 }}>{(p.usuarios as any)?.nombre || '—'}</div>
                               <div style={{ fontSize: 11, color: '#aaa' }}>{(p.usuarios as any)?.email || ''}</div>
-                            </Td>
-                            <Td>
+                            </td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
                               <div style={{ fontSize: 13, fontWeight: 500, color: diasRestantes <= 3 ? '#991b1b' : '#111' }}>{fmtFecha(p.destacado_hasta)}</div>
                               <div style={{ fontSize: 11, color: diasRestantes <= 3 ? '#ef4444' : '#aaa' }}>
                                 {diasRestantes === 1 ? 'Vence mañana' : `${diasRestantes} días restantes`}
                               </div>
-                            </Td>
+                            </td>
                           </tr>
                         )
                       })}
