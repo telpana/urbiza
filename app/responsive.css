@@ -200,29 +200,7 @@ img { max-width: 100%; }
     border-radius: 14px !important;
     position: relative !important;
   }
-  .cursos-banner::before {
-    content: '' !important;
-    position: absolute !important;
-    top: -40px !important;
-    right: -40px !important;
-    width: 180px !important;
-    height: 180px !important;
-    border-radius: 50% !important;
-    background: rgba(255,255,255,0.06) !important;
-    pointer-events: none !important;
-  }
-  .cursos-banner::after {
-    content: '' !important;
-    position: absolute !important;
-    bottom: -20px !important;
-    left: -20px !important;
-    width: 120px !important;
-    height: 120px !important;
-    border-radius: 50% !important;
-    background: rgba(255,255,255,0.04) !important;
-    pointer-events: none !important;
-  }
-  .cursos-banner > div:first-child {
+.cursos-banner > div:first-child {
     padding: 24px 20px 0 !important;
     position: relative !important;
     z-index: 1 !important;
