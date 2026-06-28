@@ -564,8 +564,12 @@ export default function Admin() {
               <Card style={{ overflow: 'auto' }}>
                 {usersLoading ? <div style={{ padding: 24, color: '#aaa', fontSize: 13 }}>Cargando...</div> : (
                   <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 700 }}>
-                    <thead style={{ background: '#fafafa', borderBottom: '1px solid #f0f0f0' }}>
-                      <tr><Th>Nombre</Th><Th>Email</Th><Th>Tipo</Th><Th>Plan</Th><Th>AEI</Th><Th>Registro</Th><Th></Th></tr>
+                    <thead>
+                      <tr style={{ borderBottom: '1.5px solid #f0f0f0', background: '#fafafa' }}>
+                        {['Nombre','Email','Tipo','Plan','AEI','Registro',''].map((h, i) => (
+                          <th key={i} style={{ textAlign: 'left', fontSize: 11, color: '#999', fontWeight: 600, padding: `12px 16px`, textTransform: 'uppercase', letterSpacing: 0.4 }}>{h}</th>
+                        ))}
+                      </tr>
                     </thead>
                     <tbody>
                       {usuarios.length === 0 && <tr><td colSpan={7} style={{ padding: 24, fontSize: 13, color: '#aaa', textAlign: 'center' }}>Sin resultados</td></tr>}
@@ -573,7 +577,7 @@ export default function Admin() {
                         const inicial = (u.nombre || u.email || '?')[0].toUpperCase()
                         return (
                         <tr key={u.id} style={{ borderBottom: '1px solid #f8f8f8' }} onMouseEnter={e => (e.currentTarget.style.background = '#fafcfc')} onMouseLeave={e => (e.currentTarget.style.background = '')}>
-                          <Td>
+                          <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
                               <div style={{ width: 30, height: 30, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 {u.foto_url
@@ -581,24 +585,24 @@ export default function Admin() {
                                   : <span style={{ fontSize: 12, fontWeight: 700, color: '#006D77' }}>{inicial}</span>
                                 }
                               </div>
-                              <span style={{ fontWeight: 500 }}>{u.nombre || '—'}</span>
+                              <span style={{ fontWeight: 500, fontSize: 13 }}>{u.nombre || '—'}</span>
                             </div>
-                          </Td>
-                          <Td><span style={{ fontSize: 12, color: '#666' }}>{u.email}</span></Td>
-                          <Td><Badge txt={u.tipo || 'particular'} color="#555" bg="#f0f0f0" /></Td>
-                          <Td><Badge txt={u.plan || 'gratis'} color={u.plan === 'profesional' ? '#065f46' : '#555'} bg={u.plan === 'profesional' ? '#d1fae5' : '#f0f0f0'} /></Td>
-                          <Td>
+                          </td>
+                          <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 12, color: '#666' }}>{u.email}</span></td>
+                          <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><Badge txt={u.tipo || 'particular'} color="#555" bg="#f0f0f0" /></td>
+                          <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><Badge txt={u.plan || 'gratis'} color={u.plan === 'profesional' ? '#065f46' : '#555'} bg={u.plan === 'profesional' ? '#d1fae5' : '#f0f0f0'} /></td>
+                          <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
                             {u.numero_aei
                               ? u.aei_aprobado
                                 ? <Badge txt={`✓ ${u.numero_aei}`} color="#065f46" bg="#d1fae5" />
                                 : <Badge txt={`⏳ ${u.numero_aei}`} color="#92400e" bg="#fef3c7" />
                               : <span style={{ color: '#ccc', fontSize: 12 }}>—</span>
                             }
-                          </Td>
-                          <Td><span style={{ fontSize: 12, color: '#aaa' }}>{fmtFecha(u.created_at)}</span></Td>
-                          <Td>
+                          </td>
+                          <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 12, color: '#aaa', whiteSpace: 'nowrap' }}>{fmtFecha(u.created_at)}</span></td>
+                          <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
                             <Btn onClick={() => eliminarUsuario(u.id, u.nombre || u.email)} variant="danger" small>Eliminar</Btn>
-                          </Td>
+                          </td>
                         </tr>
                       )})}
                     </tbody>
