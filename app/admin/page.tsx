@@ -888,6 +888,27 @@ export default function Admin() {
 
           {seccion === 'codigos' && (
             <Seccion titulo="Códigos promocionales" desc="Crea códigos que dan 30 días gratis de plan Pro antes del primer cobro">
+              {/* KPIs */}
+              {(() => {
+                const activos = codigos.filter(c => c.activo)
+                const tieneIlimitado = activos.some(c => !c.usos_maximos)
+                const usosDisponibles = tieneIlimitado ? '∞' : activos.reduce((s, c) => s + ((c.usos_maximos ?? 0) - (c.usos_actuales ?? 0)), 0)
+                return (
+                  <div style={{ display: 'flex', gap: 16, marginBottom: 20, flexWrap: 'wrap' }}>
+                    {[
+                      { label: 'Códigos activos', valor: activos.length },
+                      { label: 'Usos totales', valor: codigos.reduce((s, c) => s + (c.usos_actuales ?? 0), 0) },
+                      { label: 'Usos disponibles', valor: usosDisponibles },
+                    ].map(k => (
+                      <Card key={k.label} style={{ padding: '16px 24px', minWidth: 140 }}>
+                        <div style={{ fontSize: 12, color: '#888', marginBottom: 4 }}>{k.label}</div>
+                        <div style={{ fontSize: 28, fontWeight: 700, color: C.verde }}>{k.valor}</div>
+                      </Card>
+                    ))}
+                  </div>
+                )
+              })()}
+
               {/* Crear código */}
               <Card style={{ padding: 24, marginBottom: 20 }}>
                 <div style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 16 }}>Nuevo código</div>
