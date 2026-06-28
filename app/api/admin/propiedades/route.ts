@@ -13,7 +13,7 @@ export async function GET(req: Request) {
   const url = new URL(req.url)
   const q = url.searchParams.get('q') || ''
   let query = sb.from('propiedades')
-    .select('id,titulo,zona,precio,tipo,operacion,estado,created_at,destacado,usuarios(nombre,email)')
+    .select('id,titulo,zona,precio,tipo,operacion,estado,created_at,destacado,fotos,usuarios(nombre,email)')
     .order('created_at', { ascending: false })
     .limit(100)
   if (q) query = query.ilike('titulo', `%${q}%`)
