@@ -1369,20 +1369,17 @@ export default function Panel() {
           {!cargando && seccion === 'destacar' && (
             <div>
               {/* Hero */}
-              <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 50%, #17A6B4 100%)', borderRadius: 16, padding: '28px 24px', marginBottom: 28, color: '#fff', overflow: 'hidden', position: 'relative' }}>
-                <div style={{ position: 'absolute', top: -30, right: -30, width: 140, height: 140, background: 'rgba(255,255,255,0.05)', borderRadius: '50%' }} />
-                <div style={{ position: 'absolute', bottom: -20, right: 60, width: 80, height: 80, background: 'rgba(255,255,255,0.05)', borderRadius: '50%' }} />
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="#FFD700" stroke="#FFD700" strokeWidth="1"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                  <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1, opacity: 0.85, textTransform: 'uppercase' }}>Destacar anuncio</span>
-                </div>
-                <h1 style={{ fontSize: 22, fontWeight: 800, margin: '0 0 6px', lineHeight: 1.2 }}>Más visitas,<br/>más contactos</h1>
-                <p style={{ fontSize: 13, opacity: 0.75, margin: '0 0 20px', lineHeight: 1.5 }}>Aparece en las primeras posiciones y multiplica tu visibilidad</p>
-                <div style={{ display: 'flex', gap: 10 }}>
-                  {[{ n: '10x', label: 'más visitas' }, { n: 'TOP', label: 'posición' }, { n: '#1', label: 'en búsquedas' }].map(s => (
-                    <div key={s.n} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.12)', borderRadius: 10, padding: '10px 14px', backdropFilter: 'blur(4px)' }}>
-                      <div style={{ fontSize: 17, fontWeight: 800, letterSpacing: -0.5 }}>{s.n}</div>
-                      <div style={{ fontSize: 10, opacity: 0.75, marginTop: 2 }}>{s.label}</div>
+              <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 60%, #17A6B4 100%)', borderRadius: 16, padding: '24px 20px', marginBottom: 24, color: '#fff', overflow: 'hidden', position: 'relative' }}>
+                <div style={{ position: 'absolute', top: -40, right: -40, width: 160, height: 160, background: 'rgba(255,255,255,0.04)', borderRadius: '50%' }} />
+                <div style={{ position: 'absolute', bottom: -30, right: 40, width: 100, height: 100, background: 'rgba(255,255,255,0.04)', borderRadius: '50%' }} />
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, opacity: 0.6, textTransform: 'uppercase', marginBottom: 10 }}>Destacar anuncio</div>
+                <h1 style={{ fontSize: 24, fontWeight: 800, margin: '0 0 8px', lineHeight: 1.15 }}>Más visitas,<br/>más contactos</h1>
+                <p style={{ fontSize: 13, opacity: 0.7, margin: '0 0 20px', lineHeight: 1.5, maxWidth: 260 }}>Aparece primero en las búsquedas y consigue hasta 10× más visitas</p>
+                <div style={{ display: 'flex', gap: 8 }}>
+                  {[{ n: '10×', label: 'más visitas' }, { n: 'TOP', label: 'posición' }, { n: '#1', label: 'búsquedas' }].map(s => (
+                    <div key={s.n} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.1)', borderRadius: 10, padding: '9px 12px', flex: 1 }}>
+                      <div style={{ fontSize: 16, fontWeight: 800 }}>{s.n}</div>
+                      <div style={{ fontSize: 9, opacity: 0.7, marginTop: 2, textTransform: 'uppercase', letterSpacing: 0.5 }}>{s.label}</div>
                     </div>
                   ))}
                 </div>
@@ -1407,10 +1404,10 @@ export default function Panel() {
                         <div style={{ fontSize: 26, fontWeight: 800, color: sel && p.popular ? '#fff' : sel ? '#006D77' : '#111', lineHeight: 1, marginBottom: 14 }}>
                           <span style={{ fontSize: 13, fontWeight: 600, verticalAlign: 'top', marginTop: 4, display: 'inline-block' }}>US$</span>{p.precio}
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: 5, alignItems: 'center' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, alignItems: 'flex-start', width: '100%' }}>
                           {['Posición top', 'Badge destacado', 'Más visibilidad'].map(f => (
-                            <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: sel && p.popular ? 'rgba(255,255,255,0.85)' : '#555' }}>
-                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={sel && p.popular ? '#fff' : '#006D77'} strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+                            <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: sel && p.popular ? 'rgba(255,255,255,0.85)' : '#555', whiteSpace: 'nowrap' }}>
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke={sel && p.popular ? '#fff' : '#006D77'} strokeWidth="3" style={{ flexShrink: 0 }}><polyline points="20 6 9 17 4 12"/></svg>
                               {f}
                             </div>
                           ))}
@@ -1444,7 +1441,7 @@ export default function Panel() {
                           }
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ fontSize: 13, fontWeight: 600, color: sel ? '#006D77' : '#111', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.titulo}</div>
-                            <div style={{ fontSize: 11, color: '#aaa', marginTop: 2 }}>US$ {a.precio?.toLocaleString('en-US')} · {a.zona}</div>
+                            <div style={{ fontSize: 11, color: '#aaa', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>US$ {a.precio?.toLocaleString('en-US')} · {a.zona}</div>
                           </div>
                           {a.destacado && a.destacado_hasta && (() => { const dias = Math.ceil((new Date(a.destacado_hasta).getTime() - Date.now()) / 86400000); return dias > 0 ? <span style={{ fontSize: 10, fontWeight: 700, background: dias <= 3 ? '#fee2e2' : '#e0f5f7', color: dias <= 3 ? '#991b1b' : '#006D77', padding: '2px 8px', borderRadius: 8, flexShrink: 0, whiteSpace: 'nowrap' }}>{dias}d</span> : null })()}
                           <div style={{ width: 20, height: 20, borderRadius: '50%', border: `2px solid ${sel ? '#006D77' : '#ddd'}`, background: sel ? '#006D77' : '#fff', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.15s' }}>
@@ -1458,20 +1455,28 @@ export default function Panel() {
               </div>
 
               {/* CTA */}
-              <button onClick={async () => {
-                if (!planSeleccionado || !anuncioADestacar) return
-                const { data: { user } } = await supabase.auth.getUser()
-                const res = await fetch('/api/checkout', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ userId: user?.id, email: user?.email, tipo: planSeleccionado, propiedadId: String(anuncioADestacar.id) })
-                })
-                const data = await res.json()
-                if (data.url) window.location.href = data.url
-              }} style={{ all: 'unset', width: '100%', background: planSeleccionado && anuncioADestacar ? 'linear-gradient(135deg, #006D77, #17A6B4)' : '#e0e0e0', color: '#fff', padding: '15px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: planSeleccionado && anuncioADestacar ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxSizing: 'border-box', transition: 'opacity 0.15s', boxShadow: planSeleccionado && anuncioADestacar ? '0 4px 16px rgba(0,109,119,0.3)' : 'none' }}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                {Tpanel.destacar.pagar}
-              </button>
+              <div style={{ position: 'sticky', bottom: 0, background: '#f4f5f6', padding: '12px 0 4px', marginTop: 8 }}>
+                {planSeleccionado && anuncioADestacar && (
+                  <div style={{ fontSize: 12, color: '#888', textAlign: 'center', marginBottom: 8 }}>
+                    <span style={{ fontWeight: 600, color: '#006D77' }}>{anuncioADestacar.titulo}</span> · {planesDestacado.find(p => String(p.dias) === planSeleccionado)?.label} · <span style={{ fontWeight: 600, color: '#111' }}>US$ {planesDestacado.find(p => String(p.dias) === planSeleccionado)?.precio}</span>
+                  </div>
+                )}
+                <button onClick={async () => {
+                  if (!planSeleccionado || !anuncioADestacar) return
+                  const { data: { user } } = await supabase.auth.getUser()
+                  const res = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: user?.id, email: user?.email, tipo: planSeleccionado, propiedadId: String(anuncioADestacar.id) })
+                  })
+                  const data = await res.json()
+                  if (data.url) window.location.href = data.url
+                }} style={{ all: 'unset', width: '100%', background: planSeleccionado && anuncioADestacar ? 'linear-gradient(135deg, #006D77, #17A6B4)' : '#d1d5db', color: '#fff', padding: '14px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: planSeleccionado && anuncioADestacar ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxSizing: 'border-box', boxShadow: planSeleccionado && anuncioADestacar ? '0 4px 20px rgba(0,109,119,0.35)' : 'none', transition: 'all 0.2s' }}>
+                  {planSeleccionado && anuncioADestacar
+                    ? <>{Tpanel.destacar.pagar} →</>
+                    : 'Selecciona duración y anuncio'}
+                </button>
+              </div>
             </div>
           )}
 
