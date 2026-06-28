@@ -851,11 +851,21 @@ export default function Admin() {
                     <img src={featureImgUrl} alt="feature" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                 )}
-                <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#f0fafb', border: `1.5px solid ${C.verde}`, borderRadius: 6, padding: '9px 18px', fontSize: 13, fontWeight: 600, color: C.verde, cursor: 'pointer' }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                  {configUploading === 'feature_img_url' ? 'Subiendo…' : 'Subir imagen'}
-                  <input type="file" accept="image/*" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) subirConfig('feature_img_url', f) }} />
-                </label>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#f0fafb', border: `1.5px solid ${C.verde}`, borderRadius: 6, padding: '9px 18px', fontSize: 13, fontWeight: 600, color: C.verde, cursor: 'pointer' }}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    {configUploading === 'feature_img_url' ? 'Subiendo…' : 'Subir imagen'}
+                    <input type="file" accept="image/*" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) subirConfig('feature_img_url', f) }} />
+                  </label>
+                  {featureImgUrl && (
+                    <button onClick={async () => {
+                      await fetch('/api/admin/config', { method: 'POST', headers: { ...authHeader(), 'Content-Type': 'application/json' }, body: JSON.stringify({ clave: 'feature_img_url', valor: '' }) })
+                      setFeatureImgUrl('')
+                    }} style={{ all: 'unset', fontSize: 13, color: '#e53e3e', cursor: 'pointer', padding: '9px 14px', border: '1.5px solid #fca5a5', borderRadius: 6 }}>
+                      Quitar imagen
+                    </button>
+                  )}
+                </div>
               </Card>
             </Seccion>
           )}
