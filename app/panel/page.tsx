@@ -218,6 +218,7 @@ export default function Panel() {
   type FotoItem = { id: string; src: string; file?: File }
   const [fotosLista, setFotosLista] = useState<FotoItem[]>([])
   const [fotoDragOver, setFotoDragOver] = useState<number | null>(null)
+  const touchDragIdx = useRef<number | null>(null)
   const [pubTitulo, setPubTitulo] = useState('')
   const [pubPrecio, setPubPrecio] = useState('')
   const [pubM2, setPubM2] = useState('')
@@ -1087,6 +1088,7 @@ export default function Panel() {
                         {fotosLista.map((item, i) => (
                           <div
                             key={item.id}
+                            data-fotoidx={i}
                             draggable
                             onDragStart={e => { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', String(i)) }}
                             onDragEnter={e => { e.preventDefault(); setFotoDragOver(i) }}
@@ -1094,7 +1096,19 @@ export default function Panel() {
                             onDragLeave={() => setFotoDragOver(null)}
                             onDrop={e => { e.preventDefault(); const desde = Number(e.dataTransfer.getData('text/plain')); if (!isNaN(desde) && desde !== i) moverFoto(desde, i); setFotoDragOver(null) }}
                             onDragEnd={() => setFotoDragOver(null)}
-                            style={{ position: 'relative', borderRadius: 6, border: fotoDragOver === i ? '2px dashed #006D77' : i === 0 ? '2px solid #006D77' : '2px solid #e0e0e0', cursor: 'grab', userSelect: 'none' }}
+                            onTouchStart={e => { touchDragIdx.current = i }}
+                            onTouchMove={e => {
+                              e.preventDefault()
+                              const t = e.touches[0]
+                              const el = document.elementFromPoint(t.clientX, t.clientY)
+                              const target = el?.closest('[data-fotoidx]')
+                              if (target) setFotoDragOver(Number(target.getAttribute('data-fotoidx')))
+                            }}
+                            onTouchEnd={() => {
+                              if (touchDragIdx.current !== null && fotoDragOver !== null && touchDragIdx.current !== fotoDragOver) moverFoto(touchDragIdx.current, fotoDragOver)
+                              touchDragIdx.current = null; setFotoDragOver(null)
+                            }}
+                            style={{ position: 'relative', borderRadius: 6, border: fotoDragOver === i ? '2px dashed #006D77' : i === 0 ? '2px solid #006D77' : '2px solid #e0e0e0', cursor: 'grab', userSelect: 'none', touchAction: 'none' }}
                           >
                             <div style={{ aspectRatio: '4/3', position: 'relative', overflow: 'hidden', borderRadius: 4 }}>
                               <img src={item.src} draggable={false} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', pointerEvents: 'none' }} />
