@@ -58,8 +58,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({
       ok: true,
-      inicio: new Date(sub.created * 1000).toISOString(),
-      proximo_cobro: new Date(sub.current_period_end * 1000).toISOString(),
+      inicio: sub.created ? new Date(sub.created * 1000).toISOString() : null,
+      proximo_cobro: sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null,
       estado: sub.status,
       last4: card,
       trial_end: trialEnd,
