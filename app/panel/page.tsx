@@ -1816,7 +1816,11 @@ export default function Panel() {
                         <span style={{ background: activo ? 'rgba(255,255,255,0.25)' : 'rgba(255,80,80,0.3)', color: '#fff', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.3)' }}>● {activo ? Tpanel.plan.activo : Tpanel.plan.inactivo}</span>
                       </div>
                       <div style={{ fontSize: 28, fontWeight: 800, letterSpacing: -0.5 }}>US$ 9.99<span style={{ fontSize: 15, fontWeight: 400, opacity: 0.8 }}>/mes</span></div>
-                      {planInfo?.proximo_cobro
+                      {planInfo?.estado === 'trialing' && planInfo?.trial_end
+                        ? <div style={{ fontSize: 12, marginTop: 6, background: 'rgba(255,255,255,0.2)', borderRadius: 8, padding: '4px 10px', display: 'inline-block' }}>
+                            🎁 {Tpanel.plan.periodoGratis} · {fmt(planInfo.trial_end)}
+                          </div>
+                        : planInfo?.proximo_cobro
                         ? <div style={{ fontSize: 12, opacity: 0.8, marginTop: 4 }}>{Tpanel.plan.proximoCobro}: {fmt(planInfo.proximo_cobro)}</div>
                         : usuario?.plan_activo_hasta
                         ? <div style={{ fontSize: 12, opacity: 0.8, marginTop: 4 }}>{Tpanel.plan.activo}: {fmt(usuario.plan_activo_hasta)}</div>
@@ -1856,10 +1860,13 @@ export default function Panel() {
                     ) : planInfo.pagos?.map((p: any, i: number) => (
                       <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '10px 0', borderBottom: i < planInfo.pagos.length - 1 ? '1px solid #f5f5f5' : 'none' }}>
                         <div style={{ flex: 1, fontSize: 13, color: '#333' }}>{fmtCorto(p.fecha)}</div>
-                        <div style={{ fontSize: 13, fontWeight: 600, color: '#111' }}>{p.moneda} {p.monto}</div>
-                        <span style={{ background: p.estado === 'paid' ? '#e0f5f0' : '#fff8e1', color: p.estado === 'paid' ? '#065f46' : '#92400e', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>{p.estado === 'paid' ? Tpanel.publicar.pagado : p.estado}</span>
-                        {p.numero && <div style={{ fontSize: 12, color: '#aaa', minWidth: 80 }}>{p.numero}</div>}
-                        {p.pdf && <a href={p.pdf} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>PDF</a>}
+                        {p.esPromo
+                          ? <span style={{ fontSize: 13, color: '#006D77', fontWeight: 600 }}>🎁 {Tpanel.plan.promocion30}</span>
+                          : <div style={{ fontSize: 13, fontWeight: 600, color: '#111' }}>{p.moneda} {p.monto}</div>
+                        }
+                        {!p.esPromo && <span style={{ background: p.estado === 'paid' ? '#e0f5f0' : '#fff8e1', color: p.estado === 'paid' ? '#065f46' : '#92400e', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>{p.estado === 'paid' ? Tpanel.publicar.pagado : p.estado}</span>}
+                        {!p.esPromo && p.numero && <div style={{ fontSize: 12, color: '#aaa', minWidth: 80 }}>{p.numero}</div>}
+                        {!p.esPromo && p.pdf && <a href={p.pdf} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>PDF</a>}
                       </div>
                     ))}
                   </div>

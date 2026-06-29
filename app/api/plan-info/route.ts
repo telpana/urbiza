@@ -41,14 +41,19 @@ export async function POST(req: Request) {
         ? sub.default_payment_method.card.last4
         : null
 
-    const pagos = invoicesRes.data.map(inv => ({
-      fecha: new Date(inv.created * 1000).toISOString(),
-      monto: (inv.amount_paid / 100).toFixed(2),
-      moneda: inv.currency.toUpperCase(),
-      estado: inv.status,
-      numero: inv.number || '',
-      pdf: inv.invoice_pdf || null,
-    }))
+    const pagos = invoicesRes.data
+      .filter(inv => inv.status !== 'void' && inv.status !== 'draft')
+      .map(inv => ({
+        fecha: new Date(inv.created * 1000).toISOString(),
+        monto: (inv.amount_paid / 100).toFixed(2),
+        moneda: inv.currency.toUpperCase(),
+        estado: inv.status,
+        esPromo: inv.amount_paid === 0,
+        numero: inv.number || '',
+        pdf: inv.amount_paid > 0 ? (inv.invoice_pdf || null) : null,
+      }))
+
+    const trialEnd = sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null
 
     return NextResponse.json({
       ok: true,
@@ -56,6 +61,7 @@ export async function POST(req: Request) {
       proximo_cobro: new Date(sub.current_period_end * 1000).toISOString(),
       estado: sub.status,
       last4: card,
+      trial_end: trialEnd,
       pagos,
     })
   } catch (error: any) {
