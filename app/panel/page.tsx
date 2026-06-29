@@ -2150,43 +2150,65 @@ export default function Panel() {
           )}
 
           {!cargando && seccion === 'ayuda' && tipoUsuario === 'profesional' && (
-            <div style={{ maxWidth: 600 }}>
-              <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 8 }}>{Tpanel.ayuda.titulo}</h1>
-              <p style={{ fontSize: 14, color: '#888', marginBottom: 28 }}>{Tpanel.ayuda.desc}</p>
-
-              <div style={{ background: '#fff', borderRadius: 10, padding: '28px 28px', boxShadow: '0 1px 6px rgba(0,0,0,0.07)', marginBottom: 20 }}>
-                <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 22 }}>
-                  <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, #006D77, #17A6B4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <div style={{ maxWidth: 640 }}>
+              {/* Hero header */}
+              <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 60%, #17A6B4 100%)', borderRadius: 14, padding: '36px 40px', marginBottom: 24, position: 'relative', overflow: 'hidden' }}>
+                {/* Círculos decorativos */}
+                <div style={{ position: 'absolute', top: -30, right: -30, width: 160, height: 160, borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+                <div style={{ position: 'absolute', bottom: -20, right: 60, width: 80, height: 80, borderRadius: '50%', background: 'rgba(255,255,255,0.07)' }} />
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                  <div style={{ fontSize: 26, fontWeight: 800, color: '#fff', letterSpacing: -1.2, marginBottom: 4 }}>
+                    habitade<span style={{ color: '#83D4DB' }}>.</span>
                   </div>
-                  <p style={{ fontSize: 14, color: '#444', lineHeight: 1.7, margin: 0 }}>{Tpanel.ayuda.intro}</p>
+                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 18 }}>Centro de ayuda</div>
+                  <div style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{Tpanel.ayuda.desc}</div>
+                  <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.7, margin: 0, maxWidth: 460 }}>{Tpanel.ayuda.intro}</p>
                 </div>
+              </div>
 
+              {/* Formulario */}
+              <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 2px 12px rgba(0,0,0,0.07)', padding: '28px 32px' }}>
                 {ayudaOk ? (
-                  <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8, padding: '16px 20px', fontSize: 14, color: '#166534', fontWeight: 500 }}>
-                    {Tpanel.ayuda.ok}
+                  <div style={{ textAlign: 'center', padding: '32px 20px' }}>
+                    <div style={{ width: 56, height: 56, borderRadius: '50%', background: '#f0fdf4', border: '2px solid #bbf7d0', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: '#166534', marginBottom: 6 }}>{Tpanel.ayuda.ok}</div>
+                    <button onClick={() => setAyudaOk(false)} style={{ all: 'unset', fontSize: 13, color: '#006D77', cursor: 'pointer', textDecoration: 'underline', marginTop: 8 }}>Enviar otro mensaje</button>
                   </div>
                 ) : (
                   <>
-                    <div style={{ marginBottom: 16 }}>
-                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 8 }}>{Tpanel.ayuda.tipo}</label>
-                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                        {(['mejora', 'error', 'pregunta', 'otro'] as const).map(t => (
-                          <button key={t} onClick={() => setAyudaTipo(t)} style={{ all: 'unset', padding: '7px 14px', borderRadius: 20, fontSize: 13, cursor: 'pointer', border: `1.5px solid ${ayudaTipo === t ? '#006D77' : '#e0e0e0'}`, background: ayudaTipo === t ? '#f0fafa' : '#fafafa', color: ayudaTipo === t ? '#006D77' : '#555', fontWeight: ayudaTipo === t ? 600 : 400 }}>
-                            {Tpanel.ayuda.tipos[t]}
-                          </button>
-                        ))}
+                    <div style={{ marginBottom: 22 }}>
+                      <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#444', marginBottom: 10, letterSpacing: 0.3 }}>{Tpanel.ayuda.tipo.toUpperCase()}</label>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                        {(['mejora', 'error', 'pregunta', 'otro'] as const).map(t => {
+                          const icons: Record<string, React.ReactNode> = {
+                            mejora: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>,
+                            error: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
+                            pregunta: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
+                            otro: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>,
+                          }
+                          const sel = ayudaTipo === t
+                          return (
+                            <button key={t} onClick={() => setAyudaTipo(t)} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 8, padding: '11px 16px', borderRadius: 8, fontSize: 13, cursor: 'pointer', border: `1.5px solid ${sel ? '#006D77' : '#e8e8e8'}`, background: sel ? '#f0fafa' : '#fafafa', color: sel ? '#006D77' : '#555', fontWeight: sel ? 600 : 400, transition: 'all 0.15s' }}>
+                              <span style={{ color: sel ? '#006D77' : '#aaa' }}>{icons[t]}</span>
+                              {Tpanel.ayuda.tipos[t]}
+                            </button>
+                          )
+                        })}
                       </div>
                     </div>
 
-                    <div style={{ marginBottom: 20 }}>
-                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 8 }}>{Tpanel.ayuda.mensaje}</label>
+                    <div style={{ marginBottom: 24 }}>
+                      <label style={{ display: 'block', fontSize: 12, fontWeight: 700, color: '#444', marginBottom: 10, letterSpacing: 0.3 }}>{Tpanel.ayuda.mensaje.toUpperCase()}</label>
                       <textarea
                         value={ayudaMensaje}
                         onChange={e => setAyudaMensaje(e.target.value)}
                         placeholder={Tpanel.ayuda.placeholder}
                         rows={5}
-                        style={{ width: '100%', padding: '12px 14px', border: '1.5px solid #e0e0e0', borderRadius: 8, fontSize: 14, color: '#333', resize: 'vertical', outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box' }}
+                        style={{ width: '100%', padding: '13px 16px', border: '1.5px solid #e8e8e8', borderRadius: 8, fontSize: 14, color: '#333', resize: 'vertical', outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box', lineHeight: 1.6, transition: 'border-color 0.15s' }}
+                        onFocus={e => e.target.style.borderColor = '#006D77'}
+                        onBlur={e => e.target.style.borderColor = '#e8e8e8'}
                       />
                     </div>
 
@@ -2200,8 +2222,9 @@ export default function Panel() {
                         setAyudaOk(true)
                         setAyudaMensaje('')
                       }}
-                      style={{ all: 'unset', background: ayudaEnviando || !ayudaMensaje.trim() ? '#ccc' : '#006D77', color: '#fff', padding: '12px 28px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: ayudaEnviando || !ayudaMensaje.trim() ? 'not-allowed' : 'pointer' }}
+                      style={{ all: 'unset', display: 'inline-flex', alignItems: 'center', gap: 8, background: ayudaEnviando || !ayudaMensaje.trim() ? '#d1d5db' : 'linear-gradient(135deg, #006D77, #17A6B4)', color: '#fff', padding: '13px 32px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: ayudaEnviando || !ayudaMensaje.trim() ? 'not-allowed' : 'pointer', boxShadow: ayudaEnviando || !ayudaMensaje.trim() ? 'none' : '0 4px 14px rgba(0,109,119,0.3)' }}
                     >
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                       {ayudaEnviando ? Tpanel.ayuda.enviando : Tpanel.ayuda.enviar}
                     </button>
                   </>
