@@ -14,6 +14,7 @@ function getMenuItems(Tpanel: any) {
     { id: 'perfil', label: Tpanel?.menu?.perfil ?? 'Mi perfil', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
     { id: 'guardados', label: Tpanel?.menu?.guardados ?? 'Guardados', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> },
     { id: 'cursos', label: Tpanel?.menu?.cursos ?? 'Cursos AEI', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> },
+    { id: 'ayuda', label: Tpanel?.menu?.ayuda ?? 'Ayuda', proOnly: true, icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> },
   ]
 }
 
@@ -205,6 +206,10 @@ export default function Panel() {
   const [tipoOpen, setTipoOpen] = useState(false)
   const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
   const [planInfo, setPlanInfo] = useState<any>(null)
+  const [ayudaTipo, setAyudaTipo] = useState('pregunta')
+  const [ayudaMensaje, setAyudaMensaje] = useState('')
+  const [ayudaEnviando, setAyudaEnviando] = useState(false)
+  const [ayudaOk, setAyudaOk] = useState(false)
   const [estadosAnuncios, setEstadosAnuncios] = useState<Record<number, string>>({})
   const [mensajeSeleccionado, setMensajeSeleccionado] = useState<string | null>(null)
   const [convActiva, setConvActiva] = useState<{ propiedadId: string, otherUserId: string | null, msg: any } | null>(null)
@@ -688,7 +693,7 @@ export default function Panel() {
         <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.25)' }} onClick={() => setPanelNavOpen(false)}>
           <div style={{ position: 'absolute', top: 54, left: 0, right: 0, background: '#fff', boxShadow: '0 12px 32px rgba(0,0,0,0.15)', borderRadius: '0 0 16px 16px', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
             <div style={{ padding: '4px 0' }}>
-              {menuItems.filter(item => item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)).map(item => (
+              {menuItems.filter(item => (item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)) && (!('proOnly' in item) || tipoUsuario === 'profesional')).map(item => (
                 <button key={item.id} onClick={() => { const dest = item.id === 'publicar' && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis ? 'planes' : item.id; setSeccion(dest); setPanelNavOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '13px 20px', fontSize: 14, color: seccion === item.id ? '#006D77' : '#333', background: seccion === item.id ? '#f0fafa' : 'transparent', cursor: 'pointer', boxSizing: 'border-box' }}>
                   <span style={{ color: seccion === item.id ? '#006D77' : '#888', display: 'flex' }}>{item.icon}</span>
                   {item.label}
@@ -791,7 +796,7 @@ export default function Panel() {
 
         {/* SIDEBAR */}
         <div className={`panel-sidebar${sidebarOpen ? ' open' : ''}`} style={{ width: 220, background: '#004E57', minHeight: 'calc(100vh - 54px)', padding: '20px 0', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
-          {menuItems.filter(item => item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)).map(item => (
+          {menuItems.filter(item => (item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)) && (!('proOnly' in item) || tipoUsuario === 'profesional')).map(item => (
             <button key={item.id} onClick={() => { if (item.id === 'publicar' && !(perfilNombre && perfilTelefono)) { setSeccion('publicar'); setSidebarOpen(false); return } if (item.id === 'publicar' && !anuncioEditando && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis) { setSeccion('planes'); setSidebarOpen(false); return } setSeccion(item.id); setSidebarOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.6)', background: seccion === item.id ? 'rgba(255,255,255,0.12)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? '3px solid #83D4DB' : '3px solid transparent', boxSizing: 'border-box', position: 'relative' }}>
               {item.icon}
               {item.label}
@@ -2144,7 +2149,66 @@ export default function Panel() {
             </div>
           )}
 
-          {/* REPORTES ADMIN */}
+          {!cargando && seccion === 'ayuda' && tipoUsuario === 'profesional' && (
+            <div style={{ maxWidth: 600 }}>
+              <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 8 }}>{Tpanel.ayuda.titulo}</h1>
+              <p style={{ fontSize: 14, color: '#888', marginBottom: 28 }}>{Tpanel.ayuda.desc}</p>
+
+              <div style={{ background: '#fff', borderRadius: 10, padding: '28px 28px', boxShadow: '0 1px 6px rgba(0,0,0,0.07)', marginBottom: 20 }}>
+                <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', marginBottom: 22 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'linear-gradient(135deg, #006D77, #17A6B4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  </div>
+                  <p style={{ fontSize: 14, color: '#444', lineHeight: 1.7, margin: 0 }}>{Tpanel.ayuda.intro}</p>
+                </div>
+
+                {ayudaOk ? (
+                  <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 8, padding: '16px 20px', fontSize: 14, color: '#166534', fontWeight: 500 }}>
+                    {Tpanel.ayuda.ok}
+                  </div>
+                ) : (
+                  <>
+                    <div style={{ marginBottom: 16 }}>
+                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 8 }}>{Tpanel.ayuda.tipo}</label>
+                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                        {(['mejora', 'error', 'pregunta', 'otro'] as const).map(t => (
+                          <button key={t} onClick={() => setAyudaTipo(t)} style={{ all: 'unset', padding: '7px 14px', borderRadius: 20, fontSize: 13, cursor: 'pointer', border: `1.5px solid ${ayudaTipo === t ? '#006D77' : '#e0e0e0'}`, background: ayudaTipo === t ? '#f0fafa' : '#fafafa', color: ayudaTipo === t ? '#006D77' : '#555', fontWeight: ayudaTipo === t ? 600 : 400 }}>
+                            {Tpanel.ayuda.tipos[t]}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div style={{ marginBottom: 20 }}>
+                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 8 }}>{Tpanel.ayuda.mensaje}</label>
+                      <textarea
+                        value={ayudaMensaje}
+                        onChange={e => setAyudaMensaje(e.target.value)}
+                        placeholder={Tpanel.ayuda.placeholder}
+                        rows={5}
+                        style={{ width: '100%', padding: '12px 14px', border: '1.5px solid #e0e0e0', borderRadius: 8, fontSize: 14, color: '#333', resize: 'vertical', outline: 'none', fontFamily: 'inherit', boxSizing: 'border-box' }}
+                      />
+                    </div>
+
+                    <button
+                      disabled={ayudaEnviando || !ayudaMensaje.trim()}
+                      onClick={async () => {
+                        if (!ayudaMensaje.trim()) return
+                        setAyudaEnviando(true)
+                        await fetch('/api/ayuda', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ usuario_id: usuario?.id, nombre: usuario?.nombre, email: usuario?.email, tipo: ayudaTipo, mensaje: ayudaMensaje }) })
+                        setAyudaEnviando(false)
+                        setAyudaOk(true)
+                        setAyudaMensaje('')
+                      }}
+                      style={{ all: 'unset', background: ayudaEnviando || !ayudaMensaje.trim() ? '#ccc' : '#006D77', color: '#fff', padding: '12px 28px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: ayudaEnviando || !ayudaMensaje.trim() ? 'not-allowed' : 'pointer' }}
+                    >
+                      {ayudaEnviando ? Tpanel.ayuda.enviando : Tpanel.ayuda.enviar}
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
 
         </div>
       </div>

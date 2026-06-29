@@ -91,7 +91,7 @@ export const t = {
       err_tipo: 'Elige el tipo de cuenta', err_nombre: 'Introduce tu nombre', err_telefono: 'Introduce tu teléfono',
     },
     panel: {
-      menu: { miPanel: 'Mi panel', anuncios: 'Mis anuncios', publicar: 'Publicar anuncio', mensajes: 'Mensajes', estadisticas: 'Estadísticas', destacar: 'Destacar anuncio', plan: 'Mi plan', perfil: 'Mi perfil', guardados: 'Guardados', cursos: 'Cursos AEI', equipo: 'Equipo' },
+      menu: { miPanel: 'Mi panel', anuncios: 'Mis anuncios', publicar: 'Publicar anuncio', mensajes: 'Mensajes', estadisticas: 'Estadísticas', destacar: 'Destacar anuncio', plan: 'Mi plan', perfil: 'Mi perfil', guardados: 'Guardados', cursos: 'Cursos AEI', equipo: 'Equipo', ayuda: 'Ayuda' },
       anuncios: {
         titulo: 'Mis anuncios', publicar: '+ Publicar anuncio', sinAnuncios: 'Aún no has publicado ningún anuncio',
         publicaAhora: 'Publica tu primera propiedad gratis →', filtroTodos: 'Todos',
@@ -204,6 +204,18 @@ export const t = {
         verCursos: 'Ver todos los cursos en AEI',
         nota: 'Serás redirigido a la web oficial de la Asociación de Agentes y Empresas Inmobiliarias de República Dominicana.',
       },
+      ayuda: {
+        titulo: 'Centro de ayuda',
+        desc: 'El equipo de Habitade está aquí para ti',
+        intro: 'Hola, somos el equipo de Habitade. Estamos aquí para ayudarte a sacar el máximo partido de tu cuenta profesional. Si tienes alguna duda, sugerencia de mejora o has detectado un problema, cuéntanoslo y te atenderemos lo antes posible.',
+        tipo: 'Tipo de consulta',
+        tipos: { mejora: 'Sugerencia de mejora', error: 'Error o problema técnico', pregunta: 'Pregunta general', otro: 'Otro' },
+        mensaje: 'Tu mensaje',
+        placeholder: 'Cuéntanos en qué podemos ayudarte...',
+        enviar: 'Enviar mensaje',
+        enviando: 'Enviando...',
+        ok: '✓ Mensaje enviado. Te responderemos lo antes posible.',
+      },
     },
   },
   en: {
@@ -295,7 +307,7 @@ export const t = {
       err_tipo: 'Choose an account type', err_nombre: 'Enter your name', err_telefono: 'Enter your phone number',
     },
     panel: {
-      menu: { miPanel: 'My dashboard', anuncios: 'My listings', publicar: 'Post listing', mensajes: 'Messages', estadisticas: 'Statistics', destacar: 'Feature listing', plan: 'My plan', perfil: 'My profile', guardados: 'Saved', cursos: 'AEI Courses', equipo: 'Team' },
+      menu: { miPanel: 'My dashboard', anuncios: 'My listings', publicar: 'Post listing', mensajes: 'Messages', estadisticas: 'Statistics', destacar: 'Feature listing', plan: 'My plan', perfil: 'My profile', guardados: 'Saved', cursos: 'AEI Courses', equipo: 'Team', ayuda: 'Help' },
       anuncios: {
         titulo: 'My listings', publicar: '+ Post listing', sinAnuncios: "You haven't posted any listings yet",
         publicaAhora: 'Post your first property for free →', filtroTodos: 'All',
@@ -408,6 +420,18 @@ export const t = {
         verCursos: 'Browse all AEI courses',
         nota: 'You will be redirected to the official website of the Association of Real Estate Agents and Companies of the Dominican Republic.',
       },
+      ayuda: {
+        titulo: 'Help center',
+        desc: 'The Habitade team is here for you',
+        intro: 'Hi, we are the Habitade team. We are here to help you get the most out of your professional account. If you have any questions, suggestions, or have found an issue, don\'t hesitate to reach out — we\'ll get back to you as soon as possible.',
+        tipo: 'Type of inquiry',
+        tipos: { mejora: 'Improvement suggestion', error: 'Error or technical issue', pregunta: 'General question', otro: 'Other' },
+        mensaje: 'Your message',
+        placeholder: 'Tell us how we can help you...',
+        enviar: 'Send message',
+        enviando: 'Sending...',
+        ok: '✓ Message sent. We will get back to you as soon as possible.',
+      },
     },
   },
   fr: {
@@ -499,7 +523,7 @@ export const t = {
       err_tipo: 'Choisissez un type de compte', err_nombre: 'Entrez votre nom', err_telefono: 'Entrez votre numéro de téléphone',
     },
     panel: {
-      menu: { miPanel: 'Mon tableau de bord', anuncios: 'Mes annonces', publicar: 'Publier une annonce', mensajes: 'Messages', estadisticas: 'Statistiques', destacar: 'Mettre en avant', plan: 'Mon abonnement', perfil: 'Mon profil', guardados: 'Sauvegardés', cursos: 'Cours AEI', equipo: 'Équipe' },
+      menu: { miPanel: 'Mon tableau de bord', anuncios: 'Mes annonces', publicar: 'Publier une annonce', mensajes: 'Messages', estadisticas: 'Statistiques', destacar: 'Mettre en avant', plan: 'Mon abonnement', perfil: 'Mon profil', guardados: 'Sauvegardés', cursos: 'Cours AEI', equipo: 'Équipe', ayuda: 'Aide' },
       anuncios: {
         titulo: 'Mes annonces', publicar: '+ Publier une annonce', sinAnuncios: "Vous n'avez pas encore publié d'annonce",
         publicaAhora: 'Publiez votre première propriété gratuitement →', filtroTodos: 'Tous',
@@ -611,6 +635,18 @@ export const t = {
         infoTexto: "Accédez à toute l'offre de formation officielle de l'AEI directement sur leur site web.\nEn complétant tout cours, vous recevrez votre certification et le badge AEI vérifié apparaîtra sur toutes vos annonces Habitade.",
         verCursos: "Voir tous les cours AEI",
         nota: "Vous serez redirigé vers le site officiel de l'Association des Agents et Entreprises Immobilières de la République Dominicaine.",
+      },
+      ayuda: {
+        titulo: "Centre d'aide",
+        desc: "L'équipe Habitade est là pour vous",
+        intro: "Bonjour, nous sommes l'équipe Habitade. Nous sommes ici pour vous aider à tirer le meilleur parti de votre compte professionnel. Si vous avez des questions, des suggestions ou avez détecté un problème, écrivez-nous et nous vous répondrons dans les plus brefs délais.",
+        tipo: "Type de demande",
+        tipos: { mejora: "Suggestion d'amélioration", error: "Erreur ou problème technique", pregunta: "Question générale", otro: "Autre" },
+        mensaje: "Votre message",
+        placeholder: "Dites-nous comment nous pouvons vous aider...",
+        enviar: "Envoyer le message",
+        enviando: "Envoi en cours...",
+        ok: "✓ Message envoyé. Nous vous répondrons dans les plus brefs délais.",
       },
     },
   },

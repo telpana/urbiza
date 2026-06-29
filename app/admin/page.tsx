@@ -15,6 +15,7 @@ const menuItems = [
   { id: 'redes', label: 'Redes sociales', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> },
   { id: 'codigos', label: 'Códigos promo', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> },
   { id: 'reportes', label: 'Reportes', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> },
+  { id: 'ayuda', label: 'Ayuda usuarios', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> },
 ]
 
 function fmtFecha(iso: string) {
@@ -63,6 +64,8 @@ export default function Admin() {
   const [codigoCreando, setCodigoCreando] = useState(false)
   const [reportes, setReportes] = useState<any[]>([])
   const [reportesLoading, setReportesLoading] = useState(false)
+  const [ayudaMsgs, setAyudaMsgs] = useState<any[]>([])
+  const [ayudaLoading, setAyudaLoading] = useState(false)
   const refCodigo = useRef<HTMLInputElement>(null)
   const refMaxUsos = useRef<HTMLInputElement>(null)
   const refDescripcion = useRef<HTMLInputElement>(null)
@@ -233,6 +236,11 @@ export default function Admin() {
       setReportesLoading(true)
       fetch('/api/admin/reportes', { headers: authHeader() })
         .then(r => r.json()).then(d => { setReportes(d.lista ?? []); setReportesLoading(false) })
+    }
+    if (seccion === 'ayuda') {
+      setAyudaLoading(true)
+      fetch('/api/admin/ayuda', { headers: authHeader() })
+        .then(r => r.json()).then(d => { setAyudaMsgs(d.lista ?? []); setAyudaLoading(false) })
     }
 
     // AEI: carga inicial + polling cada 20s para detectar nuevas solicitudes
@@ -1063,6 +1071,54 @@ export default function Admin() {
                             if (!confirm('¿Eliminar este reporte?')) return
                             await fetch('/api/admin/reportes', { method: 'DELETE', headers: authHeader(), body: JSON.stringify({ id: r.id }) })
                             setReportes(prev => prev.filter((x: any) => x.id !== r.id))
+                          }} style={{ all: 'unset', fontSize: 12, color: '#dc2626', border: '1px solid #fecaca', padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}>
+                            Borrar
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </Card>
+            </Seccion>
+          )}
+
+          {seccion === 'ayuda' && (
+            <Seccion titulo="Mensajes de ayuda" desc="Consultas, sugerencias y errores enviados por usuarios profesionales">
+              <Card>
+                {ayudaLoading ? (
+                  <div style={{ color: '#888', fontSize: 14, padding: 24 }}>Cargando...</div>
+                ) : ayudaMsgs.length === 0 ? (
+                  <div style={{ color: '#aaa', fontSize: 14, padding: '40px', textAlign: 'center' }}>No hay mensajes todavía</div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 8 }}>
+                    {ayudaMsgs.map((m: any) => (
+                      <div key={m.id} style={{ background: '#fafafa', borderRadius: 8, padding: '14px 18px', borderLeft: `4px solid ${m.leido ? '#e0e0e0' : '#006D77'}`, display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
+                            {!m.leido && <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '1px 6px', borderRadius: 8 }}>NUEVO</span>}
+                            <span style={{ background: '#f0fafa', color: '#006D77', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 10, border: '1px solid #b2e0e4' }}>
+                              {{ mejora: 'Mejora', error: 'Error', pregunta: 'Pregunta', otro: 'Otro' }[m.tipo as string] ?? m.tipo}
+                            </span>
+                            {m.nombre && <span style={{ fontSize: 13, fontWeight: 600, color: '#333' }}>{m.nombre}</span>}
+                            {m.email && <span style={{ fontSize: 12, color: '#888' }}>{m.email}</span>}
+                          </div>
+                          <div style={{ fontSize: 13, color: '#444', lineHeight: 1.6, marginBottom: 6 }}>{m.mensaje}</div>
+                          <div style={{ fontSize: 11, color: '#aaa' }}>{new Date(m.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
+                        </div>
+                        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                          {!m.leido && (
+                            <button onClick={async () => {
+                              await fetch('/api/admin/ayuda', { method: 'PATCH', headers: authHeader(), body: JSON.stringify({ id: m.id }) })
+                              setAyudaMsgs(prev => prev.map((x: any) => x.id === m.id ? { ...x, leido: true } : x))
+                            }} style={{ all: 'unset', fontSize: 12, color: '#006D77', border: '1px solid #006D77', padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}>
+                              Leído
+                            </button>
+                          )}
+                          <button onClick={async () => {
+                            if (!confirm('¿Eliminar este mensaje?')) return
+                            await fetch('/api/admin/ayuda', { method: 'DELETE', headers: authHeader(), body: JSON.stringify({ id: m.id }) })
+                            setAyudaMsgs(prev => prev.filter((x: any) => x.id !== m.id))
                           }} style={{ all: 'unset', fontSize: 12, color: '#dc2626', border: '1px solid #fecaca', padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}>
                             Borrar
                           </button>
