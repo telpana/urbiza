@@ -1527,8 +1527,6 @@ export default function Panel() {
             <div>
               {/* Hero */}
               <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 60%, #17A6B4 100%)', borderRadius: 16, padding: '24px 28px', marginBottom: 24, color: '#fff', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
-                <div style={{ position: 'absolute', top: -40, right: -40, width: 160, height: 160, background: 'rgba(255,255,255,0.04)', borderRadius: '50%' }} />
-                <div style={{ position: 'absolute', bottom: -30, right: 160, width: 100, height: 100, background: 'rgba(255,255,255,0.04)', borderRadius: '50%' }} />
                 <div style={{ zIndex: 1 }}>
                   <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, opacity: 0.6, textTransform: 'uppercase', marginBottom: 10 }}>{Tpanel.destacar.titulo}</div>
                   <h1 style={{ fontSize: 24, fontWeight: 800, margin: '0 0 8px', lineHeight: 1.15 }}>{Tpanel.destacar.heroTitulo.split('\n').map((l: string, i: number) => i === 0 ? <>{l}<br/></> : l)}</h1>
