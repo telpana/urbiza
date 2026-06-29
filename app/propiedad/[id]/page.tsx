@@ -717,12 +717,14 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                       </div>
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 4 }}>
-                        <span style={{ fontSize: 17, fontWeight: 700, color: '#111' }}>{propiedad.usuarios?.nombre}</span>
-                        <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10, letterSpacing: 0.5, whiteSpace: 'nowrap' }}>{Tp.profesional}</span>
-                        {propiedad.usuarios?.aei_aprobado && (
-                          <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10, whiteSpace: 'nowrap' }}>✓ AEI</span>
-                        )}
+                      <div style={{ marginBottom: 6 }}>
+                        <div style={{ fontSize: 17, fontWeight: 700, color: '#111', marginBottom: 5 }}>{propiedad.usuarios?.nombre}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                          <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10, letterSpacing: 0.5, whiteSpace: 'nowrap' }}>{Tp.profesional}</span>
+                          {propiedad.usuarios?.aei_aprobado && (
+                            <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10, whiteSpace: 'nowrap' }}>✓ AEI</span>
+                          )}
+                        </div>
                       </div>
                       {propiedad.usuarios?.inmobiliaria && (
                         <div style={{ fontSize: 13, color: '#006D77', fontWeight: 500, marginBottom: 8 }}>{propiedad.usuarios.inmobiliaria}</div>
