@@ -609,9 +609,9 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
         </div>
       </div>
 
-      {/* TARJETA BROKER — solo profesionales */}
+      {/* TARJETA BROKER — solo profesionales, solo escritorio */}
       {propiedad.usuarios?.tipo === 'profesional' && (
-        <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 16px 32px' }}>
+        <div className="broker-card-wrap" style={{ maxWidth: 900, margin: '0 auto', padding: '0 16px 32px' }}>
           <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 2px 12px rgba(0,0,0,0.07)', border: '1px solid #e8f4f5', overflow: 'hidden' }}>
             <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 100%)', height: 6 }} />
             <div className="broker-card-inner" style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '24px 28px' }}>
