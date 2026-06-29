@@ -14,6 +14,7 @@ const menuItems = [
   { id: 'favicon', label: 'Favicon e img', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg> },
   { id: 'redes', label: 'Redes sociales', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> },
   { id: 'codigos', label: 'Códigos promo', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> },
+  { id: 'reportes', label: 'Reportes', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> },
 ]
 
 function fmtFecha(iso: string) {
@@ -60,6 +61,8 @@ export default function Admin() {
   const [codigos, setCodigos] = useState<any[]>([])
   const [codigosLoading, setCodigosLoading] = useState(false)
   const [codigoCreando, setCodigoCreando] = useState(false)
+  const [reportes, setReportes] = useState<any[]>([])
+  const [reportesLoading, setReportesLoading] = useState(false)
   const refCodigo = useRef<HTMLInputElement>(null)
   const refMaxUsos = useRef<HTMLInputElement>(null)
   const refDescripcion = useRef<HTMLInputElement>(null)
@@ -226,6 +229,11 @@ export default function Admin() {
     if (seccion === 'cobros') { cargarCobros(); cargarIngresos() }
     if (seccion === 'destacados') cargarDestacados()
     if (seccion === 'codigos') cargarCodigos()
+    if (seccion === 'reportes') {
+      setReportesLoading(true)
+      fetch('/api/admin/reportes', { headers: authHeader() })
+        .then(r => r.json()).then(d => { setReportes(d.lista ?? []); setReportesLoading(false) })
+    }
 
     // AEI: carga inicial + polling cada 20s para detectar nuevas solicitudes
     if (seccion === 'aei') {
@@ -1013,6 +1021,55 @@ export default function Admin() {
                       ))}
                     </tbody>
                   </table>
+                )}
+              </Card>
+            </Seccion>
+          )}
+
+          {seccion === 'reportes' && (
+            <Seccion titulo="Reportes de anuncios" desc="Anuncios reportados por usuarios con errores o contenido inapropiado">
+              <Card>
+                {reportesLoading ? (
+                  <div style={{ color: '#888', fontSize: 14, padding: 24 }}>Cargando...</div>
+                ) : reportes.length === 0 ? (
+                  <div style={{ color: '#aaa', fontSize: 14, padding: '40px', textAlign: 'center' }}>No hay reportes todavía</div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 8 }}>
+                    {reportes.map((r: any) => (
+                      <div key={r.id} style={{ background: '#fafafa', borderRadius: 8, padding: '14px 18px', borderLeft: `4px solid ${r.leido ? '#e0e0e0' : '#e63946'}`, display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+                            {!r.leido && <span style={{ background: '#e63946', color: '#fff', fontSize: 9, fontWeight: 700, padding: '1px 6px', borderRadius: 8 }}>NUEVO</span>}
+                            <span style={{ fontSize: 13, fontWeight: 700, color: '#333' }}>{r.motivo}</span>
+                          </div>
+                          {r.comentario && <div style={{ fontSize: 12, color: '#666', marginBottom: 6 }}>{r.comentario}</div>}
+                          <div style={{ display: 'flex', gap: 12, fontSize: 11, color: '#aaa', flexWrap: 'wrap' }}>
+                            {r.propiedades?.titulo && (
+                              <a href={`/propiedad/${r.propiedad_id}`} target="_blank" rel="noopener noreferrer" style={{ color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>{r.propiedades.titulo} →</a>
+                            )}
+                            <span>{new Date(r.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                          {!r.leido && (
+                            <button onClick={async () => {
+                              await fetch('/api/admin/reportes', { method: 'PATCH', headers: authHeader(), body: JSON.stringify({ id: r.id }) })
+                              setReportes(prev => prev.map((x: any) => x.id === r.id ? { ...x, leido: true } : x))
+                            }} style={{ all: 'unset', fontSize: 12, color: '#006D77', border: '1px solid #006D77', padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}>
+                              Marcar leído
+                            </button>
+                          )}
+                          <button onClick={async () => {
+                            if (!confirm('¿Eliminar este reporte?')) return
+                            await fetch('/api/admin/reportes', { method: 'DELETE', headers: authHeader(), body: JSON.stringify({ id: r.id }) })
+                            setReportes(prev => prev.filter((x: any) => x.id !== r.id))
+                          }} style={{ all: 'unset', fontSize: 12, color: '#dc2626', border: '1px solid #fecaca', padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontWeight: 500 }}>
+                            Borrar
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </Card>
             </Seccion>
