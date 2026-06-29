@@ -21,8 +21,14 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
   const mapInstanceRef = useRef<any>(null)
   const markersRef = useRef<any[]>([])
   const [filtroTipo, setFiltroTipo] = useState('Todos')
+  const { tr } = useIdioma()
 
   const tipos = ['Todos', 'Apartamento', 'Villa', 'Terreno', 'Oficina', 'Local comercial']
+  const tipoLabel = (t: string) => {
+    if (t === 'Todos') return tr.buscar.todos
+    const map: Record<string, keyof typeof tr.tipos> = { 'Apartamento': 'apartamento', 'Villa': 'villa', 'Terreno': 'terreno', 'Oficina': 'oficina', 'Local comercial': 'local' }
+    return tr.tipos[map[t]] || t
+  }
 
   function actualizarMarkers(L: any, map: any, filtro: string) {
     markersRef.current.forEach(m => map.removeLayer(m))
@@ -84,13 +90,13 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
     <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', flexDirection: 'column' }}>
       <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div style={{ fontSize: 15, fontWeight: 600, color: '#111' }}>{visibles} propiedades en República Dominicana</div>
+          <div style={{ fontSize: 15, fontWeight: 600, color: '#111' }}>{visibles} {tr.buscar.titulo}</div>
           <select value={filtroTipo} onChange={e => setFiltroTipo(e.target.value)} style={{ border: '1.5px solid #006D77', borderRadius: 4, padding: '6px 12px', fontSize: 13, color: '#333', outline: 'none', cursor: 'pointer', background: '#fff' }}>
-            {tipos.map(t => <option key={t}>{t}</option>)}
+            {tipos.map(t => <option key={t} value={t}>{tipoLabel(t)}</option>)}
           </select>
         </div>
         <button onClick={onCerrar} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '8px 18px', borderRadius: 4, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>
-          ← Volver
+          {tr.buscar.volver}
         </button>
       </div>
       <div ref={mapRef} style={{ flex: 1 }} />

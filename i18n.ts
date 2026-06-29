@@ -22,7 +22,7 @@ export const t = {
       sinResultados: 'No hay propiedades con estos filtros', modificaFiltros: 'Modifica los filtros para ver más resultados',
       hab: 'hab', bano: 'baño', banos2: 'baños', m2: 'm²', operacion: { venta: 'en venta', alquiler: 'en alquiler' },
       destacado: 'DESTACADO', masVisto: 'MÁS VISTO', cargando: 'Cargando propiedades...',
-      anterior: 'Anterior', siguiente: 'Siguiente', cualquiera: 'Cualquiera', pisosMin: 'Número de pisos mínimo',
+      anterior: 'Anterior', siguiente: 'Siguiente', cualquiera: 'Cualquiera', pisosMin: 'Número de pisos mínimo', volver: 'Volver',
       parqueos: 'parqueo', parqueos2: 'parqueos',
     },
     amenidades: {
@@ -200,7 +200,7 @@ export const t = {
       sinResultados: 'No properties match your filters', modificaFiltros: 'Adjust the filters to see more results',
       hab: 'bed', bano: 'bath', banos2: 'baths', m2: 'm²', operacion: { venta: 'for sale', alquiler: 'for rent' },
       destacado: 'FEATURED', masVisto: 'MOST VIEWED', cargando: 'Loading properties...',
-      anterior: 'Previous', siguiente: 'Next', cualquiera: 'Any', pisosMin: 'Minimum number of floors',
+      anterior: 'Previous', siguiente: 'Next', cualquiera: 'Any', pisosMin: 'Minimum number of floors', volver: 'Back',
       parqueos: 'parking', parqueos2: 'parkings',
     },
     amenidades: {
@@ -378,7 +378,7 @@ export const t = {
       sinResultados: 'Aucune propriété ne correspond à vos filtres', modificaFiltros: 'Modifiez les filtres pour voir plus de résultats',
       hab: 'ch.', bano: 'sdb', banos2: 'sdb', m2: 'm²', operacion: { venta: 'à vendre', alquiler: 'à louer' },
       destacado: 'EN VEDETTE', masVisto: 'PLUS VU', cargando: 'Chargement des propriétés...',
-      anterior: 'Précédent', siguiente: 'Suivant', cualquiera: 'Quelconque', pisosMin: 'Nombre minimum d\'étages',
+      anterior: 'Précédent', siguiente: 'Suivant', cualquiera: 'Quelconque', pisosMin: 'Nombre minimum d\'étages', volver: 'Retour',
       parqueos: 'parking', parqueos2: 'parkings',
     },
     amenidades: {
