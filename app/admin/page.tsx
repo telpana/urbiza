@@ -326,7 +326,7 @@ export default function Admin() {
           <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 10px', borderRadius: 10 }}>ADMIN</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <a href="/" style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>← Ver web</a>
+          <a href="/" style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>Ver web</a>
           <button onClick={logout} style={{ all: 'unset', fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.4)', padding: '5px 14px', borderRadius: 4, cursor: 'pointer' }}>Cerrar sesión</button>
         </div>
       </nav>
