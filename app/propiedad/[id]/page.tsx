@@ -32,7 +32,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'puerto plata': [19.7950, -70.6910], 'sosua': [19.7600, -70.5200], 'cabarete': [19.7700, -70.4100],
   'costambar': [19.7900, -70.7200], 'luperon': [19.8977, -70.9480], 'villa isabela': [19.8400, -71.0700], 'la isabela': [19.8400, -71.0700],
   'la romana': [18.4273, -68.9728], 'casa de campo': [18.4080, -68.9130],
-  'bayahibe': [18.3650, -68.8280], 'dominicus': [18.3600, -68.8600],
+  'bayahibe': [18.3650, -68.8280], 'dominicus': [18.3390, -68.8310],
   'jarabacoa': [19.1130, -70.6380], 'constanza': [18.9090, -70.7490], 'la vega': [19.2211, -70.5286],
   'san pedro de macoris': [18.4530, -69.3090], 'juan dolio': [18.4400, -69.5300], 'guayacanes': [18.4350, -69.5700],
   'nagua': [19.3730, -69.8470], 'rio san juan': [19.6310, -70.0760],
