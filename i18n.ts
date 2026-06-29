@@ -131,7 +131,7 @@ export const t = {
         err_sesion: 'Debes iniciar sesión para publicar', ok: '¡Anuncio publicado correctamente!', okEdit: '¡Anuncio actualizado correctamente!',
       },
       mensajes: {
-        titulo: 'Mensajes', sinMensajes: 'No tienes mensajes aún', seleccionar: 'Selecciona una conversación',
+        titulo: 'Mensajes', sinMensajes: 'No tienes mensajes aún', seleccionar: 'Selecciona una conversación', seleccionarDesc: 'Elige un contacto de la lista para ver el chat',
         eliminar: 'Eliminar', confirmarEliminar: '¿Eliminar este mensaje? No se puede deshacer.',
         bloquear: 'Bloquear contacto', desbloquear: 'Desbloquear contacto',
         propiedad: 'Propiedad', hace: 'Hace', hoy: 'Hoy',
@@ -331,7 +331,7 @@ export const t = {
         err_sesion: 'You must be signed in to post a listing', ok: 'Listing posted successfully!', okEdit: 'Listing updated successfully!',
       },
       mensajes: {
-        titulo: 'Messages', sinMensajes: 'You have no messages yet', seleccionar: 'Select a conversation',
+        titulo: 'Messages', sinMensajes: 'You have no messages yet', seleccionar: 'Select a conversation', seleccionarDesc: 'Choose a contact from the list to view the chat',
         eliminar: 'Delete', confirmarEliminar: 'Delete this message? This cannot be undone.',
         bloquear: 'Block contact', desbloquear: 'Unblock contact',
         propiedad: 'Property', hace: 'ago', hoy: 'Today',
@@ -531,7 +531,7 @@ export const t = {
         err_sesion: 'Vous devez être connecté pour publier une annonce', ok: 'Annonce publiée avec succès !', okEdit: 'Annonce mise à jour avec succès !',
       },
       mensajes: {
-        titulo: 'Messages', sinMensajes: "Vous n'avez pas encore de messages", seleccionar: 'Sélectionnez une conversation',
+        titulo: 'Messages', sinMensajes: "Vous n'avez pas encore de messages", seleccionar: 'Sélectionnez une conversation', seleccionarDesc: 'Choisissez un contact dans la liste pour voir le chat',
         eliminar: 'Supprimer', confirmarEliminar: 'Supprimer ce message ? Cette action est irréversible.',
         bloquear: 'Bloquer le contact', desbloquear: 'Débloquer le contact',
         propiedad: 'Propriété', hace: 'il y a', hoy: "Aujourd'hui",

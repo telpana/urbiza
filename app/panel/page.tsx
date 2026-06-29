@@ -1324,8 +1324,8 @@ export default function Panel() {
                   <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, color: '#ccc' }}>
                     <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" strokeWidth="1"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                     <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: 15, fontWeight: 600, color: '#bbb', marginBottom: 4 }}>Selecciona una conversación</div>
-                      <div style={{ fontSize: 13, color: '#ddd' }}>Elige un contacto de la lista para ver el chat</div>
+                      <div style={{ fontSize: 15, fontWeight: 600, color: '#bbb', marginBottom: 4 }}>{Tpanel.mensajes.seleccionar}</div>
+                      <div style={{ fontSize: 13, color: '#ddd' }}>{Tpanel.mensajes.seleccionarDesc}</div>
                     </div>
                   </div>
                 )}
