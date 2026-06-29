@@ -1107,19 +1107,19 @@ export default function Panel() {
                       </div>
                     </div>
                     <div className="pub-parqueos-col">
-                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Parqueos <span style={{ color: '#aaa', fontWeight: 400 }}>{Tpanel.publicar.sectorOpcional}</span></label>
+                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.parqueos} <span style={{ color: '#aaa', fontWeight: 400 }}>{Tpanel.publicar.sectorOpcional}</span></label>
                       <input type="number" min="0" value={pubParqueos} onChange={e => setPubParqueos(e.target.value)} placeholder="Ej: 2" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                     </div>
                     <div className="pub-planta-col">
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.planta} <span style={{ color: '#aaa', fontWeight: 400 }}>{Tpanel.publicar.sectorOpcional}</span></label>
-                      <input type="text" value={pubPlanta} onChange={e => setPubPlanta(e.target.value)} placeholder="Ej: 4ª planta" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                      <input type="text" value={pubPlanta} onChange={e => setPubPlanta(e.target.value)} placeholder={Tpanel.publicar.plantaPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                     </div>
                   </div>
                 )}
 
                 <div style={{ marginBottom: 16 }}>
                   <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.descripcion}</label>
-                  <textarea rows={4} value={pubDesc} onChange={e => setPubDesc(e.target.value)} placeholder="Describe tu propiedad con detalle — ubicación, acabados, amenidades, accesos..." style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'vertical', fontFamily: 'sans-serif', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                  <textarea rows={4} value={pubDesc} onChange={e => setPubDesc(e.target.value)} placeholder={Tpanel.publicar.descPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'vertical', fontFamily: 'sans-serif', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                 </div>
 
                 {/* AMENIDADES */}
@@ -1129,7 +1129,7 @@ export default function Panel() {
                     {amenidades.map(a => (
                       <div key={a.id} onClick={() => toggleAmenidad(a.id)} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '10px 14px', border: `1.5px solid ${amenidadesSeleccionadas.includes(a.id) ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, cursor: 'pointer', background: amenidadesSeleccionadas.includes(a.id) ? '#f0fafb' : '#fff' }}>
                         {amenidadesSeleccionadas.includes(a.id) && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
-                        <span style={{ fontSize: 13, color: amenidadesSeleccionadas.includes(a.id) ? '#006D77' : '#555', fontWeight: amenidadesSeleccionadas.includes(a.id) ? 600 : 400 }}>{a.label}</span>
+                        <span style={{ fontSize: 13, color: amenidadesSeleccionadas.includes(a.id) ? '#006D77' : '#555', fontWeight: amenidadesSeleccionadas.includes(a.id) ? 600 : 400 }}>{(trLang.amenidades as any)[a.id] || a.label}</span>
                       </div>
                     ))}
                   </div>
@@ -1143,12 +1143,12 @@ export default function Panel() {
                     onMouseLeave={e => e.currentTarget.style.borderColor='#e0e0e0'}>
                     <input type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={e => handleFotos(e.target.files)} />
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="1.5" style={{ margin: '0 auto 8px', display: 'block' }}><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    <div style={{ fontSize: 13, color: '#555', marginBottom: 2 }}>Pulsa para seleccionar fotos</div>
-                    <div style={{ fontSize: 11, color: '#aaa' }}>JPG, PNG — máximo 20 fotos, 5MB cada una</div>
+                    <div style={{ fontSize: 13, color: '#555', marginBottom: 2 }}>{Tpanel.publicar.pulsaFotos}</div>
+                    <div style={{ fontSize: 11, color: '#aaa' }}>{Tpanel.publicar.maxFotos}</div>
                   </label>
                   {fotosLista.length > 0 && (
                     <>
-                      <div style={{ fontSize: 11, color: '#aaa', marginTop: 10, marginBottom: 6 }}>Arrastra para reordenar · La primera es la foto principal</div>
+                      <div style={{ fontSize: 11, color: '#aaa', marginTop: 10, marginBottom: 6 }}>{Tpanel.publicar.arrastraFotos}</div>
                       <div className="pub-fotos-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 8 }} onDragOver={e => e.preventDefault()}>
                         {fotosLista.map((item, i) => (
                           <div
