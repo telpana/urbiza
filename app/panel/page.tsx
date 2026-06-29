@@ -1515,11 +1515,11 @@ export default function Panel() {
               <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 60%, #17A6B4 100%)', borderRadius: 16, padding: '24px 20px', marginBottom: 24, color: '#fff', overflow: 'hidden', position: 'relative' }}>
                 <div style={{ position: 'absolute', top: -40, right: -40, width: 160, height: 160, background: 'rgba(255,255,255,0.04)', borderRadius: '50%' }} />
                 <div style={{ position: 'absolute', bottom: -30, right: 40, width: 100, height: 100, background: 'rgba(255,255,255,0.04)', borderRadius: '50%' }} />
-                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, opacity: 0.6, textTransform: 'uppercase', marginBottom: 10 }}>Destacar anuncio</div>
-                <h1 style={{ fontSize: 24, fontWeight: 800, margin: '0 0 8px', lineHeight: 1.15 }}>Más visitas,<br/>más contactos</h1>
-                <p style={{ fontSize: 13, opacity: 0.7, margin: '0 0 20px', lineHeight: 1.5, maxWidth: 260 }}>Aparece primero en las búsquedas y consigue hasta 10× más visitas</p>
+                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, opacity: 0.6, textTransform: 'uppercase', marginBottom: 10 }}>{Tpanel.destacar.titulo}</div>
+                <h1 style={{ fontSize: 24, fontWeight: 800, margin: '0 0 8px', lineHeight: 1.15 }}>{Tpanel.destacar.heroTitulo.split('\n').map((l: string, i: number) => i === 0 ? <>{l}<br/></> : l)}</h1>
+                <p style={{ fontSize: 13, opacity: 0.7, margin: '0 0 20px', lineHeight: 1.5, maxWidth: 260 }}>{Tpanel.destacar.heroDesc}</p>
                 <div style={{ display: 'flex', gap: 8 }}>
-                  {[{ n: '10×', label: 'más visitas' }, { n: 'TOP', label: 'posición' }, { n: '#1', label: 'búsquedas' }].map(s => (
+                  {[{ n: '10×', label: Tpanel.destacar.statVisitas }, { n: 'TOP', label: Tpanel.destacar.statPosicion }, { n: '#1', label: Tpanel.destacar.statBusquedas }].map(s => (
                     <div key={s.n} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.1)', borderRadius: 10, padding: '9px 12px', flex: 1 }}>
                       <div style={{ fontSize: 16, fontWeight: 800 }}>{s.n}</div>
                       <div style={{ fontSize: 9, opacity: 0.7, marginTop: 2, textTransform: 'uppercase', letterSpacing: 0.5 }}>{s.label}</div>
@@ -1532,7 +1532,7 @@ export default function Panel() {
               <div style={{ marginBottom: 28 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
                   <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>1</div>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>Elige la duración</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>{Tpanel.destacar.elegirDuracion}</span>
                 </div>
                 <div className="planes-destacado-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
                   {planesDestacado.map(p => {
@@ -1543,12 +1543,12 @@ export default function Panel() {
                         background: tc ? '#006D77' : p.popular ? '#f0fafb' : '#fff',
                         border: `2px solid ${sel ? '#006D77' : p.popular ? '#83D4DB' : '#e8e8e8'}`,
                         boxShadow: sel ? '0 4px 14px rgba(0,109,119,0.18)' : '0 1px 4px rgba(0,0,0,0.05)' }}>
-                        {p.popular && <div style={{ position: 'absolute', top: -10, left: 16, background: sel ? '#004E57' : '#006D77', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 10px', borderRadius: 8, whiteSpace: 'nowrap', letterSpacing: 0.5 }}>MÁS POPULAR</div>}
+                        {p.popular && <div style={{ position: 'absolute', top: -10, left: 16, background: sel ? '#004E57' : '#006D77', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 10px', borderRadius: 8, whiteSpace: 'nowrap', letterSpacing: 0.5 }}>{Tpanel.destacar.popular}</div>}
                         {/* Izquierda: días + features */}
                         <div style={{ flex: 1 }}>
                           <div style={{ fontSize: 12, fontWeight: 700, color: tc ? 'rgba(255,255,255,0.7)' : '#888', marginBottom: 6 }}>{p.label}</div>
                           <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                            {['Posición top', 'Badge destacado', 'Más visibilidad'].map(f => (
+                            {Tpanel.destacar.features.map((f: string) => (
                               <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, color: tc ? 'rgba(255,255,255,0.85)' : '#666' }}>
                                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke={tc ? '#fff' : '#006D77'} strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
                                 {f}
@@ -1576,12 +1576,12 @@ export default function Panel() {
               <div style={{ marginBottom: 28 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
                   <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>2</div>
-                  <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>Selecciona tu anuncio</span>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>{Tpanel.destacar.seleccionarAnuncio}</span>
                 </div>
                 {anunciosReales.length === 0 ? (
                   <div style={{ background: '#f8f9fa', borderRadius: 10, padding: '24px', fontSize: 13, color: '#888', textAlign: 'center', border: '1.5px dashed #e0e0e0' }}>
-                    Aún no tienes anuncios publicados.{' '}
-                    <a href="#" onClick={e => { e.preventDefault(); setSeccion('publicar') }} style={{ color: '#006D77', fontWeight: 600 }}>Publica uno</a>
+                    {Tpanel.destacar.sinAnuncios}{' '}
+                    <a href="#" onClick={e => { e.preventDefault(); setSeccion('publicar') }} style={{ color: '#006D77', fontWeight: 600 }}>{Tpanel.destacar.publicaUno}</a>
                   </div>
                 ) : (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -1628,7 +1628,7 @@ export default function Panel() {
                 }} style={{ all: 'unset', width: '100%', background: planSeleccionado && anuncioADestacar ? 'linear-gradient(135deg, #006D77, #17A6B4)' : '#d1d5db', color: '#fff', padding: '14px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: planSeleccionado && anuncioADestacar ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxSizing: 'border-box', boxShadow: planSeleccionado && anuncioADestacar ? '0 4px 20px rgba(0,109,119,0.35)' : 'none', transition: 'all 0.2s' }}>
                   {planSeleccionado && anuncioADestacar
                     ? <>{Tpanel.destacar.pagar} →</>
-                    : 'Selecciona duración y anuncio'}
+                    : Tpanel.destacar.ctaDefault}
                 </button>
               </div>
             </div>
