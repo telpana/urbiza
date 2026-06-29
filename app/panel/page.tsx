@@ -1536,7 +1536,7 @@ export default function Panel() {
                 </div>
                 <div style={{ display: 'flex', gap: 8, flexShrink: 0, zIndex: 1 }}>
                   {[{ n: '10×', label: Tpanel.destacar.statVisitas }, { n: 'TOP', label: Tpanel.destacar.statPosicion }, { n: '#1', label: Tpanel.destacar.statBusquedas }].map(s => (
-                    <div key={s.n} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.1)', borderRadius: 10, padding: '12px 16px', minWidth: 70 }}>
+                    <div key={s.n} style={{ textAlign: 'center', padding: '12px 16px', minWidth: 70 }}>
                       <div style={{ fontSize: 18, fontWeight: 800 }}>{s.n}</div>
                       <div style={{ fontSize: 9, opacity: 0.7, marginTop: 3, textTransform: 'uppercase', letterSpacing: 0.5 }}>{s.label}</div>
                     </div>
