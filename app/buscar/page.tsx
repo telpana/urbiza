@@ -884,10 +884,8 @@ function BuscarContent() {
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
                         </button>
                       )}
-                      <div style={{ position: 'absolute', bottom: 8, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 4, zIndex: 2 }}>
-                        {p.fotos.map((_: any, i: number) => (
-                          <span key={i} style={{ width: i === (fotoIdx[String(p.id)] ?? 0) ? 14 : 5, height: 5, borderRadius: 3, background: i === (fotoIdx[String(p.id)] ?? 0) ? '#fff' : 'rgba(255,255,255,0.5)', transition: 'all 0.2s', display: 'block' }} />
-                        ))}
+                      <div style={{ position: 'absolute', bottom: 8, right: 10, background: 'rgba(0,0,0,0.45)', color: '#fff', fontSize: 11, fontWeight: 500, padding: '2px 7px', borderRadius: 10, zIndex: 2 }}>
+                        {(fotoIdx[String(p.id)] ?? 0) + 1} / {p.fotos.length}
                       </div>
                     </>
                   )}
