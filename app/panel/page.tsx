@@ -191,13 +191,14 @@ function GuardadosSeccion() {
 }
 
 export default function Panel() {
-  const { tr: trLang } = useIdioma()
+  const { tr: trLang, idioma, setIdioma } = useIdioma()
   const Tpanel = trLang.panel
   const Tn = trLang.nav
   const menuItems = getMenuItems(Tpanel)
   const [seccion, setSeccion] = useState('anuncios')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [panelNavOpen, setPanelNavOpen] = useState(false)
+  const [navUserMenuOpen, setNavUserMenuOpen] = useState(false)
   const [filtroTipo, setFiltroTipo] = useState('')
   const [filtroProvincia, setFiltroProvincia] = useState('')
   const [provinciaOpen, setProvinciaOpen] = useState(false)
@@ -713,11 +714,39 @@ export default function Panel() {
               {tipoUsuario === 'particular' ? Tpanel.anuncios.roles.particular : Tpanel.anuncios.roles.profesional}
             </span>
           </div>
-          <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.35)', padding: '5px 14px', borderRadius: 6, textDecoration: 'none', fontWeight: 500 }}
-            onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.7)'}
-            onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(255,255,255,0.35)'}>
-            {Tn.verWeb}
-          </a>
+          <div style={{ position: 'relative' }}>
+            <button onClick={() => setNavUserMenuOpen(v => !v)} style={{ all: 'unset', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: 6, background: 'rgba(255,255,255,0.15)', cursor: 'pointer' }}>
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><rect y="0" width="16" height="2" rx="1" fill="white"/><rect y="5" width="16" height="2" rx="1" fill="white"/><rect y="10" width="16" height="2" rx="1" fill="white"/></svg>
+            </button>
+            {navUserMenuOpen && (
+              <>
+                <div style={{ position: 'fixed', inset: 0, zIndex: 199 }} onClick={() => setNavUserMenuOpen(false)} />
+                <div style={{ position: 'absolute', top: 'calc(100% + 8px)', right: 0, background: '#fff', border: '1px solid #e8e8e8', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', overflow: 'hidden', minWidth: 180, zIndex: 200 }}>
+                  <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', fontSize: 13, color: '#333', textDecoration: 'none', borderBottom: '1px solid #f5f5f5' }}
+                    onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = '#f0fafb'}
+                    onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    {Tn.verWeb}
+                  </a>
+                  <button onClick={async () => { const { supabase: sb } = await import('../../supabase'); await sb.auth.signOut(); window.location.href = '/' }}
+                    style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', fontSize: 13, color: '#e63946', cursor: 'pointer', boxSizing: 'border-box', borderBottom: '1px solid #f5f5f5' }}
+                    onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.background = '#fff5f5'}
+                    onMouseLeave={e => (e.currentTarget as HTMLButtonElement).style.background = 'transparent'}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    {Tn.cerrarSesion}
+                  </button>
+                  <div style={{ padding: '10px 16px', display: 'flex', gap: 4 }}>
+                    {(['es', 'en', 'fr'] as const).map(l => (
+                      <button key={l} onClick={() => { setIdioma(l); setNavUserMenuOpen(false) }}
+                        style={{ all: 'unset', flex: 1, textAlign: 'center', padding: '5px 0', borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: idioma === l ? '#006D77' : '#f0f0f0', color: idioma === l ? '#fff' : '#888', transition: 'all 0.15s' }}>
+                        {l.toUpperCase()}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
         <button className="panel-nav-hamburger-right" onClick={() => setPanelNavOpen(v => !v)} style={{ display: 'none', background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 6, padding: '6px 8px', cursor: 'pointer' }}>
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
