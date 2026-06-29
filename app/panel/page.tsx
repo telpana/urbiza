@@ -1818,7 +1818,7 @@ export default function Panel() {
                       <div style={{ fontSize: 28, fontWeight: 800, letterSpacing: -0.5 }}>US$ 9.99<span style={{ fontSize: 15, fontWeight: 400, opacity: 0.8 }}>/mes</span></div>
                       {planInfo?.estado === 'trialing' && planInfo?.trial_end
                         ? <div style={{ fontSize: 12, marginTop: 6, background: 'rgba(255,255,255,0.2)', borderRadius: 8, padding: '4px 10px', display: 'inline-block' }}>
-                            🎁 {Tpanel.plan.periodoGratis} · {fmt(planInfo.trial_end)}
+                            {Tpanel.plan.periodoGratis} · {fmt(planInfo.trial_end)}
                           </div>
                         : planInfo?.proximo_cobro
                         ? <div style={{ fontSize: 12, opacity: 0.8, marginTop: 4 }}>{Tpanel.plan.proximoCobro}: {fmt(planInfo.proximo_cobro)}</div>
@@ -1861,7 +1861,7 @@ export default function Panel() {
                       <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '10px 0', borderBottom: i < planInfo.pagos.length - 1 ? '1px solid #f5f5f5' : 'none' }}>
                         <div style={{ flex: 1, fontSize: 13, color: '#333' }}>{fmtCorto(p.fecha)}</div>
                         {p.esPromo
-                          ? <span style={{ fontSize: 13, color: '#006D77', fontWeight: 600 }}>🎁 {Tpanel.plan.promocion30}</span>
+                          ? <span style={{ fontSize: 13, color: '#006D77', fontWeight: 600 }}>{Tpanel.plan.promocion30}</span>
                           : <div style={{ fontSize: 13, fontWeight: 600, color: '#111' }}>{p.moneda} {p.monto}</div>
                         }
                         {!p.esPromo && <span style={{ background: p.estado === 'paid' ? '#e0f5f0' : '#fff8e1', color: p.estado === 'paid' ? '#065f46' : '#92400e', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>{p.estado === 'paid' ? Tpanel.publicar.pagado : p.estado}</span>}
