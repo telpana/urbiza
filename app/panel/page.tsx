@@ -1120,6 +1120,9 @@ export default function Panel() {
                 <div style={{ marginBottom: 16 }}>
                   <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.descripcion}</label>
                   <textarea rows={4} value={pubDesc} onChange={e => setPubDesc(e.target.value)} placeholder={Tpanel.publicar.descPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'vertical', fontFamily: 'sans-serif', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                  <div style={{ marginTop: 8, padding: '8px 12px', background: '#f0fafb', borderLeft: '3px solid #006D77', borderRadius: '0 6px 6px 0', fontSize: 12, color: '#006D77' }}>
+                    💡 {trLang.propiedad.descCta}
+                  </div>
                 </div>
 
                 {/* AMENIDADES */}
