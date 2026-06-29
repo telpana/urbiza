@@ -244,6 +244,7 @@ export default function Panel() {
   const [perfilTelefono, setPerfilTelefono] = useState('')
   const [perfilInmobiliaria, setPerfilInmobiliaria] = useState('')
   const [perfilAei, setPerfilAei] = useState('')
+  const [perfilIdiomas, setPerfilIdiomas] = useState<string[]>([])
   const [usuario, setUsuario] = useState<any>(null)
   const [anunciosReales, setAnunciosReales] = useState<any[]>([])
   const [mensajesReales, setMensajesReales] = useState<any[]>([])
@@ -290,6 +291,7 @@ export default function Panel() {
         setPerfilTelefono(perfil.telefono || '')
         setPerfilInmobiliaria(perfil.inmobiliaria || '')
         setPerfilAei(perfil.numero_aei || '')
+        setPerfilIdiomas(Array.isArray(perfil.idiomas) ? perfil.idiomas : [])
 
         const params = new URLSearchParams(window.location.search)
         if (params.get('pago') === 'ok') {
@@ -445,6 +447,7 @@ export default function Panel() {
       telefono: perfilTelefono,
       inmobiliaria: perfilInmobiliaria,
       numero_aei: perfilAei || null,
+      idiomas: perfilIdiomas,
     }
     if (perfilAei) updates.tipo = 'profesional'
     if (nuevaFotoUrl) updates.foto_url = nuevaFotoUrl
@@ -2007,6 +2010,22 @@ export default function Panel() {
                     </div>
                   )}
                 </div>
+                {tipoUsuario === 'profesional' && usuario?.plan === 'profesional' && (
+                  <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid #f0f0f0' }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 10 }}>{Tpanel.perfil.idiomasLabel}</div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                      {['Español','English','Français','Português','Italiano','Deutsch','中文','Русский','العربية'].map(lang => {
+                        const sel = perfilIdiomas.includes(lang)
+                        return (
+                          <button key={lang} onClick={() => setPerfilIdiomas(prev => sel ? prev.filter(l => l !== lang) : [...prev, lang])}
+                            style={{ all: 'unset', padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: `1.5px solid ${sel ? '#006D77' : '#e0e0e0'}`, background: sel ? '#f0fafb' : '#fff', color: sel ? '#006D77' : '#888', transition: 'all 0.15s' }}>
+                            {lang}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
                 <button className="perfil-save-btn" onClick={guardarPerfil} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 20 }}>
                   {Tpanel.perfil.guardar}
                 </button>
