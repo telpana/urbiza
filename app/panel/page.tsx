@@ -964,7 +964,7 @@ export default function Panel() {
                             </span>
                           </div>
                         </div>
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
+                        <div className="anuncio-card-btns" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
                           <span className="anuncio-card-status" style={{ background: estado === 'activo' ? '#e0f5f0' : '#f5f5f5', color: estado === 'activo' ? '#065f46' : '#888', fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 10, whiteSpace: 'nowrap' }}>
                             {estado === 'activo' ? `● ${Tpanel.anuncios.estado.activo}` : `○ ${Tpanel.anuncios.estado.pausado}`}
                           </span>

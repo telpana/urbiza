@@ -168,9 +168,18 @@ img { max-width: 100%; }
   .panel-nav-email { display: none !important; }
 
   /* Tarjetas de anuncios */
-  .anuncio-card-body { padding: 12px !important; gap: 10px !important; }
+  .anuncio-card-body { padding: 12px !important; gap: 10px !important; flex-wrap: wrap !important; }
   .anuncio-card-status { display: none !important; }
-  .anuncio-card-actions { padding: 0 12px 10px !important; border-top: 1px solid #f5f5f5 !important; padding-top: 10px !important; }
+  .anuncio-card-btns {
+    width: 100% !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    flex-shrink: unset !important;
+    border-top: 1px solid #f0f0f0 !important;
+    padding-top: 8px !important;
+    gap: 6px !important;
+  }
 
   /* Hero destacar — centrado en móvil */
   .destacar-hero {
