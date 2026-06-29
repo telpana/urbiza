@@ -1860,13 +1860,10 @@ export default function Panel() {
                     ) : planInfo.pagos?.map((p: any, i: number) => (
                       <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '10px 0', borderBottom: i < planInfo.pagos.length - 1 ? '1px solid #f5f5f5' : 'none' }}>
                         <div style={{ flex: 1, fontSize: 13, color: '#333' }}>{fmtCorto(p.fecha)}</div>
-                        {p.esPromo
-                          ? <span style={{ fontSize: 13, color: '#006D77', fontWeight: 600 }}>{Tpanel.plan.promocion30}</span>
-                          : <div style={{ fontSize: 13, fontWeight: 600, color: '#111' }}>{p.moneda} {p.monto}</div>
-                        }
-                        {!p.esPromo && <span style={{ background: p.estado === 'paid' ? '#e0f5f0' : '#fff8e1', color: p.estado === 'paid' ? '#065f46' : '#92400e', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>{p.estado === 'paid' ? Tpanel.publicar.pagado : p.estado}</span>}
-                        {!p.esPromo && p.numero && <div style={{ fontSize: 12, color: '#aaa', minWidth: 80 }}>{p.numero}</div>}
-                        {!p.esPromo && p.pdf && <a href={p.pdf} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>PDF</a>}
+                        <div style={{ fontSize: 13, fontWeight: 600, color: '#111' }}>{p.moneda} {p.monto}</div>
+                        <span style={{ background: p.estado === 'paid' ? '#e0f5f0' : '#fff8e1', color: p.estado === 'paid' ? '#065f46' : '#92400e', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>{p.estado === 'paid' ? Tpanel.publicar.pagado : p.estado}</span>
+                        {p.numero && <div style={{ fontSize: 12, color: '#aaa', minWidth: 80 }}>{p.numero}</div>}
+                        {p.pdf && <a href={p.pdf} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>PDF</a>}
                       </div>
                     ))}
                   </div>

@@ -42,15 +42,14 @@ export async function POST(req: Request) {
         : null
 
     const pagos = invoicesRes.data
-      .filter(inv => inv.status !== 'void' && inv.status !== 'draft')
+      .filter(inv => inv.status !== 'void' && inv.status !== 'draft' && inv.amount_paid > 0)
       .map(inv => ({
         fecha: new Date(inv.created * 1000).toISOString(),
         monto: (inv.amount_paid / 100).toFixed(2),
         moneda: inv.currency.toUpperCase(),
         estado: inv.status,
-        esPromo: inv.amount_paid === 0,
         numero: inv.number || '',
-        pdf: inv.amount_paid > 0 ? (inv.invoice_pdf || null) : null,
+        pdf: inv.invoice_pdf || null,
       }))
 
     const trialEnd = sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null
