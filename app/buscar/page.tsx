@@ -874,14 +874,14 @@ function BuscarContent() {
                     <>
                       {(fotoIdx[String(p.id)] ?? 0) > 0 && (
                         <button className="slider-arrow slider-arrow-left" onClick={e => cambiarFoto(e, String(p.id), p.fotos, -1)}
-                          style={{ position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.35)', border: 'none', color: '#fff', width: 28, height: 28, borderRadius: '50%', fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2, opacity: 0, transition: 'opacity 0.15s' }}>
-                          ‹
+                          style={{ position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.35)', border: 'none', color: '#fff', width: 28, height: 28, borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2, opacity: 0, transition: 'opacity 0.15s', padding: 0 }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
                         </button>
                       )}
                       {(fotoIdx[String(p.id)] ?? 0) < p.fotos.length - 1 && (
                         <button className="slider-arrow slider-arrow-right" onClick={e => cambiarFoto(e, String(p.id), p.fotos, 1)}
-                          style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.35)', border: 'none', color: '#fff', width: 28, height: 28, borderRadius: '50%', fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2, opacity: 0, transition: 'opacity 0.15s' }}>
-                          ›
+                          style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.35)', border: 'none', color: '#fff', width: 28, height: 28, borderRadius: '50%', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2, opacity: 0, transition: 'opacity 0.15s', padding: 0 }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
                         </button>
                       )}
                       <div style={{ position: 'absolute', bottom: 8, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 4, zIndex: 2 }}>
