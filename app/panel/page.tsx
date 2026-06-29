@@ -853,9 +853,9 @@ export default function Panel() {
               {/* KPIs reales */}
               <div className="kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 20 }}>
                 {[
-                  { label: Tpanel.anuncios.kpi_visitas, val: anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0).toLocaleString(), sub: Tpanel.anuncios.kpi_visitas_sub, color: '#006D77' },
-                  { label: Tpanel.anuncios.kpi_tel, val: anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0).toLocaleString(), sub: Tpanel.anuncios.kpi_tel_sub, color: '#10b981' },
-                  { label: Tpanel.anuncios.guardados, val: anunciosReales.reduce((s, a) => s + (a.favoritos || 0), 0).toLocaleString(), sub: Tpanel.anuncios.kpi_guardados_sub, color: '#f59e0b' },
+                  { label: Tpanel.anuncios.kpi_visitas, val: fmtStat(anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0)), sub: Tpanel.anuncios.kpi_visitas_sub, color: '#006D77' },
+                  { label: Tpanel.anuncios.kpi_tel, val: fmtStat(anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0)), sub: Tpanel.anuncios.kpi_tel_sub, color: '#10b981' },
+                  { label: Tpanel.anuncios.guardados, val: fmtStat(anunciosReales.reduce((s, a) => s + (a.favoritos || 0), 0)), sub: Tpanel.anuncios.kpi_guardados_sub, color: '#f59e0b' },
                 ].map(k => (
                   <div key={k.label} style={{ background: '#fff', borderRadius: 8, padding: '14px 16px', borderTop: `3px solid ${k.color}`, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
                     <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>{k.label}</div>
@@ -975,11 +975,11 @@ export default function Panel() {
                           <div style={{ display: 'flex', gap: 12, fontSize: 11, color: '#aaa' }}>
                             <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
                               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-                              {a.clics ?? a.visitas ?? 0}
+                              {fmtStat(a.clics ?? a.visitas ?? 0)}
                             </span>
                             <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
                               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                              {a.tel_vistos ?? a.telVistos ?? 0}
+                              {fmtStat(a.tel_vistos ?? a.telVistos ?? 0)}
                             </span>
                             <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
                               <svg width="11" height="11" viewBox="0 0 24 24" fill="#e63946" stroke="#e63946" strokeWidth="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
