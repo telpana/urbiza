@@ -36,11 +36,11 @@ async function validarCodigoPromo(codigo: string): Promise<{ ok: boolean; error?
 export async function POST(req: Request) {
   try {
     const contentType = req.headers.get('content-type') || ''
-    let userId: string, email: string, tipo: string, codigoPromo: string | undefined, propiedadId: string | undefined
+    let userId: string, email: string, tipo: string, codigoPromo: string | undefined, propiedadId: string | undefined, locale: string | undefined
 
     if (contentType.includes('application/json')) {
       const body = await req.json();
-      ({ userId, email, tipo, codigoPromo, propiedadId } = body)
+      ;({ userId, email, tipo, codigoPromo, propiedadId, locale } = body)
     } else {
       const form = await req.formData()
       userId = form.get('userId') as string
@@ -62,11 +62,13 @@ export async function POST(req: Request) {
       }
     }
 
+    const stripeLocale = locale === 'fr' ? 'fr' : locale === 'en' ? 'en' : 'es'
     const sessionParams: Stripe.Checkout.SessionCreateParams = {
       payment_method_types: ['card'],
       mode: esDestacado ? 'payment' : 'subscription',
       customer_email: email || undefined,
       line_items: [{ price: priceId, quantity: 1 }],
+      locale: stripeLocale as Stripe.Checkout.SessionCreateParams['locale'],
       success_url: `${baseUrl}/panel?pago=ok&session_id={CHECKOUT_SESSION_ID}&tipo=${tipo || 'profesional'}`,
       cancel_url: `${baseUrl}/panel?pago=cancelado`,
       metadata: { userId, tipo, ...(propiedadId ? { propiedadId } : {}) },

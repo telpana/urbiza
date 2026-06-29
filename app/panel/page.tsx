@@ -646,7 +646,7 @@ export default function Panel() {
     setPromoLoading(true)
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      const body: any = { userId: user?.id, email: user?.email, tipo: 'profesional' }
+      const body: any = { userId: user?.id, email: user?.email, tipo: 'profesional', locale: idioma }
       if (codigoPromo.trim()) body.codigoPromo = codigoPromo.trim().toUpperCase()
       const res = await fetch('/api/checkout', {
         method: 'POST',
@@ -1621,7 +1621,7 @@ export default function Panel() {
                   const res = await fetch('/api/checkout', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: user?.id, email: user?.email, tipo: planSeleccionado, propiedadId: String(anuncioADestacar.id) })
+                    body: JSON.stringify({ userId: user?.id, email: user?.email, tipo: planSeleccionado, propiedadId: String(anuncioADestacar.id), locale: idioma })
                   })
                   const data = await res.json()
                   if (data.url) window.location.href = data.url
