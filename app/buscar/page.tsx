@@ -359,24 +359,21 @@ function BuscarContent() {
   const [favoritosSet, setFavoritosSet] = useState<Set<string>>(new Set())
   const [userId, setUserId] = useState<string | null>(null)
   const [sortOpen, setSortOpen] = useState(false)
-  const [lightbox, setLightbox] = useState<{ fotos: string[], idx: number, propId: string } | null>(null)
+  const [fotoIdx, setFotoIdx] = useState<Record<string, number>>({})
+  const visitaRegistrada = useRef<Set<string>>(new Set())
 
-  const abrirLightbox = (e: React.MouseEvent, fotos: string[], propId: string) => {
+  const cambiarFoto = (e: React.MouseEvent, propId: string, fotos: string[], dir: 1 | -1) => {
     e.stopPropagation()
-    fetch('/api/visita', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ propiedadId: propId }) })
-    setLightbox({ fotos, idx: 0, propId })
-  }
-
-  useEffect(() => {
-    if (!lightbox) return
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setLightbox(null)
-      if (e.key === 'ArrowRight') setLightbox(l => l && l.idx < l.fotos.length - 1 ? { ...l, idx: l.idx + 1 } : l)
-      if (e.key === 'ArrowLeft') setLightbox(l => l && l.idx > 0 ? { ...l, idx: l.idx - 1 } : l)
+    if (!visitaRegistrada.current.has(propId)) {
+      visitaRegistrada.current.add(propId)
+      fetch('/api/visita', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ propiedadId: propId }) })
     }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  }, [lightbox])
+    setFotoIdx(prev => {
+      const cur = prev[propId] ?? 0
+      const next = Math.max(0, Math.min(fotos.length - 1, cur + dir))
+      return { ...prev, [propId]: next }
+    })
+  }
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
@@ -865,19 +862,39 @@ function BuscarContent() {
                 onClick={() => window.location.href = `/propiedad/${p.id}`}
                 onMouseEnter={e => (e.currentTarget.style.background = '#fafefe')}
                 onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
-                <div className="prop-card-img"
-                  onClick={p.fotos && p.fotos.length > 0 ? (e) => abrirLightbox(e, p.fotos, String(p.id)) : undefined}
-                  style={{ width: 300, minWidth: 300, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: p.fotos && p.fotos.length > 0 ? 'zoom-in' : 'pointer' }}>
+                <div className="prop-card-img prop-card-img-slider"
+                  style={{ width: 300, minWidth: 300, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer' }}>
                   {p.fotos && p.fotos.length > 0
-                    ? <img src={p.fotos[0]} alt={p.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ? <img src={p.fotos[fotoIdx[String(p.id)] ?? 0]} alt={p.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity 0.2s' }} />
                     : <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                   }
                   {p.dest && <div className="pc-badge pc-badge-dest">{Tb.destacado}</div>}
                   {p.visitas && !p.dest && <div className="pc-badge pc-badge-visto">{Tb.masVisto}</div>}
-                  {p.fotos && p.fotos.length > 0 && (
+                  {p.fotos && p.fotos.length > 1 && (
+                    <>
+                      {(fotoIdx[String(p.id)] ?? 0) > 0 && (
+                        <button className="slider-arrow slider-arrow-left" onClick={e => cambiarFoto(e, String(p.id), p.fotos, -1)}
+                          style={{ position: 'absolute', left: 8, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.35)', border: 'none', color: '#fff', width: 28, height: 28, borderRadius: '50%', fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2, opacity: 0, transition: 'opacity 0.15s' }}>
+                          ‹
+                        </button>
+                      )}
+                      {(fotoIdx[String(p.id)] ?? 0) < p.fotos.length - 1 && (
+                        <button className="slider-arrow slider-arrow-right" onClick={e => cambiarFoto(e, String(p.id), p.fotos, 1)}
+                          style={{ position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.35)', border: 'none', color: '#fff', width: 28, height: 28, borderRadius: '50%', fontSize: 16, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 2, opacity: 0, transition: 'opacity 0.15s' }}>
+                          ›
+                        </button>
+                      )}
+                      <div style={{ position: 'absolute', bottom: 8, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 4, zIndex: 2 }}>
+                        {p.fotos.map((_: any, i: number) => (
+                          <span key={i} style={{ width: i === (fotoIdx[String(p.id)] ?? 0) ? 14 : 5, height: 5, borderRadius: 3, background: i === (fotoIdx[String(p.id)] ?? 0) ? '#fff' : 'rgba(255,255,255,0.5)', transition: 'all 0.2s', display: 'block' }} />
+                        ))}
+                      </div>
+                    </>
+                  )}
+                  {p.fotos && p.fotos.length > 0 && p.fotos.length === 1 && (
                     <div style={{ position: 'absolute', bottom: 10, left: 10, background: 'rgba(0,0,0,0.45)', color: '#fff', fontSize: 10, padding: '2px 8px', borderRadius: 3, display: 'flex', alignItems: 'center', gap: 4, zIndex: 1 }}>
                       <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                      {p.fotos.length}
+                      1
                     </div>
                   )}
                   {/* Corazón overlay — solo visible en móvil via CSS */}
@@ -959,43 +976,8 @@ function BuscarContent() {
         </div>
       </div>
     </main>
-    {/* Lightbox */}
-    {lightbox && (
-      <div onClick={() => setLightbox(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.92)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <button onClick={() => setLightbox(null)} style={{ position: 'absolute', top: 20, right: 24, background: 'none', border: 'none', color: '#fff', fontSize: 28, cursor: 'pointer', lineHeight: 1, zIndex: 1 }}>×</button>
-
-        {lightbox.idx > 0 && (
-          <button onClick={e => { e.stopPropagation(); setLightbox(l => l ? { ...l, idx: l.idx - 1 } : l) }}
-            style={{ position: 'absolute', left: 20, background: 'rgba(255,255,255,0.15)', border: 'none', color: '#fff', width: 44, height: 44, borderRadius: '50%', fontSize: 20, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            ‹
-          </button>
-        )}
-
-        <img onClick={e => e.stopPropagation()} src={lightbox.fotos[lightbox.idx]} alt=""
-          style={{ maxWidth: '90vw', maxHeight: '88vh', objectFit: 'contain', borderRadius: 4, userSelect: 'none' }} />
-
-        {lightbox.idx < lightbox.fotos.length - 1 && (
-          <button onClick={e => { e.stopPropagation(); setLightbox(l => l ? { ...l, idx: l.idx + 1 } : l) }}
-            style={{ position: 'absolute', right: 20, background: 'rgba(255,255,255,0.15)', border: 'none', color: '#fff', width: 44, height: 44, borderRadius: '50%', fontSize: 20, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            ›
-          </button>
-        )}
-
-        {lightbox.fotos.length > 1 && (
-          <div style={{ position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 6 }}>
-            {lightbox.fotos.map((_, i) => (
-              <button key={i} onClick={e => { e.stopPropagation(); setLightbox(l => l ? { ...l, idx: i } : l) }}
-                style={{ width: i === lightbox.idx ? 20 : 6, height: 6, borderRadius: 3, background: i === lightbox.idx ? '#fff' : 'rgba(255,255,255,0.4)', border: 'none', cursor: 'pointer', transition: 'all 0.2s', padding: 0 }} />
-            ))}
-          </div>
-        )}
-
-        <div style={{ position: 'absolute', top: 20, left: '50%', transform: 'translateX(-50%)', color: 'rgba(255,255,255,0.6)', fontSize: 13 }}>
-          {lightbox.idx + 1} / {lightbox.fotos.length}
-        </div>
-      </div>
-    )}
-    </>
+    <style>{`.prop-card-img-slider:hover .slider-arrow { opacity: 1 !important; }`}</style>
+</>
   )
 }
 
