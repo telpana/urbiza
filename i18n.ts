@@ -78,7 +78,7 @@ export const t = {
       descCta: '¿Quieres llegar a más compradores internacionales? Escribe también la descripción en inglés o francés al editar tu anuncio.',
     },
     panel: {
-      menu: { anuncios: 'Mis anuncios', publicar: 'Publicar anuncio', mensajes: 'Mensajes', estadisticas: 'Estadísticas', destacar: 'Destacar anuncio', plan: 'Mi plan', perfil: 'Mi perfil', guardados: 'Guardados', cursos: 'Cursos AEI', equipo: 'Equipo' },
+      menu: { miPanel: 'Mi panel', anuncios: 'Mis anuncios', publicar: 'Publicar anuncio', mensajes: 'Mensajes', estadisticas: 'Estadísticas', destacar: 'Destacar anuncio', plan: 'Mi plan', perfil: 'Mi perfil', guardados: 'Guardados', cursos: 'Cursos AEI', equipo: 'Equipo' },
       anuncios: {
         titulo: 'Mis anuncios', publicar: '+ Publicar anuncio', sinAnuncios: 'Aún no has publicado ningún anuncio',
         publicaAhora: 'Publica tu primera propiedad gratis →', filtroTodos: 'Todos',
@@ -233,7 +233,7 @@ export const t = {
       descCta: 'Want to reach more international buyers? Add an English or French description when editing your listing.',
     },
     panel: {
-      menu: { anuncios: 'My listings', publicar: 'Post listing', mensajes: 'Messages', estadisticas: 'Statistics', destacar: 'Feature listing', plan: 'My plan', perfil: 'My profile', guardados: 'Saved', cursos: 'AEI Courses', equipo: 'Team' },
+      menu: { miPanel: 'My dashboard', anuncios: 'My listings', publicar: 'Post listing', mensajes: 'Messages', estadisticas: 'Statistics', destacar: 'Feature listing', plan: 'My plan', perfil: 'My profile', guardados: 'Saved', cursos: 'AEI Courses', equipo: 'Team' },
       anuncios: {
         titulo: 'My listings', publicar: '+ Post listing', sinAnuncios: "You haven't posted any listings yet",
         publicaAhora: 'Post your first property for free →', filtroTodos: 'All',
@@ -388,7 +388,7 @@ export const t = {
       descCta: 'Vous voulez toucher plus d\'acheteurs internationaux ? Ajoutez une description en anglais ou en espagnol en modifiant votre annonce.',
     },
     panel: {
-      menu: { anuncios: 'Mes annonces', publicar: 'Publier une annonce', mensajes: 'Messages', estadisticas: 'Statistiques', destacar: 'Mettre en avant', plan: 'Mon abonnement', perfil: 'Mon profil', guardados: 'Sauvegardés', cursos: 'Cours AEI', equipo: 'Équipe' },
+      menu: { miPanel: 'Mon tableau de bord', anuncios: 'Mes annonces', publicar: 'Publier une annonce', mensajes: 'Messages', estadisticas: 'Statistiques', destacar: 'Mettre en avant', plan: 'Mon abonnement', perfil: 'Mon profil', guardados: 'Sauvegardés', cursos: 'Cours AEI', equipo: 'Équipe' },
       anuncios: {
         titulo: 'Mes annonces', publicar: '+ Publier une annonce', sinAnuncios: "Vous n'avez pas encore publié d'annonce",
         publicaAhora: 'Publiez votre première propriété gratuitement →', filtroTodos: 'Tous',
