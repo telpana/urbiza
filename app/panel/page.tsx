@@ -687,13 +687,27 @@ export default function Panel() {
                 </button>
               ))}
             </div>
-            <div style={{ borderTop: '1px solid #f0f0f0', padding: '4px 0 6px' }}>
+            <div style={{ borderTop: '1px solid #f0f0f0', padding: '4px 0 0' }}>
               <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '13px 20px', fontSize: 14, color: '#333', textDecoration: 'none' }}>
                 <span style={{ color: '#888', display: 'flex' }}>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                 </span>
                 {Tn.verWeb}
               </a>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 20px 14px', borderTop: '1px solid #f5f5f5' }}>
+                <div style={{ display: 'flex', gap: 6 }}>
+                  {(['es', 'en', 'fr'] as const).map(l => (
+                    <button key={l} onClick={() => { setIdioma(l); setPanelNavOpen(false) }}
+                      style={{ all: 'unset', padding: '5px 12px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: idioma === l ? '#006D77' : '#f0f0f0', color: idioma === l ? '#fff' : '#888', transition: 'all 0.15s' }}>
+                      {l.toUpperCase()}
+                    </button>
+                  ))}
+                </div>
+                <button onClick={async () => { const { supabase: sb } = await import('../../supabase'); await sb.auth.signOut(); window.location.href = '/' }}
+                  style={{ all: 'unset', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 8, background: '#fff0f0', cursor: 'pointer' }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#e63946" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>
