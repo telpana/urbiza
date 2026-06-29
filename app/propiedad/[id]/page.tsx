@@ -10,12 +10,6 @@ function formatDOP(usd: number) {
   return 'RD$ ' + (usd * USD_TO_DOP).toLocaleString('es-DO', { maximumFractionDigits: 0 })
 }
 
-const AMENIDADES_LABELS: Record<string, string> = {
-  piscina: 'Piscina', parqueo: 'Parqueo', vista_mar: 'Vista al mar',
-  amueblado: 'Amueblado', jardin: 'Jardín', terraza: 'Terraza',
-  jacuzzi: 'Jacuzzi', barbacoa: 'Barbacoa', gimnasio: 'Gimnasio',
-  seguridad: 'Seguridad 24h', ascensor: 'Ascensor',
-}
 
 const ZONAS_COORDS: Record<string, [number, number]> = {
   'piantini': [18.4890, -69.9370], 'naco': [18.4950, -69.9450], 'bella vista': [18.4760, -69.9450],
@@ -450,12 +444,12 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                           <div className="caract-conversion" style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid #e8e8e8', display: 'flex', flexDirection: 'column', gap: 6 }}>
                             {esTerreno && (
                               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
-                                <span style={{ color: '#888' }}>Tareas</span>
-                                <span style={{ fontWeight: 600, color: '#111' }}>{tareasStr} tareas</span>
+                                <span style={{ color: '#888' }}>{Tp.tareas}</span>
+                                <span style={{ fontWeight: 600, color: '#111' }}>{tareasStr}</span>
                               </div>
                             )}
                             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
-                              <span style={{ color: '#888' }}>Pies cuadrados</span>
+                              <span style={{ color: '#888' }}>{Tp.piesC}</span>
                               <span style={{ fontWeight: 600, color: '#111' }}>{sqft.toLocaleString('en-US')} sq ft</span>
                             </div>
                           </div>
@@ -482,6 +476,9 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                 {(propiedad.descripcion as string).split('\n\n').map((p: string, i: number) => (
                   <p key={i} style={{ fontSize: 14, color: '#555', lineHeight: 1.8, marginBottom: 12 }}>{p}</p>
                 ))}
+                <div style={{ marginTop: 16, padding: '10px 14px', background: '#f0fafb', borderLeft: '3px solid #006D77', borderRadius: '0 6px 6px 0', fontSize: 12, color: '#006D77' }}>
+                  💡 {Tp.descCta}
+                </div>
               </div>
             )}
 
@@ -495,7 +492,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                       <div style={{ width: 20, height: 20, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
                       </div>
-                      {AMENIDADES_LABELS[a] || a}
+                      {(tr.amenidades as any)[a] || a}
                     </div>
                   ))}
                 </div>
@@ -518,8 +515,8 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                   <div style={{ color: '#fff', fontSize: 14, fontWeight: 600, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap' }}>
                     {v.nombre || 'Propietario'}
                     {esProfesional
-                      ? <span style={{ background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>PROFESIONAL</span>
-                      : <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 9, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>PARTICULAR</span>
+                      ? <span style={{ background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>{Tp.profesional}</span>
+                      : <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 9, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>{Tp.particular}</span>
                     }
                     {v.numero_aei && v.aei_aprobado && (
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: 3, background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>

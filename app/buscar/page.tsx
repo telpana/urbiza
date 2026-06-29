@@ -445,6 +445,11 @@ function BuscarContent() {
   })) : propiedadesEjemplo
 
   const tipos = ['Todos', 'Apartamento', 'Casa', 'Villa', 'Edificio', 'Oficina', 'Terreno', 'Local comercial']
+  const tipoLabel = (t: string) => {
+    if (t === 'Todos') return Tb.todos
+    const map: Record<string, keyof typeof tr.tipos> = { 'Apartamento': 'apartamento', 'Casa': 'casa', 'Villa': 'villa', 'Edificio': 'edificio', 'Oficina': 'oficina', 'Terreno': 'terreno', 'Local comercial': 'local' }
+    return tr.tipos[map[t]] || t
+  }
   const ordenes = [
     { val: 'Relevancia', label: Tb.relevancia },
     { val: 'Recientes', label: Tb.recientes },
@@ -719,7 +724,7 @@ function BuscarContent() {
           <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>{Tb.tipoInmueble}</div>
             <select value={tipo} onChange={e => setTipo(e.target.value)} style={{ width: '100%', border: '1px solid #ddd', borderRadius: 4, padding: '8px 10px', fontSize: 13, color: '#444', background: '#fff', cursor: 'pointer', outline: 'none' }}>
-              {tipos.map(t => <option key={t}>{t}</option>)}
+              {tipos.map(t => <option key={t} value={t}>{tipoLabel(t)}</option>)}
             </select>
           </div>
 
@@ -773,19 +778,7 @@ function BuscarContent() {
           <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>{Tb.caracteristicas}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {[
-                { id: 'piscina', label: 'Piscina' },
-                { id: 'parqueo', label: 'Parqueo' },
-                { id: 'vista_mar', label: 'Vista al mar' },
-                { id: 'amueblado', label: 'Amueblado' },
-                { id: 'jardin', label: 'Jardín' },
-                { id: 'terraza', label: 'Terraza' },
-                { id: 'jacuzzi', label: 'Jacuzzi' },
-                { id: 'barbacoa', label: 'Barbacoa' },
-                { id: 'gimnasio', label: 'Gimnasio' },
-                { id: 'seguridad', label: 'Seguridad 24h' },
-                { id: 'ascensor', label: 'Ascensor' },
-              ].map(({ id, label }) => (
+              {(['piscina', 'parqueo', 'vista_mar', 'amueblado', 'jardin', 'terraza', 'jacuzzi', 'barbacoa', 'gimnasio', 'seguridad', 'ascensor'] as const).map(id => (
                 <label key={id} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 13, color: '#444', cursor: 'pointer' }}>
                   <input
                     type="checkbox"
@@ -793,7 +786,7 @@ function BuscarContent() {
                     onChange={e => setAmenidadesFiltro(prev => e.target.checked ? [...prev, id] : prev.filter(a => a !== id))}
                     style={{ accentColor: '#006D77', width: 14, height: 14 }}
                   />
-                  {label}
+                  {(tr.amenidades as any)[id]}
                 </label>
               ))}
             </div>
@@ -802,11 +795,11 @@ function BuscarContent() {
           {/* FILTRO EDIFICIO */}
           {tipo === 'Edificio' && (
             <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>Número de pisos mínimo</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>{Tb.pisosMin}</div>
               <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
                 {[0, 3, 5, 8, 12].map(p => (
                   <button key={p} onClick={() => setPisosMin(p)} style={{ all: 'unset', border: `1px solid ${pisosMin === p ? '#006D77' : '#ddd'}`, borderRadius: 4, padding: '6px 10px', fontSize: 12, cursor: 'pointer', color: pisosMin === p ? '#006D77' : '#666', background: pisosMin === p ? '#f0fafb' : '#fff' }}>
-                    {p === 0 ? 'Cualquiera' : `${p}+`}
+                    {p === 0 ? Tb.cualquiera : `${p}+`}
                   </button>
                 ))}
               </div>
@@ -858,8 +851,8 @@ function BuscarContent() {
                     ? <img src={p.fotos[0]} alt={p.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                     : <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                   }
-                  {p.dest && <div className="pc-badge pc-badge-dest">{Tb.destacado ?? 'DESTACADO'}</div>}
-                  {p.visitas && !p.dest && <div className="pc-badge pc-badge-visto">MÁS VISTO</div>}
+                  {p.dest && <div className="pc-badge pc-badge-dest">{Tb.destacado}</div>}
+                  {p.visitas && !p.dest && <div className="pc-badge pc-badge-visto">{Tb.masVisto}</div>}
                   {p.fotos && p.fotos.length > 0 && (
                     <div style={{ position: 'absolute', bottom: 10, left: 10, background: 'rgba(0,0,0,0.45)', color: '#fff', fontSize: 10, padding: '2px 8px', borderRadius: 3, display: 'flex', alignItems: 'center', gap: 4, zIndex: 1 }}>
                       <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
@@ -883,10 +876,10 @@ function BuscarContent() {
                     </div>
                     <div className="pc-dop" style={{ fontSize: 12, color: '#aaa', marginBottom: 12 }}>{formatDOP(p.precio)}</div>
                     <div className="pc-feats" style={{ fontSize: 13, color: '#444', marginBottom: 12 }}>
-                      {p.hab > 0 && <span>{p.hab} hab. &nbsp;·&nbsp; </span>}
+                      {p.hab > 0 && <span>{p.hab} {Tb.hab} &nbsp;·&nbsp; </span>}
                       <span>{p.m2} m² &nbsp;·&nbsp; </span>
-                      {p.banos > 0 && <span>{p.banos} baños &nbsp;·&nbsp; </span>}
-                      {p.parqueos > 0 && <span>{p.parqueos} parqueo{p.parqueos > 1 ? 's' : ''}</span>}
+                      {p.banos > 0 && <span>{p.banos} {p.banos > 1 ? Tb.banos2 : Tb.bano} &nbsp;·&nbsp; </span>}
+                      {p.parqueos > 0 && <span>{p.parqueos} {p.parqueos > 1 ? Tb.parqueos2 : Tb.parqueos}</span>}
                     </div>
                     <div className="pc-desc" style={{ fontSize: 13, color: '#777', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginBottom: 14 }}>{p.desc}</div>
                   </div>
@@ -919,7 +912,7 @@ function BuscarContent() {
               <button onClick={() => { setPagina(p => Math.max(1, p - 1)); window.scrollTo(0,0) }}
                 disabled={pagina === 1}
                 style={{ border: '1.5px solid #e0e0e0', background: '#fff', color: pagina === 1 ? '#ccc' : '#333', padding: '8px 14px', borderRadius: 4, fontSize: 13, cursor: pagina === 1 ? 'default' : 'pointer' }}>
-                Anterior
+                {Tb.anterior}
               </button>
               {Array.from({ length: totalPaginas }, (_, i) => i + 1)
                 .filter(n => n === 1 || n === totalPaginas || Math.abs(n - pagina) <= 2)
