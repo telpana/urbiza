@@ -581,7 +581,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
             <div style={{ display: 'flex', gap: 0, marginTop: 12, borderTop: '1px solid #f0f0f0' }}>
               <button onClick={toggleGuardado} style={{ all: 'unset', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '14px 8px', fontSize: 11, fontWeight: 600, color: guardado ? '#006D77' : '#888', cursor: 'pointer', boxSizing: 'border-box', borderRight: '1px solid #f0f0f0' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill={guardado ? '#006D77' : 'none'} stroke={guardado ? '#006D77' : '#aaa'} strokeWidth="1.6"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                {guardado ? 'Guardado' : 'Guardar'}
+                {guardado ? Tp.guardado : Tp.guardar}
               </button>
               <button onClick={async () => {
                 const url = window.location.href.split('?')[0]
@@ -589,7 +589,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                 else { await navigator.clipboard.writeText(url); alert(Tp.enlaceCopiad) }
               }} style={{ all: 'unset', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '14px 8px', fontSize: 11, fontWeight: 600, color: '#888', cursor: 'pointer', boxSizing: 'border-box' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="1.6"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-                Compartir
+                {Tp.compartir}
               </button>
             </div>
           </div>
@@ -610,7 +610,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
       </div>
 
       <footer style={{ background: '#004E57', color: 'rgba(255,255,255,0.5)', padding: '20px', fontSize: 12, textAlign: 'center' }}>
-        <strong style={{ color: 'rgba(255,255,255,0.8)' }}>habitade.com</strong> · © 2025 · República Dominicana
+        <strong style={{ color: 'rgba(255,255,255,0.8)' }}>habitade.com</strong> · © 2025 · {tr.footer.derechos.split('·').pop()?.trim()}
       </footer>
     </main>
   )
