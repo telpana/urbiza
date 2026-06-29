@@ -848,7 +848,7 @@ export default function Panel() {
                 <div style={{ position: 'relative' }}>
                   <button onClick={() => { setTipoOpen(v => !v); setProvinciaOpen(false) }} style={{ all: 'unset', border: `1.5px solid ${filtroTipo ? '#006D77' : '#e0e0e0'}`, borderRadius: 8, padding: '7px 14px', fontSize: 13, color: filtroTipo ? '#006D77' : '#555', background: filtroTipo ? '#f0fafb' : '#fff', cursor: 'pointer', fontWeight: filtroTipo ? 600 : 400, display: 'flex', alignItems: 'center', gap: 7, whiteSpace: 'nowrap', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-                    {filtroTipo || 'Tipo de vivienda'}
+                    {filtroTipo ? (trLang.tipos as any)[{ 'Apartamento':'apartamento','Casa':'casa','Villa':'villa','Edificio':'edificio','Oficina':'oficina','Terreno':'terreno','Local comercial':'local' }[filtroTipo] || ''] || filtroTipo : Tpanel.anuncios.filtroTipo}
                     {filtroTipo && <span onClick={e => { e.stopPropagation(); setFiltroTipo('') }} style={{ display: 'flex', alignItems: 'center', marginLeft: 2, opacity: 0.5 }}>×</span>}
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: tipoOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s', marginLeft: 2 }}><polyline points="6 9 12 15 18 9"/></svg>
                   </button>
@@ -856,7 +856,7 @@ export default function Panel() {
                     <>
                       <div style={{ position: 'fixed', inset: 0, zIndex: 49 }} onClick={() => setTipoOpen(false)} />
                       <div style={{ position: 'absolute', left: 0, top: 'calc(100% + 6px)', background: '#fff', border: '1px solid #e8e8e8', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', zIndex: 50, minWidth: 200, overflow: 'hidden' }}>
-                        {[{ val: '', label: 'Todos los tipos' }, ...['Apartamento', 'Casa', 'Villa', 'Edificio', 'Oficina', 'Terreno', 'Local comercial'].map(t => ({ val: t, label: t }))].map(({ val, label }, i, arr) => (
+                        {[{ val: '', label: Tpanel.anuncios.filtroTodostipos }, ...([['Apartamento','apartamento'],['Casa','casa'],['Villa','villa'],['Edificio','edificio'],['Oficina','oficina'],['Terreno','terreno'],['Local comercial','local']] as [string,string][]).map(([val,key]) => ({ val, label: (trLang.tipos as any)[key] || val }))].map(({ val, label }, i, arr) => (
                           <button key={val} onClick={() => { setFiltroTipo(val); setTipoOpen(false) }} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 16px', fontSize: 13, color: filtroTipo === val ? '#006D77' : '#333', fontWeight: filtroTipo === val ? 600 : 400, background: filtroTipo === val ? '#f0fafb' : 'transparent', cursor: 'pointer', borderBottom: i < arr.length - 1 ? '1px solid #f5f5f5' : 'none', boxSizing: 'border-box' }}>
                             {filtroTipo === val && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
                             {filtroTipo !== val && <span style={{ width: 12 }} />}
@@ -872,7 +872,7 @@ export default function Panel() {
                   <div style={{ position: 'relative' }}>
                     <button onClick={() => { setProvinciaOpen(v => !v); setTipoOpen(false) }} style={{ all: 'unset', border: `1.5px solid ${filtroProvincia ? '#006D77' : '#e0e0e0'}`, borderRadius: 8, padding: '7px 14px', fontSize: 13, color: filtroProvincia ? '#006D77' : '#555', background: filtroProvincia ? '#f0fafb' : '#fff', cursor: 'pointer', fontWeight: filtroProvincia ? 600 : 400, display: 'flex', alignItems: 'center', gap: 7, whiteSpace: 'nowrap', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
-                      {filtroProvincia || 'Provincia'}
+                      {filtroProvincia || Tpanel.anuncios.filtroProvincia}
                       {filtroProvincia && <span onClick={e => { e.stopPropagation(); setFiltroProvincia('') }} style={{ display: 'flex', alignItems: 'center', marginLeft: 2, opacity: 0.5 }}>×</span>}
                       <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: provinciaOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s', marginLeft: 2 }}><polyline points="6 9 12 15 18 9"/></svg>
                     </button>
@@ -883,7 +883,7 @@ export default function Panel() {
                           <button onClick={() => { setFiltroProvincia(''); setProvinciaOpen(false) }} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 16px', fontSize: 13, color: !filtroProvincia ? '#006D77' : '#333', fontWeight: !filtroProvincia ? 600 : 400, background: !filtroProvincia ? '#f0fafb' : 'transparent', cursor: 'pointer', borderBottom: '1px solid #f5f5f5', boxSizing: 'border-box' }}>
                             {!filtroProvincia && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
                             {filtroProvincia && <span style={{ width: 12 }} />}
-                            Todas las provincias
+                            {Tpanel.anuncios.filtroTodasProvincias}
                           </button>
                           {provinciasDisponibles.map(p => (
                             <button key={p} onClick={() => { setFiltroProvincia(p); setProvinciaOpen(false) }} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 16px', fontSize: 13, color: filtroProvincia === p ? '#006D77' : '#333', fontWeight: filtroProvincia === p ? 600 : 400, background: filtroProvincia === p ? '#f0fafb' : 'transparent', cursor: 'pointer', borderBottom: '1px solid #f5f5f5', boxSizing: 'border-box' }}>
@@ -964,25 +964,24 @@ export default function Panel() {
                             </span>
                           </div>
                         </div>
-                        <span className="anuncio-card-status" style={{ background: estado === 'activo' ? '#e0f5f0' : '#f5f5f5', color: estado === 'activo' ? '#065f46' : '#888', fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 10, flexShrink: 0, whiteSpace: 'nowrap' }}>
-                          {estado === 'activo' ? `● ${Tpanel.anuncios.estado.activo}` : `○ ${Tpanel.anuncios.estado.pausado}`}
-                        </span>
-                      </div>
-                      {/* Fila de acciones */}
-                      <div className="anuncio-card-actions" style={{ display: 'flex', gap: 8, padding: '0 16px 12px', flexWrap: 'wrap', alignItems: 'center' }}>
-                        {a.destacado
-                          ? <div style={{ border: '1px solid #006D77', color: '#006D77', padding: '5px 11px', borderRadius: 6, fontSize: 12, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 4, background: '#f0fafb', whiteSpace: 'nowrap' }} title={a.destacado_hasta ? `Vence el ${new Date(a.destacado_hasta).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}` : ''}>
-                              <svg width="11" height="11" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                              Destacado{a.destacado_hasta ? ` · hasta ${new Date(a.destacado_hasta).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}` : ''}
-                            </div>
-                          : <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '5px 11px', borderRadius: 6, fontSize: 12, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
-                              <svg width="11" height="11" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                              Destacar
-                            </button>
-                        }
-                        <div style={{ marginLeft: 'auto', display: 'flex', gap: 8 }}>
-                          <button onClick={() => handleEditar(a)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '5px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>{Tpanel.anuncios.editar}</button>
-                          <button onClick={() => eliminarAnuncio(a.id)} style={{ all: 'unset', border: '1px solid #fca5a5', color: '#dc2626', padding: '5px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer', fontWeight: 500 }}>{Tpanel.anuncios.eliminar}</button>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 8, flexShrink: 0 }}>
+                          <span className="anuncio-card-status" style={{ background: estado === 'activo' ? '#e0f5f0' : '#f5f5f5', color: estado === 'activo' ? '#065f46' : '#888', fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 10, whiteSpace: 'nowrap' }}>
+                            {estado === 'activo' ? `● ${Tpanel.anuncios.estado.activo}` : `○ ${Tpanel.anuncios.estado.pausado}`}
+                          </span>
+                          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                            {a.destacado
+                              ? <div style={{ border: '1px solid #006D77', color: '#006D77', padding: '5px 11px', borderRadius: 6, fontSize: 12, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 4, background: '#f0fafb', whiteSpace: 'nowrap' }} title={a.destacado_hasta ? `Vence el ${new Date(a.destacado_hasta).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}` : ''}>
+                                  <svg width="11" height="11" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                  {Tpanel.anuncios.dest}
+                                </div>
+                              : <button onClick={() => { setAnuncioADestacar(a); setSeccion('destacar') }} style={{ all: 'unset', border: '1px solid #006D77', color: '#006D77', padding: '5px 11px', borderRadius: 6, fontSize: 12, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                  <svg width="11" height="11" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                  {Tpanel.anuncios.destacar}
+                                </button>
+                            }
+                            <button onClick={() => handleEditar(a)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#555', padding: '5px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer' }}>{Tpanel.anuncios.editar}</button>
+                            <button onClick={() => eliminarAnuncio(a.id)} style={{ all: 'unset', border: '1px solid #fca5a5', color: '#dc2626', padding: '5px 12px', borderRadius: 6, fontSize: 12, cursor: 'pointer', fontWeight: 500 }}>{Tpanel.anuncios.eliminar}</button>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1048,15 +1047,21 @@ export default function Panel() {
                 <div className="pub-form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.operacion}</label>
-                    <select value={pubOperacion} onChange={e => setPubOperacion(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
-                      <option value="Venta">{Tpanel.publicar.venta}</option><option value="Alquiler">{Tpanel.publicar.alquiler}</option>
-                    </select>
+                    <div style={{ position: 'relative' }}>
+                      <select value={pubOperacion} onChange={e => setPubOperacion(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 36px 10px 12px', fontSize: 13, outline: 'none', background: '#fff', appearance: 'none', cursor: 'pointer' }}>
+                        <option value="Venta">{Tpanel.publicar.venta}</option><option value="Alquiler">{Tpanel.publicar.alquiler}</option>
+                      </select>
+                      <svg style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.tipoInmueble}</label>
-                    <select value={pubTipo} onChange={e => setPubTipo(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
-                      <option value="Apartamento">{trLang.tipos.apartamento}</option><option value="Casa">{trLang.tipos.casa}</option><option value="Villa">{trLang.tipos.villa}</option><option value="Edificio">{trLang.tipos.edificio}</option><option value="Oficina">{trLang.tipos.oficina}</option><option value="Terreno">{trLang.tipos.terreno}</option><option value="Local comercial">{trLang.tipos.local}</option>
-                    </select>
+                    <div style={{ position: 'relative' }}>
+                      <select value={pubTipo} onChange={e => setPubTipo(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 36px 10px 12px', fontSize: 13, outline: 'none', background: '#fff', appearance: 'none', cursor: 'pointer' }}>
+                        <option value="Apartamento">{trLang.tipos.apartamento}</option><option value="Casa">{trLang.tipos.casa}</option><option value="Villa">{trLang.tipos.villa}</option><option value="Edificio">{trLang.tipos.edificio}</option><option value="Oficina">{trLang.tipos.oficina}</option><option value="Terreno">{trLang.tipos.terreno}</option><option value="Local comercial">{trLang.tipos.local}</option>
+                      </select>
+                      <svg style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.titulo_anuncio}</label>
@@ -1068,17 +1073,23 @@ export default function Panel() {
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.provincia}</label>
-                    <select value={pubProvincia} onChange={e => { setPubProvincia(e.target.value); setPubSector('') }} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
-                      <option value="">{Tpanel.publicar.seleccionaProvincia}</option>
-                      {Object.keys(provinciasZonas).map(p => <option key={p} value={p}>{p}</option>)}
-                    </select>
+                    <div style={{ position: 'relative' }}>
+                      <select value={pubProvincia} onChange={e => { setPubProvincia(e.target.value); setPubSector('') }} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 36px 10px 12px', fontSize: 13, outline: 'none', background: '#fff', appearance: 'none', cursor: 'pointer' }}>
+                        <option value="">{Tpanel.publicar.seleccionaProvincia}</option>
+                        {Object.keys(provinciasZonas).map(p => <option key={p} value={p}>{p}</option>)}
+                      </select>
+                      <svg style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.sector} <span style={{ fontWeight: 400, color: '#aaa' }}>{Tpanel.publicar.sectorOpcional}</span></label>
-                    <select value={pubSector} onChange={e => setPubSector(e.target.value)} disabled={!pubProvincia} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: pubProvincia ? '#fff' : '#f9f9f9', color: pubProvincia ? '#333' : '#aaa' }}>
-                      <option value="">{Tpanel.publicar.seleccionaSector}</option>
-                      {pubProvincia && provinciasZonas[pubProvincia].map(z => <option key={z} value={z}>{z}</option>)}
-                    </select>
+                    <div style={{ position: 'relative' }}>
+                      <select value={pubSector} onChange={e => setPubSector(e.target.value)} disabled={!pubProvincia} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 36px 10px 12px', fontSize: 13, outline: 'none', background: pubProvincia ? '#fff' : '#f9f9f9', color: pubProvincia ? '#333' : '#aaa', appearance: 'none', cursor: pubProvincia ? 'pointer' : 'default' }}>
+                        <option value="">{Tpanel.publicar.seleccionaSector}</option>
+                        {pubProvincia && provinciasZonas[pubProvincia].map(z => <option key={z} value={z}>{z}</option>)}
+                      </select>
+                      <svg style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={pubProvincia ? '#888' : '#ccc'} strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    </div>
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.superficie} *</label>
