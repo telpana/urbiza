@@ -527,6 +527,7 @@ function BuscarContent() {
   const tituloPagina = `${filtradas.length} propiedades ${query ? `en ${query.split(',')[0].trim()}` : 'en República Dominicana'}`
 
   return (
+    <>
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
 
       {/* MAPA COMPLETO — pantalla entera */}
@@ -958,7 +959,6 @@ function BuscarContent() {
         </div>
       </div>
     </main>
-
     {/* Lightbox */}
     {lightbox && (
       <div onClick={() => setLightbox(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.92)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -995,6 +995,7 @@ function BuscarContent() {
         </div>
       </div>
     )}
+    </>
   )
 }
 
