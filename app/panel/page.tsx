@@ -1512,17 +1512,19 @@ export default function Panel() {
           {!cargando && seccion === 'destacar' && (
             <div>
               {/* Hero */}
-              <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 60%, #17A6B4 100%)', borderRadius: 16, padding: '24px 20px', marginBottom: 24, color: '#fff', overflow: 'hidden', position: 'relative' }}>
+              <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 60%, #17A6B4 100%)', borderRadius: 16, padding: '24px 28px', marginBottom: 24, color: '#fff', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
                 <div style={{ position: 'absolute', top: -40, right: -40, width: 160, height: 160, background: 'rgba(255,255,255,0.04)', borderRadius: '50%' }} />
-                <div style={{ position: 'absolute', bottom: -30, right: 40, width: 100, height: 100, background: 'rgba(255,255,255,0.04)', borderRadius: '50%' }} />
-                <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, opacity: 0.6, textTransform: 'uppercase', marginBottom: 10 }}>{Tpanel.destacar.titulo}</div>
-                <h1 style={{ fontSize: 24, fontWeight: 800, margin: '0 0 8px', lineHeight: 1.15 }}>{Tpanel.destacar.heroTitulo.split('\n').map((l: string, i: number) => i === 0 ? <>{l}<br/></> : l)}</h1>
-                <p style={{ fontSize: 13, opacity: 0.7, margin: '0 0 20px', lineHeight: 1.5, maxWidth: 260 }}>{Tpanel.destacar.heroDesc}</p>
-                <div style={{ display: 'flex', gap: 8 }}>
+                <div style={{ position: 'absolute', bottom: -30, right: 160, width: 100, height: 100, background: 'rgba(255,255,255,0.04)', borderRadius: '50%' }} />
+                <div style={{ zIndex: 1 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, opacity: 0.6, textTransform: 'uppercase', marginBottom: 10 }}>{Tpanel.destacar.titulo}</div>
+                  <h1 style={{ fontSize: 24, fontWeight: 800, margin: '0 0 8px', lineHeight: 1.15 }}>{Tpanel.destacar.heroTitulo.split('\n').map((l: string, i: number) => i === 0 ? <>{l}<br/></> : l)}</h1>
+                  <p style={{ fontSize: 13, opacity: 0.7, margin: 0, lineHeight: 1.5 }}>{Tpanel.destacar.heroDesc}</p>
+                </div>
+                <div style={{ display: 'flex', gap: 8, flexShrink: 0, zIndex: 1 }}>
                   {[{ n: '10×', label: Tpanel.destacar.statVisitas }, { n: 'TOP', label: Tpanel.destacar.statPosicion }, { n: '#1', label: Tpanel.destacar.statBusquedas }].map(s => (
-                    <div key={s.n} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.1)', borderRadius: 10, padding: '9px 12px', flex: 1 }}>
-                      <div style={{ fontSize: 16, fontWeight: 800 }}>{s.n}</div>
-                      <div style={{ fontSize: 9, opacity: 0.7, marginTop: 2, textTransform: 'uppercase', letterSpacing: 0.5 }}>{s.label}</div>
+                    <div key={s.n} style={{ textAlign: 'center', background: 'rgba(255,255,255,0.1)', borderRadius: 10, padding: '12px 16px', minWidth: 70 }}>
+                      <div style={{ fontSize: 18, fontWeight: 800 }}>{s.n}</div>
+                      <div style={{ fontSize: 9, opacity: 0.7, marginTop: 3, textTransform: 'uppercase', letterSpacing: 0.5 }}>{s.label}</div>
                     </div>
                   ))}
                 </div>
@@ -1530,8 +1532,7 @@ export default function Panel() {
 
               {/* Paso 1: elegir plan */}
               <div style={{ marginBottom: 28 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-                  <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>1</div>
+                <div style={{ marginBottom: 16 }}>
                   <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>{Tpanel.destacar.elegirDuracion}</span>
                 </div>
                 <div className="planes-destacado-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
@@ -1574,8 +1575,7 @@ export default function Panel() {
 
               {/* Paso 2: seleccionar anuncio */}
               <div style={{ marginBottom: 28 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
-                  <div style={{ width: 22, height: 22, borderRadius: '50%', background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>2</div>
+                <div style={{ marginBottom: 16 }}>
                   <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>{Tpanel.destacar.seleccionarAnuncio}</span>
                 </div>
                 {anunciosReales.length === 0 ? (
