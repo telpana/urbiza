@@ -41,8 +41,10 @@ export async function POST(req: Request) {
         ? sub.default_payment_method.card.last4
         : null
 
-    const pagos = invoicesRes.data
-      .filter(inv => inv.status !== 'void' && inv.status !== 'draft' && inv.amount_paid > 0)
+    const esTrial = sub.status === 'trialing'
+
+    const pagos = esTrial ? [] : invoicesRes.data
+      .filter(inv => inv.status === 'paid' && inv.amount_paid > 0)
       .map(inv => ({
         fecha: new Date(inv.created * 1000).toISOString(),
         monto: (inv.amount_paid / 100).toFixed(2),

@@ -1848,7 +1848,7 @@ export default function Panel() {
                     {!planInfo ? (
                       <div style={{ fontSize: 13, color: '#aaa', textAlign: 'center', padding: '16px 0' }}>{Tpanel.plan.cargando}</div>
                     ) : planInfo.sin_sub || planInfo.error || !planInfo.pagos?.length ? (
-                      usuario?.plan_activo_hasta ? (
+                      usuario?.plan_activo_hasta && planInfo?.estado !== 'trialing' ? (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '10px 0' }}>
                           <div style={{ flex: 1, fontSize: 13, color: '#333' }}>{fmtCorto(usuario.created_at)}</div>
                           <div style={{ fontSize: 13, fontWeight: 600, color: '#111' }}>US$ 9.99</div>
