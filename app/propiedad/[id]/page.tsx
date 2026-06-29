@@ -604,51 +604,49 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
               <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
               {propiedad.zona}
             </div>
+
+            {/* TARJETA BROKER — solo profesionales, solo escritorio */}
+            {propiedad.usuarios?.tipo === 'profesional' && (
+              <div className="broker-card-wrap" style={{ marginTop: 20 }}>
+                <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 2px 12px rgba(0,0,0,0.07)', border: '1px solid #e8f4f5', overflow: 'hidden' }}>
+                  <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 100%)', height: 6 }} />
+                  <div className="broker-card-inner" style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '24px 28px' }}>
+                    <div style={{ flexShrink: 0 }}>
+                      <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#e0f5f7', overflow: 'hidden', border: '3px solid #006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, fontWeight: 700, color: '#006D77' }}>
+                        {propiedad.usuarios?.foto_url
+                          ? <img src={propiedad.usuarios.foto_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          : (propiedad.usuarios?.nombre || 'P').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
+                        }
+                      </div>
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 4 }}>
+                        <span style={{ fontSize: 17, fontWeight: 700, color: '#111' }}>{propiedad.usuarios?.nombre}</span>
+                        <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10, letterSpacing: 0.5, whiteSpace: 'nowrap' }}>{Tp.profesional}</span>
+                        {propiedad.usuarios?.aei_aprobado && (
+                          <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10, whiteSpace: 'nowrap' }}>✓ AEI</span>
+                        )}
+                      </div>
+                      {propiedad.usuarios?.inmobiliaria && (
+                        <div style={{ fontSize: 13, color: '#006D77', fontWeight: 500, marginBottom: 8 }}>{propiedad.usuarios.inmobiliaria}</div>
+                      )}
+                      {Array.isArray(propiedad.usuarios?.idiomas) && propiedad.usuarios.idiomas.length > 0 && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                          {propiedad.usuarios.idiomas.map((lang: string) => (
+                            <span key={lang} style={{ background: '#f0fafb', border: '1px solid #c7eaee', color: '#006D77', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>{lang}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
         </div>
       </div>
-
-      {/* TARJETA BROKER — solo profesionales, solo escritorio */}
-      {propiedad.usuarios?.tipo === 'profesional' && (
-        <div className="broker-card-wrap" style={{ maxWidth: 900, margin: '0 auto', padding: '0 16px 32px' }}>
-          <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 2px 12px rgba(0,0,0,0.07)', border: '1px solid #e8f4f5', overflow: 'hidden' }}>
-            <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 100%)', height: 6 }} />
-            <div className="broker-card-inner" style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '24px 28px' }}>
-              {/* Foto */}
-              <div style={{ flexShrink: 0 }}>
-                <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#e0f5f7', overflow: 'hidden', border: '3px solid #006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, fontWeight: 700, color: '#006D77' }}>
-                  {propiedad.usuarios?.foto_url
-                    ? <img src={propiedad.usuarios.foto_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    : (propiedad.usuarios?.nombre || 'P').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
-                  }
-                </div>
-              </div>
-              {/* Info */}
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 4 }}>
-                  <span style={{ fontSize: 17, fontWeight: 700, color: '#111' }}>{propiedad.usuarios?.nombre}</span>
-                  <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10, letterSpacing: 0.5, whiteSpace: 'nowrap' }}>{Tp.profesional}</span>
-                  {propiedad.usuarios?.aei_aprobado && (
-                    <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10, whiteSpace: 'nowrap' }}>✓ AEI</span>
-                  )}
-                </div>
-                {propiedad.usuarios?.inmobiliaria && (
-                  <div style={{ fontSize: 13, color: '#006D77', fontWeight: 500, marginBottom: 8 }}>{propiedad.usuarios.inmobiliaria}</div>
-                )}
-                {Array.isArray(propiedad.usuarios?.idiomas) && propiedad.usuarios.idiomas.length > 0 && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                    {propiedad.usuarios.idiomas.map((lang: string) => (
-                      <span key={lang} style={{ background: '#f0fafb', border: '1px solid #c7eaee', color: '#006D77', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>{lang}</span>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       <footer style={{ background: '#004E57', color: 'rgba(255,255,255,0.5)', padding: '20px', fontSize: 12, textAlign: 'center' }}>
         <strong style={{ color: 'rgba(255,255,255,0.8)' }}>habitade.com</strong> · © 2025 · {tr.footer.derechos.split('·').pop()?.trim()}
