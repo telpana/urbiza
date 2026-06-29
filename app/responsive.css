@@ -172,6 +172,16 @@ img { max-width: 100%; }
   .anuncio-card-status { display: none !important; }
   .anuncio-card-actions { padding: 0 12px 10px !important; border-top: 1px solid #f5f5f5 !important; padding-top: 10px !important; }
 
+  /* Hero destacar — apilar verticalmente en móvil */
+  .destacar-hero {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  .destacar-hero > div:last-child {
+    flex-wrap: wrap !important;
+    gap: 0 !important;
+  }
+
   /* Planes destacar — una columna */
   .planes-destacado-grid {
     grid-template-columns: 1fr !important;

@@ -1526,7 +1526,7 @@ export default function Panel() {
           {!cargando && seccion === 'destacar' && (
             <div>
               {/* Hero */}
-              <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 60%, #17A6B4 100%)', borderRadius: 16, padding: '24px 28px', marginBottom: 24, color: '#fff', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
+              <div className="destacar-hero" style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 60%, #17A6B4 100%)', borderRadius: 16, padding: '24px 28px', marginBottom: 24, color: '#fff', overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24 }}>
                 <div style={{ zIndex: 1 }}>
                   <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, opacity: 0.6, textTransform: 'uppercase', marginBottom: 10 }}>{Tpanel.destacar.titulo}</div>
                   <h1 style={{ fontSize: 24, fontWeight: 800, margin: '0 0 8px', lineHeight: 1.15 }}>{Tpanel.destacar.heroTitulo.split('\n').map((l: string, i: number) => i === 0 ? <>{l}<br/></> : l)}</h1>
