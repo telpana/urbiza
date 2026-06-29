@@ -76,6 +76,9 @@ export const t = {
       err_propio: 'No puedes enviarte mensajes a ti mismo', err_campos: 'El nombre y el mensaje son obligatorios',
       err_bloqueado: 'No es posible enviar el mensaje', err_envio: 'Error al enviar. Inténtalo de nuevo.',
       descCta: '¿Quieres llegar a más compradores internacionales? Escribe también la descripción en inglés o francés al editar tu anuncio.',
+      reportarBtn: '¿Hay algún error en este anuncio? Repórtalo',
+      reportarTitulo: 'Reportar anuncio', reportarEnviar: 'Enviar reporte', reportarEnviando: 'Enviando...', reportarOk: '✓ Reporte enviado, gracias',
+      reportarComentario: 'Comentario adicional (opcional)',
     },
     completarPerfil: {
       titulo: 'Completa tu perfil', subtitulo: 'Necesitamos unos datos más para activar tu cuenta',
@@ -277,6 +280,9 @@ export const t = {
       err_propio: 'You cannot send messages to yourself', err_campos: 'Name and message are required',
       err_bloqueado: 'It is not possible to send the message', err_envio: 'Error sending. Please try again.',
       descCta: 'Want to reach more international buyers? Add an English or French description when editing your listing.',
+      reportarBtn: 'Is there an error in this listing? Report it',
+      reportarTitulo: 'Report listing', reportarEnviar: 'Submit report', reportarEnviando: 'Sending...', reportarOk: '✓ Report submitted, thank you',
+      reportarComentario: 'Additional comment (optional)',
     },
     completarPerfil: {
       titulo: 'Complete your profile', subtitulo: 'We need a few more details to activate your account',
@@ -478,6 +484,9 @@ export const t = {
       err_propio: 'Vous ne pouvez pas vous envoyer des messages', err_campos: 'Le nom et le message sont obligatoires',
       err_bloqueado: "Il n'est pas possible d'envoyer le message", err_envio: "Erreur lors de l'envoi. Veuillez réessayer.",
       descCta: 'Vous voulez toucher plus d\'acheteurs internationaux ? Ajoutez une description en anglais ou en espagnol en modifiant votre annonce.',
+      reportarBtn: 'Une erreur dans cette annonce ? Signalez-la',
+      reportarTitulo: 'Signaler l\'annonce', reportarEnviar: 'Envoyer le signalement', reportarEnviando: 'Envoi...', reportarOk: '✓ Signalement envoyé, merci',
+      reportarComentario: 'Commentaire supplémentaire (optionnel)',
     },
     completarPerfil: {
       titulo: 'Complétez votre profil', subtitulo: 'Nous avons besoin de quelques informations pour activer votre compte',

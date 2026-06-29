@@ -184,6 +184,8 @@ const MOTIVOS = [
 ]
 
 function ReportarAnuncio({ propiedadId }: { propiedadId: number | string }) {
+  const { tr } = useIdioma()
+  const Tp = tr.propiedad
   const [abierto, setAbierto] = useState(false)
   const [motivo, setMotivo] = useState('')
   const [comentario, setComentario] = useState('')
@@ -207,18 +209,18 @@ function ReportarAnuncio({ propiedadId }: { propiedadId: number | string }) {
     <div style={{ textAlign: 'center', padding: '14px 16px 20px' }}>
       {!abierto ? (
         <button onClick={() => setAbierto(true)} style={{ all: 'unset', fontSize: 12, color: '#006D77', cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: 3, opacity: 0.7 }}>
-          ¿Hay algún error en este anuncio? Repórtalo
+          {Tp.reportarBtn}
         </button>
       ) : (
         <div style={{ display: 'inline-block', background: '#fff', border: '1px solid #e8e8e8', borderRadius: 10, padding: '18px 20px', textAlign: 'left', width: '100%', maxWidth: 480, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
           {enviado ? (
             <div style={{ textAlign: 'center', padding: '8px 0', color: '#006D77', fontWeight: 600, fontSize: 14 }}>
-              ✓ Reporte enviado, gracias
+              {Tp.reportarOk}
             </div>
           ) : (
             <>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                <span style={{ fontSize: 13, fontWeight: 600, color: '#333' }}>Reportar anuncio</span>
+                <span style={{ fontSize: 13, fontWeight: 600, color: '#333' }}>{Tp.reportarTitulo}</span>
                 <button onClick={() => setAbierto(false)} style={{ all: 'unset', cursor: 'pointer', color: '#aaa', fontSize: 18, lineHeight: 1 }}>×</button>
               </div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -229,11 +231,11 @@ function ReportarAnuncio({ propiedadId }: { propiedadId: number | string }) {
                   </label>
                 ))}
               </div>
-              <textarea value={comentario} onChange={e => setComentario(e.target.value)} placeholder="Comentario adicional (opcional)" rows={2}
+              <textarea value={comentario} onChange={e => setComentario(e.target.value)} placeholder={Tp.reportarComentario} rows={2}
                 style={{ width: '100%', marginTop: 12, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '8px 10px', fontSize: 12, resize: 'none', outline: 'none', color: '#444', boxSizing: 'border-box' }} />
               <button onClick={enviar} disabled={!motivo || enviando}
                 style={{ all: 'unset', marginTop: 10, background: !motivo || enviando ? '#ccc' : '#e63946', color: '#fff', padding: '8px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: !motivo || enviando ? 'default' : 'pointer', display: 'block', width: '100%', textAlign: 'center', boxSizing: 'border-box' }}>
-                {enviando ? 'Enviando...' : 'Enviar reporte'}
+                {enviando ? Tp.reportarEnviando : Tp.reportarEnviar}
               </button>
             </>
           )}
