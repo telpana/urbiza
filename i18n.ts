@@ -8,8 +8,8 @@ export const t = {
     idioma: { es: 'Español', en: 'English', fr: 'Français' },
     tipos: { apartamento: 'Apartamento', casa: 'Casa', villa: 'Villa', oficina: 'Oficina', terreno: 'Terreno', local: 'Local comercial', edificio: 'Edificio' },
     secciones: {
-      mapaTitle: 'Selecciona zonas en el mapa', mapaDesc: 'Busca en varias zonas a la vez seleccionándolas directamente en el mapa de República Dominicana.', mapaLink: 'Empezar a seleccionar →',
-      publicarTitle: 'Publica tu propiedad', publicarDesc: 'Tus 2 primeros anuncios son completamente gratuitos. Apartamentos, casas, villas, terrenos... ¡Todo cabe!', publicarLink: 'Publicar mi anuncio →'
+      mapaTitle: 'Selecciona zonas en el mapa', mapaDesc: 'Busca en varias zonas a la vez seleccionándolas directamente en el mapa de República Dominicana.', mapaLink: 'Explorar el mapa',
+      publicarTitle: 'Publica tu propiedad', publicarDesc: 'Tus 2 primeros anuncios son completamente gratuitos. Apartamentos, casas, villas, terrenos... ¡Todo cabe!', publicarLink: 'Poner mi anuncio'
     },
     destacadas: { titulo: 'Propiedades destacadas', subtitulo: 'Las mejores oportunidades del mercado dominicano', verTodas: 'Ver todas las propiedades', destacado: 'DESTACADO', masVisto: 'Más visto', masVistos: 'Más vistos', ver: 'Ver propiedad', gratis: 'GRATIS' },
     novedades: { santoDomingo: 'Novedades en Santo Domingo', puntaCana: 'Novedades en Punta Cana', santiago: 'Novedades en Santiago', verTodas: 'Ver todas las propiedades', nuevo: 'NUEVO' },
@@ -163,8 +163,8 @@ export const t = {
     idioma: { es: 'Español', en: 'English', fr: 'Français' },
     tipos: { apartamento: 'Apartment', casa: 'House', villa: 'Villa', oficina: 'Office', terreno: 'Land', local: 'Commercial space', edificio: 'Building' },
     secciones: {
-      mapaTitle: 'Select areas on the map', mapaDesc: 'Search multiple areas at once by selecting them directly on the map of the Dominican Republic.', mapaLink: 'Start selecting areas →',
-      publicarTitle: 'List your property', publicarDesc: 'Your first 2 listings are completely free. Apartments, houses, villas, land... Everything fits!', publicarLink: 'Post your listing →'
+      mapaTitle: 'Select areas on the map', mapaDesc: 'Search multiple areas at once by selecting them directly on the map of the Dominican Republic.', mapaLink: 'Explore the map',
+      publicarTitle: 'List your property', publicarDesc: 'Your first 2 listings are completely free. Apartments, houses, villas, land... Everything fits!', publicarLink: 'Post my listing'
     },
     destacadas: { titulo: 'Featured properties', subtitulo: 'The best opportunities in the Dominican market', verTodas: 'View all properties', destacado: 'FEATURED', masVisto: 'Most viewed', masVistos: 'Most viewed', ver: 'View property', gratis: 'FREE' },
     novedades: { santoDomingo: 'New listings in Santo Domingo', puntaCana: 'New listings in Punta Cana', santiago: 'New listings in Santiago', verTodas: 'View all properties', nuevo: 'NEW' },
@@ -318,8 +318,8 @@ export const t = {
     idioma: { es: 'Español', en: 'English', fr: 'Français' },
     tipos: { apartamento: 'Appartement', casa: 'Maison', villa: 'Villa', oficina: 'Bureau', terreno: 'Terrain', local: 'Local commercial', edificio: 'Immeuble' },
     secciones: {
-      mapaTitle: 'Sélectionner des zones sur la carte', mapaDesc: 'Recherchez plusieurs zones à la fois en les sélectionnant directement sur la carte de la République Dominicaine.', mapaLink: 'Commencer à sélectionner →',
-      publicarTitle: 'Publier votre annonce', publicarDesc: 'Vos 2 premières annonces sont entièrement gratuites. Appartements, maisons, villas, terrains... Tout est possible!', publicarLink: 'Déposer mon annonce →'
+      mapaTitle: 'Sélectionner des zones sur la carte', mapaDesc: 'Recherchez plusieurs zones à la fois en les sélectionnant directement sur la carte de la République Dominicaine.', mapaLink: 'Explorer la carte',
+      publicarTitle: 'Publier votre annonce', publicarDesc: 'Vos 2 premières annonces sont entièrement gratuites. Appartements, maisons, villas, terrains... Tout est possible!', publicarLink: 'Déposer mon annonce'
     },
     destacadas: { titulo: 'Propriétés en vedette', subtitulo: 'Les meilleures opportunités du marché dominicain', verTodas: 'Voir toutes les propriétés', destacado: 'EN VEDETTE', masVisto: 'Plus consulté', masVistos: 'Les plus consultés', ver: 'Voir la propriété', gratis: 'GRATUIT' },
     novedades: { santoDomingo: 'Nouveautés à Saint-Domingue', puntaCana: 'Nouveautés à Punta Cana', santiago: 'Nouveautés à Santiago', verTodas: 'Voir toutes les propriétés', nuevo: 'NOUVEAU' },

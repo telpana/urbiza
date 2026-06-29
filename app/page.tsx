@@ -458,8 +458,8 @@ export default function Home() {
           </a>
           <div className="nav-links" style={{ display: 'flex' }}>
           {[
-            { label: 'Comprar', href: '/buscar?operacion=venta' },
-            { label: 'Alquilar', href: '/buscar?operacion=alquiler' },
+            { label: tr.nav.comprar, href: '/buscar?operacion=venta' },
+            { label: tr.nav.alquilar, href: '/buscar?operacion=alquiler' },
           ].map((item) => (
             <a key={item.label} href={item.href} style={{ padding: '0 14px', height: 60, display: 'flex', alignItems: 'center', fontSize: 14, color: '#555', textDecoration: 'none', borderBottom: '2.5px solid transparent' }}
               onMouseEnter={e => { e.currentTarget.style.color = '#006D77'; e.currentTarget.style.borderBottomColor = '#006D77' }}
@@ -520,7 +520,7 @@ export default function Home() {
           </p>
           <div className="hero-search-box" style={{ background: '#fff', borderRadius: 8, padding: '18px 18px', boxShadow: '0 4px 24px rgba(0,0,0,0.15)' }}>
             <div style={{ display: 'flex', gap: 0, marginBottom: 14 }}>
-              {[{ key: 'Comprar', label: tr.hero.comprar }, { key: 'Alquilar', label: tr.hero.alquilar }].map(({ key, label }) => (
+              {[{ key: 'Comprar', label: tr.nav.comprar }, { key: 'Alquilar', label: tr.nav.alquilar }].map(({ key, label }) => (
                 <button key={key} onClick={() => setTipo(key)} style={{ flex: 1, padding: '9px', fontSize: 14, fontWeight: 500, cursor: 'pointer', border: 'none', borderBottom: tipo === key ? '2.5px solid #006D77' : '2.5px solid #e0e0e0', background: 'transparent', color: tipo === key ? '#006D77' : '#888' }}>
                   {label}
                 </button>
