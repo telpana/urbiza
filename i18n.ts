@@ -154,6 +154,7 @@ export const t = {
         titulo: 'Pásate a PRO y publica sin límites', desc: 'Has usado tus {n} anuncios gratuitos.',
         ventajas: ['Anuncios ilimitados', 'Estadísticas avanzadas', 'Apareces antes en búsquedas', 'Badge Profesional en tus anuncios', 'Soporte prioritario'],
         suscribirse: 'Suscribirse por US$9.99/mes',
+        tienesCodigo: '¿Tienes un código promocional?', aplicar: 'Aplicar', codigoPlaceholder: 'Código promocional',
       },
       cursos: {
         titulo: 'Cursos AEI', desc: 'Formación oficial de la Asociación de Agentes y Empresas Inmobiliarias de República Dominicana',
@@ -318,6 +319,7 @@ export const t = {
         titulo: 'Go PRO and post without limits', desc: "You've used your {n} free listings.",
         ventajas: ['Unlimited listings', 'Advanced statistics', 'Appear higher in searches', 'Professional badge on your listings', 'Priority support'],
         suscribirse: 'Subscribe for US$9.99/month',
+        tienesCodigo: 'Have a promo code?', aplicar: 'Apply', codigoPlaceholder: 'Promo code',
       },
       cursos: {
         titulo: 'AEI Courses', desc: 'Official training from the Association of Real Estate Agents and Companies of the Dominican Republic',
@@ -482,6 +484,7 @@ export const t = {
         titulo: 'Passez PRO et publiez sans limites', desc: 'Vous avez utilisé vos {n} annonces gratuites.',
         ventajas: ['Annonces illimitées', 'Statistiques avancées', 'Apparaissez en haut des recherches', 'Badge Professionnel sur vos annonces', 'Support prioritaire'],
         suscribirse: "S'abonner pour 9,99 US$/mois",
+        tienesCodigo: 'Vous avez un code promo ?', aplicar: 'Appliquer', codigoPlaceholder: 'Code promotionnel',
       },
       cursos: {
         titulo: 'Cours AEI', desc: "Formation officielle de l'Association des Agents et Entreprises Immobilières de la République Dominicaine",

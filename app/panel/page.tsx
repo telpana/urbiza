@@ -1627,10 +1627,10 @@ export default function Panel() {
                 </button>
                 <div style={{ marginTop: 14, textAlign: 'center' }}>
                   {!promoExpanded ? (
-                    <button onClick={() => setPromoExpanded(true)} style={{ all: 'unset', fontSize: 12, color: '#006D77', cursor: 'pointer', textDecoration: 'underline' }}>¿Tienes un código promocional?</button>
+                    <button onClick={() => setPromoExpanded(true)} style={{ all: 'unset', fontSize: 12, color: '#006D77', cursor: 'pointer', textDecoration: 'underline' }}>{Tpanel.planes.tienesCodigo}</button>
                   ) : (
                     <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center' }}>
-                      <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }} placeholder="CÓDIGO PROMO" maxLength={32} style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '8px 12px', fontSize: 13, width: 160, outline: 'none', textAlign: 'center', letterSpacing: 1 }} />
+                      <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }} placeholder={Tpanel.planes.codigoPlaceholder.toUpperCase()} maxLength={32} style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '8px 12px', fontSize: 13, width: 160, outline: 'none', textAlign: 'center', letterSpacing: 1 }} />
                     </div>
                   )}
                   {promoError && <div style={{ fontSize: 12, color: '#dc2626', marginTop: 6 }}>{promoError}</div>}
@@ -1744,10 +1744,10 @@ export default function Panel() {
                   </button>
                   <div style={{ marginTop: 14 }}>
                     {!promoExpanded ? (
-                      <button onClick={() => setPromoExpanded(true)} style={{ all: 'unset', fontSize: 12, color: '#006D77', cursor: 'pointer', textDecoration: 'underline' }}>¿Tienes un código promocional?</button>
+                      <button onClick={() => setPromoExpanded(true)} style={{ all: 'unset', fontSize: 12, color: '#006D77', cursor: 'pointer', textDecoration: 'underline' }}>{Tpanel.planes.tienesCodigo}</button>
                     ) : (
                       <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center' }}>
-                        <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }} placeholder="CÓDIGO PROMO" maxLength={32} style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '8px 12px', fontSize: 13, width: 160, outline: 'none', textAlign: 'center', letterSpacing: 1 }} />
+                        <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }} placeholder={Tpanel.planes.codigoPlaceholder.toUpperCase()} maxLength={32} style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '8px 12px', fontSize: 13, width: 160, outline: 'none', textAlign: 'center', letterSpacing: 1 }} />
                       </div>
                     )}
                     {promoError && <div style={{ fontSize: 12, color: '#dc2626', marginTop: 6 }}>{promoError}</div>}
