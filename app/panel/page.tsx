@@ -14,6 +14,7 @@ function getMenuItems(Tpanel: any) {
     { id: 'perfil', label: Tpanel?.menu?.perfil ?? 'Mi perfil', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
     { id: 'guardados', label: Tpanel?.menu?.guardados ?? 'Guardados', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> },
     { id: 'cursos', label: Tpanel?.menu?.cursos ?? 'Cursos AEI', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> },
+    { id: 'reportes', label: 'Reportes', adminOnly: true, icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> },
   ]
 }
 
@@ -249,6 +250,8 @@ export default function Panel() {
   const [anunciosReales, setAnunciosReales] = useState<any[]>([])
   const [mensajesReales, setMensajesReales] = useState<any[]>([])
   const [bloqueadosSet, setBloqueadosSet] = useState<Set<string>>(new Set())
+  const [reportesAdmin, setReportesAdmin] = useState<any[]>([])
+  const [reportesCargando, setReportesCargando] = useState(false)
   const [cargando, setCargando] = useState(true)
   const [respuesta, setRespuesta] = useState('')
   const [verificandoPago, setVerificandoPago] = useState(false)
@@ -274,6 +277,11 @@ export default function Panel() {
     if (seccion === 'plan' && usuario?.id && !planInfo) {
       fetch('/api/plan-info', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: usuario.id }) })
         .then(r => r.json()).then(d => setPlanInfo(d ?? { error: true })).catch(() => setPlanInfo({ error: true }))
+    }
+    if (seccion === 'reportes' && usuario?.email === 'hellotelpana@gmail.com') {
+      setReportesCargando(true)
+      supabase.from('reportes').select('*, propiedades(titulo)').order('created_at', { ascending: false })
+        .then(({ data }) => { if (data) setReportesAdmin(data); setReportesCargando(false) })
     }
   }, [seccion, usuario])
 
@@ -680,7 +688,7 @@ export default function Panel() {
         <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.25)' }} onClick={() => setPanelNavOpen(false)}>
           <div style={{ position: 'absolute', top: 54, left: 0, right: 0, background: '#fff', boxShadow: '0 12px 32px rgba(0,0,0,0.15)', borderRadius: '0 0 16px 16px', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
             <div style={{ padding: '4px 0' }}>
-              {menuItems.filter(item => item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)).map(item => (
+              {menuItems.filter(item => (item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)) && (!('adminOnly' in item) || usuario?.email === 'hellotelpana@gmail.com')).map(item => (
                 <button key={item.id} onClick={() => { const dest = item.id === 'publicar' && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis ? 'planes' : item.id; setSeccion(dest); setPanelNavOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '13px 20px', fontSize: 14, color: seccion === item.id ? '#006D77' : '#333', background: seccion === item.id ? '#f0fafa' : 'transparent', cursor: 'pointer', boxSizing: 'border-box' }}>
                   <span style={{ color: seccion === item.id ? '#006D77' : '#888', display: 'flex' }}>{item.icon}</span>
                   {item.label}
@@ -783,7 +791,7 @@ export default function Panel() {
 
         {/* SIDEBAR */}
         <div className={`panel-sidebar${sidebarOpen ? ' open' : ''}`} style={{ width: 220, background: '#004E57', minHeight: 'calc(100vh - 54px)', padding: '20px 0', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
-          {menuItems.filter(item => item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)).map(item => (
+          {menuItems.filter(item => (item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)) && (!('adminOnly' in item) || usuario?.email === 'hellotelpana@gmail.com')).map(item => (
             <button key={item.id} onClick={() => { if (item.id === 'publicar' && !(perfilNombre && perfilTelefono)) { setSeccion('publicar'); setSidebarOpen(false); return } if (item.id === 'publicar' && !anuncioEditando && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis) { setSeccion('planes'); setSidebarOpen(false); return } setSeccion(item.id); setSidebarOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.6)', background: seccion === item.id ? 'rgba(255,255,255,0.12)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? '3px solid #83D4DB' : '3px solid transparent', boxSizing: 'border-box', position: 'relative' }}>
               {item.icon}
               {item.label}
@@ -2105,6 +2113,46 @@ export default function Panel() {
                   {Tpanel.cursos.nota}
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* REPORTES ADMIN */}
+          {!cargando && seccion === 'reportes' && usuario?.email === 'hellotelpana@gmail.com' && (
+            <div>
+              <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>Reportes de anuncios</h1>
+              {reportesCargando ? (
+                <div style={{ color: '#888', fontSize: 14 }}>Cargando...</div>
+              ) : reportesAdmin.length === 0 ? (
+                <div style={{ background: '#fff', borderRadius: 8, padding: '40px', textAlign: 'center', color: '#aaa', fontSize: 14, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>No hay reportes</div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {reportesAdmin.map((r: any) => (
+                    <div key={r.id} style={{ background: '#fff', borderRadius: 8, padding: '16px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderLeft: `4px solid ${r.leido ? '#e0e0e0' : '#e63946'}`, display: 'flex', gap: 16, alignItems: 'flex-start' }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4, flexWrap: 'wrap' }}>
+                          {!r.leido && <span style={{ background: '#e63946', color: '#fff', fontSize: 9, fontWeight: 700, padding: '1px 6px', borderRadius: 8 }}>NUEVO</span>}
+                          <span style={{ fontSize: 13, fontWeight: 700, color: '#333' }}>{r.motivo}</span>
+                        </div>
+                        {r.comentario && <div style={{ fontSize: 12, color: '#666', marginBottom: 6 }}>{r.comentario}</div>}
+                        <div style={{ display: 'flex', gap: 12, fontSize: 11, color: '#aaa', flexWrap: 'wrap' }}>
+                          {r.propiedades?.titulo && (
+                            <a href={`/propiedad/${r.propiedad_id}`} target="_blank" rel="noopener noreferrer" style={{ color: '#006D77', textDecoration: 'none', fontWeight: 500 }}>{r.propiedades.titulo} →</a>
+                          )}
+                          <span>{new Date(r.created_at).toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                      </div>
+                      {!r.leido && (
+                        <button onClick={async () => {
+                          await supabase.from('reportes').update({ leido: true }).eq('id', r.id)
+                          setReportesAdmin(prev => prev.map((x: any) => x.id === r.id ? { ...x, leido: true } : x))
+                        }} style={{ all: 'unset', fontSize: 11, color: '#006D77', cursor: 'pointer', whiteSpace: 'nowrap', fontWeight: 600, padding: '4px 10px', border: '1px solid #006D77', borderRadius: 5 }}>
+                          Marcar leído
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 

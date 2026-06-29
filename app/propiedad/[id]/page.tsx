@@ -138,6 +138,76 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
   )
 }
 
+const MOTIVOS = [
+  'Información incorrecta',
+  'Fotos engañosas o de otro inmueble',
+  'Precio incorrecto o engañoso',
+  'Anuncio duplicado',
+  'Propiedad ya vendida / alquilada',
+  'Contenido inapropiado',
+  'Otro',
+]
+
+function ReportarAnuncio({ propiedadId }: { propiedadId: number | string }) {
+  const [abierto, setAbierto] = useState(false)
+  const [motivo, setMotivo] = useState('')
+  const [comentario, setComentario] = useState('')
+  const [enviando, setEnviando] = useState(false)
+  const [enviado, setEnviado] = useState(false)
+
+  const enviar = async () => {
+    if (!motivo) return
+    setEnviando(true)
+    await fetch('/api/reportar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ propiedad_id: propiedadId, motivo, comentario }),
+    })
+    setEnviando(false)
+    setEnviado(true)
+    setTimeout(() => { setAbierto(false); setEnviado(false); setMotivo(''); setComentario('') }, 2000)
+  }
+
+  return (
+    <div style={{ textAlign: 'center', padding: '14px 16px 20px' }}>
+      {!abierto ? (
+        <button onClick={() => setAbierto(true)} style={{ all: 'unset', fontSize: 12, color: '#bbb', cursor: 'pointer', textDecoration: 'underline', textDecorationStyle: 'dotted', textUnderlineOffset: 3 }}>
+          ¿Hay algún error en este anuncio? Repórtalo
+        </button>
+      ) : (
+        <div style={{ display: 'inline-block', background: '#fff', border: '1px solid #e8e8e8', borderRadius: 10, padding: '18px 20px', textAlign: 'left', width: '100%', maxWidth: 480, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
+          {enviado ? (
+            <div style={{ textAlign: 'center', padding: '8px 0', color: '#006D77', fontWeight: 600, fontSize: 14 }}>
+              ✓ Reporte enviado, gracias
+            </div>
+          ) : (
+            <>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+                <span style={{ fontSize: 13, fontWeight: 600, color: '#333' }}>Reportar anuncio</span>
+                <button onClick={() => setAbierto(false)} style={{ all: 'unset', cursor: 'pointer', color: '#aaa', fontSize: 18, lineHeight: 1 }}>×</button>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {MOTIVOS.map(m => (
+                  <label key={m} style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', fontSize: 13, color: '#444' }}>
+                    <input type="radio" name="motivo" value={m} checked={motivo === m} onChange={() => setMotivo(m)} style={{ accentColor: '#006D77' }} />
+                    {m}
+                  </label>
+                ))}
+              </div>
+              <textarea value={comentario} onChange={e => setComentario(e.target.value)} placeholder="Comentario adicional (opcional)" rows={2}
+                style={{ width: '100%', marginTop: 12, border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '8px 10px', fontSize: 12, resize: 'none', outline: 'none', color: '#444', boxSizing: 'border-box' }} />
+              <button onClick={enviar} disabled={!motivo || enviando}
+                style={{ all: 'unset', marginTop: 10, background: !motivo || enviando ? '#ccc' : '#e63946', color: '#fff', padding: '8px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: !motivo || enviando ? 'default' : 'pointer', display: 'block', width: '100%', textAlign: 'center', boxSizing: 'border-box' }}>
+                {enviando ? 'Enviando...' : 'Enviar reporte'}
+              </button>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function Propiedad({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
   const { tr, idioma, setIdioma } = useIdioma()
@@ -647,6 +717,9 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
 
         </div>
       </div>
+
+      {/* REPORTAR ANUNCIO */}
+      <ReportarAnuncio propiedadId={propiedad.id} />
 
       <footer style={{ background: '#004E57', color: 'rgba(255,255,255,0.5)', padding: '20px', fontSize: 12, textAlign: 'center' }}>
         <strong style={{ color: 'rgba(255,255,255,0.8)' }}>habitade.com</strong> · © 2025 · {tr.footer.derechos.split('·').pop()?.trim()}
