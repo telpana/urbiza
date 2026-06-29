@@ -14,8 +14,8 @@ const supabase = createClient(
 const PRECIOS: Record<string, string> = {
   'profesional': 'price_1TjQ7N2W2OvWvCK3IFRRmZBY',
   '15': 'price_1TjIsm2W2OvWvCK3yycPzPR6',
-  '30': 'price_1TjItK2W2OvWvCK3K2TW7Hf6',
-  '60': 'price_1TjIts2W2OvWvCK3OG28wLg9',
+  '30': 'price_1TneNr2W2OvWvCK3ugqrKOOy',
+  '60': 'price_1TnePQ2W2OvWvCK350Z9Z8MQ',
 }
 
 async function validarCodigoPromo(codigo: string): Promise<{ ok: boolean; error?: string }> {

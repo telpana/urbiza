@@ -33,8 +33,8 @@ const mensajesEjemplo = [
 
 const planesDestacado = [
   { dias: 15, precio: 9.99, label: '15 días', popular: false },
-  { dias: 30, precio: 19.99, label: '30 días', popular: true },
-  { dias: 60, precio: 34.99, label: '60 días', popular: false },
+  { dias: 30, precio: 15.99, label: '30 días', popular: true },
+  { dias: 60, precio: 29.99, label: '60 días', popular: false },
 ]
 
 
