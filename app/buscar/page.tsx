@@ -863,7 +863,7 @@ function BuscarContent() {
                 onMouseEnter={e => (e.currentTarget.style.background = '#fafefe')}
                 onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
                 <div className="prop-card-img prop-card-img-slider"
-                  style={{ width: 300, minWidth: 300, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer' }}>
+                  style={{ width: 300, minWidth: 300, height: 220, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer', flexShrink: 0 }}>
                   {p.fotos && p.fotos.length > 0
                     ? <img src={p.fotos[fotoIdx[String(p.id)] ?? 0]} alt={p.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity 0.2s' }} />
                     : <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
