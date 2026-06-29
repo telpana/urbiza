@@ -884,18 +884,7 @@ function BuscarContent() {
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
                         </button>
                       )}
-                      <div style={{ position: 'absolute', bottom: 8, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 4, zIndex: 2 }}>
-                        {p.fotos.map((_: any, i: number) => (
-                          <span key={i} style={{ width: i === (fotoIdx[String(p.id)] ?? 0) ? 14 : 5, height: 5, borderRadius: 3, background: i === (fotoIdx[String(p.id)] ?? 0) ? '#fff' : 'rgba(255,255,255,0.5)', transition: 'all 0.2s', display: 'block' }} />
-                        ))}
-                      </div>
                     </>
-                  )}
-                  {p.fotos && p.fotos.length > 0 && p.fotos.length === 1 && (
-                    <div style={{ position: 'absolute', bottom: 10, left: 10, background: 'rgba(0,0,0,0.45)', color: '#fff', fontSize: 10, padding: '2px 8px', borderRadius: 3, display: 'flex', alignItems: 'center', gap: 4, zIndex: 1 }}>
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="#fff"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-                      1
-                    </div>
                   )}
                   {/* Corazón overlay — solo visible en móvil via CSS */}
                   <button className="pc-fav-img" onClick={e => toggleFavorito(e, String(p.id))}>
