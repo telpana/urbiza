@@ -171,8 +171,9 @@ function ReportarAnuncio({ propiedadId }: { propiedadId: number | string }) {
   return (
     <div style={{ textAlign: 'center', padding: '14px 16px 20px' }}>
       {!abierto ? (
-        <button onClick={() => setAbierto(true)} style={{ all: 'unset', fontSize: 12, color: '#bbb', cursor: 'pointer', textDecoration: 'underline', textDecorationStyle: 'dotted', textUnderlineOffset: 3 }}>
-          ¿Hay algún error en este anuncio? Repórtalo
+        <button onClick={() => setAbierto(true)} style={{ all: 'unset', fontSize: 12, color: '#006D77', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 5, opacity: 0.7 }}>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span style={{ textDecoration: 'underline', textUnderlineOffset: 3 }}>¿Hay algún error en este anuncio? Repórtalo</span>
         </button>
       ) : (
         <div style={{ display: 'inline-block', background: '#fff', border: '1px solid #e8e8e8', borderRadius: 10, padding: '18px 20px', textAlign: 'left', width: '100%', maxWidth: 480, boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
