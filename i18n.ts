@@ -77,6 +77,16 @@ export const t = {
       err_bloqueado: 'No es posible enviar el mensaje', err_envio: 'Error al enviar. Inténtalo de nuevo.',
       descCta: '¿Quieres llegar a más compradores internacionales? Escribe también la descripción en inglés o francés al editar tu anuncio.',
     },
+    completarPerfil: {
+      titulo: 'Completa tu perfil', subtitulo: 'Necesitamos unos datos más para activar tu cuenta',
+      tipoCuenta: 'Tipo de cuenta',
+      particular: 'Particular', particularDesc: 'Vendo o alquilo mi propiedad',
+      profesional: 'Profesional', profesionalDesc: 'Agente o inmobiliaria',
+      nombre: 'Nombre completo', nombrePlaceholder: 'Tu nombre',
+      telefono: 'Teléfono', cedula: 'Cédula', aei: 'Número AEI', opcional: '(opcional)',
+      entrar: 'Entrar a mi panel', guardando: 'Guardando...', cargando: 'Cargando...',
+      err_tipo: 'Elige el tipo de cuenta', err_nombre: 'Introduce tu nombre', err_telefono: 'Introduce tu teléfono',
+    },
     panel: {
       menu: { miPanel: 'Mi panel', anuncios: 'Mis anuncios', publicar: 'Publicar anuncio', mensajes: 'Mensajes', estadisticas: 'Estadísticas', destacar: 'Destacar anuncio', plan: 'Mi plan', perfil: 'Mi perfil', guardados: 'Guardados', cursos: 'Cursos AEI', equipo: 'Equipo' },
       anuncios: {
@@ -255,6 +265,16 @@ export const t = {
       err_bloqueado: 'It is not possible to send the message', err_envio: 'Error sending. Please try again.',
       descCta: 'Want to reach more international buyers? Add an English or French description when editing your listing.',
     },
+    completarPerfil: {
+      titulo: 'Complete your profile', subtitulo: 'We need a few more details to activate your account',
+      tipoCuenta: 'Account type',
+      particular: 'Individual', particularDesc: 'I sell or rent my property',
+      profesional: 'Professional', profesionalDesc: 'Agent or real estate agency',
+      nombre: 'Full name', nombrePlaceholder: 'Your name',
+      telefono: 'Phone', cedula: 'ID card', aei: 'AEI Number', opcional: '(optional)',
+      entrar: 'Go to my dashboard', guardando: 'Saving...', cargando: 'Loading...',
+      err_tipo: 'Choose an account type', err_nombre: 'Enter your name', err_telefono: 'Enter your phone number',
+    },
     panel: {
       menu: { miPanel: 'My dashboard', anuncios: 'My listings', publicar: 'Post listing', mensajes: 'Messages', estadisticas: 'Statistics', destacar: 'Feature listing', plan: 'My plan', perfil: 'My profile', guardados: 'Saved', cursos: 'AEI Courses', equipo: 'Team' },
       anuncios: {
@@ -432,6 +452,16 @@ export const t = {
       err_propio: 'Vous ne pouvez pas vous envoyer des messages', err_campos: 'Le nom et le message sont obligatoires',
       err_bloqueado: "Il n'est pas possible d'envoyer le message", err_envio: "Erreur lors de l'envoi. Veuillez réessayer.",
       descCta: 'Vous voulez toucher plus d\'acheteurs internationaux ? Ajoutez une description en anglais ou en espagnol en modifiant votre annonce.',
+    },
+    completarPerfil: {
+      titulo: 'Complétez votre profil', subtitulo: 'Nous avons besoin de quelques informations pour activer votre compte',
+      tipoCuenta: 'Type de compte',
+      particular: 'Particulier', particularDesc: 'Je vends ou loue mon bien',
+      profesional: 'Professionnel', profesionalDesc: 'Agent ou agence immobilière',
+      nombre: 'Nom complet', nombrePlaceholder: 'Votre nom',
+      telefono: 'Téléphone', cedula: "Carte d'identité", aei: 'Numéro AEI', opcional: '(optionnel)',
+      entrar: 'Accéder à mon tableau de bord', guardando: 'Enregistrement...', cargando: 'Chargement...',
+      err_tipo: 'Choisissez un type de compte', err_nombre: 'Entrez votre nom', err_telefono: 'Entrez votre numéro de téléphone',
     },
     panel: {
       menu: { miPanel: 'Mon tableau de bord', anuncios: 'Mes annonces', publicar: 'Publier une annonce', mensajes: 'Messages', estadisticas: 'Statistiques', destacar: 'Mettre en avant', plan: 'Mon abonnement', perfil: 'Mon profil', guardados: 'Sauvegardés', cursos: 'Cours AEI', equipo: 'Équipe' },
