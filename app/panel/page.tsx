@@ -1038,7 +1038,7 @@ export default function Panel() {
                       Activar — US$9.99/mes
                     </a>
                   </div>
-                  <div style={{ fontSize: 12, color: '#aaa' }}>Cancela cuando quieras. Sin permanencia.</div>
+                  <div style={{ fontSize: 12, color: '#aaa' }}>{Tpanel.publicar.sinPermanencia}</div>
                   </>
                   )}
                 </div>
@@ -1049,18 +1049,18 @@ export default function Panel() {
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.operacion}</label>
                     <select value={pubOperacion} onChange={e => setPubOperacion(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
-                      <option>Venta</option><option>Alquiler</option>
+                      <option value="Venta">{Tpanel.publicar.venta}</option><option value="Alquiler">{Tpanel.publicar.alquiler}</option>
                     </select>
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.tipoInmueble}</label>
                     <select value={pubTipo} onChange={e => setPubTipo(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
-                      <option>Apartamento</option><option>Casa</option><option>Villa</option><option>Edificio</option><option>Oficina</option><option>Terreno</option><option>Local comercial</option>
+                      <option value="Apartamento">{trLang.tipos.apartamento}</option><option value="Casa">{trLang.tipos.casa}</option><option value="Villa">{trLang.tipos.villa}</option><option value="Edificio">{trLang.tipos.edificio}</option><option value="Oficina">{trLang.tipos.oficina}</option><option value="Terreno">{trLang.tipos.terreno}</option><option value="Local comercial">{trLang.tipos.local}</option>
                     </select>
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.titulo_anuncio}</label>
-                    <input type="text" value={pubTitulo} onChange={e => setPubTitulo(e.target.value.slice(0, 50))} maxLength={50} placeholder="Ej: Apartamento en Piantini con vista al mar" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    <input type="text" value={pubTitulo} onChange={e => setPubTitulo(e.target.value.slice(0, 50))} maxLength={50} placeholder={Tpanel.publicar.tituloPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.precio}</label>
@@ -1069,14 +1069,14 @@ export default function Panel() {
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.provincia}</label>
                     <select value={pubProvincia} onChange={e => { setPubProvincia(e.target.value); setPubSector('') }} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: '#fff' }}>
-                      <option value="">Selecciona provincia</option>
+                      <option value="">{Tpanel.publicar.seleccionaProvincia}</option>
                       {Object.keys(provinciasZonas).map(p => <option key={p} value={p}>{p}</option>)}
                     </select>
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.sector} <span style={{ fontWeight: 400, color: '#aaa' }}>{Tpanel.publicar.sectorOpcional}</span></label>
                     <select value={pubSector} onChange={e => setPubSector(e.target.value)} disabled={!pubProvincia} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', background: pubProvincia ? '#fff' : '#f9f9f9', color: pubProvincia ? '#333' : '#aaa' }}>
-                      <option value="">Selecciona sector</option>
+                      <option value="">{Tpanel.publicar.seleccionaSector}</option>
                       {pubProvincia && provinciasZonas[pubProvincia].map(z => <option key={z} value={z}>{z}</option>)}
                     </select>
                   </div>
