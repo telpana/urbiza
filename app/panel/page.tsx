@@ -278,6 +278,12 @@ export default function Panel() {
   }, [seccion, usuario])
 
   useEffect(() => {
+    if (!cargando && !perfilTelefono && seccion !== 'perfil') {
+      setSeccion('perfil')
+    }
+  }, [cargando, perfilTelefono])
+
+  useEffect(() => {
     const cargarDatos = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { window.location.href = '/login'; return }
@@ -1934,6 +1940,12 @@ export default function Panel() {
           {!cargando && seccion === 'perfil' && (
             <div>
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>{Tpanel.perfil.titulo}</h1>
+              {!perfilTelefono && (
+                <div style={{ background: '#fff3cd', border: '1px solid #ffc107', borderRadius: 8, padding: '14px 18px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#856404" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  <span style={{ fontSize: 13, color: '#856404', fontWeight: 500 }}>{Tpanel.anuncios.avisoTel}</span>
+                </div>
+              )}
               <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
                 <div className="perfil-avatar-row" style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24, paddingBottom: 20, borderBottom: '1px solid #f0f0f0' }}>
                   <div style={{ position: 'relative', flexShrink: 0 }}>
