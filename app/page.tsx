@@ -520,9 +520,9 @@ export default function Home() {
           </p>
           <div className="hero-search-box" style={{ background: '#fff', borderRadius: 8, padding: '18px 18px', boxShadow: '0 4px 24px rgba(0,0,0,0.15)' }}>
             <div style={{ display: 'flex', gap: 0, marginBottom: 14 }}>
-              {['Comprar', 'Alquilar'].map((t) => (
-                <button key={t} onClick={() => setTipo(t)} style={{ flex: 1, padding: '9px', fontSize: 14, fontWeight: 500, cursor: 'pointer', border: 'none', borderBottom: tipo === t ? '2.5px solid #006D77' : '2.5px solid #e0e0e0', background: 'transparent', color: tipo === t ? '#006D77' : '#888' }}>
-                  {t}
+              {[{ key: 'Comprar', label: tr.hero.comprar }, { key: 'Alquilar', label: tr.hero.alquilar }].map(({ key, label }) => (
+                <button key={key} onClick={() => setTipo(key)} style={{ flex: 1, padding: '9px', fontSize: 14, fontWeight: 500, cursor: 'pointer', border: 'none', borderBottom: tipo === key ? '2.5px solid #006D77' : '2.5px solid #e0e0e0', background: 'transparent', color: tipo === key ? '#006D77' : '#888' }}>
+                  {label}
                 </button>
               ))}
             </div>
@@ -557,13 +557,13 @@ export default function Home() {
                 )}
               </div>{/* fin input wrapper */}
               <select value={tipoInmueble} onChange={e => setTipoInmueble(e.target.value)} style={{ padding: '0 30px 0 12px', fontSize: 13, border: 'none', borderLeft: '1px solid #e0e0e0', outline: 'none', color: '#555', background: `#f9f9f9 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23888' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") no-repeat right 10px center`, appearance: 'none', WebkitAppearance: 'none', cursor: 'pointer' }}>
-                <option value="Apartamento">Apartamento</option>
-                <option value="Casa">Casa</option>
-                <option value="Villa">Villa</option>
-                <option value="Oficina">Oficina</option>
-                <option value="Terreno">Terreno</option>
-                <option value="Local comercial">Local comercial</option>
-                <option value="Edificio">Edificio</option>
+                <option value="Apartamento">{tr.tipos.apartamento}</option>
+                <option value="Casa">{tr.tipos.casa}</option>
+                <option value="Villa">{tr.tipos.villa}</option>
+                <option value="Oficina">{tr.tipos.oficina}</option>
+                <option value="Terreno">{tr.tipos.terreno}</option>
+                <option value="Local comercial">{tr.tipos.local}</option>
+                <option value="Edificio">{tr.tipos.edificio}</option>
               </select>
               <button onClick={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); if (queryHome) p.set('zona', queryHome); if (tipoInmueble) p.set('tipo', tipoInmueble); window.location.href = `/buscar?${p.toString()}` }} style={{ background: '#006D77', color: '#fff', border: 'none', padding: '0 26px', fontSize: 14, fontWeight: 600, cursor: 'pointer', borderRadius: '0 4px 4px 0' }}>{tr.hero.buscar}</button>
             </div>{/* fin hero-search */}
@@ -583,9 +583,9 @@ export default function Home() {
               <MapaMiniHome />
             </div>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#111', marginBottom: 5 }}>Seleccionar zonas en el mapa</div>
-              <div style={{ fontSize: 13, color: '#777', lineHeight: 1.6, marginBottom: 10 }}>Busca en varias zonas a la vez seleccionándolas directamente en el mapa de República Dominicana.</div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: '#006D77', background: '#e0f5f7', padding: '4px 12px', borderRadius: 20 }}>Explorar el mapa</span>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#111', marginBottom: 5 }}>{tr.secciones.mapaTitle}</div>
+              <div style={{ fontSize: 13, color: '#777', lineHeight: 1.6, marginBottom: 10 }}>{tr.secciones.mapaDesc}</div>
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#006D77', background: '#e0f5f7', padding: '4px 12px', borderRadius: 20 }}>{tr.secciones.mapaLink}</span>
             </div>
           </a>
           <a href="/registro"
@@ -605,12 +605,12 @@ export default function Home() {
                     <path d="M19 42 L21 44 L26 39" stroke="#006D77" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
               }
-              <div style={{ position: 'absolute', top: 6, right: 6, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 10 }}>GRATIS</div>
+              <div style={{ position: 'absolute', top: 6, right: 6, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 10 }}>{tr.destacadas.gratis}</div>
             </div>
             <div>
-              <div style={{ fontSize: 15, fontWeight: 700, color: '#111', marginBottom: 5 }}>Publicar tu anuncio</div>
-              <div style={{ fontSize: 13, color: '#777', lineHeight: 1.6, marginBottom: 10 }}>Tus 2 primeros anuncios son completamente gratis. Apartamentos, casas, villas, terrenos... ¡Todo cabe!</div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: '#006D77', background: '#e0f5f7', padding: '4px 12px', borderRadius: 20 }}>Poner mi anuncio</span>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#111', marginBottom: 5 }}>{tr.secciones.publicarTitle}</div>
+              <div style={{ fontSize: 13, color: '#777', lineHeight: 1.6, marginBottom: 10 }}>{tr.secciones.publicarDesc}</div>
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#006D77', background: '#e0f5f7', padding: '4px 12px', borderRadius: 20 }}>{tr.secciones.publicarLink}</span>
             </div>
           </a>
         </div>
@@ -633,8 +633,8 @@ export default function Home() {
               <div className="home-cards-section" style={{ marginBottom: 32 }}>
                 <div className="home-section-hdr" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
                   <div>
-                    <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Propiedades destacadas</h2>
-                    <a href="/buscar?dest=1" className="home-ver-top" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades</a>
+                    <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>{tr.destacadas.titulo}</h2>
+                    <a href="/buscar?dest=1" className="home-ver-top" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>{tr.destacadas.verTodas}</a>
                   </div>
                 </div>
                 <div className="sc-wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
@@ -647,7 +647,7 @@ export default function Home() {
                           ? <img src={p.fotos[0]} alt={p.titulo ?? p.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                           : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         }
-                        <div style={{ position: 'absolute', top: 8, right: 8, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>DESTACADO</div>
+                        <div style={{ position: 'absolute', top: 8, right: 8, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>{tr.destacadas.destacado}</div>
                       </div>
                       <div className="home-prop-card-body" style={{ padding: '14px 16px' }}>
                         <div style={{ fontSize: 19, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio ?? p.price ?? 0).toLocaleString('en-US')}</div>
@@ -658,7 +658,7 @@ export default function Home() {
                     </a>
                   ))}
                 </div>
-                <a href="/buscar?dest=1" className="home-ver-bottom" style={{ display: 'none', fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades</a>
+                <a href="/buscar?dest=1" className="home-ver-bottom" style={{ display: 'none', fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>{tr.destacadas.verTodas}</a>
               </div>
             )
           })()}
@@ -674,8 +674,8 @@ export default function Home() {
               <div className="home-cards-section" style={{ marginBottom: 32 }}>
                 <div className="home-section-hdr" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
                   <div>
-                    <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>Más vistos</h2>
-                    <a href="/buscar?orden=visitas" className="home-ver-top" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades</a>
+                    <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>{tr.destacadas.masVistos}</h2>
+                    <a href="/buscar?orden=visitas" className="home-ver-top" style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>{tr.destacadas.verTodas}</a>
                   </div>
                 </div>
                 <div className="sc-wrap" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 16 }}>
@@ -688,7 +688,7 @@ export default function Home() {
                           ? <img src={p.fotos[0]} alt={p.titulo ?? p.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                           : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         }
-                        <div style={{ position: 'absolute', top: 8, right: 8, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>MÁS VISTO</div>
+                        <div style={{ position: 'absolute', top: 8, right: 8, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>{tr.destacadas.masVisto}</div>
                       </div>
                       <div className="home-prop-card-body" style={{ padding: '14px 16px' }}>
                         <div style={{ fontSize: 19, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio ?? p.price ?? 0).toLocaleString('en-US')}</div>
@@ -699,22 +699,22 @@ export default function Home() {
                     </a>
                   ))}
                 </div>
-                <a href="/buscar?orden=visitas" className="home-ver-bottom" style={{ display: 'none', fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>Ver todas las propiedades</a>
+                <a href="/buscar?orden=visitas" className="home-ver-bottom" style={{ display: 'none', fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>{tr.destacadas.verTodas}</a>
               </div>
             )
           })()}
         </div>
 
         {/* NOVEDADES POR ZONA */}
-        <SeccionNovedad titulo="Novedades en Santo Domingo" subtitulo="Ver todas las propiedades" zona="Santo Domingo" reales={novedadesSantoDomingo} ejemplos={propiedadesSantoDomingo} />
-        <SeccionNovedad titulo="Novedades en Punta Cana" subtitulo="Ver todas las propiedades" zona="Punta Cana" reales={novedadesPuntaCana} ejemplos={propiedadesPuntaCana} />
-        <SeccionNovedad titulo="Novedades en Santiago" subtitulo="Ver todas las propiedades" zona="Santiago" reales={novedadesSantiago} ejemplos={propiedadesSantiago} />
+        <SeccionNovedad titulo={tr.novedades.santoDomingo} subtitulo={tr.novedades.verTodas} zona="Santo Domingo" reales={novedadesSantoDomingo} ejemplos={propiedadesSantoDomingo} />
+        <SeccionNovedad titulo={tr.novedades.puntaCana} subtitulo={tr.novedades.verTodas} zona="Punta Cana" reales={novedadesPuntaCana} ejemplos={propiedadesPuntaCana} />
+        <SeccionNovedad titulo={tr.novedades.santiago} subtitulo={tr.novedades.verTodas} zona="Santiago" reales={novedadesSantiago} ejemplos={propiedadesSantiago} />
       </div>
 
       {/* ZONAS MÁS BUSCADAS */}
       <div className="home-zonas-section" style={{ background: '#fff', borderTop: '1px solid #e8e8e8', padding: '36px 20px 40px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 20 }}>Zonas más buscadas</h2>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 20 }}>{tr.zonas.titulo}</h2>
           <div className="zonas-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 }}>
             {zonas.map((z) => (
               <div key={z.nombre + z.tipo} style={{ padding: '10px 0', borderBottom: '1px solid #f5f5f5' }}>

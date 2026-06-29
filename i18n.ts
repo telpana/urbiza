@@ -11,9 +11,9 @@ export const t = {
       mapaTitle: 'Selecciona zonas en el mapa', mapaDesc: 'Busca en varias zonas a la vez seleccionándolas directamente en el mapa de República Dominicana.', mapaLink: 'Empezar a seleccionar →',
       publicarTitle: 'Publica tu propiedad', publicarDesc: 'Tus 2 primeros anuncios son completamente gratuitos. Apartamentos, casas, villas, terrenos... ¡Todo cabe!', publicarLink: 'Publicar mi anuncio →'
     },
-    destacadas: { titulo: 'Propiedades destacadas', subtitulo: 'Las mejores oportunidades del mercado dominicano', verTodas: 'Ver todas las propiedades →', destacado: 'Destacado', masVisto: 'Más visto', ver: 'Ver propiedad' },
-    novedades: { santoDomingo: 'Novedades en Santo Domingo', puntaCana: 'Novedades en Punta Cana', santiago: 'Novedades en Santiago', verTodas: 'Ver todas las propiedades en venta →', nuevo: 'NUEVO' },
-    zonas: { titulo: 'Dónde están buscando todos en República Dominicana ahora mismo' },
+    destacadas: { titulo: 'Propiedades destacadas', subtitulo: 'Las mejores oportunidades del mercado dominicano', verTodas: 'Ver todas las propiedades', destacado: 'DESTACADO', masVisto: 'Más visto', masVistos: 'Más vistos', ver: 'Ver propiedad', gratis: 'GRATIS' },
+    novedades: { santoDomingo: 'Novedades en Santo Domingo', puntaCana: 'Novedades en Punta Cana', santiago: 'Novedades en Santiago', verTodas: 'Ver todas las propiedades', nuevo: 'NUEVO' },
+    zonas: { titulo: 'Zonas más buscadas' },
     footer: { avisoLegal: 'Aviso legal', privacidad: 'Privacidad', cookies: 'Cookies', ayuda: 'Ayuda', publicar: 'Publicar anuncio', planes: 'Planes', derechos: '© 2025 habitade.com · República Dominicana' },
     buscar: {
       titulo: 'propiedades en República Dominicana', ordenar: 'Ordenar por:', relevancia: 'Relevancia', recientes: 'Recientes', baratos: 'Más baratos', caros: 'Más caros',
@@ -166,9 +166,9 @@ export const t = {
       mapaTitle: 'Select areas on the map', mapaDesc: 'Search multiple areas at once by selecting them directly on the map of the Dominican Republic.', mapaLink: 'Start selecting areas →',
       publicarTitle: 'List your property', publicarDesc: 'Your first 2 listings are completely free. Apartments, houses, villas, land... Everything fits!', publicarLink: 'Post your listing →'
     },
-    destacadas: { titulo: 'Featured properties', subtitulo: 'The best opportunities in the Dominican market', verTodas: 'View all properties →', destacado: 'Featured', masVisto: 'Most viewed', ver: 'View property' },
-    novedades: { santoDomingo: 'New listings in Santo Domingo', puntaCana: 'New listings in Punta Cana', santiago: 'New listings in Santiago', verTodas: 'View all properties for sale →', nuevo: 'NEW' },
-    zonas: { titulo: 'Where everyone is searching in the Dominican Republic right now' },
+    destacadas: { titulo: 'Featured properties', subtitulo: 'The best opportunities in the Dominican market', verTodas: 'View all properties', destacado: 'FEATURED', masVisto: 'Most viewed', masVistos: 'Most viewed', ver: 'View property', gratis: 'FREE' },
+    novedades: { santoDomingo: 'New listings in Santo Domingo', puntaCana: 'New listings in Punta Cana', santiago: 'New listings in Santiago', verTodas: 'View all properties', nuevo: 'NEW' },
+    zonas: { titulo: 'Most searched areas' },
     footer: { avisoLegal: 'Legal notice', privacidad: 'Privacy', cookies: 'Cookies', ayuda: 'Help', publicar: 'Post a listing', planes: 'Plans', derechos: '© 2025 habitade.com · Dominican Republic' },
     buscar: {
       titulo: 'properties in the Dominican Republic', ordenar: 'Sort by:', relevancia: 'Relevance', recientes: 'Recent', baratos: 'Cheapest', caros: 'Most expensive',
@@ -321,9 +321,9 @@ export const t = {
       mapaTitle: 'Sélectionner des zones sur la carte', mapaDesc: 'Recherchez plusieurs zones à la fois en les sélectionnant directement sur la carte de la République Dominicaine.', mapaLink: 'Commencer à sélectionner →',
       publicarTitle: 'Publier votre annonce', publicarDesc: 'Vos 2 premières annonces sont entièrement gratuites. Appartements, maisons, villas, terrains... Tout est possible!', publicarLink: 'Déposer mon annonce →'
     },
-    destacadas: { titulo: 'Propriétés en vedette', subtitulo: 'Les meilleures opportunités du marché dominicain', verTodas: 'Voir toutes les propriétés →', destacado: 'En vedette', masVisto: 'Plus consulté', ver: 'Voir la propriété' },
-    novedades: { santoDomingo: 'Nouveautés à Saint-Domingue', puntaCana: 'Nouveautés à Punta Cana', santiago: 'Nouveautés à Santiago', verTodas: 'Voir toutes les propriétés à vendre →', nuevo: 'NOUVEAU' },
-    zonas: { titulo: 'Où tout le monde recherche en République Dominicaine en ce moment' },
+    destacadas: { titulo: 'Propriétés en vedette', subtitulo: 'Les meilleures opportunités du marché dominicain', verTodas: 'Voir toutes les propriétés', destacado: 'EN VEDETTE', masVisto: 'Plus consulté', masVistos: 'Les plus consultés', ver: 'Voir la propriété', gratis: 'GRATUIT' },
+    novedades: { santoDomingo: 'Nouveautés à Saint-Domingue', puntaCana: 'Nouveautés à Punta Cana', santiago: 'Nouveautés à Santiago', verTodas: 'Voir toutes les propriétés', nuevo: 'NOUVEAU' },
+    zonas: { titulo: 'Zones les plus recherchées' },
     footer: { avisoLegal: 'Mentions légales', privacidad: 'Confidentialité', cookies: 'Cookies', ayuda: 'Aide', publicar: 'Publier une annonce', planes: 'Abonnements', derechos: '© 2025 habitade.com · République Dominicaine' },
     buscar: {
       titulo: 'propriétés en République Dominicaine', ordenar: 'Trier par :', relevancia: 'Pertinence', recientes: 'Récents', baratos: 'Moins chers', caros: 'Plus chers',
