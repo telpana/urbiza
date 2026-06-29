@@ -181,8 +181,9 @@ img { max-width: 100%; }
     gap: 6px !important;
   }
 
-  /* Tarjeta broker — oculta en móvil (la info ya aparece arriba) */
-  .broker-card-wrap { display: none !important; }
+  /* Tarjeta broker — visible en móvil */
+  .broker-card-inner { flex-direction: column !important; text-align: center !important; padding: 20px 16px !important; }
+  .broker-card-inner > div:last-child > div { justify-content: center !important; }
 
   /* Hero destacar — centrado en móvil */
   .destacar-hero {
