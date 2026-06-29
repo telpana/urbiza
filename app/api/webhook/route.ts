@@ -47,7 +47,8 @@ export async function POST(req: Request) {
         plan: 'profesional',
         tipo: 'profesional',
         stripe_subscription_id: subscriptionId,
-        plan_activo_hasta: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        plan_activo_hasta: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        ya_suscrito: true,
       }).eq('id', userId)
       if (error) console.error('[webhook] error actualizando plan:', error)
     }

@@ -16,12 +16,12 @@ export async function POST(req: Request) {
 
     const { data: usuario } = await supabase
       .from('usuarios')
-      .select('stripe_subscription_id, plan_activo_hasta, created_at')
+      .select('stripe_subscription_id, plan_activo_hasta, created_at, ya_suscrito')
       .eq('id', userId)
       .single()
 
     if (!usuario?.stripe_subscription_id) {
-      return NextResponse.json({ ok: true, sin_sub: true })
+      return NextResponse.json({ ok: true, sin_sub: true, ya_suscrito: usuario?.ya_suscrito ?? false })
     }
 
     const sub = await stripe.subscriptions.retrieve(usuario.stripe_subscription_id, {
