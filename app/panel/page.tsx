@@ -225,6 +225,9 @@ export default function Panel() {
   const [pubPrecio, setPubPrecio] = useState('')
   const [pubM2, setPubM2] = useState('')
   const [pubDesc, setPubDesc] = useState('')
+  const [pubDescEn, setPubDescEn] = useState('')
+  const [pubDescFr, setPubDescFr] = useState('')
+  const [descLang, setDescLang] = useState<'es'|'en'|'fr'>('es')
   const [pubTipo, setPubTipo] = useState('Apartamento')
   const [pubOperacion, setPubOperacion] = useState('Venta')
   const [pubHab, setPubHab] = useState('1')
@@ -543,6 +546,9 @@ export default function Panel() {
     setPubPrecio(String(raw.precio || ''))
     setPubM2(raw.m2 ? String(raw.m2) : '')
     setPubDesc(raw.descripcion || '')
+    setPubDescEn(raw.descripcion_en || '')
+    setPubDescFr(raw.descripcion_fr || '')
+    setDescLang('es')
     setPubTipo(raw.tipo || 'Apartamento')
     setPubOperacion(raw.operacion ? (raw.operacion.charAt(0).toUpperCase() + raw.operacion.slice(1)) : 'Venta')
     setPubHab(raw.habitaciones ? String(raw.habitaciones) : '1')
@@ -591,6 +597,8 @@ export default function Panel() {
     const campos = {
       titulo: pubTitulo,
       descripcion: pubDesc,
+      descripcion_en: pubDescEn.trim() || null,
+      descripcion_fr: pubDescFr.trim() || null,
       precio: Number(pubPrecio.replace(/\D/g, '')),
       tipo: pubTipo,
       operacion: pubOperacion.toLowerCase(),
@@ -618,7 +626,7 @@ export default function Panel() {
     if (anunciosActualizados) setAnunciosReales(anunciosActualizados)
     setPubExito(true)
     setPubLoading(false)
-    setPubTitulo(''); setPubPrecio(''); setPubM2(''); setPubDesc('')
+    setPubTitulo(''); setPubPrecio(''); setPubM2(''); setPubDesc(''); setPubDescEn(''); setPubDescFr(''); setDescLang('es')
     setPubProvincia(''); setPubSector(''); setPubHab('1'); setPubBanos('1')
     setPubParqueos(''); setPubPlanta(''); setPubAnio('')
     setFotosLista([]); setAnuncioEditando(null)
@@ -1160,8 +1168,34 @@ export default function Panel() {
                 )}
 
                 <div style={{ marginBottom: 16 }}>
-                  <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.descripcion}</label>
-                  <textarea rows={4} value={pubDesc} onChange={e => setPubDesc(e.target.value)} placeholder={Tpanel.publicar.descPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'vertical', fontFamily: 'sans-serif', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <label style={{ fontSize: 13, fontWeight: 600, color: '#333' }}>{Tpanel.publicar.descripcion}</label>
+                    <div style={{ display: 'flex', gap: 4, background: '#f0f0f0', borderRadius: 6, padding: 3 }}>
+                      {([['es','ES'], ['en','EN'], ['fr','FR']] as const).map(([l, label]) => (
+                        <button key={l} type="button" onClick={() => setDescLang(l)}
+                          style={{ all: 'unset', padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: descLang === l ? '#006D77' : 'transparent', color: descLang === l ? '#fff' : '#888', transition: 'all 0.15s', position: 'relative' }}>
+                          {label}
+                          {l !== 'es' && ((l === 'en' ? pubDescEn : pubDescFr).trim()) && (
+                            <span style={{ position: 'absolute', top: 1, right: 1, width: 5, height: 5, background: '#10b981', borderRadius: '50%' }} />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {descLang === 'es' && (
+                    <textarea rows={4} value={pubDesc} onChange={e => setPubDesc(e.target.value)} placeholder={Tpanel.publicar.descPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'vertical', fontFamily: 'sans-serif', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                  )}
+                  {descLang === 'en' && (
+                    <textarea rows={4} value={pubDescEn} onChange={e => setPubDescEn(e.target.value)} placeholder="Describe the property in English (optional)" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'vertical', fontFamily: 'sans-serif', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                  )}
+                  {descLang === 'fr' && (
+                    <textarea rows={4} value={pubDescFr} onChange={e => setPubDescFr(e.target.value)} placeholder="Décrivez la propriété en français (optionnel)" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', resize: 'vertical', fontFamily: 'sans-serif', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                  )}
+                  {descLang !== 'es' && (
+                    <div style={{ marginTop: 6, fontSize: 11, color: '#aaa' }}>
+                      {descLang === 'en' ? 'Optional — shown to users browsing in English' : 'Optionnel — affiché aux utilisateurs en français'}
+                    </div>
+                  )}
                   <div style={{ marginTop: 8, padding: '8px 12px', background: '#f0fafb', borderLeft: '3px solid #006D77', borderRadius: '0 6px 6px 0', fontSize: 12, color: '#006D77' }}>
                     💡 {trLang.propiedad.descCta}
                   </div>

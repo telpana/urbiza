@@ -138,6 +138,41 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
   )
 }
 
+function DescripcionMultiIdioma({ propiedad, idioma, Tp }: { propiedad: any, idioma: string, Tp: any }) {
+  const disponibles: {code: string, label: string}[] = [{ code: 'es', label: 'ES' }]
+  if (propiedad.descripcion_en?.trim()) disponibles.push({ code: 'en', label: 'EN' })
+  if (propiedad.descripcion_fr?.trim()) disponibles.push({ code: 'fr', label: 'FR' })
+
+  const defaultLang = disponibles.find(d => d.code === idioma)?.code ?? 'es'
+  const [lang, setLang] = useState(defaultLang)
+
+  const texto = lang === 'en' ? propiedad.descripcion_en : lang === 'fr' ? propiedad.descripcion_fr : propiedad.descripcion
+
+  return (
+    <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+        <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', margin: 0 }}>{Tp.descripcion}</h2>
+        {disponibles.length > 1 && (
+          <div style={{ display: 'flex', gap: 4, background: '#f0f0f0', borderRadius: 6, padding: 3 }}>
+            {disponibles.map(d => (
+              <button key={d.code} onClick={() => setLang(d.code)}
+                style={{ all: 'unset', padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: lang === d.code ? '#006D77' : 'transparent', color: lang === d.code ? '#fff' : '#888', transition: 'all 0.15s' }}>
+                {d.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      {(texto as string).split('\n\n').map((p: string, i: number) => (
+        <p key={i} style={{ fontSize: 14, color: '#555', lineHeight: 1.8, marginBottom: 12 }}>{p}</p>
+      ))}
+      <div style={{ marginTop: 16, padding: '10px 14px', background: '#f0fafb', borderLeft: '3px solid #006D77', borderRadius: '0 6px 6px 0', fontSize: 12, color: '#006D77' }}>
+        💡 {Tp.descCta}
+      </div>
+    </div>
+  )
+}
+
 const MOTIVOS = [
   'Información incorrecta',
   'Fotos engañosas o de otro inmueble',
@@ -541,15 +576,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
 
             {/* DESCRIPCIÓN */}
             {propiedad.descripcion && (
-              <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
-                <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 14 }}>{Tp.descripcion}</h2>
-                {(propiedad.descripcion as string).split('\n\n').map((p: string, i: number) => (
-                  <p key={i} style={{ fontSize: 14, color: '#555', lineHeight: 1.8, marginBottom: 12 }}>{p}</p>
-                ))}
-                <div style={{ marginTop: 16, padding: '10px 14px', background: '#f0fafb', borderLeft: '3px solid #006D77', borderRadius: '0 6px 6px 0', fontSize: 12, color: '#006D77' }}>
-                  💡 {Tp.descCta}
-                </div>
-              </div>
+              <DescripcionMultiIdioma propiedad={propiedad} idioma={idioma} Tp={Tp} />
             )}
 
             {/* AMENIDADES */}
