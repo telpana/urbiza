@@ -521,7 +521,7 @@ function BuscarContent() {
   }
 
   const tituloOperacion = operacion === 'alquiler' ? Tb.operacion.alquiler : Tb.operacion.venta
-  const tituloPagina = `${filtradas.length} propiedades ${query ? `en ${query.split(',')[0].trim()}` : 'en República Dominicana'}`
+  const tituloPagina = `${filtradas.length} ${query ? `${Tb.propiedadesEn} ${query.split(',')[0].trim()}` : Tb.titulo}`
 
   return (
     <>
