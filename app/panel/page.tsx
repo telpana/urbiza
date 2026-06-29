@@ -1952,7 +1952,7 @@ export default function Panel() {
                   </div>
                   <div>
                     <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 6 }}>{perfilNombre || usuario?.nombre || Tpanel.perfil.titulo}</div>
-                    <div style={{ display: 'flex', gap: 8 }}>
+                    <div className="perfil-badges-row" style={{ display: 'flex', gap: 8 }}>
                       {tipoUsuario === 'profesional' && <span style={{ background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>{Tpanel.anuncios.roles.profesional}</span>}
                       {perfilAei && usuario?.aei_aprobado === true && <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>✓ AEI</span>}
                       {perfilAei && usuario?.aei_aprobado !== true && <span style={{ background: '#f59e0b', color: '#fff', fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>⏳ AEI pendiente</span>}

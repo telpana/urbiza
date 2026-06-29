@@ -289,7 +289,8 @@ img { max-width: 100%; }
 
   /* Mi perfil */
   .perfil-fields-grid { grid-template-columns: 1fr !important; }
-  .perfil-avatar-row { flex-direction: column !important; align-items: center !important; text-align: center; }
+  .perfil-avatar-row { flex-direction: column !important; align-items: center !important; text-align: center !important; }
+  .perfil-badges-row { justify-content: center !important; }
   .perfil-save-btn { display: block !important; width: 100% !important; text-align: center !important; box-sizing: border-box !important; margin-top: 16px !important; }
 
   /* Cursos AEI */
