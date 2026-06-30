@@ -290,7 +290,7 @@ export default function Home() {
     (typeof window !== 'undefined' && localStorage.getItem('hb_banner')) ||
     'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1600&q=80'
   )
-  const [featureImgUrl, setFeatureImgUrl] = useState('')
+  const [featureImgUrl, setFeatureImgUrl] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('hb_feature_img') || '' : '')
   const [instagramUrl, setInstagramUrl] = useState('')
   const [facebookUrl, setFacebookUrl] = useState('')
   const [tiktokUrl, setTiktokUrl] = useState('')
@@ -327,7 +327,7 @@ export default function Home() {
     // Load site config
     fetch('/api/admin/config').then(r => r.json()).then(cfg => {
       if (cfg.banner_url) { setBannerUrl(cfg.banner_url); localStorage.setItem('hb_banner', cfg.banner_url) }
-      if (cfg.feature_img_url) setFeatureImgUrl(cfg.feature_img_url)
+      if (cfg.feature_img_url) { setFeatureImgUrl(cfg.feature_img_url); localStorage.setItem('hb_feature_img', cfg.feature_img_url) }
       if (cfg.instagram_url) setInstagramUrl(cfg.instagram_url)
       if (cfg.facebook_url) setFacebookUrl(cfg.facebook_url)
       if (cfg.tiktok_url) setTiktokUrl(cfg.tiktok_url)
