@@ -1423,7 +1423,7 @@ export default function Panel() {
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                               <span style={{ fontSize: 11, color: '#006D77', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.propiedades?.titulo}</span>
-                              <a href={`/propiedad/${m.propiedad_id}`} style={{ fontSize: 10, color: '#006D77', textDecoration: 'none', fontWeight: 600, flexShrink: 0, background: '#e8f5f6', padding: '2px 8px', borderRadius: 10, border: '1px solid #c0e4e7', whiteSpace: 'nowrap' }}>Ver →</a>
+                              <a href={`/propiedad/${m.propiedad_id}`} style={{ fontSize: 10, color: '#006D77', textDecoration: 'none', fontWeight: 600, flexShrink: 0, background: '#e8f5f6', padding: '2px 8px', borderRadius: 10, border: '1px solid #c0e4e7', whiteSpace: 'nowrap' }}>Ver</a>
                             </div>
                           </div>
                           <div style={{ display: 'flex', gap: 6, flexShrink: 0, alignItems: 'center' }}>
@@ -1491,14 +1491,21 @@ export default function Panel() {
               <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>{Tpanel.estadisticas.titulo}</h1>
               <div className="kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 24 }}>
                 {[
-                  { label: Tpanel.estadisticas.visitas, val: fmtStat(anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0)), sub: Tpanel.anuncios.kpi_visitas_sub, color: '#006D77' },
-                  { label: Tpanel.estadisticas.telVistos, val: fmtStat(anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0)), sub: Tpanel.anuncios.kpi_tel_sub, color: '#10b981' },
-                  { label: Tpanel.estadisticas.mensajes, val: fmtStat(mensajesReales.length), sub: `${noLeidos} ${Tpanel.mensajes.noLeidos}`, color: '#f59e0b' },
-                  { label: Tpanel.anuncios.kpi_compartidos ?? 'Compartido', val: fmtStat(anunciosReales.reduce((s, a) => s + (a.compartidos || 0), 0)), sub: Tpanel.anuncios.kpi_compartidos_sub ?? 'veces compartido', color: '#8b5cf6' },
+                  { label: Tpanel.estadisticas.visitas, val: fmtStat(anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0)), sub: Tpanel.anuncios.kpi_visitas_sub, color: '#006D77', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> },
+                  { label: Tpanel.estadisticas.telVistos, val: fmtStat(anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0)), sub: Tpanel.anuncios.kpi_tel_sub, color: '#10b981', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg> },
+                  { label: Tpanel.estadisticas.mensajes, val: fmtStat(mensajesReales.length), sub: `${noLeidos} ${Tpanel.mensajes.noLeidos}`, color: '#f59e0b', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
+                  { label: Tpanel.anuncios.kpi_compartidos ?? 'Compartido', val: fmtStat(anunciosReales.reduce((s, a) => s + (a.compartidos || 0), 0)), sub: Tpanel.anuncios.kpi_compartidos_sub ?? 'veces compartido', color: '#8b5cf6', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> },
                 ].map(s => (
-                  <div key={s.label} style={{ background: '#fff', borderRadius: 8, padding: '16px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderTop: `3px solid ${s.color}` }}>
-                    <div style={{ fontSize: 11, color: '#888', marginBottom: 6 }}>{s.label}</div>
-                    <div style={{ fontSize: 26, fontWeight: 700, color: '#111', marginBottom: 4 }}>{s.val}</div>
+                  <div key={s.label} style={{ background: '#fff', borderRadius: 14, padding: '18px 20px', boxShadow: '0 2px 10px rgba(0,0,0,0.05)', border: '1px solid #f0f0f0', transition: 'box-shadow 0.15s' }}
+                    onMouseEnter={e => (e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.09)')}
+                    onMouseLeave={e => (e.currentTarget.style.boxShadow = '0 2px 10px rgba(0,0,0,0.05)')}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                      <div style={{ width: 36, height: 36, borderRadius: 10, background: `${s.color}1a`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                        {s.icon}
+                      </div>
+                      <div style={{ fontSize: 12, color: '#888', fontWeight: 500 }}>{s.label}</div>
+                    </div>
+                    <div style={{ fontSize: 27, fontWeight: 800, color: '#111', letterSpacing: -0.5, marginBottom: 3 }}>{s.val}</div>
                     <div style={{ fontSize: 11, color: '#aaa' }}>{s.sub}</div>
                   </div>
                 ))}
@@ -1510,28 +1517,31 @@ export default function Panel() {
               ) : (<>
 
                 {/* DESKTOP: tabla */}
-                <div className="estadisticas-tabla-desktop" style={{ background: '#fff', borderRadius: 10, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
+                <div className="estadisticas-tabla-desktop" style={{ background: '#fff', borderRadius: 14, boxShadow: '0 2px 10px rgba(0,0,0,0.05)', border: '1px solid #f0f0f0', overflow: 'hidden' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
-                      <tr style={{ borderBottom: '2px solid #f0f0f0' }}>
-                        <th style={{ textAlign: 'left', padding: '12px 16px', fontSize: 12, fontWeight: 600, color: '#888' }}>Anuncio</th>
-                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>{Tpanel.estadisticas.visitasCol}</th>
-                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>Teléfono</th>
-                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>{Tpanel.estadisticas.mensajesCol}</th>
-                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>{Tpanel.estadisticas.guardadosCol}</th>
-                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>Compartido</th>
+                      <tr style={{ background: '#fafbfc', borderBottom: '1px solid #f0f0f0' }}>
+                        <th style={{ textAlign: 'left', padding: '14px 16px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.4 }}>Anuncio</th>
+                        <th style={{ textAlign: 'center', padding: '14px 10px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.4 }}>{Tpanel.estadisticas.visitasCol}</th>
+                        <th style={{ textAlign: 'center', padding: '14px 10px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.4 }}>Teléfono</th>
+                        <th style={{ textAlign: 'center', padding: '14px 10px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.4 }}>{Tpanel.estadisticas.mensajesCol}</th>
+                        <th style={{ textAlign: 'center', padding: '14px 10px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.4 }}>{Tpanel.estadisticas.guardadosCol}</th>
+                        <th style={{ textAlign: 'center', padding: '14px 10px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.4 }}>Compartido</th>
                       </tr>
                     </thead>
                     <tbody>
                       {anunciosAMostrar.map((a: any) => {
                         const foto = Array.isArray(a.fotos) && a.fotos.length > 0 ? a.fotos[0] : null
+                        const Badge = ({ raw, color }: { raw: number, color: string }) => (
+                          <span style={{ display: 'inline-flex', minWidth: 34, justifyContent: 'center', fontSize: 13, fontWeight: 700, color: raw > 0 ? color : '#ccc', background: raw > 0 ? `${color}14` : 'transparent', padding: '6px 12px', borderRadius: 20 }}>{fmtStat(raw)}</span>
+                        )
                         return (
-                          <tr key={a.id} style={{ borderBottom: '1px solid #f5f5f5' }}
-                            onMouseEnter={e => (e.currentTarget.style.background = '#fafafa')}
+                          <tr key={a.id} style={{ borderBottom: '1px solid #f5f5f5', transition: 'background 0.1s' }}
+                            onMouseEnter={e => (e.currentTarget.style.background = '#fafbfc')}
                             onMouseLeave={e => (e.currentTarget.style.background = '')}>
-                            <td style={{ padding: '10px 16px' }}>
+                            <td style={{ padding: '12px 16px' }}>
                               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                                <div style={{ width: 56, height: 42, borderRadius: 6, overflow: 'hidden', flexShrink: 0, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <div style={{ width: 56, height: 42, borderRadius: 8, overflow: 'hidden', flexShrink: 0, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                   {foto ? <img src={foto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>}
                                 </div>
                                 <div>
@@ -1543,11 +1553,11 @@ export default function Panel() {
                                 </div>
                               </div>
                             </td>
-                            <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#333', padding: '10px' }}>{fmtStat(a.clics)}</td>
-                            <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#333', padding: '10px' }}>{fmtStat(a.telVistos)}</td>
-                            <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#333', padding: '10px' }}>{fmtStat(a.mensajes)}</td>
-                            <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#333', padding: '10px' }}>{fmtStat(a.favoritos)}</td>
-                            <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#8b5cf6', padding: '10px' }}>{fmtStat(a.compartidos)}</td>
+                            <td style={{ textAlign: 'center', padding: '10px' }}><Badge raw={a.clics} color="#006D77" /></td>
+                            <td style={{ textAlign: 'center', padding: '10px' }}><Badge raw={a.telVistos} color="#10b981" /></td>
+                            <td style={{ textAlign: 'center', padding: '10px' }}><Badge raw={a.mensajes} color="#f59e0b" /></td>
+                            <td style={{ textAlign: 'center', padding: '10px' }}><Badge raw={a.favoritos} color="#e63946" /></td>
+                            <td style={{ textAlign: 'center', padding: '10px' }}><Badge raw={a.compartidos} color="#8b5cf6" /></td>
                           </tr>
                         )
                       })}
@@ -1560,25 +1570,25 @@ export default function Panel() {
                   {anunciosAMostrar.map((a: any) => {
                     const foto = Array.isArray(a.fotos) && a.fotos.length > 0 ? a.fotos[0] : null
                     return (
-                      <div key={a.id} style={{ background: '#fff', borderRadius: 12, boxShadow: '0 1px 8px rgba(0,0,0,0.07)', overflow: 'hidden', borderLeft: '4px solid #006D77' }}>
+                      <div key={a.id} style={{ background: '#fff', borderRadius: 14, boxShadow: '0 2px 10px rgba(0,0,0,0.06)', overflow: 'hidden', border: '1px solid #f0f0f0' }}>
                         <div style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '14px 14px 12px' }}>
-                          <div style={{ width: 62, height: 48, borderRadius: 7, overflow: 'hidden', flexShrink: 0, background: '#e8f8f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <div style={{ width: 62, height: 48, borderRadius: 8, overflow: 'hidden', flexShrink: 0, background: '#e8f8f9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             {foto ? <img src={foto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>}
                           </div>
                           <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 14, fontWeight: 700, color: '#111', textDecoration: 'none', flex: 1, lineHeight: 1.3 }}>
                             {a.titulo}
                           </a>
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', background: '#f8fdfd', borderTop: '1px solid #e8f5f6' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', background: '#fafbfc', borderTop: '1px solid #f0f0f0' }}>
                           {[
-                            { val: fmtStat(a.clics), label: Tpanel.estadisticas.visitasCol },
-                            { val: fmtStat(a.telVistos), label: 'Tel.' },
-                            { val: fmtStat(a.mensajes), label: Tpanel.estadisticas.mensajesCol },
-                            { val: fmtStat(a.favoritos), label: Tpanel.estadisticas.guardadosCol },
-                            { val: fmtStat(a.compartidos), label: 'Comp.' },
+                            { val: fmtStat(a.clics), label: Tpanel.estadisticas.visitasCol, color: '#006D77' },
+                            { val: fmtStat(a.telVistos), label: 'Tel.', color: '#10b981' },
+                            { val: fmtStat(a.mensajes), label: Tpanel.estadisticas.mensajesCol, color: '#f59e0b' },
+                            { val: fmtStat(a.favoritos), label: Tpanel.estadisticas.guardadosCol, color: '#e63946' },
+                            { val: fmtStat(a.compartidos), label: 'Comp.', color: '#8b5cf6' },
                           ].map((s, i) => (
-                            <div key={s.label} style={{ padding: '8px 4px', textAlign: 'center', borderRight: i < 4 ? '1px solid #e8f5f6' : 'none' }}>
-                              <div style={{ fontSize: 13, fontWeight: 400, color: '#006D77', lineHeight: 1 }}>{s.val}</div>
+                            <div key={s.label} style={{ padding: '10px 4px', textAlign: 'center', borderRight: i < 4 ? '1px solid #f0f0f0' : 'none' }}>
+                              <div style={{ fontSize: 14, fontWeight: 700, color: s.color, lineHeight: 1 }}>{s.val}</div>
                               <div style={{ fontSize: 9, color: '#bbb', marginTop: 3, fontWeight: 400, textTransform: 'uppercase', letterSpacing: 0.3 }}>{s.label}</div>
                             </div>
                           ))}
