@@ -794,7 +794,7 @@ function BuscarContent() {
           <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>{Tb.caracteristicas}</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {(['piscina', 'parqueo', 'vista_mar', 'amueblado', 'jardin', 'terraza', 'jacuzzi', 'barbacoa', 'gimnasio', 'seguridad', 'ascensor'] as const).map(id => (
+              {(['piscina', 'parqueo', 'vista_mar', 'amueblado', 'jardin', 'terraza', 'jacuzzi', 'barbacoa', 'gimnasio', 'seguridad', 'ascensor', 'zona_recreativa'] as const).map(id => (
                 <label key={id} style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 13, color: '#444', cursor: 'pointer' }}>
                   <input
                     type="checkbox"

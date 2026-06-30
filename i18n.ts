@@ -28,7 +28,7 @@ export const t = {
     amenidades: {
       piscina: 'Piscina', parqueo: 'Parqueo', vista_mar: 'Vista al mar', amueblado: 'Amueblado',
       jardin: 'Jardín', terraza: 'Terraza', jacuzzi: 'Jacuzzi', barbacoa: 'Barbacoa',
-      gimnasio: 'Gimnasio', seguridad: 'Seguridad 24h', ascensor: 'Ascensor',
+      gimnasio: 'Gimnasio', seguridad: 'Seguridad 24h', ascensor: 'Ascensor', zona_recreativa: 'Zona recreativa',
     },
     login: {
       acceder: 'Accede a tu cuenta', email: 'Email', contrasena: 'Contraseña', placeholder_pass: 'Tu contraseña',
@@ -244,7 +244,7 @@ export const t = {
     amenidades: {
       piscina: 'Swimming pool', parqueo: 'Parking', vista_mar: 'Sea view', amueblado: 'Furnished',
       jardin: 'Garden', terraza: 'Terrace', jacuzzi: 'Jacuzzi', barbacoa: 'BBQ area',
-      gimnasio: 'Gym', seguridad: '24h security', ascensor: 'Elevator',
+      gimnasio: 'Gym', seguridad: '24h security', ascensor: 'Elevator', zona_recreativa: 'Recreation area',
     },
     login: {
       acceder: 'Sign in to your account', email: 'Email', contrasena: 'Password', placeholder_pass: 'Your password',
@@ -460,7 +460,7 @@ export const t = {
     amenidades: {
       piscina: 'Piscine', parqueo: 'Parking', vista_mar: 'Vue mer', amueblado: 'Meublé',
       jardin: 'Jardin', terraza: 'Terrasse', jacuzzi: 'Jacuzzi', barbacoa: 'Barbecue',
-      gimnasio: 'Salle de sport', seguridad: 'Sécurité 24h', ascensor: 'Ascenseur',
+      gimnasio: 'Salle de sport', seguridad: 'Sécurité 24h', ascensor: 'Ascenseur', zona_recreativa: 'Zone de loisirs',
     },
     login: {
       acceder: 'Accédez à votre compte', email: 'Email', contrasena: 'Mot de passe', placeholder_pass: 'Votre mot de passe',

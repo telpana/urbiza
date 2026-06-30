@@ -88,6 +88,7 @@ const amenidades = [
   { id: 'gimnasio', label: 'Gimnasio' },
   { id: 'seguridad', label: 'Seguridad 24h' },
   { id: 'ascensor', label: 'Ascensor' },
+  { id: 'zona_recreativa', label: 'Zona recreativa' },
 ]
 
 function fmtStat(n: number | string | undefined): string {
