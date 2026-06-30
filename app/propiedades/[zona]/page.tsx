@@ -69,7 +69,7 @@ export default function ZonaPage({ params }: { params: { zona: string } }) {
       <main style={{ fontFamily: 'sans-serif' }}>
         <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', padding: '0 24px' }}>
           <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>
-            habitade<span style={{ color: '#83D4DB' }}>.</span>
+            habitade.
           </a>
         </nav>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '40px 20px' }}>

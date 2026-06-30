@@ -3,7 +3,7 @@ export default function Proximamente() {
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center', padding: '40px 24px', maxWidth: 520 }}>
         <div style={{ fontSize: 36, fontWeight: 800, color: '#006D77', letterSpacing: -2, marginBottom: 4 }}>
-          habitade<span style={{ color: '#17A6B4' }}>.</span>
+          habitade.
         </div>
         <div style={{ width: 48, height: 3, background: 'linear-gradient(90deg, #006D77, #17A6B4)', borderRadius: 2, margin: '16px auto 28px' }} />
         <div style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 12 }}>Estamos preparando algo grande</div>

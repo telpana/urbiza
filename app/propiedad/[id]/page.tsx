@@ -460,7 +460,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
       <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 20px', position: 'sticky', top: 0, zIndex: 900 }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', marginRight: 28 }}>
-            habitade<span style={{ color: '#83D4DB' }}>.</span>
+            habitade.
           </a>
           <div className="prop-nav-links" style={{ display: 'flex' }}>
             {[{ label: Tn.comprar, href: '/buscar?operacion=venta' }, { label: Tn.alquilar, href: '/buscar?operacion=alquiler' }].map(item => (

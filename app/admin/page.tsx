@@ -265,7 +265,7 @@ export default function Admin() {
     <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: C.oscuro }}>
       <div style={{ background: '#fff', borderRadius: 12, padding: '48px 40px', width: 360, boxShadow: '0 8px 40px rgba(0,0,0,0.25)' }}>
         <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div style={{ fontSize: 28, fontWeight: 700, color: C.verde, letterSpacing: -1.5 }}>habitade<span style={{ color: C.azul }}>.</span></div>
+          <div style={{ fontSize: 28, fontWeight: 700, color: C.verde, letterSpacing: -1.5 }}>habitade.</div>
           <div style={{ fontSize: 13, color: '#888', marginTop: 4 }}>Panel de administración</div>
         </div>
         <label style={{ display: 'block', fontSize: 13, fontWeight: 500, color: '#555', marginBottom: 8 }}>Contraseña</label>
@@ -332,7 +332,7 @@ export default function Admin() {
       {/* NAV */}
       <nav style={{ background: C.verde, height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', position: 'sticky', top: 0, zIndex: 100 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <a href="/" style={{ fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>habitade<span style={{ color: '#83D4DB' }}>.</span></a>
+          <a href="/" style={{ fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>habitade.</a>
           <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 10px', borderRadius: 10 }}>ADMIN</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>

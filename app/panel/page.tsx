@@ -736,7 +736,7 @@ export default function Panel() {
             <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect y="0" width="18" height="2" rx="1" fill="white"/><rect y="6" width="18" height="2" rx="1" fill="white"/><rect y="12" width="18" height="2" rx="1" fill="white"/></svg>
           </button>
           <a href="/" style={{ fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>
-            habitade<span style={{ color: '#83D4DB' }}>.</span>
+            habitade.
           </a>
           <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 10px', borderRadius: 10 }}>MI PANEL</span>
         </div>
@@ -2157,7 +2157,7 @@ export default function Panel() {
               {/* Hero header */}
               <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 60%, #17A6B4 100%)', borderRadius: 14, padding: '36px 40px', marginBottom: 24 }}>
                 <a href="/" style={{ fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', display: 'inline-block', marginBottom: 4 }}>
-                  habitade<span style={{ color: '#83D4DB' }}>.</span>
+                  habitade.
                 </a>
                 <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', fontWeight: 600, letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 18 }}>{Tpanel.ayuda.titulo}</div>
                 <div style={{ fontSize: 20, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{Tpanel.ayuda.desc}</div>
