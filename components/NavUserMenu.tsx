@@ -8,7 +8,13 @@ interface Props {
 }
 
 export default function NavUserMenu({ dark = false }: Props) {
-  const [sesion, setSesion] = useState(false)
+  const [sesion, setSesion] = useState(() => {
+    if (typeof window === 'undefined') return false
+    try {
+      const stored = Object.keys(localStorage).find(k => k.startsWith('sb-') && k.endsWith('-auth-token'))
+      return stored ? !!JSON.parse(localStorage.getItem(stored) || 'null') : false
+    } catch { return false }
+  })
   const [fotoUrl, setFotoUrl] = useState<string | null>(null)
   const [inicial, setInicial] = useState('U')
   const [noLeidos, setNoLeidos] = useState(0)
@@ -17,8 +23,9 @@ export default function NavUserMenu({ dark = false }: Props) {
 
   useEffect(() => {
     const init = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      const { data: { session } } = await supabase.auth.getSession()
+      const user = session?.user
+      if (!user) { setSesion(false); return }
       setSesion(true)
 
       const { data: perfil } = await supabase
