@@ -684,6 +684,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
               </button>
               <button onClick={async () => {
                 const url = window.location.href.split('?')[0]
+                fetch('/api/compartir', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ propiedadId: id }) })
                 if (navigator.share) { navigator.share({ title: propiedad?.titulo || 'Propiedad en Habitade', url }) }
                 else { await navigator.clipboard.writeText(url); alert(Tp.enlaceCopiad) }
               }} style={{ all: 'unset', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '14px 8px', fontSize: 11, fontWeight: 600, color: '#888', cursor: 'pointer', boxSizing: 'border-box' }}>

@@ -644,6 +644,7 @@ export default function Panel() {
     clics: a.visitas || 0,
     telVistos: a.tel_vistos || 0,
     favoritos: a.favoritos || 0,
+    compartidos: a.compartidos || 0,
     mensajes: mensajesReales.filter((m: any) => m.propiedad_id === a.id).length,
     destacado: a.destacado && (!a.destacado_hasta || new Date(a.destacado_hasta) > new Date()),
     destacado_hasta: a.destacado_hasta || null,
@@ -872,6 +873,7 @@ export default function Panel() {
                   { label: Tpanel.anuncios.kpi_visitas, val: fmtStat(anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0)), sub: Tpanel.anuncios.kpi_visitas_sub, color: '#006D77' },
                   { label: Tpanel.anuncios.kpi_tel, val: fmtStat(anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0)), sub: Tpanel.anuncios.kpi_tel_sub, color: '#10b981' },
                   { label: Tpanel.anuncios.guardados, val: fmtStat(anunciosReales.reduce((s, a) => s + (a.favoritos || 0), 0)), sub: Tpanel.anuncios.kpi_guardados_sub, color: '#f59e0b' },
+                  { label: Tpanel.anuncios.kpi_compartidos ?? 'Veces compartido', val: fmtStat(anunciosReales.reduce((s, a) => s + (a.compartidos || 0), 0)), sub: Tpanel.anuncios.kpi_compartidos_sub ?? 'veces que compartieron', color: '#8b5cf6' },
                 ].map(k => (
                   <div key={k.label} style={{ background: '#fff', borderRadius: 8, padding: '14px 16px', borderTop: `3px solid ${k.color}`, boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
                     <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>{k.label}</div>
@@ -1000,6 +1002,10 @@ export default function Panel() {
                             <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
                               <svg width="11" height="11" viewBox="0 0 24 24" fill="#e63946" stroke="#e63946" strokeWidth="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                               {a.favoritos ?? 0}
+                            </span>
+                            <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                              {fmtStat(a.compartidos ?? 0)}
                             </span>
                           </div>
                         </div>
@@ -1494,6 +1500,7 @@ export default function Panel() {
                   { label: Tpanel.estadisticas.visitas, val: fmtStat(anunciosReales.reduce((s, a) => s + (a.visitas || 0), 0)), sub: Tpanel.anuncios.kpi_visitas_sub, color: '#006D77' },
                   { label: Tpanel.estadisticas.telVistos, val: fmtStat(anunciosReales.reduce((s, a) => s + (a.tel_vistos || 0), 0)), sub: Tpanel.anuncios.kpi_tel_sub, color: '#10b981' },
                   { label: Tpanel.estadisticas.mensajes, val: fmtStat(mensajesReales.length), sub: `${noLeidos} ${Tpanel.mensajes.noLeidos}`, color: '#f59e0b' },
+                  { label: Tpanel.anuncios.kpi_compartidos ?? 'Compartido', val: fmtStat(anunciosReales.reduce((s, a) => s + (a.compartidos || 0), 0)), sub: Tpanel.anuncios.kpi_compartidos_sub ?? 'veces compartido', color: '#8b5cf6' },
                 ].map(s => (
                   <div key={s.label} style={{ background: '#fff', borderRadius: 8, padding: '16px 20px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', borderTop: `3px solid ${s.color}` }}>
                     <div style={{ fontSize: 11, color: '#888', marginBottom: 6 }}>{s.label}</div>
@@ -1518,6 +1525,7 @@ export default function Panel() {
                         <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>Teléfono</th>
                         <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>{Tpanel.estadisticas.mensajesCol}</th>
                         <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>{Tpanel.estadisticas.guardadosCol}</th>
+                        <th style={{ textAlign: 'center', padding: '12px 10px', fontSize: 12, fontWeight: 600, color: '#888' }}>Compartido</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1545,6 +1553,7 @@ export default function Panel() {
                             <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#333', padding: '10px' }}>{fmtStat(a.telVistos)}</td>
                             <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#333', padding: '10px' }}>{fmtStat(a.mensajes)}</td>
                             <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#333', padding: '10px' }}>{fmtStat(a.favoritos)}</td>
+                            <td style={{ textAlign: 'center', fontSize: 17, fontWeight: 700, color: '#8b5cf6', padding: '10px' }}>{fmtStat(a.compartidos)}</td>
                           </tr>
                         )
                       })}
@@ -1566,14 +1575,15 @@ export default function Panel() {
                             {a.titulo}
                           </a>
                         </div>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', background: '#f8fdfd', borderTop: '1px solid #e8f5f6' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', background: '#f8fdfd', borderTop: '1px solid #e8f5f6' }}>
                           {[
                             { val: fmtStat(a.clics), label: Tpanel.estadisticas.visitasCol },
                             { val: fmtStat(a.telVistos), label: 'Tel.' },
                             { val: fmtStat(a.mensajes), label: Tpanel.estadisticas.mensajesCol },
                             { val: fmtStat(a.favoritos), label: Tpanel.estadisticas.guardadosCol },
+                            { val: fmtStat(a.compartidos), label: 'Comp.' },
                           ].map((s, i) => (
-                            <div key={s.label} style={{ padding: '8px 4px', textAlign: 'center', borderRight: i < 3 ? '1px solid #e8f5f6' : 'none' }}>
+                            <div key={s.label} style={{ padding: '8px 4px', textAlign: 'center', borderRight: i < 4 ? '1px solid #e8f5f6' : 'none' }}>
                               <div style={{ fontSize: 13, fontWeight: 400, color: '#006D77', lineHeight: 1 }}>{s.val}</div>
                               <div style={{ fontSize: 9, color: '#bbb', marginTop: 3, fontWeight: 400, textTransform: 'uppercase', letterSpacing: 0.3 }}>{s.label}</div>
                             </div>
