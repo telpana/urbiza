@@ -1320,19 +1320,19 @@ export default function Panel() {
                 </div>
                 {noLeidos > 0 && <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '5px 14px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.3)' }}>{noLeidos} sin leer</span>}
               </div>
-              <div className="chat-grid" style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: 16, height: 'calc(100vh - 230px)', minHeight: 500 }}>
+              <div className="chat-grid" style={{ display: 'grid', gridTemplateColumns: '300px 1fr', height: 'calc(100vh - 220px)', minHeight: 520, borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 16px rgba(0,0,0,0.08)', border: '1px solid #e8e8e8' }}>
                 {/* Lista de conversaciones */}
-                <div className="chat-list" style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', overflowY: 'auto' }}>
-                  {cargando && (
-                    <div style={{ padding: '48px 24px', textAlign: 'center' }}>
-                      <div style={{ width: 28, height: 28, border: '3px solid #e0e0e0', borderTopColor: '#006D77', borderRadius: '50%', margin: '0 auto 12px', animation: 'spin 0.8s linear infinite' }} />
-                      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
-                    </div>
-                  )}
+                <div className="chat-list" style={{ background: '#fff', borderRight: '1px solid #f0f0f0', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ padding: '16px 16px 10px', borderBottom: '1px solid #f0f0f0', flexShrink: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: '#111', letterSpacing: -0.2 }}>{Tpanel.mensajes.titulo}</div>
+                    <div style={{ fontSize: 11, color: '#aaa', marginTop: 2 }}>{conversaciones.length} conversación{conversaciones.length !== 1 ? 'es' : ''}{noLeidos > 0 ? ` · ${noLeidos} sin leer` : ''}</div>
+                  </div>
                   {!cargando && conversaciones.length === 0 && (
-                    <div style={{ padding: '48px 24px', textAlign: 'center' }}>
-                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" strokeWidth="1" style={{ margin: '0 auto 16px', display: 'block' }}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                      <div style={{ fontSize: 16, fontWeight: 600, color: '#555', marginBottom: 8 }}>{Tpanel.mensajes.sinMensajes}</div>
+                    <div style={{ padding: '48px 20px', textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#f4f5f6', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                      </div>
+                      <div style={{ fontSize: 13, fontWeight: 600, color: '#bbb' }}>{Tpanel.mensajes.sinMensajes}</div>
                     </div>
                   )}
                   {conversaciones.map((conv) => {
@@ -1340,50 +1340,45 @@ export default function Panel() {
                     const esEnviado = m._tipo === 'enviado'
                     const nombreMostrar = esEnviado ? (m._nombre || m.propiedades?.titulo || 'Propiedad') : (m.nombre_cliente || m._nombre || '?')
                     const seleccionada = mensajeSeleccionado === conv.key
+                    const iniciales = nombreMostrar.split(' ').map((w: string) => w[0]).slice(0, 2).join('').toUpperCase()
+                    const colores = ['#006D77','#0e7490','#7c3aed','#b45309','#be185d','#065f46']
+                    const colorIdx = nombreMostrar.charCodeAt(0) % colores.length
                     return (
                       <div key={conv.key} onClick={async () => {
                           setMensajeSeleccionado(conv.key)
                           setConvActiva({ propiedadId: conv.propiedadId, otherUserId: conv.otherUserId, msg: m })
-                          // marcar todos los recibidos de esta conversacion como leidos
                           const msgsConv = mensajesReales.filter((x: any) => `${x.propiedad_id}__${x.remitente_id || 'anon'}` === conv.key)
                           if (msgsConv.length > 0) {
                             const updates: Record<string, boolean> = {}
                             msgsConv.forEach((x: any) => { updates[x.id] = true })
                             setMensajesLeidos(prev => {
                               const next = { ...prev, ...updates }
-                              try {
-                                const { data: { user: u } } = { data: { user: usuario } }
-                                if (u?.id) localStorage.setItem(`habitade_leidos_${u.id}`, JSON.stringify(next))
-                              } catch {}
+                              try { const { data: { user: u } } = { data: { user: usuario } }; if (u?.id) localStorage.setItem(`habitade_leidos_${u.id}`, JSON.stringify(next)) } catch {}
                               return next
                             })
                           }
                           const { data: { user } } = await supabase.auth.getUser()
-                          if (user && conv.propiedadId && conv.otherUserId) {
-                            cargarHilo(conv.propiedadId, user.id, conv.otherUserId)
-                          } else {
-                            setHilo([m])
-                          }
+                          if (user && conv.propiedadId && conv.otherUserId) { cargarHilo(conv.propiedadId, user.id, conv.otherUserId) } else { setHilo([m]) }
                         }}
-                        style={{ padding: '14px 16px', borderBottom: '1px solid #f5f5f5', cursor: 'pointer', background: seleccionada ? '#f0fafb' : '#fff', borderLeft: seleccionada ? '3px solid #006D77' : '3px solid transparent' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 4 }}>
-                          <div style={{ width: 36, height: 36, borderRadius: '50%', background: conv.tieneNoLeido ? '#e0f5f7' : '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: conv.tieneNoLeido ? '#006D77' : '#888', flexShrink: 0, overflow: 'hidden' }}>
-                            {m._foto ? <img src={m._foto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : getAvatar(nombreMostrar)}
+                        style={{ padding: '12px 14px', cursor: 'pointer', background: seleccionada ? '#f0fafb' : 'transparent', borderLeft: `3px solid ${seleccionada ? '#006D77' : 'transparent'}`, transition: 'background 0.1s' }}
+                        onMouseEnter={e => { if (!seleccionada) e.currentTarget.style.background = '#fafafa' }}
+                        onMouseLeave={e => { if (!seleccionada) e.currentTarget.style.background = 'transparent' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <div style={{ width: 40, height: 40, borderRadius: '50%', background: colores[colorIdx], display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: '#fff', flexShrink: 0, overflow: 'hidden', letterSpacing: 0.5 }}>
+                            {m._foto ? <img src={m._foto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : iniciales}
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                              <div style={{ fontSize: 13, fontWeight: conv.tieneNoLeido ? 700 : 500, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 160 }}>{nombreMostrar}</div>
-                              <div style={{ fontSize: 11, color: '#aaa' }}>{formatFecha(m.created_at, Tpanel.mensajes.hace, Tpanel.mensajes.hoy)}</div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 2 }}>
+                              <div style={{ fontSize: 13, fontWeight: conv.tieneNoLeido ? 700 : 500, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 150 }}>{nombreMostrar}</div>
+                              <div style={{ fontSize: 10, color: conv.tieneNoLeido ? '#006D77' : '#bbb', fontWeight: conv.tieneNoLeido ? 600 : 400, flexShrink: 0, marginLeft: 6 }}>{formatFecha(m.created_at, Tpanel.mensajes.hace, Tpanel.mensajes.hoy)}</div>
                             </div>
-                            <div style={{ fontSize: 11, color: '#aaa', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: 3 }}>
-                              <svg width="9" height="11" viewBox="0 0 9 11" fill="none" style={{ flexShrink: 0 }}><path d="M4.5 0C2.015 0 0 2.015 0 4.5c0 3.375 4.5 6.5 4.5 6.5S9 7.875 9 4.5C9 2.015 6.985 0 4.5 0zm0 6.125A1.625 1.625 0 1 1 4.5 2.875a1.625 1.625 0 0 1 0 3.25z" fill="#17A6B4"/></svg>
-                              {m.propiedades?.titulo}
+                            <div style={{ fontSize: 11, color: '#006D77', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 2 }}>{m.propiedades?.titulo}</div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                              {esEnviado && <svg width="11" height="8" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>}
+                              <div style={{ fontSize: 12, color: conv.tieneNoLeido ? '#333' : '#999', fontWeight: conv.tieneNoLeido ? 500 : 400, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.mensaje}</div>
+                              {conv.tieneNoLeido && <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#006D77', flexShrink: 0, marginLeft: 'auto' }} />}
                             </div>
                           </div>
-                          {conv.tieneNoLeido && <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#006D77', flexShrink: 0 }} />}
-                        </div>
-                        <div style={{ fontSize: 12, color: '#777', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', paddingLeft: 46 }}>
-                          {esEnviado ? '↗ ' : ''}{m.mensaje}
                         </div>
                       </div>
                     )
@@ -1392,11 +1387,13 @@ export default function Panel() {
 
                 {/* Detalle — chat */}
                 {!convActiva && (
-                  <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, color: '#ccc' }}>
-                    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#e0e0e0" strokeWidth="1"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  <div style={{ background: '#f8f9fa', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+                    <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>
+                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5" opacity="0.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
                     <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: 15, fontWeight: 600, color: '#bbb', marginBottom: 4 }}>{Tpanel.mensajes.seleccionar}</div>
-                      <div style={{ fontSize: 13, color: '#ddd' }}>{Tpanel.mensajes.seleccionarDesc}</div>
+                      <div style={{ fontSize: 14, fontWeight: 600, color: '#bbb', marginBottom: 4 }}>{Tpanel.mensajes.seleccionar}</div>
+                      <div style={{ fontSize: 12, color: '#ccc' }}>{Tpanel.mensajes.seleccionarDesc}</div>
                     </div>
                   </div>
                 )}
@@ -1406,82 +1403,79 @@ export default function Panel() {
                   const contactoNombre = esEnviado ? (m._nombre || m.propiedades?.titulo || '?') : (m.nombre_cliente || m._nombre || '?')
                   const contactoTel = esEnviado ? null : m.telefono_cliente
                   const contactoId = convActiva.otherUserId
+                  const esPro = m._plan === 'profesional' || m._tipo === 'profesional'
+                  const iniciales = contactoNombre.split(' ').map((w: string) => w[0]).slice(0, 2).join('').toUpperCase()
+                  const colores = ['#006D77','#0e7490','#7c3aed','#b45309','#be185d','#065f46']
+                  const colorIdx = contactoNombre.charCodeAt(0) % colores.length
                   return (
-                    <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 1px 6px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                      {/* Header */}
-                      <div style={{ padding: '14px 18px', borderBottom: '1px solid #f0f0f0', flexShrink: 0 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-                          <div style={{ width: 38, height: 38, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: '#006D77', flexShrink: 0, overflow: 'hidden' }}>
-                            {m._foto ? <img src={m._foto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : getAvatar(contactoNombre)}
+                    <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#fff' }}>
+                      {/* Header del chat */}
+                      <div style={{ padding: '12px 18px', borderBottom: '1px solid #f0f0f0', flexShrink: 0, background: '#fff' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <div style={{ width: 40, height: 40, borderRadius: '50%', background: colores[colorIdx], display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: '#fff', flexShrink: 0, overflow: 'hidden' }}>
+                            {m._foto ? <img src={m._foto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : iniciales}
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 2 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
                               <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>{contactoNombre}</span>
-                              {(() => {
-                                const esPro = m._plan === 'profesional' || m._tipo === 'profesional'
-                                return (
-                                  <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, background: esPro ? '#17A6B4' : 'rgba(0,109,119,0.12)', color: esPro ? '#fff' : '#006D77' }}>
-                                    {esPro ? 'PROFESIONAL' : 'PARTICULAR'}
-                                  </span>
-                                )
-                              })()}
-                              {m._numero_aei && (
-                                <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, background: m._aei_aprobado ? '#006D77' : '#f59e0b', color: '#fff' }}>
-                                  {m._aei_aprobado ? 'AEI' : 'AEI ⏳'}
-                                </span>
-                              )}
+                              <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 8, background: esPro ? '#006D77' : '#f0f0f0', color: esPro ? '#fff' : '#888' }}>{esPro ? 'PRO' : 'PARTICULAR'}</span>
+                              {m._numero_aei && <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 8, background: m._aei_aprobado ? '#065f46' : '#f59e0b', color: '#fff' }}>{m._aei_aprobado ? 'AEI ✓' : 'AEI'}</span>}
                             </div>
-                            {contactoTel && <a href={`tel:${contactoTel}`} style={{ fontSize: 12, color: '#006D77', textDecoration: 'none' }}>📞 {contactoTel}</a>}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                              <span style={{ fontSize: 11, color: '#006D77', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.propiedades?.titulo}</span>
+                              <a href={`/propiedad/${m.propiedad_id}`} style={{ fontSize: 10, color: '#006D77', textDecoration: 'none', fontWeight: 600, flexShrink: 0, background: '#e8f5f6', padding: '2px 8px', borderRadius: 10, border: '1px solid #c0e4e7', whiteSpace: 'nowrap' }}>Ver →</a>
+                            </div>
                           </div>
-                          <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
+                          <div style={{ display: 'flex', gap: 6, flexShrink: 0, alignItems: 'center' }}>
+                            {contactoTel && <a href={`tel:${contactoTel}`} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#006D77', textDecoration: 'none', fontWeight: 600, background: '#e8f5f6', padding: '5px 10px', borderRadius: 6, border: '1px solid #c0e4e7' }}>
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                              {contactoTel}
+                            </a>}
                             {contactoId && <button onClick={() => toggleBloqueo(contactoId)}
-                              style={{ all: 'unset', border: `1px solid ${bloqueadosSet.has(contactoId) ? '#e0e0e0' : '#fca5a5'}`, color: bloqueadosSet.has(contactoId) ? '#555' : '#dc2626', padding: '4px 10px', borderRadius: 4, fontSize: 11, cursor: 'pointer', fontWeight: 500 }}>
+                              style={{ all: 'unset', border: `1px solid ${bloqueadosSet.has(contactoId) ? '#e0e0e0' : '#fca5a5'}`, color: bloqueadosSet.has(contactoId) ? '#888' : '#dc2626', padding: '5px 10px', borderRadius: 6, fontSize: 11, cursor: 'pointer', fontWeight: 500 }}>
                               {bloqueadosSet.has(contactoId) ? Tpanel.mensajes.desbloquear : Tpanel.mensajes.bloquear}
                             </button>}
-                            <button onClick={() => eliminarMensaje(m.id)} style={{ all: 'unset', border: '1px solid #e0e0e0', color: '#888', padding: '4px 10px', borderRadius: 4, fontSize: 11, cursor: 'pointer' }}>{Tpanel.mensajes.eliminar}</button>
+                            <button onClick={() => eliminarMensaje(m.id)} style={{ all: 'unset', border: '1px solid #f0f0f0', color: '#bbb', padding: '5px 10px', borderRadius: 6, fontSize: 11, cursor: 'pointer' }}>{Tpanel.mensajes.eliminar}</button>
                           </div>
-                        </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: '#f4f5f6', borderRadius: 6, padding: '7px 10px' }}>
-                          <div style={{ fontSize: 12, fontWeight: 600, color: '#333', flex: 1, display: 'flex', alignItems: 'center', gap: 4 }}>
-                            <svg width="10" height="13" viewBox="0 0 9 11" fill="none" style={{ flexShrink: 0 }}><path d="M4.5 0C2.015 0 0 2.015 0 4.5c0 3.375 4.5 6.5 4.5 6.5S9 7.875 9 4.5C9 2.015 6.985 0 4.5 0zm0 6.125A1.625 1.625 0 1 1 4.5 2.875a1.625 1.625 0 0 1 0 3.25z" fill="#006D77"/></svg>
-                            {m.propiedades?.titulo}
-                          </div>
-                          <a href={`/propiedad/${m.propiedad_id}`} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#006D77', textDecoration: 'none', fontWeight: 600, flexShrink: 0, background: '#e8f5f6', padding: '4px 10px', borderRadius: 20, border: '1px solid #c0e4e7' }}>
-                            Ver anuncio
-                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                          </a>
                         </div>
                       </div>
-                      {/* Mensajes del hilo */}
-                      <div style={{ flex: 1, padding: '16px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      {/* Área de mensajes */}
+                      <div style={{ flex: 1, padding: '20px 20px 12px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 8, background: '#f8f9fa' }}>
                         {hiloLoading ? (
-                          <div style={{ textAlign: 'center', color: '#aaa', fontSize: 13, padding: '20px 0' }}>Cargando...</div>
-                        ) : hilo.map((msg: any) => {
+                          <div style={{ textAlign: 'center', padding: '40px 0' }}>
+                            <div style={{ width: 24, height: 24, border: '2.5px solid #e0e0e0', borderTopColor: '#006D77', borderRadius: '50%', margin: '0 auto', animation: 'spin 0.8s linear infinite' }} />
+                          </div>
+                        ) : hilo.map((msg: any, idx: number) => {
                           const esMio = msg.remitente_id === usuario?.id
+                          const hora = new Date(msg.created_at).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
+                          const anteriorEsMismo = idx > 0 && (hilo[idx-1].remitente_id === usuario?.id) === esMio
                           return (
-                            <div key={msg.id} style={{ display: 'flex', justifyContent: esMio ? 'flex-end' : 'flex-start' }}>
-                              <div style={{ background: esMio ? '#006D77' : '#f4f5f6', color: esMio ? '#fff' : '#333', borderRadius: esMio ? '12px 12px 2px 12px' : '12px 12px 12px 2px', padding: '10px 14px', maxWidth: '75%' }}>
-                                <div style={{ fontSize: 14, lineHeight: 1.5 }}>{msg.mensaje}</div>
+                            <div key={msg.id} style={{ display: 'flex', justifyContent: esMio ? 'flex-end' : 'flex-start', marginTop: anteriorEsMismo ? 2 : 10 }}>
+                              <div style={{ maxWidth: '72%' }}>
+                                <div style={{ background: esMio ? '#006D77' : '#fff', color: esMio ? '#fff' : '#222', borderRadius: esMio ? '16px 16px 4px 16px' : '16px 16px 16px 4px', padding: '10px 14px', fontSize: 13, lineHeight: 1.5, boxShadow: esMio ? 'none' : '0 1px 4px rgba(0,0,0,0.08)', wordBreak: 'break-word' }}>
+                                  {msg.mensaje}
+                                </div>
+                                <div style={{ fontSize: 10, color: '#bbb', marginTop: 3, textAlign: esMio ? 'right' : 'left', paddingInline: 4 }}>{hora}</div>
                               </div>
                             </div>
                           )
                         })}
                         <div ref={hiloBottomRef} />
                       </div>
-                      {/* Caja de respuesta */}
-                      <div style={{ padding: '12px 16px', borderTop: '1px solid #f0f0f0', flexShrink: 0 }}>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
+                      {/* Input */}
+                      <div style={{ padding: '12px 16px', background: '#fff', borderTop: '1px solid #f0f0f0', flexShrink: 0 }}>
+                        <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end', background: '#f4f5f6', borderRadius: 24, padding: '8px 8px 8px 16px', border: '1.5px solid transparent', transition: 'border-color 0.15s' }}
+                          onFocusCapture={e => e.currentTarget.style.borderColor = '#006D77'}
+                          onBlurCapture={e => e.currentTarget.style.borderColor = 'transparent'}>
                           <textarea value={respuesta} onChange={e => setRespuesta(e.target.value)}
                             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviarRespuesta(m, respuesta) } }}
-                            placeholder="Escribe un mensaje..." rows={2}
-                            style={{ flex: 1, border: '1.5px solid #e0e0e0', borderRadius: 8, padding: '9px 12px', fontSize: 13, outline: 'none', resize: 'none', fontFamily: 'sans-serif', boxSizing: 'border-box', color: '#111' }}
-                            onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                          <button type="button" onClick={() => enviarRespuesta(m, respuesta)}
-                            style={{ background: respuesta.trim() ? '#006D77' : '#ccc', color: '#fff', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 600, cursor: 'pointer', border: 'none', whiteSpace: 'nowrap' }}>
-                            Enviar
+                            placeholder={Tpanel.mensajes.escribir ?? 'Escribe un mensaje...'} rows={1}
+                            style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', resize: 'none', fontFamily: 'sans-serif', fontSize: 13, color: '#111', lineHeight: 1.5, maxHeight: 100, overflowY: 'auto', paddingTop: 2 }} />
+                          <button type="button" onClick={() => enviarRespuesta(m, respuesta)} disabled={!respuesta.trim()}
+                            style={{ width: 36, height: 36, borderRadius: '50%', background: respuesta.trim() ? '#006D77' : '#e0e0e0', border: 'none', cursor: respuesta.trim() ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.15s' }}>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                           </button>
                         </div>
-                        {contactoTel && <a href={`tel:${contactoTel}`} style={{ display: 'inline-block', marginTop: 8, fontSize: 12, color: '#006D77', textDecoration: 'none' }}>📞 Llamar a {contactoNombre}</a>}
                       </div>
                     </div>
                   )
