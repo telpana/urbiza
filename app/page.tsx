@@ -270,13 +270,14 @@ export default function Home() {
   const [sugHome, setSugHome] = useState<string[]>([])
   const inputHomeRef = useRef<HTMLInputElement>(null)
   const [mostrarSugHome, setMostrarSugHome] = useState(false)
-  const [destReales, setDestReales] = useState<any[]>([])
-  const [masVistasReales, setMasVistasReales] = useState<any[]>([])
+  const lsGet = (k: string) => { try { return typeof window !== 'undefined' ? JSON.parse(localStorage.getItem(k) || '[]') : [] } catch { return [] } }
+  const [destReales, setDestReales] = useState<any[]>(() => lsGet('hb_dest'))
+  const [masVistasReales, setMasVistasReales] = useState<any[]>(() => lsGet('hb_masvistos'))
   const [slideIdx, setSlideIdx] = useState(0)
   const [masIdx, setMasIdx] = useState(0)
-  const [novedadesSantoDomingo, setNovedadesSantoDomingo] = useState<any[]>([])
-  const [novedadesPuntaCana, setNovedadesPuntaCana] = useState<any[]>([])
-  const [novedadesSantiago, setNovedadesSantiago] = useState<any[]>([])
+  const [novedadesSantoDomingo, setNovedadesSantoDomingo] = useState<any[]>(() => lsGet('hb_nov_sd'))
+  const [novedadesPuntaCana, setNovedadesPuntaCana] = useState<any[]>(() => lsGet('hb_nov_pc'))
+  const [novedadesSantiago, setNovedadesSantiago] = useState<any[]>(() => lsGet('hb_nov_stg'))
   const [sesionActiva, setSesionActiva] = useState(false)
   const [authReady, setAuthReady] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -344,10 +345,10 @@ export default function Home() {
     const cargar = async () => {
       const { data: dest } = await supabase.from('propiedades')
         .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos').eq('destacado', true).eq('estado', 'activo').limit(12)
-      if (dest && dest.length > 0) setDestReales(dest)
+      if (dest && dest.length > 0) { setDestReales(dest); try { localStorage.setItem('hb_dest', JSON.stringify(dest)) } catch {} }
       const { data: vistas } = await supabase.from('propiedades')
         .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos').eq('estado', 'activo').order('visitas', { ascending: false }).limit(3)
-      if (vistas && vistas.length > 0) setMasVistasReales(vistas)
+      if (vistas && vistas.length > 0) { setMasVistasReales(vistas); try { localStorage.setItem('hb_masvistos', JSON.stringify(vistas)) } catch {} }
 
       const campos = 'id,titulo,precio,zona,habitaciones,m2,tipo,operacion,fotos'
       const [{ data: sd }, { data: pc }, { data: stg }] = await Promise.all([
@@ -361,9 +362,9 @@ export default function Home() {
           .or('zona.ilike.%Santiago%')
           .order('created_at', { ascending: false }).limit(4),
       ])
-      if (sd && sd.length > 0) setNovedadesSantoDomingo(sd)
-      if (pc && pc.length > 0) setNovedadesPuntaCana(pc)
-      if (stg && stg.length > 0) setNovedadesSantiago(stg)
+      if (sd && sd.length > 0) { setNovedadesSantoDomingo(sd); try { localStorage.setItem('hb_nov_sd', JSON.stringify(sd)) } catch {} }
+      if (pc && pc.length > 0) { setNovedadesPuntaCana(pc); try { localStorage.setItem('hb_nov_pc', JSON.stringify(pc)) } catch {} }
+      if (stg && stg.length > 0) { setNovedadesSantiago(stg); try { localStorage.setItem('hb_nov_stg', JSON.stringify(stg)) } catch {} }
     }
     cargar()
   }, [])

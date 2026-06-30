@@ -857,6 +857,21 @@ function BuscarContent() {
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+            {cargando && propiedadesReales.length === 0 && [...Array(6)].map((_, i) => (
+              <div key={i} className="prop-card" style={{ display: 'flex', background: '#fff', borderBottom: '8px solid #f4f5f6', minHeight: 220 }}>
+                <div className="prop-card-img skeleton" style={{ width: 300, minWidth: 300 }} />
+                <div style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                  <div className="skeleton" style={{ height: 22, width: '55%' }} />
+                  <div className="skeleton" style={{ height: 14, width: '35%' }} />
+                  <div className="skeleton" style={{ height: 16, width: '45%' }} />
+                  <div style={{ display: 'flex', gap: 8, marginTop: 4 }}>
+                    <div className="skeleton" style={{ height: 12, width: 60 }} />
+                    <div className="skeleton" style={{ height: 12, width: 60 }} />
+                    <div className="skeleton" style={{ height: 12, width: 60 }} />
+                  </div>
+                </div>
+              </div>
+            ))}
             {filtradasPagina.map(p => (
               <div key={p.id} className="prop-card" style={{ display: 'flex', background: '#fff', borderBottom: '8px solid #f4f5f6', cursor: 'pointer', minHeight: 220, boxShadow: p.dest ? '0 2px 12px rgba(0,109,119,0.10)' : 'none' }}
                 onClick={() => window.location.href = `/propiedad/${p.id}`}
