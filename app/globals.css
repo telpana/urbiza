@@ -27,6 +27,7 @@ body {
 
 * { box-sizing: border-box; }
 img { max-width: 100%; }
+html { touch-action: manipulation; }
 
 .banner-img {
   transform: scale(1.12);
