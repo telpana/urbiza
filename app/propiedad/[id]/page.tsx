@@ -164,9 +164,6 @@ function DescripcionMultiIdioma({ propiedad, idioma, setIdioma, Tp }: { propieda
       {(texto || '').split('\n\n').map((p: string, i: number) => (
         <p key={i} style={{ fontSize: 14, color: '#555', lineHeight: 1.8, marginBottom: 12, overflowWrap: 'break-word', wordBreak: 'break-word' }}>{p}</p>
       ))}
-      <div style={{ marginTop: 16, padding: '10px 14px', background: '#f0fafb', borderLeft: '3px solid #006D77', borderRadius: '0 6px 6px 0', fontSize: 12, color: '#006D77' }}>
-        💡 {Tp.descCta}
-      </div>
     </div>
   )
 }
