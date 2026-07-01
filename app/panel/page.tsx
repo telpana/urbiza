@@ -124,22 +124,31 @@ function formatHoraChat(iso: string) {
   return `${d.getDate()} ${d.toLocaleString('es', { month: 'short' })}, ${hh}:${mm}`
 }
 
-function GuardadosSeccion() {
+function GuardadosSeccion({ onLeer }: { onLeer?: () => void }) {
   const { tr } = useIdioma()
   const Tg = tr.panel.guardados
   const [guardados, setGuardados] = useState<any[]>([])
+  const [notificaciones, setNotificaciones] = useState<any[]>([])
   const [cargando, setCargando] = useState(true)
 
   useEffect(() => {
     const cargar = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { setCargando(false); return }
-      const { data } = await supabase
-        .from('favoritos')
-        .select('propiedad_id, propiedades(id, titulo, zona, precio, tipo, operacion, habitaciones, banos, m2, fotos)')
-        .eq('usuario_id', user.id)
-        .order('created_at', { ascending: false })
+      const [{ data }, { data: notifs }] = await Promise.all([
+        supabase
+          .from('favoritos')
+          .select('propiedad_id, propiedades(id, titulo, zona, precio, tipo, operacion, habitaciones, banos, m2, fotos)')
+          .eq('usuario_id', user.id)
+          .order('created_at', { ascending: false }),
+        supabase
+          .from('notificaciones_propiedades')
+          .select('*')
+          .eq('usuario_id', user.id)
+          .eq('leida', false)
+      ])
       setGuardados(data || [])
+      setNotificaciones(notifs || [])
       setCargando(false)
     }
     cargar()
@@ -150,6 +159,19 @@ function GuardadosSeccion() {
     if (!user) return
     await supabase.from('favoritos').delete().eq('usuario_id', user.id).eq('propiedad_id', propiedadId)
     setGuardados(prev => prev.filter(f => f.propiedad_id !== propiedadId))
+  }
+
+  const abrirPropiedad = async (propiedadId: number | string, url: string) => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      await supabase.from('notificaciones_propiedades')
+        .update({ leida: true })
+        .eq('usuario_id', user.id)
+        .eq('propiedad_id', propiedadId)
+      setNotificaciones(prev => prev.filter(n => n.propiedad_id !== propiedadId))
+      onLeer?.()
+    }
+    window.location.href = url
   }
 
   return (
@@ -169,12 +191,32 @@ function GuardadosSeccion() {
             const p = f.propiedades
             if (!p) return null
             const foto = Array.isArray(p.fotos) && p.fotos[0]
+            const notifsCard = notificaciones.filter(n => String(n.propiedad_id) === String(f.propiedad_id))
+            const hasPrecio = notifsCard.some(n => n.tipo === 'precio')
+            const hasFotos = notifsCard.some(n => n.tipo === 'fotos')
+            const tieneNotif = hasPrecio || hasFotos
+            const notifPrecio = notifsCard.find(n => n.tipo === 'precio')
             return (
-              <div key={f.propiedad_id} className="guardado-card" style={{ background: '#fff', borderRadius: 8, border: '1px solid #e8e8e8', display: 'flex', overflow: 'hidden', cursor: 'pointer' }} onClick={() => window.location.href = `/propiedad/${p.id}`}>
-                <div className="guardado-foto" style={{ width: 140, minWidth: 140, height: 115, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <div key={f.propiedad_id} className="guardado-card" style={{ background: '#fff', borderRadius: 8, border: tieneNotif ? '1.5px solid #006D77' : '1px solid #e8e8e8', display: 'flex', overflow: 'hidden', cursor: 'pointer', position: 'relative' }} onClick={() => abrirPropiedad(f.propiedad_id, `/propiedad/${p.id}`)}>
+                {tieneNotif && (
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: '#006D77', padding: '4px 12px', display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                    {hasPrecio && (
+                      <span style={{ fontSize: 11, fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: 4 }}>
+                        💰 Precio actualizado
+                        {notifPrecio?.precio_anterior && notifPrecio?.precio_nuevo && (
+                          <span style={{ fontWeight: 400, opacity: 0.85 }}>
+                            US$ {Number(notifPrecio.precio_anterior).toLocaleString('en-US')} → US$ {Number(notifPrecio.precio_nuevo).toLocaleString('en-US')}
+                          </span>
+                        )}
+                      </span>
+                    )}
+                    {hasFotos && <span style={{ fontSize: 11, fontWeight: 700, color: '#fff' }}>📷 Nuevas fotos</span>}
+                  </div>
+                )}
+                <div className="guardado-foto" style={{ width: 140, minWidth: 140, height: tieneNotif ? 139 : 115, marginTop: tieneNotif ? 24 : 0, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   {foto ? <img src={foto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>}
                 </div>
-                <div style={{ flex: 1, padding: '12px 14px', minWidth: 0 }}>
+                <div style={{ flex: 1, padding: tieneNotif ? '12px 14px 12px' : '12px 14px', paddingTop: tieneNotif ? 32 : 12, minWidth: 0 }}>
                   <div className="guardado-titulo" style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.titulo}</div>
                   <div style={{ fontSize: 11, color: '#888', marginBottom: 6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.zona}</div>
                   <div style={{ fontSize: 15, fontWeight: 700, color: '#006D77', marginBottom: 4 }}>US$ {p.precio?.toLocaleString('en-US')}</div>
@@ -182,7 +224,7 @@ function GuardadosSeccion() {
                     {p.habitaciones > 0 && `${p.habitaciones} hab · `}{p.banos > 0 && `${p.banos} baños`}{p.m2 > 0 && ` · ${p.m2} m²`}
                   </div>
                 </div>
-                <div style={{ padding: '12px', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                <div style={{ padding: '12px', display: 'flex', alignItems: tieneNotif ? 'flex-end' : 'center', paddingBottom: 12, flexShrink: 0 }}>
                   <button onClick={e => { e.stopPropagation(); quitar(f.propiedad_id) }} style={{ all: 'unset', color: '#006D77', fontSize: 20, cursor: 'pointer', lineHeight: 1 }} title="Quitar de guardados">♥</button>
                 </div>
               </div>
@@ -635,6 +677,21 @@ export default function Panel() {
     }
     if (error) { setPubError(Tpanel.perfil.err); setPubLoading(false); return }
 
+    // Notificar a usuarios que tienen este anuncio guardado si cambió el precio o las fotos
+    if (anuncioEditando) {
+      const nuevoPrecio = Number(pubPrecio.replace(/\D/g, ''))
+      const precioAnterior = anuncioEditando.precio
+      const fotosAnteriores = JSON.stringify((anuncioEditando.fotos || []).slice().sort())
+      const fotosNuevas = JSON.stringify(todasFotos.slice().sort())
+      const notifBase = { propiedadId: anuncioEditando.id, propietarioId: user.id }
+      if (precioAnterior !== nuevoPrecio) {
+        fetch('/api/notificar-cambio', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...notifBase, tipo: 'precio', precioAnterior, precioNuevo: nuevoPrecio }) })
+      }
+      if (fotosAnteriores !== fotosNuevas) {
+        fetch('/api/notificar-cambio', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...notifBase, tipo: 'fotos' }) })
+      }
+    }
+
     const { data: anunciosActualizados } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
     if (anunciosActualizados) setAnunciosReales(anunciosActualizados)
     setPubExito(true)
@@ -692,6 +749,14 @@ export default function Panel() {
       return 0
     })
   const noLeidos = mensajesReales.filter((m: any) => !mensajesLeidos[m.id]).length
+  const [noLeidosGuardados, setNoLeidosGuardados] = useState(0)
+  useEffect(() => {
+    supabase.auth.getUser().then(async ({ data }) => {
+      if (!data.user) return
+      const { data: notifs } = await supabase.from('notificaciones_propiedades').select('id').eq('usuario_id', data.user.id).eq('leida', false)
+      setNoLeidosGuardados((notifs || []).length)
+    })
+  }, [])
   const tipoUsuario: string = usuario?.plan === 'profesional'
     ? 'profesional'
     : (usuario?.tipo && !['profesional', 'cancelando'].includes(usuario.tipo) ? usuario.tipo : 'particular')
@@ -838,6 +903,9 @@ export default function Panel() {
               {item.label}
               {item.id === 'mensajes' && noLeidos > 0 && (
                 <span style={{ position: 'absolute', right: 14, background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 700, width: 18, height: 18, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{noLeidos}</span>
+              )}
+              {item.id === 'guardados' && noLeidosGuardados > 0 && (
+                <span style={{ position: 'absolute', right: 14, background: '#e63946', color: '#fff', fontSize: 10, fontWeight: 700, width: 18, height: 18, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{noLeidosGuardados > 9 ? '9+' : noLeidosGuardados}</span>
               )}
             </button>
           ))}
@@ -2228,7 +2296,7 @@ export default function Panel() {
 
           {/* GUARDADOS */}
           {!cargando && seccion === 'guardados' && (
-            <GuardadosSeccion />
+            <GuardadosSeccion onLeer={() => setNoLeidosGuardados(v => Math.max(0, v - 1))} />
           )}
 
           {/* CURSOS AEI */}
