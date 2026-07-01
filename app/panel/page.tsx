@@ -237,6 +237,8 @@ export default function Panel() {
   const [pubDesc, setPubDesc] = useState('')
   const [pubDescEn, setPubDescEn] = useState('')
   const [pubDescFr, setPubDescFr] = useState('')
+  const [pubTituloEn, setPubTituloEn] = useState('')
+  const [pubTituloFr, setPubTituloFr] = useState('')
   const [descLang, setDescLang] = useState<'es'|'en'|'fr'>('es')
   const [pubTipo, setPubTipo] = useState('Apartamento')
   const [pubOperacion, setPubOperacion] = useState('Venta')
@@ -555,6 +557,8 @@ export default function Panel() {
     setPubDesc(raw.descripcion || '')
     setPubDescEn(raw.descripcion_en || '')
     setPubDescFr(raw.descripcion_fr || '')
+    setPubTituloEn(raw.titulo_en || '')
+    setPubTituloFr(raw.titulo_fr || '')
     setDescLang('es')
     setPubTipo(raw.tipo || 'Apartamento')
     setPubOperacion(raw.operacion ? (raw.operacion.charAt(0).toUpperCase() + raw.operacion.slice(1)) : 'Venta')
@@ -603,6 +607,8 @@ export default function Panel() {
 
     const campos = {
       titulo: pubTitulo,
+      titulo_en: pubTituloEn.trim() || null,
+      titulo_fr: pubTituloFr.trim() || null,
       descripcion: pubDesc,
       descripcion_en: pubDescEn.trim() || null,
       descripcion_fr: pubDescFr.trim() || null,
@@ -633,7 +639,7 @@ export default function Panel() {
     if (anunciosActualizados) setAnunciosReales(anunciosActualizados)
     setPubExito(true)
     setPubLoading(false)
-    setPubTitulo(''); setPubPrecio(''); setPubM2(''); setPubDesc(''); setPubDescEn(''); setPubDescFr(''); setDescLang('es')
+    setPubTitulo(''); setPubTituloEn(''); setPubTituloFr(''); setPubPrecio(''); setPubM2(''); setPubDesc(''); setPubDescEn(''); setPubDescFr(''); setDescLang('es')
     setPubProvincia(''); setPubSector(''); setPubHab('1'); setPubBanos('1')
     setPubParqueos(''); setPubPlanta(''); setPubAnio('')
     setFotosLista([]); setAnuncioEditando(null)
@@ -641,9 +647,13 @@ export default function Panel() {
     setTimeout(() => { setSeccion('anuncios'); setPubExito(false) }, 1200)
   }
 
+  const tit = (a: any) => idioma === 'en' && a.titulo_en ? a.titulo_en : idioma === 'fr' && a.titulo_fr ? a.titulo_fr : a.titulo
+
   const anunciosAMostrar = anunciosReales.map(a => ({
     id: a.id,
     titulo: a.titulo,
+    titulo_en: a.titulo_en || null,
+    titulo_fr: a.titulo_fr || null,
     precio: a.precio,
     zona: a.zona || '',
     tipo: a.tipo || 'Apartamento',
@@ -666,7 +676,7 @@ export default function Panel() {
     .filter((a: any) => {
       if (filtroTipo && a.tipo !== filtroTipo) return false
       if (filtroProvincia && !(a.zona || '').endsWith(filtroProvincia)) return false
-      if (busquedaAnuncio.trim() && !(a.titulo || '').toLowerCase().includes(busquedaAnuncio.trim().toLowerCase())) return false
+      if (busquedaAnuncio.trim() && ![(a.titulo||''),(a.titulo_en||''),(a.titulo_fr||'')].some(t => t.toLowerCase().includes(busquedaAnuncio.trim().toLowerCase()))) return false
       return true
     })
     .sort((a: any, b: any) => {
@@ -1049,7 +1059,7 @@ export default function Panel() {
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 2, flexWrap: 'wrap' }}>
-                            <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 14, fontWeight: 700, color: '#111', textDecoration: 'none', lineHeight: 1.3 }} onMouseEnter={e => (e.currentTarget.style.color='#006D77')} onMouseLeave={e => (e.currentTarget.style.color='#111')}>{a.titulo}</a>
+                            <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 14, fontWeight: 700, color: '#111', textDecoration: 'none', lineHeight: 1.3 }} onMouseEnter={e => (e.currentTarget.style.color='#006D77')} onMouseLeave={e => (e.currentTarget.style.color='#111')}>{tit(a)}</a>
                             {a.destacado && <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 6, letterSpacing: 0.4, whiteSpace: 'nowrap', flexShrink: 0 }}>DEST.</span>}
                           </div>
                           <div style={{ fontSize: 12, color: '#aaa', marginBottom: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.zona} · {a.tipo}</div>
@@ -1173,8 +1183,19 @@ export default function Panel() {
                     </div>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.titulo_anuncio}</label>
-                    <input type="text" value={pubTitulo} onChange={e => setPubTitulo(e.target.value.slice(0, 50))} maxLength={50} placeholder={Tpanel.publicar.tituloPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>
+                      {descLang === 'es' ? Tpanel.publicar.titulo_anuncio : descLang === 'en' ? 'Listing title (EN)' : 'Titre de l\'annonce (FR)'}
+                      {descLang !== 'es' && <span style={{ fontWeight: 400, color: '#aaa', fontSize: 12, marginLeft: 6 }}>(optional)</span>}
+                    </label>
+                    {descLang === 'es' && (
+                      <input type="text" value={pubTitulo} onChange={e => setPubTitulo(e.target.value.slice(0, 50))} maxLength={50} placeholder={Tpanel.publicar.tituloPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    )}
+                    {descLang === 'en' && (
+                      <input type="text" value={pubTituloEn} onChange={e => setPubTituloEn(e.target.value.slice(0, 50))} maxLength={50} placeholder="E.g: Apartment in Piantini with ocean view" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    )}
+                    {descLang === 'fr' && (
+                      <input type="text" value={pubTituloFr} onChange={e => setPubTituloFr(e.target.value.slice(0, 50))} maxLength={50} placeholder="Ex : Appartement à Piantini avec vue mer" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    )}
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.precio}</label>
@@ -1613,7 +1634,7 @@ export default function Panel() {
                                 <div>
                                   <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 13, fontWeight: 600, color: '#111', textDecoration: 'none' }}
                                     onMouseEnter={e => (e.currentTarget.style.color = '#006D77')} onMouseLeave={e => (e.currentTarget.style.color = '#111')}>
-                                    {a.titulo}
+                                    {tit(a)}
                                   </a>
                                   <div style={{ fontSize: 11, color: '#aaa', marginTop: 2 }}>{a.zona}</div>
                                 </div>
@@ -1642,7 +1663,7 @@ export default function Panel() {
                             {foto ? <img src={foto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>}
                           </div>
                           <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 14, fontWeight: 700, color: '#111', textDecoration: 'none', flex: 1, lineHeight: 1.3 }}>
-                            {a.titulo}
+                            {tit(a)}
                           </a>
                         </div>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', background: '#fafbfc', borderTop: '1px solid #f0f0f0' }}>
@@ -1751,7 +1772,7 @@ export default function Panel() {
                             : <div style={{ width: 56, height: 40, background: '#e0f5f7', borderRadius: 6, flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
                           }
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ fontSize: 13, fontWeight: 600, color: sel ? '#006D77' : '#111', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{a.titulo}</div>
+                            <div style={{ fontSize: 13, fontWeight: 600, color: sel ? '#006D77' : '#111', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{tit(a)}</div>
                             <div style={{ fontSize: 11, color: '#aaa', marginTop: 2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>US$ {a.precio?.toLocaleString('en-US')} · {a.zona}</div>
                           </div>
                           {a.destacado && a.destacado_hasta && (() => { const dias = Math.ceil((new Date(a.destacado_hasta).getTime() - Date.now()) / 86400000); return dias > 0 ? <span style={{ fontSize: 10, fontWeight: 700, background: dias <= 3 ? '#fee2e2' : '#e0f5f7', color: dias <= 3 ? '#991b1b' : '#006D77', padding: '2px 8px', borderRadius: 8, flexShrink: 0, whiteSpace: 'nowrap' }}>{dias}d</span> : null })()}

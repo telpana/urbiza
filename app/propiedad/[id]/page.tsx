@@ -378,6 +378,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   const fotos: string[] = Array.isArray(propiedad.fotos) ? propiedad.fotos : []
   const esProfesional = v.plan === 'profesional'
   const tituloVendedor = v.inmobiliaria || v.nombre || 'Propietario'
+  const tituloMostrar = (idioma === 'en' && propiedad.titulo_en) ? propiedad.titulo_en : (idioma === 'fr' && propiedad.titulo_fr) ? propiedad.titulo_fr : propiedad.titulo
   const telVendedor = v.telefono || ''
   const precio = propiedad.precio || 0
   const m2 = propiedad.m2 || 0
@@ -488,7 +489,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
         <span>›</span>
         <a href={`/buscar?operacion=${propiedad.operacion}`} style={{ color: '#006D77', textDecoration: 'none' }}>{propiedad.tipo}</a>
         <span>›</span>
-        <span style={{ color: '#444' }}>{propiedad.titulo}</span>
+        <span style={{ color: '#444' }}>{tituloMostrar}</span>
       </div>
 
       <div className="propiedad-outer" style={{ maxWidth: 1100, margin: '0 auto', padding: '20px 20px 40px' }}>
@@ -502,7 +503,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
             {/* TÍTULO MÓVIL — debajo de la foto, con corazón de favorito */}
             <div className="galeria-titulo-bajo" style={{ display: 'none', padding: '14px 16px 12px', background: '#fff' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
-                <h1 style={{ fontSize: 18, fontWeight: 700, color: '#111', margin: 0, lineHeight: 1.3, flex: 1 }}>{propiedad.titulo}</h1>
+                <h1 style={{ fontSize: 18, fontWeight: 700, color: '#111', margin: 0, lineHeight: 1.3, flex: 1 }}>{tituloMostrar}</h1>
                 <button onClick={toggleGuardado} style={{ all: 'unset', cursor: 'pointer', padding: '2px 0 0 4px', flexShrink: 0 }}>
                   <svg width="22" height="22" viewBox="0 0 24 24" fill={guardado ? '#e63946' : 'none'} stroke={guardado ? '#e63946' : '#bbb'} strokeWidth="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                 </button>
@@ -517,7 +518,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
             <div className="propiedad-precio-bloque" style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 10 }}>
                 <div className="prop-titulo-desktop">
-                  <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>{propiedad.titulo}</h1>
+                  <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 6 }}>{tituloMostrar}</h1>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13, color: '#888' }}>
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
                     {propiedad.zona}

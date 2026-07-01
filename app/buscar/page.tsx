@@ -464,6 +464,8 @@ function BuscarContent() {
     id: p.id,
     precio: p.precio,
     titulo: p.titulo,
+    titulo_en: p.titulo_en || null,
+    titulo_fr: p.titulo_fr || null,
     zona: p.zona || '',
     hab: p.habitaciones || 0,
     banos: p.banos || 0,
@@ -510,7 +512,7 @@ function BuscarContent() {
       const sectores = expandirGrupo(query)
       if (sectores) {
         if (!sectores.some(s => normalize(p.zona).includes(normalize(s)))) return false
-      } else if (!normalize(p.titulo).includes(normalize(query)) && !normalize(p.zona).includes(normalize(query))) {
+      } else if (!normalize(p.titulo).includes(normalize(query)) && !(p.titulo_en && normalize(p.titulo_en).includes(normalize(query))) && !(p.titulo_fr && normalize(p.titulo_fr).includes(normalize(query))) && !normalize(p.zona).includes(normalize(query))) {
         return false
       }
     }
@@ -925,7 +927,7 @@ function BuscarContent() {
                   <div>
                     <div className="pc-zona-text">{p.zona}</div>
                     <div className="pc-titulo" style={{ fontSize: 15, fontWeight: 600, color: '#006D77', marginBottom: 8 }}>
-                      {p.titulo}
+                      {idioma === 'en' && p.titulo_en ? p.titulo_en : idioma === 'fr' && p.titulo_fr ? p.titulo_fr : p.titulo}
                     </div>
                     <div className="pc-precio-wrap" style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 2 }}>
                       US$ {p.precio.toLocaleString('en-US')}
