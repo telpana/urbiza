@@ -905,8 +905,8 @@ export default function Panel() {
                 ))}
               </div>
 
-              {/* Filtro por tipo + provincia */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+              {/* Filtros + buscador + orden */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 16, flexWrap: 'wrap' }}>
                 {/* Desplegable tipo */}
                 <div style={{ position: 'relative' }}>
                   <button onClick={() => { setTipoOpen(v => !v); setProvinciaOpen(false) }} style={{ all: 'unset', border: `1.5px solid ${filtroTipo ? '#006D77' : '#e0e0e0'}`, borderRadius: 8, padding: '7px 14px', fontSize: 13, color: filtroTipo ? '#006D77' : '#555', background: filtroTipo ? '#f0fafb' : '#fff', cursor: 'pointer', fontWeight: filtroTipo ? 600 : 400, display: 'flex', alignItems: 'center', gap: 7, whiteSpace: 'nowrap', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
@@ -960,27 +960,8 @@ export default function Panel() {
                     )}
                   </div>
                 )}
-              </div>
-
-              {/* Banner pago fallido */}
-              {usuario?.plan === 'past_due' && (
-                <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 10, padding: '16px 20px', marginBottom: 8, display: 'flex', alignItems: 'flex-start', gap: 14 }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c2410c" strokeWidth="2" style={{ flexShrink: 0, marginTop: 1 }}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: '#c2410c', marginBottom: 3 }}>Tus anuncios no son visibles temporalmente</div>
-                    <div style={{ fontSize: 13, color: '#7c2d12', lineHeight: 1.5 }}>
-                      Hubo un problema con tu último pago. Estamos intentando cobrarlo de nuevo. En cuanto se resuelva, tus anuncios vuelven a publicarse automáticamente.<br/>
-                      <span style={{ fontWeight: 600 }}>Si no se resuelve en 15 días, tus anuncios serán eliminados.</span>
-                    </div>
-                    <button onClick={() => setSeccion('plan')} style={{ all: 'unset', marginTop: 10, background: '#c2410c', color: '#fff', padding: '7px 16px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'inline-block' }}>Actualizar método de pago</button>
-                  </div>
-                </div>
-              )}
-
-              {/* Buscador + orden */}
-              <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
                 {/* Buscador */}
-                <div style={{ flex: 1, minWidth: 180, position: 'relative' }}>
+                <div style={{ flex: 1, minWidth: 160, position: 'relative' }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2" style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                   <input
                     value={busquedaAnuncio}
@@ -1022,6 +1003,21 @@ export default function Panel() {
                   )}
                 </div>
               </div>
+
+              {/* Banner pago fallido */}
+              {usuario?.plan === 'past_due' && (
+                <div style={{ background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 10, padding: '16px 20px', marginBottom: 8, display: 'flex', alignItems: 'flex-start', gap: 14 }}>
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#c2410c" strokeWidth="2" style={{ flexShrink: 0, marginTop: 1 }}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: '#c2410c', marginBottom: 3 }}>Tus anuncios no son visibles temporalmente</div>
+                    <div style={{ fontSize: 13, color: '#7c2d12', lineHeight: 1.5 }}>
+                      Hubo un problema con tu último pago. Estamos intentando cobrarlo de nuevo. En cuanto se resuelva, tus anuncios vuelven a publicarse automáticamente.<br/>
+                      <span style={{ fontWeight: 600 }}>Si no se resuelve en 15 días, tus anuncios serán eliminados.</span>
+                    </div>
+                    <button onClick={() => setSeccion('plan')} style={{ all: 'unset', marginTop: 10, background: '#c2410c', color: '#fff', padding: '7px 16px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'inline-block' }}>Actualizar método de pago</button>
+                  </div>
+                </div>
+              )}
 
               {/* Lista anuncios */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
