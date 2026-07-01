@@ -170,19 +170,19 @@ function GuardadosSeccion() {
             if (!p) return null
             const foto = Array.isArray(p.fotos) && p.fotos[0]
             return (
-              <div key={f.propiedad_id} style={{ background: '#fff', borderRadius: 8, border: '1px solid #e8e8e8', display: 'flex', height: 110, overflow: 'hidden', cursor: 'pointer' }} onClick={() => window.location.href = `/propiedad/${p.id}`}>
-                <div style={{ width: 140, minWidth: 140, height: '100%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <div key={f.propiedad_id} className="guardado-card" style={{ background: '#fff', borderRadius: 8, border: '1px solid #e8e8e8', display: 'flex', overflow: 'hidden', cursor: 'pointer' }} onClick={() => window.location.href = `/propiedad/${p.id}`}>
+                <div className="guardado-foto" style={{ width: 140, minWidth: 140, height: 115, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   {foto ? <img src={foto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>}
                 </div>
-                <div style={{ flex: 1, padding: '14px 18px', minWidth: 0, overflow: 'hidden' }}>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: '#111', marginBottom: 4, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.titulo}</div>
-                  <div style={{ fontSize: 12, color: '#888', marginBottom: 8, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.zona}</div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: '#006D77', marginBottom: 6 }}>US$ {p.precio?.toLocaleString('en-US')}</div>
-                  <div style={{ fontSize: 12, color: '#aaa' }}>
+                <div style={{ flex: 1, padding: '12px 14px', minWidth: 0 }}>
+                  <div className="guardado-titulo" style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.titulo}</div>
+                  <div style={{ fontSize: 11, color: '#888', marginBottom: 6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.zona}</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: '#006D77', marginBottom: 4 }}>US$ {p.precio?.toLocaleString('en-US')}</div>
+                  <div style={{ fontSize: 11, color: '#aaa' }}>
                     {p.habitaciones > 0 && `${p.habitaciones} hab · `}{p.banos > 0 && `${p.banos} baños`}{p.m2 > 0 && ` · ${p.m2} m²`}
                   </div>
                 </div>
-                <div style={{ padding: '14px', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+                <div style={{ padding: '12px', display: 'flex', alignItems: 'center', flexShrink: 0 }}>
                   <button onClick={e => { e.stopPropagation(); quitar(f.propiedad_id) }} style={{ all: 'unset', color: '#006D77', fontSize: 20, cursor: 'pointer', lineHeight: 1 }} title="Quitar de guardados">♥</button>
                 </div>
               </div>
@@ -743,7 +743,7 @@ export default function Panel() {
           <a href="/" style={{ fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>
             habitade.
           </a>
-          <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 10px', borderRadius: 10 }}>MI PANEL</span>
+          <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 10px', borderRadius: 10 }}>{Tpanel?.menu?.miPanel ?? 'Mi panel'}</span>
         </div>
         <div className="panel-nav-right" style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

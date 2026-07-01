@@ -165,6 +165,10 @@ img { max-width: 100%; }
   .chat-back-btn { display: flex !important; }
   .chat-header-actions { display: none !important; }
 
+  /* Guardados: foto más pequeña, título sin cortar */
+  .guardado-foto { width: 100px !important; min-width: 100px !important; }
+  .guardado-titulo { white-space: normal !important; font-size: 13px !important; }
+
   /* Beneficios plan: 2 columnas */
   .plan-beneficios-grid { grid-template-columns: repeat(2, 1fr) !important; }
 
