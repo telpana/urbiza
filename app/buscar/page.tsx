@@ -365,9 +365,9 @@ function BuscarContent() {
   const [sortOpen, setSortOpen] = useState(false)
   const [fotoIdx, setFotoIdx] = useState<Record<string, number>>({})
   const visitaRegistrada = useRef<Set<string>>(new Set())
+  const touchStartX = useRef<Record<string, number>>({})
 
-  const cambiarFoto = (e: React.MouseEvent, propId: string, fotos: string[], dir: 1 | -1) => {
-    e.stopPropagation()
+  const slidePhoto = (propId: string, fotos: string[], dir: 1 | -1) => {
     if (!visitaRegistrada.current.has(propId)) {
       visitaRegistrada.current.add(propId)
       fetch('/api/visita', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ propiedadId: propId }) })
@@ -377,6 +377,24 @@ function BuscarContent() {
       const next = Math.max(0, Math.min(fotos.length - 1, cur + dir))
       return { ...prev, [propId]: next }
     })
+  }
+
+  const cambiarFoto = (e: React.MouseEvent, propId: string, fotos: string[], dir: 1 | -1) => {
+    e.stopPropagation()
+    slidePhoto(propId, fotos, dir)
+  }
+
+  const onTouchStart = (e: React.TouchEvent, propId: string) => {
+    touchStartX.current[propId] = e.touches[0].clientX
+  }
+
+  const onTouchEnd = (e: React.TouchEvent, propId: string, fotos: string[]) => {
+    const startX = touchStartX.current[propId]
+    if (startX === undefined || fotos.length <= 1) return
+    const diff = startX - e.changedTouches[0].clientX
+    if (Math.abs(diff) < 30) return
+    e.stopPropagation()
+    slidePhoto(propId, fotos, diff > 0 ? 1 : -1)
   }
 
   useEffect(() => {
@@ -870,7 +888,9 @@ function BuscarContent() {
                 onMouseEnter={e => (e.currentTarget.style.background = p.dest ? '#e8f5f6' : '#fafefe')}
                 onMouseLeave={e => (e.currentTarget.style.background = p.dest ? '#f0fafb' : '#fff')}>
                 <div className="prop-card-img prop-card-img-slider"
-                  style={{ width: 300, minWidth: 300, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer' }}>
+                  style={{ width: 300, minWidth: 300, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer' }}
+                  onTouchStart={e => onTouchStart(e, String(p.id))}
+                  onTouchEnd={e => onTouchEnd(e, String(p.id), p.fotos || [])}>
                   {p.fotos && p.fotos.length > 0
                     ? <img src={p.fotos[fotoIdx[String(p.id)] ?? 0]} alt={p.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity 0.2s' }} />
                     : <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
