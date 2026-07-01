@@ -207,6 +207,9 @@ export default function Panel() {
   const [filtroProvincia, setFiltroProvincia] = useState('')
   const [provinciaOpen, setProvinciaOpen] = useState(false)
   const [tipoOpen, setTipoOpen] = useState(false)
+  const [busquedaAnuncio, setBusquedaAnuncio] = useState('')
+  const [ordenAnuncio, setOrdenAnuncio] = useState('destacados')
+  const [ordenOpen, setOrdenOpen] = useState(false)
   const [planSeleccionado, setPlanSeleccionado] = useState<string | null>(null)
   const [planInfo, setPlanInfo] = useState<any>(null)
   const [ayudaTipo, setAyudaTipo] = useState('pregunta')
@@ -652,17 +655,32 @@ export default function Panel() {
     mensajes: mensajesReales.filter((m: any) => m.propiedad_id === a.id).length,
     destacado: a.destacado && (!a.destacado_hasta || new Date(a.destacado_hasta) > new Date()),
     destacado_hasta: a.destacado_hasta || null,
+    created_at: a.created_at || '',
     vence: '30 días',
     bg: '#e0f5f7',
     fotos: a.fotos,
   }))
 
   const provinciasDisponibles = [...new Set(anunciosAMostrar.map((a: any) => { const p = (a.zona || '').split(','); return p[p.length - 1].trim() }).filter(Boolean))] as string[]
-  const anunciosFiltrados = anunciosAMostrar.filter((a: any) => {
-    if (filtroTipo && a.tipo !== filtroTipo) return false
-    if (filtroProvincia && !(a.zona || '').endsWith(filtroProvincia)) return false
-    return true
-  })
+  const anunciosFiltrados = anunciosAMostrar
+    .filter((a: any) => {
+      if (filtroTipo && a.tipo !== filtroTipo) return false
+      if (filtroProvincia && !(a.zona || '').endsWith(filtroProvincia)) return false
+      if (busquedaAnuncio.trim() && !(a.titulo || '').toLowerCase().includes(busquedaAnuncio.trim().toLowerCase())) return false
+      return true
+    })
+    .sort((a: any, b: any) => {
+      if (ordenAnuncio === 'destacados') {
+        if (a.destacado && !b.destacado) return -1
+        if (!a.destacado && b.destacado) return 1
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      }
+      if (ordenAnuncio === 'recientes') return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      if (ordenAnuncio === 'antiguos') return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      if (ordenAnuncio === 'caros') return (b.precio || 0) - (a.precio || 0)
+      if (ordenAnuncio === 'baratos') return (a.precio || 0) - (b.precio || 0)
+      return 0
+    })
   const noLeidos = mensajesReales.filter((m: any) => !mensajesLeidos[m.id]).length
   const tipoUsuario: string = usuario?.plan === 'profesional'
     ? 'profesional'
@@ -958,6 +976,52 @@ export default function Panel() {
                   </div>
                 </div>
               )}
+
+              {/* Buscador + orden */}
+              <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+                {/* Buscador */}
+                <div style={{ flex: 1, minWidth: 180, position: 'relative' }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2" style={{ position: 'absolute', left: 11, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }}><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <input
+                    value={busquedaAnuncio}
+                    onChange={e => setBusquedaAnuncio(e.target.value)}
+                    placeholder="Buscar anuncio..."
+                    style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 8, padding: '7px 12px 7px 32px', fontSize: 13, color: '#333', background: '#fff', outline: 'none', boxSizing: 'border-box', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}
+                  />
+                  {busquedaAnuncio && (
+                    <button onClick={() => setBusquedaAnuncio('')} style={{ all: 'unset', position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', cursor: 'pointer', color: '#aaa', fontSize: 16, lineHeight: 1 }}>×</button>
+                  )}
+                </div>
+                {/* Desplegable orden */}
+                <div style={{ position: 'relative', flexShrink: 0 }}>
+                  <button onClick={() => { setOrdenOpen(v => !v); setTipoOpen(false); setProvinciaOpen(false) }} style={{ all: 'unset', border: '1.5px solid #e0e0e0', borderRadius: 8, padding: '7px 14px', fontSize: 13, color: '#555', background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, whiteSpace: 'nowrap', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+                    {{ destacados: 'Destacados primero', recientes: 'Más recientes', antiguos: 'Más antiguos', caros: 'Más caros', baratos: 'Más baratos' }[ordenAnuncio]}
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: ordenOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}><polyline points="6 9 12 15 18 9"/></svg>
+                  </button>
+                  {ordenOpen && (
+                    <>
+                      <div style={{ position: 'fixed', inset: 0, zIndex: 49 }} onClick={() => setOrdenOpen(false)} />
+                      <div style={{ position: 'absolute', right: 0, top: 'calc(100% + 6px)', background: '#fff', border: '1px solid #e8e8e8', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', zIndex: 50, minWidth: 190, overflow: 'hidden' }}>
+                        {[
+                          { val: 'destacados', label: 'Destacados primero' },
+                          { val: 'recientes',  label: 'Más recientes' },
+                          { val: 'antiguos',   label: 'Más antiguos' },
+                          { val: 'caros',      label: 'Más caros' },
+                          { val: 'baratos',    label: 'Más baratos' },
+                        ].map(({ val, label }, i, arr) => (
+                          <button key={val} onClick={() => { setOrdenAnuncio(val); setOrdenOpen(false) }} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 16px', fontSize: 13, color: ordenAnuncio === val ? '#006D77' : '#333', fontWeight: ordenAnuncio === val ? 600 : 400, background: ordenAnuncio === val ? '#f0fafb' : 'transparent', cursor: 'pointer', borderBottom: i < arr.length - 1 ? '1px solid #f5f5f5' : 'none', boxSizing: 'border-box' }}>
+                            {ordenAnuncio === val
+                              ? <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>
+                              : <span style={{ width: 12 }} />}
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
 
               {/* Lista anuncios */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
