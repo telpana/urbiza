@@ -966,7 +966,7 @@ export default function Panel() {
                   <input
                     value={busquedaAnuncio}
                     onChange={e => setBusquedaAnuncio(e.target.value)}
-                    placeholder="Buscar anuncio..."
+                    placeholder={Tpanel.anuncios.buscarAnuncio ?? 'Buscar anuncio...'}
                     style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 8, padding: '7px 12px 7px 32px', fontSize: 13, color: '#333', background: '#fff', outline: 'none', boxSizing: 'border-box', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}
                   />
                   {busquedaAnuncio && (
@@ -977,7 +977,7 @@ export default function Panel() {
                 <div style={{ position: 'relative', flexShrink: 0 }}>
                   <button onClick={() => { setOrdenOpen(v => !v); setTipoOpen(false); setProvinciaOpen(false) }} style={{ all: 'unset', border: '1.5px solid #e0e0e0', borderRadius: 8, padding: '7px 14px', fontSize: 13, color: '#555', background: '#fff', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7, whiteSpace: 'nowrap', boxShadow: '0 1px 4px rgba(0,0,0,0.05)' }}>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
-                    {{ destacados: 'Destacados primero', recientes: 'Más recientes', antiguos: 'Más antiguos', caros: 'Más caros', baratos: 'Más baratos' }[ordenAnuncio]}
+                    {{ destacados: Tpanel.anuncios.ordenDestacados ?? 'Destacados primero', recientes: Tpanel.anuncios.ordenRecientes ?? 'Más recientes', antiguos: Tpanel.anuncios.ordenAntiguos ?? 'Más antiguos', caros: Tpanel.anuncios.ordenCaros ?? 'Más caros', baratos: Tpanel.anuncios.ordenBaratos ?? 'Más baratos' }[ordenAnuncio]}
                     <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ transform: ordenOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}><polyline points="6 9 12 15 18 9"/></svg>
                   </button>
                   {ordenOpen && (
@@ -985,11 +985,11 @@ export default function Panel() {
                       <div style={{ position: 'fixed', inset: 0, zIndex: 49 }} onClick={() => setOrdenOpen(false)} />
                       <div style={{ position: 'absolute', right: 0, top: 'calc(100% + 6px)', background: '#fff', border: '1px solid #e8e8e8', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', zIndex: 50, minWidth: 190, overflow: 'hidden' }}>
                         {[
-                          { val: 'destacados', label: 'Destacados primero' },
-                          { val: 'recientes',  label: 'Más recientes' },
-                          { val: 'antiguos',   label: 'Más antiguos' },
-                          { val: 'caros',      label: 'Más caros' },
-                          { val: 'baratos',    label: 'Más baratos' },
+                          { val: 'destacados', label: Tpanel.anuncios.ordenDestacados ?? 'Destacados primero' },
+                          { val: 'recientes',  label: Tpanel.anuncios.ordenRecientes  ?? 'Más recientes' },
+                          { val: 'antiguos',   label: Tpanel.anuncios.ordenAntiguos   ?? 'Más antiguos' },
+                          { val: 'caros',      label: Tpanel.anuncios.ordenCaros      ?? 'Más caros' },
+                          { val: 'baratos',    label: Tpanel.anuncios.ordenBaratos    ?? 'Más baratos' },
                         ].map(({ val, label }, i, arr) => (
                           <button key={val} onClick={() => { setOrdenAnuncio(val); setOrdenOpen(false) }} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 10, width: '100%', padding: '10px 16px', fontSize: 13, color: ordenAnuncio === val ? '#006D77' : '#333', fontWeight: ordenAnuncio === val ? 600 : 400, background: ordenAnuncio === val ? '#f0fafb' : 'transparent', cursor: 'pointer', borderBottom: i < arr.length - 1 ? '1px solid #f5f5f5' : 'none', boxSizing: 'border-box' }}>
                             {ordenAnuncio === val
