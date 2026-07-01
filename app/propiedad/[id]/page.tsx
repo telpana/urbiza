@@ -145,7 +145,7 @@ function MapaUbicacion({ zona }: { zona: string }) {
     const load = () => {
       const L = (window as any).L
       if (!L || !mapRef.current) return
-      const map = L.map(mapRef.current, { center: [lat, lng], zoom: 9, zoomControl: true, attributionControl: false })
+      const map = L.map(mapRef.current, { center: [lat, lng], zoom: 9, zoomControl: true, attributionControl: false, scrollWheelZoom: false })
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
       const icono = L.divIcon({
         className: '',
@@ -154,6 +154,7 @@ function MapaUbicacion({ zona }: { zona: string }) {
       })
       L.marker([lat, lng], { icon: icono }).addTo(map)
       mapInstanceRef.current = map
+      setTimeout(() => map.invalidateSize(), 100)
     }
     if ((window as any).L) { load() }
     else {
