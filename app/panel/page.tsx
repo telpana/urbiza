@@ -291,7 +291,7 @@ export default function Panel() {
   }, [seccion, usuario])
 
   useEffect(() => {
-    if (!cargando && !perfilTelefono && seccion !== 'perfil') {
+    if (!cargando && !perfilTelefono && seccion === 'anuncios') {
       setSeccion('perfil')
     }
   }, [cargando, perfilTelefono])
