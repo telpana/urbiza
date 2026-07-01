@@ -151,7 +151,7 @@ function GuardadosSeccion({ onLeer }: { onLeer?: (n: number) => void }) {
       setNotificaciones(notifs || [])
       setCargando(false)
       if (notifs && notifs.length > 0) {
-        supabase.from('notificaciones_propiedades')
+        await supabase.from('notificaciones_propiedades')
           .update({ leida: true })
           .eq('usuario_id', user.id)
           .eq('leida', false)
@@ -197,19 +197,9 @@ function GuardadosSeccion({ onLeer }: { onLeer?: (n: number) => void }) {
             return (
               <div key={f.propiedad_id} className="guardado-card" style={{ background: '#fff', borderRadius: 8, border: tieneNotif ? '1.5px solid #006D77' : '1px solid #e8e8e8', display: 'flex', overflow: 'hidden', cursor: 'pointer', position: 'relative' }} onClick={() => abrirPropiedad(f.propiedad_id, `/propiedad/${p.id}`)}>
                 {tieneNotif && (
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: '#006D77', padding: '4px 12px', display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-                    {hasPrecio && (
-                      <span style={{ fontSize: 11, color: '#fff', display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <span style={{ fontWeight: 700 }}>Cambio de precio</span>
-                        {notifPrecio?.precio_anterior && notifPrecio?.precio_nuevo && (
-                          <>
-                            <span style={{ textDecoration: 'line-through', opacity: 0.65 }}>US$ {Number(notifPrecio.precio_anterior).toLocaleString('en-US')}</span>
-                            <span style={{ fontWeight: 700 }}>US$ {Number(notifPrecio.precio_nuevo).toLocaleString('en-US')}</span>
-                          </>
-                        )}
-                      </span>
-                    )}
-                    {hasFotos && <span style={{ fontSize: 11, fontWeight: 700, color: '#fff' }}>Nuevas fotos</span>}
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: '#006D77', padding: '4px 12px', display: 'flex', gap: 10, alignItems: 'center' }}>
+                    {hasPrecio && <span style={{ fontSize: 11, fontWeight: 700, color: '#fff' }}>{Tg.cambioPrecio}</span>}
+                    {hasFotos && <span style={{ fontSize: 11, fontWeight: 700, color: '#fff' }}>{Tg.nuevasFotos}</span>}
                   </div>
                 )}
                 <div className="guardado-foto" style={{ width: 140, minWidth: 140, height: tieneNotif ? 139 : 115, marginTop: tieneNotif ? 24 : 0, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>

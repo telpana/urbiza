@@ -189,7 +189,7 @@ export const t = {
         ok: 'Cambios guardados correctamente', err: 'Error al guardar',
         err_nombre: 'El nombre es obligatorio', err_telefono: 'El teléfono es obligatorio',
       },
-      guardados: { titulo: 'Propiedades guardadas', sinGuardados: 'No tienes propiedades guardadas', explorar: 'Explorar propiedades' },
+      guardados: { titulo: 'Propiedades guardadas', sinGuardados: 'No tienes propiedades guardadas', explorar: 'Explorar propiedades', cambioPrecio: 'Cambio de precio', nuevasFotos: 'Nuevas fotos' },
       planes: {
         titulo: 'Pásate a PRO y publica sin límites', desc: 'Has usado tus {n} anuncios gratuitos.',
         ventajas: ['Anuncios ilimitados', 'Estadísticas avanzadas', 'Apareces antes en búsquedas', 'Badge Profesional en tus anuncios', 'Soporte prioritario'],
@@ -406,7 +406,7 @@ export const t = {
         ok: 'Changes saved successfully', err: 'Error saving',
         err_nombre: 'Name is required', err_telefono: 'Phone is required',
       },
-      guardados: { titulo: 'Saved properties', sinGuardados: 'You have no saved properties', explorar: 'Explore properties' },
+      guardados: { titulo: 'Saved properties', sinGuardados: 'You have no saved properties', explorar: 'Explore properties', cambioPrecio: 'Price change', nuevasFotos: 'New photos' },
       planes: {
         titulo: 'Go PRO and post without limits', desc: "You've used your {n} free listings.",
         ventajas: ['Unlimited listings', 'Advanced statistics', 'Appear higher in searches', 'Professional badge on your listings', 'Priority support'],
@@ -623,7 +623,7 @@ export const t = {
         ok: 'Modifications enregistrées avec succès', err: "Erreur lors de l'enregistrement",
         err_nombre: 'Le nom est obligatoire', err_telefono: 'Le téléphone est obligatoire',
       },
-      guardados: { titulo: 'Propriétés sauvegardées', sinGuardados: "Vous n'avez pas de propriétés sauvegardées", explorar: 'Explorer les propriétés' },
+      guardados: { titulo: 'Propriétés sauvegardées', sinGuardados: "Vous n'avez pas de propriétés sauvegardées", explorar: 'Explorer les propriétés', cambioPrecio: 'Changement de prix', nuevasFotos: 'Nouvelles photos' },
       planes: {
         titulo: 'Passez PRO et publiez sans limites', desc: 'Vous avez utilisé vos {n} annonces gratuites.',
         ventajas: ['Annonces illimitées', 'Statistiques avancées', 'Apparaissez en haut des recherches', 'Badge Professionnel sur vos annonces', 'Support prioritaire'],
