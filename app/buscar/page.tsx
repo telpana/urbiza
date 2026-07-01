@@ -976,11 +976,11 @@ function BuscarContent() {
     <style>{`
       .prop-card-img-slider:hover .slider-arrow { opacity: 1 !important; }
       .pc-badge { position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; z-index: 2; text-transform: uppercase; letter-spacing: 0.6px; }
-      .pc-badge-dest { background: linear-gradient(135deg, #006D77, #17A6B4); color: #fff; box-shadow: 0 2px 8px rgba(0,109,119,0.4); font-size: 8px !important; padding: 3px 8px !important; }
+      .pc-badge-dest { background: #006D77; color: #fff; box-shadow: 0 2px 8px rgba(0,109,119,0.4); font-size: 8px !important; padding: 3px 8px !important; }
       .pc-badge-visto { background: rgba(0,0,0,0.48); color: #fff; }
       @media (max-width: 900px) {
         .prop-card-dest { border-left: none !important; border-top: 4px solid #006D77 !important; }
-        .prop-card-dest .prop-card-img::after { content: 'DESTACADO'; position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(135deg, #006D77, #17A6B4); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; padding: 5px 12px; text-align: center; z-index: 3; }
+        .prop-card-dest .prop-card-img::after { content: 'DESTACADO'; position: absolute; bottom: 0; left: 0; right: 0; background: #006D77; color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; padding: 5px 12px; text-align: center; z-index: 3; }
       }
     `}</style>
 </>
