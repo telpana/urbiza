@@ -1,5 +1,5 @@
 ﻿'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import { supabase } from '../../supabase'
 import { useIdioma } from '../../IdiomaContext'
 
@@ -199,10 +199,7 @@ export default function Panel() {
   const Tpanel = trLang.panel
   const Tn = trLang.nav
   const menuItems = getMenuItems(Tpanel)
-  const [seccion, setSeccion] = useState(() => {
-    if (typeof window === 'undefined') return 'anuncios'
-    return new URLSearchParams(window.location.search).get('s') || 'anuncios'
-  })
+  const [seccion, setSeccion] = useState('anuncios')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [panelNavOpen, setPanelNavOpen] = useState(false)
   const [navUserMenuOpen, setNavUserMenuOpen] = useState(false)
@@ -275,6 +272,11 @@ export default function Panel() {
 
 
 
+  useLayoutEffect(() => {
+    const s = new URLSearchParams(window.location.search).get('s')
+    if (s) setSeccion(s)
+  }, [])
+
   useEffect(() => {
     history.replaceState(null, '', `?s=${seccion}`)
   }, [seccion])
@@ -291,7 +293,7 @@ export default function Panel() {
   }, [seccion, usuario])
 
   useEffect(() => {
-    if (!cargando && !perfilTelefono && seccion === 'anuncios') {
+    if (!cargando && !perfilTelefono && seccion !== 'perfil') {
       setSeccion('perfil')
     }
   }, [cargando, perfilTelefono])
@@ -803,7 +805,7 @@ export default function Panel() {
         {/* SIDEBAR */}
         <div className={`panel-sidebar${sidebarOpen ? ' open' : ''}`} style={{ width: 220, background: '#004E57', minHeight: 'calc(100vh - 54px)', padding: '20px 0', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
           {menuItems.filter(item => (item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)) && (!('proOnly' in item) || tipoUsuario === 'profesional')).map(item => (
-            <button key={item.id} onClick={() => { if (item.id === 'publicar' && !(perfilNombre && perfilTelefono)) { setSeccion('publicar'); setSidebarOpen(false); return } if (item.id === 'publicar' && !anuncioEditando && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis) { setSeccion('planes'); setSidebarOpen(false); return } setSeccion(item.id); setSidebarOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, fontWeight: seccion === item.id ? 700 : 400, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.5)', background: seccion === item.id ? 'rgba(255,255,255,0.18)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? '4px solid #83D4DB' : '4px solid transparent', boxSizing: 'border-box', position: 'relative' }}>
+            <button key={item.id} onClick={() => { if (item.id === 'publicar' && !(perfilNombre && perfilTelefono)) { setSeccion('publicar'); setSidebarOpen(false); return } if (item.id === 'publicar' && !anuncioEditando && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis) { setSeccion('planes'); setSidebarOpen(false); return } setSeccion(item.id); setSidebarOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.6)', background: seccion === item.id ? 'rgba(255,255,255,0.12)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? '3px solid #83D4DB' : '3px solid transparent', boxSizing: 'border-box', position: 'relative' }}>
               {item.icon}
               {item.label}
               {item.id === 'mensajes' && noLeidos > 0 && (
