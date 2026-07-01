@@ -16,7 +16,7 @@ export const t = {
     zonas: { titulo: 'Zonas más buscadas' },
     footer: { avisoLegal: 'Aviso legal', privacidad: 'Privacidad', cookies: 'Cookies', ayuda: 'Ayuda', publicar: 'Publicar anuncio', planes: 'Planes', derechos: '© 2025 habitade.com · República Dominicana' },
     buscar: {
-      titulo: 'propiedades en República Dominicana', propiedadesEn: 'propiedades en', ordenar: 'Ordenar por:', relevancia: 'Relevancia', recientes: 'Recientes', baratos: 'Más baratos', caros: 'Más caros',
+      titulo: 'propiedades en República Dominicana', propiedadesEn: 'propiedades en', ordenar: 'Ordenar por:', relevancia: 'Relevancia', recientes: 'Recientes', baratos: 'Más baratos', caros: 'Más caros', filtrar: 'Filtrar',
       tipoInmueble: 'Tipo de inmueble', todos: 'Todos', precio: 'Precio (US$)', superficie: 'Superficie (m²)', habitaciones: 'Habitaciones', banos: 'Baños',
       caracteristicas: 'Características', minimo: 'Mín', maximo: 'Máx', verMapa: 'Ver en mapa', verTelefono: 'Ver teléfono', contactar: 'Contactar', verMas: 'Ver más propiedades',
       sinResultados: 'No hay propiedades con estos filtros', modificaFiltros: 'Modifica los filtros para ver más resultados',
@@ -232,7 +232,7 @@ export const t = {
     zonas: { titulo: 'Most searched areas' },
     footer: { avisoLegal: 'Legal notice', privacidad: 'Privacy', cookies: 'Cookies', ayuda: 'Help', publicar: 'Post a listing', planes: 'Plans', derechos: '© 2025 habitade.com · Dominican Republic' },
     buscar: {
-      titulo: 'properties in the Dominican Republic', propiedadesEn: 'properties in', ordenar: 'Sort by:', relevancia: 'Relevance', recientes: 'Recent', baratos: 'Cheapest', caros: 'Most expensive',
+      titulo: 'properties in the Dominican Republic', propiedadesEn: 'properties in', ordenar: 'Sort by:', relevancia: 'Relevance', recientes: 'Recent', baratos: 'Cheapest', caros: 'Most expensive', filtrar: 'Filter',
       tipoInmueble: 'Property type', todos: 'All', precio: 'Price (US$)', superficie: 'Area (m²)', habitaciones: 'Bedrooms', banos: 'Bathrooms',
       caracteristicas: 'Features', minimo: 'Min', maximo: 'Max', verMapa: 'View on map', verTelefono: 'Show phone', contactar: 'Contact', verMas: 'View more properties',
       sinResultados: 'No properties match your filters', modificaFiltros: 'Adjust the filters to see more results',
@@ -448,7 +448,7 @@ export const t = {
     zonas: { titulo: 'Zones les plus recherchées' },
     footer: { avisoLegal: 'Mentions légales', privacidad: 'Confidentialité', cookies: 'Cookies', ayuda: 'Aide', publicar: 'Publier une annonce', planes: 'Abonnements', derechos: '© 2025 habitade.com · République Dominicaine' },
     buscar: {
-      titulo: 'propriétés en République Dominicaine', propiedadesEn: 'propriétés à', ordenar: 'Trier par :', relevancia: 'Pertinence', recientes: 'Récents', baratos: 'Moins chers', caros: 'Plus chers',
+      titulo: 'propriétés en République Dominicaine', propiedadesEn: 'propriétés à', ordenar: 'Trier par :', relevancia: 'Pertinence', recientes: 'Récents', baratos: 'Moins chers', caros: 'Plus chers', filtrar: 'Filtrer',
       tipoInmueble: 'Type de bien', todos: 'Tous', precio: 'Prix (US$)', superficie: 'Surface (m²)', habitaciones: 'Chambres', banos: 'Salles de bain',
       caracteristicas: 'Caractéristiques', minimo: 'Min', maximo: 'Max', verMapa: 'Voir sur la carte', verTelefono: 'Afficher le téléphone', contactar: 'Contacter', verMas: 'Voir plus de propriétés',
       sinResultados: 'Aucune propriété ne correspond à vos filtres', modificaFiltros: 'Modifiez les filtres pour voir plus de résultats',

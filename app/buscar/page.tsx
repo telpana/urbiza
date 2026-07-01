@@ -671,7 +671,7 @@ function BuscarContent() {
         {/* TABS COMPRAR / ALQUILAR */}
         <div className="buscar-op-tabs">
           <div className="buscar-op-tabs-inner">
-            {[{ val: 'venta', label: 'Comprar' }, { val: 'alquiler', label: 'Alquilar' }].map(t => (
+            {[{ val: 'venta', label: Tn.comprar }, { val: 'alquiler', label: Tn.alquilar }].map(t => (
               <button key={t.val} className={`buscar-op-tab${operacion === t.val ? ' active' : ''}`} onClick={() => setOperacion(t.val)}>
                 {t.label}
               </button>
@@ -682,7 +682,7 @@ function BuscarContent() {
         <div className="buscar-mobile-actionbar">
           <button className="bma-btn" onClick={() => setFiltrosOpen(v => !v)}>
             <svg width="14" height="12" viewBox="0 0 14 12" fill="none"><rect y="0" width="14" height="2" rx="1" fill="currentColor"/><rect x="2" y="5" width="10" height="2" rx="1" fill="currentColor"/><rect x="4" y="10" width="6" height="2" rx="1" fill="currentColor"/></svg>
-            Filtrar
+            {Tb.filtrar ?? 'Filtrar'}
           </button>
           <button className="bma-btn" onClick={() => setSortOpen(v => !v)}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 6h18M7 12h10M11 18h2"/></svg>
