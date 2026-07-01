@@ -138,14 +138,12 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
   )
 }
 
-function DescripcionMultiIdioma({ propiedad, idioma, Tp }: { propiedad: any, idioma: string, Tp: any }) {
+function DescripcionMultiIdioma({ propiedad, idioma, setIdioma, Tp }: { propiedad: any, idioma: string, setIdioma: (i: any) => void, Tp: any }) {
   const disponibles: {code: string, label: string}[] = [{ code: 'es', label: 'ES' }]
   if (propiedad.descripcion_en?.trim()) disponibles.push({ code: 'en', label: 'EN' })
   if (propiedad.descripcion_fr?.trim()) disponibles.push({ code: 'fr', label: 'FR' })
 
-  const defaultLang = disponibles.find(d => d.code === idioma)?.code ?? 'es'
-  const [lang, setLang] = useState(defaultLang)
-
+  const lang = disponibles.find(d => d.code === idioma)?.code ?? 'es'
   const texto = lang === 'en' ? propiedad.descripcion_en : lang === 'fr' ? propiedad.descripcion_fr : propiedad.descripcion
 
   return (
@@ -155,7 +153,7 @@ function DescripcionMultiIdioma({ propiedad, idioma, Tp }: { propiedad: any, idi
         {disponibles.length > 1 && (
           <div style={{ display: 'flex', gap: 4, background: '#f0f0f0', borderRadius: 6, padding: 3 }}>
             {disponibles.map(d => (
-              <button key={d.code} onClick={() => setLang(d.code)}
+              <button key={d.code} onClick={() => setIdioma(d.code)}
                 style={{ border: 'none', outline: 'none', padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: lang === d.code ? '#006D77' : 'transparent', color: lang === d.code ? '#fff' : '#888', transition: 'background 0.15s, color 0.15s', touchAction: 'manipulation', userSelect: 'none' }}>
                 {d.label}
               </button>
@@ -579,7 +577,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
 
             {/* DESCRIPCIÓN */}
             {propiedad.descripcion && (
-              <DescripcionMultiIdioma propiedad={propiedad} idioma={idioma} Tp={Tp} />
+              <DescripcionMultiIdioma propiedad={propiedad} idioma={idioma} setIdioma={setIdioma} Tp={Tp} />
             )}
 
             {/* AMENIDADES */}
