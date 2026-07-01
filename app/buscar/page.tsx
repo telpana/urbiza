@@ -865,10 +865,10 @@ function BuscarContent() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {filtradasPagina.map(p => (
-              <div key={p.id} className="prop-card" style={{ display: 'flex', background: p.dest ? '#fffdf5' : '#fff', borderBottom: '8px solid #f4f5f6', borderLeft: p.dest ? '4px solid #f59e0b' : 'none', cursor: 'pointer', boxShadow: p.dest ? '0 4px 18px rgba(245,158,11,0.15)' : 'none' }}
+              <div key={p.id} className={`prop-card${p.dest ? ' prop-card-dest' : ''}`} style={{ display: 'flex', background: p.dest ? '#f0fafb' : '#fff', borderBottom: '8px solid #f4f5f6', borderLeft: p.dest ? '4px solid #006D77' : 'none', cursor: 'pointer', boxShadow: p.dest ? '0 4px 18px rgba(0,109,119,0.12)' : 'none' }}
                 onClick={() => window.location.href = `/propiedad/${p.id}`}
-                onMouseEnter={e => (e.currentTarget.style.background = p.dest ? '#fff9e6' : '#fafefe')}
-                onMouseLeave={e => (e.currentTarget.style.background = p.dest ? '#fffdf5' : '#fff')}>
+                onMouseEnter={e => (e.currentTarget.style.background = p.dest ? '#e8f5f6' : '#fafefe')}
+                onMouseLeave={e => (e.currentTarget.style.background = p.dest ? '#f0fafb' : '#fff')}>
                 <div className="prop-card-img prop-card-img-slider"
                   style={{ width: 300, minWidth: 300, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer' }}>
                   {p.fotos && p.fotos.length > 0
@@ -976,8 +976,12 @@ function BuscarContent() {
     <style>{`
       .prop-card-img-slider:hover .slider-arrow { opacity: 1 !important; }
       .pc-badge { position: absolute; top: 10px; left: 10px; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; z-index: 2; text-transform: uppercase; letter-spacing: 0.6px; }
-      .pc-badge-dest { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; box-shadow: 0 2px 8px rgba(245,158,11,0.45); }
+      .pc-badge-dest { background: linear-gradient(135deg, #006D77, #17A6B4); color: #fff; box-shadow: 0 2px 8px rgba(0,109,119,0.4); }
       .pc-badge-visto { background: rgba(0,0,0,0.48); color: #fff; }
+      @media (max-width: 900px) {
+        .prop-card-dest { border-left: none !important; border-top: 4px solid #006D77 !important; }
+        .prop-card-dest .prop-card-img::after { content: 'DESTACADO'; position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(135deg, #006D77, #17A6B4); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; padding: 5px 12px; text-align: center; z-index: 3; }
+      }
     `}</style>
 </>
   )
