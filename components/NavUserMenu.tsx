@@ -15,8 +15,14 @@ export default function NavUserMenu({ dark = false }: Props) {
       return stored ? !!JSON.parse(localStorage.getItem(stored) || 'null') : false
     } catch { return false }
   })
-  const [fotoUrl, setFotoUrl] = useState<string | null>(null)
-  const [inicial, setInicial] = useState('U')
+  const [fotoUrl, setFotoUrl] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null
+    try { return localStorage.getItem('hb_perfil_foto') || null } catch { return null }
+  })
+  const [inicial, setInicial] = useState(() => {
+    if (typeof window === 'undefined') return 'U'
+    try { return localStorage.getItem('hb_perfil_inicial') || 'U' } catch { return 'U' }
+  })
   const [noLeidos, setNoLeidos] = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -33,8 +39,8 @@ export default function NavUserMenu({ dark = false }: Props) {
         .select('foto_url, nombre')
         .eq('id', user.id)
         .single()
-      if (perfil?.foto_url) setFotoUrl(perfil.foto_url)
-      if (perfil?.nombre) setInicial(perfil.nombre[0].toUpperCase())
+      if (perfil?.foto_url) { setFotoUrl(perfil.foto_url); try { localStorage.setItem('hb_perfil_foto', perfil.foto_url) } catch {} }
+      if (perfil?.nombre) { const ini = perfil.nombre[0].toUpperCase(); setInicial(ini); try { localStorage.setItem('hb_perfil_inicial', ini) } catch {} }
 
       // Contar mensajes no leídos
       const { data: msgs } = await supabase
