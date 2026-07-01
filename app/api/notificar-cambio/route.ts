@@ -19,15 +19,19 @@ export async function POST(req: NextRequest) {
 
     if (!favs || favs.length === 0) return NextResponse.json({ ok: true })
 
-    await sb.from('notificaciones_propiedades').insert(
+    const { error: insertError } = await sb.from('notificaciones_propiedades').insert(
       favs.map((f: any) => ({
         usuario_id: f.usuario_id,
-        propiedad_id: propiedadId,
+        propiedad_id: String(propiedadId),
         tipo,
         precio_anterior: precioAnterior ?? null,
         precio_nuevo: precioNuevo ?? null,
       }))
     )
+    if (insertError) {
+      console.error('notificar-cambio insert error', insertError)
+      return NextResponse.json({ ok: false, error: insertError.message }, { status: 500 })
+    }
 
     return NextResponse.json({ ok: true })
   } catch {

@@ -124,7 +124,7 @@ function formatHoraChat(iso: string) {
   return `${d.getDate()} ${d.toLocaleString('es', { month: 'short' })}, ${hh}:${mm}`
 }
 
-function GuardadosSeccion({ onLeer }: { onLeer?: () => void }) {
+function GuardadosSeccion({ onLeer }: { onLeer?: (n: number) => void }) {
   const { tr } = useIdioma()
   const Tg = tr.panel.guardados
   const [guardados, setGuardados] = useState<any[]>([])
@@ -150,6 +150,13 @@ function GuardadosSeccion({ onLeer }: { onLeer?: () => void }) {
       setGuardados(data || [])
       setNotificaciones(notifs || [])
       setCargando(false)
+      if (notifs && notifs.length > 0) {
+        supabase.from('notificaciones_propiedades')
+          .update({ leida: true })
+          .eq('usuario_id', user.id)
+          .eq('leida', false)
+        onLeer?.(notifs.length)
+      }
     }
     cargar()
   }, [])
@@ -161,16 +168,7 @@ function GuardadosSeccion({ onLeer }: { onLeer?: () => void }) {
     setGuardados(prev => prev.filter(f => f.propiedad_id !== propiedadId))
   }
 
-  const abrirPropiedad = async (propiedadId: number | string, url: string) => {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (user) {
-      await supabase.from('notificaciones_propiedades')
-        .update({ leida: true })
-        .eq('usuario_id', user.id)
-        .eq('propiedad_id', propiedadId)
-      setNotificaciones(prev => prev.filter(n => n.propiedad_id !== propiedadId))
-      onLeer?.()
-    }
+  const abrirPropiedad = (propiedadId: number | string, url: string) => {
     window.location.href = url
   }
 
@@ -199,18 +197,20 @@ function GuardadosSeccion({ onLeer }: { onLeer?: () => void }) {
             return (
               <div key={f.propiedad_id} className="guardado-card" style={{ background: '#fff', borderRadius: 8, border: tieneNotif ? '1.5px solid #006D77' : '1px solid #e8e8e8', display: 'flex', overflow: 'hidden', cursor: 'pointer', position: 'relative' }} onClick={() => abrirPropiedad(f.propiedad_id, `/propiedad/${p.id}`)}>
                 {tieneNotif && (
-                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: '#006D77', padding: '4px 12px', display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: '#006D77', padding: '4px 12px', display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
                     {hasPrecio && (
-                      <span style={{ fontSize: 11, fontWeight: 700, color: '#fff', display: 'flex', alignItems: 'center', gap: 4 }}>
-                        💰 Precio actualizado
-                        {notifPrecio?.precio_anterior && notifPrecio?.precio_nuevo && (
-                          <span style={{ fontWeight: 400, opacity: 0.85 }}>
-                            US$ {Number(notifPrecio.precio_anterior).toLocaleString('en-US')} → US$ {Number(notifPrecio.precio_nuevo).toLocaleString('en-US')}
-                          </span>
+                      <span style={{ fontSize: 11, color: '#fff', display: 'flex', alignItems: 'center', gap: 6 }}>
+                        {notifPrecio?.precio_anterior && notifPrecio?.precio_nuevo ? (
+                          <>
+                            <span style={{ textDecoration: 'line-through', opacity: 0.65 }}>US$ {Number(notifPrecio.precio_anterior).toLocaleString('en-US')}</span>
+                            <span style={{ fontWeight: 700 }}>US$ {Number(notifPrecio.precio_nuevo).toLocaleString('en-US')}</span>
+                          </>
+                        ) : (
+                          <span style={{ fontWeight: 700 }}>Precio actualizado</span>
                         )}
                       </span>
                     )}
-                    {hasFotos && <span style={{ fontSize: 11, fontWeight: 700, color: '#fff' }}>📷 Nuevas fotos</span>}
+                    {hasFotos && <span style={{ fontSize: 11, fontWeight: 700, color: '#fff' }}>Nuevas fotos</span>}
                   </div>
                 )}
                 <div className="guardado-foto" style={{ width: 140, minWidth: 140, height: tieneNotif ? 139 : 115, marginTop: tieneNotif ? 24 : 0, background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
@@ -225,7 +225,9 @@ function GuardadosSeccion({ onLeer }: { onLeer?: () => void }) {
                   </div>
                 </div>
                 <div style={{ padding: '12px', display: 'flex', alignItems: tieneNotif ? 'flex-end' : 'center', paddingBottom: 12, flexShrink: 0 }}>
-                  <button onClick={e => { e.stopPropagation(); quitar(f.propiedad_id) }} style={{ all: 'unset', color: '#006D77', fontSize: 20, cursor: 'pointer', lineHeight: 1 }} title="Quitar de guardados">♥</button>
+                  <button onClick={e => { e.stopPropagation(); quitar(f.propiedad_id) }} style={{ all: 'unset', cursor: 'pointer', display: 'flex' }} title="Quitar de guardados">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#006D77" stroke="#006D77" strokeWidth="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                  </button>
                 </div>
               </div>
             )
@@ -683,13 +685,13 @@ export default function Panel() {
       const precioAnterior = anuncioEditando.precio
       const fotosAnteriores = JSON.stringify((anuncioEditando.fotos || []).slice().sort())
       const fotosNuevas = JSON.stringify(todasFotos.slice().sort())
-      const notifBase = { propiedadId: anuncioEditando.id, propietarioId: user.id }
-      if (precioAnterior !== nuevoPrecio) {
-        fetch('/api/notificar-cambio', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...notifBase, tipo: 'precio', precioAnterior, precioNuevo: nuevoPrecio }) })
-      }
-      if (fotosAnteriores !== fotosNuevas) {
-        fetch('/api/notificar-cambio', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...notifBase, tipo: 'fotos' }) })
-      }
+      const notifBase = { propiedadId: String(anuncioEditando.id), propietarioId: user.id }
+      const notificar = (body: object) =>
+        fetch('/api/notificar-cambio', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+          .then(r => r.json()).then(d => { if (!d.ok) console.error('notificar-cambio error', d) })
+          .catch(e => console.error('notificar-cambio fetch error', e))
+      if (precioAnterior !== nuevoPrecio) notificar({ ...notifBase, tipo: 'precio', precioAnterior, precioNuevo: nuevoPrecio })
+      if (fotosAnteriores !== fotosNuevas) notificar({ ...notifBase, tipo: 'fotos' })
     }
 
     const { data: anunciosActualizados } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
@@ -2296,7 +2298,7 @@ export default function Panel() {
 
           {/* GUARDADOS */}
           {!cargando && seccion === 'guardados' && (
-            <GuardadosSeccion onLeer={() => setNoLeidosGuardados(v => Math.max(0, v - 1))} />
+            <GuardadosSeccion onLeer={(n = 1) => setNoLeidosGuardados(v => Math.max(0, v - n))} />
           )}
 
           {/* CURSOS AEI */}

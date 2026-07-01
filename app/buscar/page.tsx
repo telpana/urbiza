@@ -152,6 +152,8 @@ function MapaMini({ zona }: { zona: string }) {
 
 // Mapa completo con iconos de propiedades
 function MapaCompleto({ propiedades, onCerrar }: { propiedades: any[], onCerrar: () => void }) {
+  const { tr } = useIdioma()
+  const Tb = tr.buscar
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<any>(null)
 
@@ -209,12 +211,15 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: any[], onCerrar:
   }, [])
 
   return (
-    <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', flexDirection: 'column' }}>
-      <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ fontSize: 15, fontWeight: 600, color: '#111' }}>{propiedades.length} propiedades en el mapa</div>
-        <button onClick={onCerrar} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '8px 18px', borderRadius: 4, fontSize: 13, fontWeight: 500, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}>
-          Volver a listado
+    <div style={{ position: 'fixed', inset: 0, zIndex: 1100, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+        <button onClick={onCerrar} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, color: '#006D77', fontWeight: 600, cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap' }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+          {Tb.volver}
         </button>
+        <div style={{ fontSize: 14, fontWeight: 700, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {propiedades.length} {Tb.titulo}
+        </div>
       </div>
       <div ref={mapRef} style={{ flex: 1 }} />
     </div>
