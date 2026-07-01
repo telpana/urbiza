@@ -865,12 +865,12 @@ function BuscarContent() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {filtradasPagina.map(p => (
-              <div key={p.id} className="prop-card" style={{ display: 'flex', background: '#fff', borderBottom: '8px solid #f4f5f6', cursor: 'pointer', minHeight: 220, boxShadow: p.dest ? '0 2px 12px rgba(0,109,119,0.10)' : 'none' }}
+              <div key={p.id} className="prop-card" style={{ display: 'flex', background: '#fff', borderBottom: '8px solid #f4f5f6', cursor: 'pointer', height: 210, overflow: 'hidden', boxShadow: p.dest ? '0 2px 12px rgba(0,109,119,0.10)' : 'none' }}
                 onClick={() => window.location.href = `/propiedad/${p.id}`}
                 onMouseEnter={e => (e.currentTarget.style.background = '#fafefe')}
                 onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
                 <div className="prop-card-img prop-card-img-slider"
-                  style={{ width: 300, minWidth: 300, height: 220, alignSelf: 'flex-start', background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer', borderLeft: p.dest ? '4px solid #006D77' : 'none' }}>
+                  style={{ width: 300, minWidth: 300, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer', borderLeft: p.dest ? '4px solid #006D77' : 'none' }}>
                   {p.fotos && p.fotos.length > 0
                     ? <img src={p.fotos[fotoIdx[String(p.id)] ?? 0]} alt={p.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity 0.2s' }} />
                     : <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -901,7 +901,7 @@ function BuscarContent() {
                     <svg width="18" height="18" viewBox="0 0 24 24" fill={favoritosSet.has(String(p.id)) ? '#e63946' : 'none'} stroke={favoritosSet.has(String(p.id)) ? '#e63946' : '#555'} strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
                   </button>
                 </div>
-                <div className="pc-body" style={{ flex: 1, padding: '20px 24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0 }}>
+                <div className="pc-body" style={{ flex: 1, padding: '14px 20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minWidth: 0, overflow: 'hidden' }}>
                   <div>
                     <div className="pc-zona-text">{p.zona}</div>
                     <div className="pc-titulo" style={{ fontSize: 15, fontWeight: 600, color: '#006D77', marginBottom: 8 }}>
