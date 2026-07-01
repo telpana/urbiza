@@ -1326,7 +1326,7 @@ export default function Panel() {
               </div>
               <div className="chat-grid" style={{ display: 'grid', gridTemplateColumns: '300px 1fr', height: 'calc(100vh - 220px)', minHeight: 520, borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 16px rgba(0,0,0,0.08)', border: '1px solid #e8e8e8' }}>
                 {/* Lista de conversaciones */}
-                <div className="chat-list" style={{ background: '#fff', borderRight: '1px solid #f0f0f0', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+                <div className={`chat-list${convActiva ? ' chat-list-hidden' : ''}`} style={{ background: '#fff', borderRight: '1px solid #f0f0f0', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ padding: '16px 16px 10px', borderBottom: '1px solid #f0f0f0', flexShrink: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 700, color: '#111', letterSpacing: -0.2 }}>{Tpanel.mensajes.titulo}</div>
                     <div style={{ fontSize: 11, color: '#aaa', marginTop: 2 }}>{conversaciones.length} conversación{conversaciones.length !== 1 ? 'es' : ''}{noLeidos > 0 ? ` · ${noLeidos} sin leer` : ''}</div>
@@ -1412,10 +1412,13 @@ export default function Panel() {
                   const colores = ['#006D77','#0e7490','#7c3aed','#b45309','#be185d','#065f46']
                   const colorIdx = contactoNombre.charCodeAt(0) % colores.length
                   return (
-                    <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#fff' }}>
+                    <div className="chat-detail-panel" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#fff' }}>
                       {/* Header del chat */}
                       <div style={{ padding: '12px 18px', borderBottom: '1px solid #f0f0f0', flexShrink: 0, background: '#fff' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                          <button className="chat-back-btn" onClick={() => setConvActiva(null)} style={{ display: 'none', all: 'unset', cursor: 'pointer', color: '#006D77', padding: '4px 6px 4px 0', flexShrink: 0 }}>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+                          </button>
                           <div style={{ width: 40, height: 40, borderRadius: '50%', background: colores[colorIdx], display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: '#fff', flexShrink: 0, overflow: 'hidden' }}>
                             {m._foto ? <img src={m._foto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : iniciales}
                           </div>
@@ -1430,7 +1433,7 @@ export default function Panel() {
                               <a href={`/propiedad/${m.propiedad_id}`} style={{ fontSize: 10, color: '#006D77', textDecoration: 'none', fontWeight: 600, flexShrink: 0, background: '#e8f5f6', padding: '2px 8px', borderRadius: 10, border: '1px solid #c0e4e7', whiteSpace: 'nowrap' }}>Ver</a>
                             </div>
                           </div>
-                          <div style={{ display: 'flex', gap: 6, flexShrink: 0, alignItems: 'center' }}>
+                          <div className="chat-header-actions" style={{ display: 'flex', gap: 6, flexShrink: 0, alignItems: 'center' }}>
                             {contactoTel && <a href={`tel:${contactoTel}`} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#006D77', textDecoration: 'none', fontWeight: 600, background: '#e8f5f6', padding: '5px 10px', borderRadius: 6, border: '1px solid #c0e4e7' }}>
                               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                               {contactoTel}

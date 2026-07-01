@@ -153,13 +153,17 @@ img { max-width: 100%; }
   /* KPIs: 2 columnas */
   .kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
 
-  /* Chat: lista arriba, detalle abajo */
+  /* Chat: solo lista O solo detalle en móvil */
   .chat-grid {
     grid-template-columns: 1fr !important;
-    height: auto !important;
+    height: calc(100vh - 160px) !important;
     min-height: unset !important;
   }
-  .chat-list { max-height: 260px !important; overflow-y: auto !important; }
+  .chat-list { overflow-y: auto !important; }
+  .chat-list-hidden { display: none !important; }
+  .chat-detail-panel { display: flex !important; }
+  .chat-back-btn { display: flex !important; }
+  .chat-header-actions { display: none !important; }
 
   /* Beneficios plan: 2 columnas */
   .plan-beneficios-grid { grid-template-columns: repeat(2, 1fr) !important; }

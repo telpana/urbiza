@@ -270,8 +270,11 @@ img { max-width: 100%; }
   }
   .panel-main    { padding: 16px !important; }
   .kpi-grid      { grid-template-columns: repeat(2, 1fr) !important; }
-  .chat-grid     { grid-template-columns: 1fr !important; height: auto !important; min-height: unset !important; }
-  .chat-list     { max-height: 260px !important; overflow-y: auto !important; }
+  .chat-grid     { grid-template-columns: 1fr !important; height: calc(100vh - 160px) !important; min-height: unset !important; }
+  .chat-list     { overflow-y: auto !important; }
+  .chat-list-hidden { display: none !important; }
+  .chat-back-btn { display: flex !important; }
+  .chat-header-actions { display: none !important; }
   .plan-beneficios-grid { grid-template-columns: repeat(2, 1fr) !important; }
   .panel-nav-email { display: none !important; }
 }
