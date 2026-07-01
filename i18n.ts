@@ -12,7 +12,7 @@ export const t = {
       publicarTitle: 'Publica tu propiedad', publicarDesc: 'Tus 2 primeros anuncios son completamente gratuitos. Apartamentos, casas, villas, terrenos... ¡Todo cabe!', publicarLink: 'Poner mi anuncio'
     },
     destacadas: { titulo: 'Propiedades destacadas', subtitulo: 'Las mejores oportunidades del mercado dominicano', verTodas: 'Ver todas las propiedades', destacado: 'DESTACADO', masVisto: 'Más visto', masVistos: 'Más vistos', ver: 'Ver propiedad', gratis: 'GRATIS' },
-    novedades: { santoDomingo: 'Novedades en Santo Domingo', puntaCana: 'Novedades en Punta Cana', santiago: 'Novedades en Santiago', verTodas: 'Ver todas las propiedades', nuevo: 'NUEVO' },
+    novedades: { santoDomingo: 'Novedades en Santo Domingo', puntaCana: 'Novedades en Punta Cana', lasTerrenas: 'Novedades en Las Terrenas', verTodas: 'Ver todas las propiedades', nuevo: 'NUEVO' },
     zonas: { titulo: 'Zonas más buscadas' },
     footer: { avisoLegal: 'Aviso legal', privacidad: 'Privacidad', cookies: 'Cookies', ayuda: 'Ayuda', publicar: 'Publicar anuncio', planes: 'Planes', derechos: '© 2025 habitade.com · República Dominicana' },
     buscar: {
@@ -229,7 +229,7 @@ export const t = {
       publicarTitle: 'List your property', publicarDesc: 'Your first 2 listings are completely free. Apartments, houses, villas, land... Everything fits!', publicarLink: 'Post my listing'
     },
     destacadas: { titulo: 'Featured properties', subtitulo: 'The best opportunities in the Dominican market', verTodas: 'View all properties', destacado: 'FEATURED', masVisto: 'Most viewed', masVistos: 'Most viewed', ver: 'View property', gratis: 'FREE' },
-    novedades: { santoDomingo: 'New listings in Santo Domingo', puntaCana: 'New listings in Punta Cana', santiago: 'New listings in Santiago', verTodas: 'View all properties', nuevo: 'NEW' },
+    novedades: { santoDomingo: 'New listings in Santo Domingo', puntaCana: 'New listings in Punta Cana', lasTerrenas: 'New listings in Las Terrenas', verTodas: 'View all properties', nuevo: 'NEW' },
     zonas: { titulo: 'Most searched areas' },
     footer: { avisoLegal: 'Legal notice', privacidad: 'Privacy', cookies: 'Cookies', ayuda: 'Help', publicar: 'Post a listing', planes: 'Plans', derechos: '© 2025 habitade.com · Dominican Republic' },
     buscar: {
@@ -446,7 +446,7 @@ export const t = {
       publicarTitle: 'Publier votre annonce', publicarDesc: 'Vos 2 premières annonces sont entièrement gratuites. Appartements, maisons, villas, terrains... Tout est possible!', publicarLink: 'Déposer mon annonce'
     },
     destacadas: { titulo: 'Propriétés en vedette', subtitulo: 'Les meilleures opportunités du marché dominicain', verTodas: 'Voir toutes les propriétés', destacado: 'EN VEDETTE', masVisto: 'Plus consulté', masVistos: 'Les plus consultés', ver: 'Voir la propriété', gratis: 'GRATUIT' },
-    novedades: { santoDomingo: 'Nouveautés à Saint-Domingue', puntaCana: 'Nouveautés à Punta Cana', santiago: 'Nouveautés à Santiago', verTodas: 'Voir toutes les propriétés', nuevo: 'NOUVEAU' },
+    novedades: { santoDomingo: 'Nouveautés à Saint-Domingue', puntaCana: 'Nouveautés à Punta Cana', lasTerrenas: 'Nouveautés à Las Terrenas', verTodas: 'Voir toutes les propriétés', nuevo: 'NOUVEAU' },
     zonas: { titulo: 'Zones les plus recherchées' },
     footer: { avisoLegal: 'Mentions légales', privacidad: 'Confidentialité', cookies: 'Cookies', ayuda: 'Aide', publicar: 'Publier une annonce', planes: 'Abonnements', derechos: '© 2025 habitade.com · République Dominicaine' },
     buscar: {

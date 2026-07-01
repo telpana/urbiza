@@ -173,11 +173,11 @@ const propiedadesPuntaCana = [
   { price: 185000, title: 'Apartamento en Bávaro', feats: 'Apartamento · 2 hab · 105 m²', bg: '#f0ebe0' },
 ]
 
-const propiedadesSantiago = [
-  { price: 145000, title: 'Apartamento en Los Jardines', feats: 'Apartamento · 3 hab · 120 m²', bg: '#f0ebe0' },
-  { price: 220000, title: 'Casa en Cerros de Gurabo', feats: 'Casa · 4 hab · 280 m²', bg: '#e0f5f7' },
-  { price: 98000, title: 'Apartamento en Reparto Conuco', feats: 'Apartamento · 2 hab · 90 m²', bg: '#ddf0e8' },
-  { price: 310000, title: 'Villa en Arroyo Hondo', feats: 'Villa · 4 hab · 380 m²', bg: '#e8eaf0' },
+const propiedadesLasTerrenas = [
+  { price: 185000, title: 'Villa en Las Terrenas', feats: 'Villa · 3 hab · 180 m²', bg: '#e0f5f7' },
+  { price: 95000, title: 'Apartamento en El Portillo', feats: 'Apartamento · 2 hab · 80 m²', bg: '#ddf0e8' },
+  { price: 320000, title: 'Villa en Cosón', feats: 'Villa · 4 hab · 350 m²', bg: '#f0ebe0' },
+  { price: 130000, title: 'Casa en Las Terrenas', feats: 'Casa · 3 hab · 150 m²', bg: '#e8eaf0' },
 ]
 
 const zonas = [
@@ -277,7 +277,7 @@ export default function Home() {
   const [masIdx, setMasIdx] = useState(0)
   const [novedadesSantoDomingo, setNovedadesSantoDomingo] = useState<any[]>(() => lsGet('hb_nov_sd'))
   const [novedadesPuntaCana, setNovedadesPuntaCana] = useState<any[]>(() => lsGet('hb_nov_pc'))
-  const [novedadesSantiago, setNovedadesSantiago] = useState<any[]>(() => lsGet('hb_nov_stg'))
+  const [novedadesLasTerrenas, setNovedadesLasTerrenas] = useState<any[]>(() => lsGet('hb_nov_lt'))
   const [sesionActiva, setSesionActiva] = useState(false)
   const [authReady, setAuthReady] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -359,12 +359,12 @@ export default function Home() {
           .or('zona.ilike.%Punta Cana%,zona.ilike.%Bávaro%,zona.ilike.%La Altagracia%,zona.ilike.%Cap Cana%')
           .order('created_at', { ascending: false }).limit(4),
         supabase.from('propiedades').select(campos).eq('estado', 'activo')
-          .or('zona.ilike.%Santiago%')
+          .or('zona.ilike.%Las Terrenas%,zona.ilike.%El Portillo%,zona.ilike.%Cosón%')
           .order('created_at', { ascending: false }).limit(4),
       ])
       if (sd && sd.length > 0) { setNovedadesSantoDomingo(sd); try { localStorage.setItem('hb_nov_sd', JSON.stringify(sd)) } catch {} }
       if (pc && pc.length > 0) { setNovedadesPuntaCana(pc); try { localStorage.setItem('hb_nov_pc', JSON.stringify(pc)) } catch {} }
-      if (stg && stg.length > 0) { setNovedadesSantiago(stg); try { localStorage.setItem('hb_nov_stg', JSON.stringify(stg)) } catch {} }
+      if (stg && stg.length > 0) { setNovedadesLasTerrenas(stg); try { localStorage.setItem('hb_nov_lt', JSON.stringify(stg)) } catch {} }
     }
     cargar()
   }, [])
@@ -715,7 +715,7 @@ export default function Home() {
         {/* NOVEDADES POR ZONA */}
         <SeccionNovedad titulo={tr.novedades.santoDomingo} subtitulo={tr.novedades.verTodas} zona="Santo Domingo" reales={novedadesSantoDomingo} ejemplos={propiedadesSantoDomingo} />
         <SeccionNovedad titulo={tr.novedades.puntaCana} subtitulo={tr.novedades.verTodas} zona="Punta Cana" reales={novedadesPuntaCana} ejemplos={propiedadesPuntaCana} />
-        <SeccionNovedad titulo={tr.novedades.santiago} subtitulo={tr.novedades.verTodas} zona="Santiago" reales={novedadesSantiago} ejemplos={propiedadesSantiago} />
+        <SeccionNovedad titulo={tr.novedades.lasTerrenas} subtitulo={tr.novedades.verTodas} zona="Las Terrenas" reales={novedadesLasTerrenas} ejemplos={propiedadesLasTerrenas} />
       </div>
 
       {/* ZONAS MÁS BUSCADAS */}
