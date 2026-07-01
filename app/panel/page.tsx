@@ -200,13 +200,12 @@ function GuardadosSeccion({ onLeer }: { onLeer?: (n: number) => void }) {
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, background: '#006D77', padding: '4px 12px', display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
                     {hasPrecio && (
                       <span style={{ fontSize: 11, color: '#fff', display: 'flex', alignItems: 'center', gap: 6 }}>
-                        {notifPrecio?.precio_anterior && notifPrecio?.precio_nuevo ? (
+                        <span style={{ fontWeight: 700 }}>Cambio de precio</span>
+                        {notifPrecio?.precio_anterior && notifPrecio?.precio_nuevo && (
                           <>
                             <span style={{ textDecoration: 'line-through', opacity: 0.65 }}>US$ {Number(notifPrecio.precio_anterior).toLocaleString('en-US')}</span>
                             <span style={{ fontWeight: 700 }}>US$ {Number(notifPrecio.precio_nuevo).toLocaleString('en-US')}</span>
                           </>
-                        ) : (
-                          <span style={{ fontWeight: 700 }}>Precio actualizado</span>
                         )}
                       </span>
                     )}
@@ -219,7 +218,16 @@ function GuardadosSeccion({ onLeer }: { onLeer?: (n: number) => void }) {
                 <div style={{ flex: 1, padding: tieneNotif ? '12px 14px 12px' : '12px 14px', paddingTop: tieneNotif ? 32 : 12, minWidth: 0 }}>
                   <div className="guardado-titulo" style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.titulo}</div>
                   <div style={{ fontSize: 11, color: '#888', marginBottom: 6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.zona}</div>
-                  <div style={{ fontSize: 15, fontWeight: 700, color: '#006D77', marginBottom: 4 }}>US$ {p.precio?.toLocaleString('en-US')}</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, color: '#006D77', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
+                    {hasPrecio && notifPrecio?.precio_anterior ? (
+                      <>
+                        <span style={{ textDecoration: 'line-through', opacity: 0.45, fontWeight: 500, fontSize: 13 }}>US$ {Number(notifPrecio.precio_anterior).toLocaleString('en-US')}</span>
+                        <span>US$ {p.precio?.toLocaleString('en-US')}</span>
+                      </>
+                    ) : (
+                      <span>US$ {p.precio?.toLocaleString('en-US')}</span>
+                    )}
+                  </div>
                   <div style={{ fontSize: 11, color: '#aaa' }}>
                     {p.habitaciones > 0 && `${p.habitaciones} hab · `}{p.banos > 0 && `${p.banos} baños`}{p.m2 > 0 && ` · ${p.m2} m²`}
                   </div>
