@@ -1264,7 +1264,7 @@ export default function Panel() {
                     <div style={{ display: 'flex', gap: 4, background: '#f0f0f0', borderRadius: 6, padding: 3 }}>
                       {([['es','ES'], ['en','EN'], ['fr','FR']] as const).map(([l, label]) => (
                         <button key={l} type="button" onClick={() => setDescLang(l)}
-                          style={{ all: 'unset', padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: descLang === l ? '#006D77' : 'transparent', color: descLang === l ? '#fff' : '#888', transition: 'all 0.15s', position: 'relative' }}>
+                          style={{ border: 'none', outline: 'none', padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: descLang === l ? '#006D77' : 'transparent', color: descLang === l ? '#fff' : '#888', transition: 'background 0.15s, color 0.15s', position: 'relative', touchAction: 'manipulation', userSelect: 'none' }}>
                           {label}
                           {l !== 'es' && ((l === 'en' ? pubDescEn : pubDescFr).trim()) && (
                             <span style={{ position: 'absolute', top: 1, right: 1, width: 5, height: 5, background: '#10b981', borderRadius: '50%' }} />

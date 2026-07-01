@@ -156,14 +156,14 @@ function DescripcionMultiIdioma({ propiedad, idioma, Tp }: { propiedad: any, idi
           <div style={{ display: 'flex', gap: 4, background: '#f0f0f0', borderRadius: 6, padding: 3 }}>
             {disponibles.map(d => (
               <button key={d.code} onClick={() => setLang(d.code)}
-                style={{ all: 'unset', padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: lang === d.code ? '#006D77' : 'transparent', color: lang === d.code ? '#fff' : '#888', transition: 'all 0.15s' }}>
+                style={{ border: 'none', outline: 'none', padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: lang === d.code ? '#006D77' : 'transparent', color: lang === d.code ? '#fff' : '#888', transition: 'background 0.15s, color 0.15s', touchAction: 'manipulation', userSelect: 'none' }}>
                 {d.label}
               </button>
             ))}
           </div>
         )}
       </div>
-      {(texto as string).split('\n\n').map((p: string, i: number) => (
+      {(texto || '').split('\n\n').map((p: string, i: number) => (
         <p key={i} style={{ fontSize: 14, color: '#555', lineHeight: 1.8, marginBottom: 12 }}>{p}</p>
       ))}
       <div style={{ marginTop: 16, padding: '10px 14px', background: '#f0fafb', borderLeft: '3px solid #006D77', borderRadius: '0 6px 6px 0', fontSize: 12, color: '#006D77' }}>
