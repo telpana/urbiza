@@ -2081,12 +2081,12 @@ export default function Panel() {
                         value={perfilAei}
                         readOnly={usuario?.aei_aprobado === true}
                         onChange={e => {
-                          let v = e.target.value
+                          let v = e.target.value.toUpperCase()
                           if (!v.startsWith('AEI-')) v = 'AEI-' + v.replace(/^AEI-?/i, '')
                           setPerfilAei(v)
                         }}
                         placeholder='AEI-0000'
-                        style={{ width: '100%', border: `1.5px solid ${usuario?.aei_aprobado === true ? '#d1fae5' : '#e0e0e0'}`, borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box', background: usuario?.aei_aprobado === true ? '#f0fdf4' : '#fff', color: usuario?.aei_aprobado === true ? '#065f46' : '#111', cursor: usuario?.aei_aprobado === true ? 'not-allowed' : 'text', fontWeight: usuario?.aei_aprobado === true ? 700 : 400 }}
+                        style={{ width: '100%', border: `1.5px solid ${usuario?.aei_aprobado === true ? '#d1fae5' : '#e0e0e0'}`, borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box', background: usuario?.aei_aprobado === true ? '#f0fdf4' : '#fff', color: usuario?.aei_aprobado === true ? '#065f46' : '#111', cursor: usuario?.aei_aprobado === true ? 'not-allowed' : 'text', fontWeight: usuario?.aei_aprobado === true ? 700 : 400, textTransform: 'uppercase' }}
                         onFocus={e => { if (usuario?.aei_aprobado !== true) e.target.style.borderColor='#006D77' }}
                         onBlur={e => { if (usuario?.aei_aprobado !== true) e.target.style.borderColor='#e0e0e0' }}
                       />
