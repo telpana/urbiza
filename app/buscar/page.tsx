@@ -212,14 +212,15 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: any[], onCerrar:
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 1100, display: 'flex', flexDirection: 'column' }}>
-      <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '10px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
-        <button onClick={onCerrar} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, color: '#006D77', fontWeight: 600, cursor: 'pointer', flexShrink: 0, whiteSpace: 'nowrap' }}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-          {Tb.volver}
+      <div style={{ background: '#006D77', height: 52, display: 'flex', alignItems: 'center', padding: '0 16px', gap: 12, flexShrink: 0 }}>
+        <button onClick={onCerrar} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 6, color: '#fff', cursor: 'pointer', touchAction: 'manipulation', flexShrink: 0 }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+          <span style={{ fontSize: 14, fontWeight: 600 }}>{Tb.volver}</span>
         </button>
-        <div style={{ fontSize: 14, fontWeight: 700, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-          {propiedades.length} {Tb.titulo}
-        </div>
+        <div style={{ flex: 1 }} />
+        <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.9)', background: 'rgba(0,0,0,0.18)', padding: '3px 10px', borderRadius: 12, whiteSpace: 'nowrap' }}>
+          {propiedades.length} {propiedades.length === 1 ? 'propiedad' : 'propiedades'}
+        </span>
       </div>
       <div ref={mapRef} style={{ flex: 1 }} />
     </div>
