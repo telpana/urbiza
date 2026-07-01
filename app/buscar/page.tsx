@@ -980,6 +980,11 @@ function BuscarContent() {
       .pc-badge-visto { background: rgba(0,0,0,0.48); color: #fff; }
       @media (max-width: 900px) {
         .prop-card-dest { border-left: none !important; border-top: none !important; box-shadow: none !important; }
+        .pc-precio-wrap { font-size: 18px !important; }
+        .pc-titulo { font-size: 13px !important; margin-bottom: 4px !important; }
+        .pc-zona-text { font-size: 10px !important; }
+        .pc-feats { font-size: 11px !important; }
+        .pc-body { padding: 10px 14px !important; }
       }
     `}</style>
 </>
