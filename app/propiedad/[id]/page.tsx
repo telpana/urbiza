@@ -447,7 +447,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
             <div style={{ borderTop: '1px solid #f0f0f0', padding: '12px 20px 16px', background: '#fafafa' }}>
               <div style={{ display: 'flex', background: '#efefef', borderRadius: 8, overflow: 'hidden', padding: 3, gap: 2 }}>
                 {(['es', 'en', 'fr'] as const).map(l => (
-                  <button key={l} onClick={() => { setIdioma(l); setMobileMenuOpen(false) }} style={{ all: 'unset', padding: '6px 16px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: idioma === l ? '#fff' : 'transparent', color: idioma === l ? '#006D77' : '#999', boxShadow: idioma === l ? '0 1px 4px rgba(0,0,0,0.1)' : 'none', transition: 'all 0.15s' }}>
+                  <button key={l} onClick={() => { setIdioma(l); setMobileMenuOpen(false) }} style={{ border: 'none', outline: 'none', padding: '6px 16px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: idioma === l ? '#fff' : 'transparent', color: idioma === l ? '#006D77' : '#999', boxShadow: idioma === l ? '0 1px 4px rgba(0,0,0,0.1)' : 'none', transition: 'background 0.15s, color 0.15s, box-shadow 0.15s', touchAction: 'manipulation', userSelect: 'none' }}>
                     {l.toUpperCase()}
                   </button>
                 ))}

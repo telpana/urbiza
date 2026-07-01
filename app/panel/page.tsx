@@ -747,7 +747,7 @@ export default function Panel() {
                 <div style={{ display: 'flex', gap: 6 }}>
                   {(['es', 'en', 'fr'] as const).map(l => (
                     <button key={l} onClick={() => { setIdioma(l); setPanelNavOpen(false) }}
-                      style={{ all: 'unset', padding: '5px 12px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: idioma === l ? '#006D77' : '#f0f0f0', color: idioma === l ? '#fff' : '#888', transition: 'all 0.15s' }}>
+                      style={{ border: 'none', outline: 'none', padding: '5px 12px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: idioma === l ? '#006D77' : '#f0f0f0', color: idioma === l ? '#fff' : '#888', transition: 'background 0.15s, color 0.15s', touchAction: 'manipulation', userSelect: 'none' }}>
                       {l.toUpperCase()}
                     </button>
                   ))}
@@ -810,7 +810,7 @@ export default function Panel() {
                   <div style={{ padding: '10px 16px', display: 'flex', gap: 4 }}>
                     {(['es', 'en', 'fr'] as const).map(l => (
                       <button key={l} onClick={() => { setIdioma(l); setNavUserMenuOpen(false) }}
-                        style={{ all: 'unset', flex: 1, textAlign: 'center', padding: '5px 0', borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: idioma === l ? '#006D77' : '#f0f0f0', color: idioma === l ? '#fff' : '#888', transition: 'all 0.15s' }}>
+                        style={{ border: 'none', outline: 'none', flex: 1, textAlign: 'center', padding: '5px 0', borderRadius: 5, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: idioma === l ? '#006D77' : '#f0f0f0', color: idioma === l ? '#fff' : '#888', transition: 'background 0.15s, color 0.15s', touchAction: 'manipulation', userSelect: 'none' }}>
                         {l.toUpperCase()}
                       </button>
                     ))}

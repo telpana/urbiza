@@ -446,7 +446,7 @@ export default function Home() {
             <div style={{ borderTop: '1px solid #f0f0f0', padding: '12px 20px 16px', display: 'flex', gap: 0, background: '#fafafa' }}>
               <div style={{ display: 'flex', background: '#efefef', borderRadius: 8, overflow: 'hidden', padding: 3, gap: 2 }}>
                 {(['es', 'en', 'fr'] as const).map(l => (
-                  <button key={l} onClick={() => { setIdioma(l); setMobileMenuOpen(false) }} style={{ all: 'unset', padding: '6px 16px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: idioma === l ? '#fff' : 'transparent', color: idioma === l ? '#006D77' : '#999', boxShadow: idioma === l ? '0 1px 4px rgba(0,0,0,0.1)' : 'none', transition: 'all 0.15s' }}>
+                  <button key={l} onClick={() => { setIdioma(l); setMobileMenuOpen(false) }} style={{ border: 'none', outline: 'none', padding: '6px 16px', borderRadius: 6, fontSize: 12, fontWeight: 700, cursor: 'pointer', background: idioma === l ? '#fff' : 'transparent', color: idioma === l ? '#006D77' : '#999', boxShadow: idioma === l ? '0 1px 4px rgba(0,0,0,0.1)' : 'none', transition: 'background 0.15s, color 0.15s, box-shadow 0.15s', touchAction: 'manipulation', userSelect: 'none' }}>
                     {l.toUpperCase()}
                   </button>
                 ))}
@@ -480,7 +480,7 @@ export default function Home() {
         {/* Desktop: idioma + NavUserMenu + botones auth */}
         <div className="nav-desktop-right" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <div style={{ position: 'relative' }} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setIdiomaOpen(false) }}>
-            <button onClick={() => setIdiomaOpen(!idiomaOpen)} style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 600, color: '#555', cursor: 'pointer', padding: '5px 8px', borderRadius: 4 }}
+            <button onClick={() => setIdiomaOpen(!idiomaOpen)} style={{ border: 'none', outline: 'none', background: 'transparent', display: 'flex', alignItems: 'center', gap: 4, fontSize: 13, fontWeight: 600, color: '#555', cursor: 'pointer', padding: '5px 8px', borderRadius: 4, touchAction: 'manipulation', userSelect: 'none' }}
               onMouseEnter={e => e.currentTarget.style.color = '#006D77'}
               onMouseLeave={e => e.currentTarget.style.color = '#555'}>
               {idioma.toUpperCase()}
@@ -489,7 +489,7 @@ export default function Home() {
             {idiomaOpen && (
               <div style={{ position: 'absolute', top: 'calc(100% + 6px)', right: 0, background: '#fff', border: '1px solid #e8e8e8', borderRadius: 6, boxShadow: '0 4px 16px rgba(0,0,0,0.10)', overflow: 'hidden', zIndex: 200, minWidth: 64 }}>
                 {(['es', 'en', 'fr'] as const).map(l => (
-                  <button key={l} onClick={() => { setIdioma(l); setIdiomaOpen(false) }} style={{ all: 'unset', display: 'block', width: '100%', padding: '9px 16px', fontSize: 13, fontWeight: idioma === l ? 700 : 400, color: idioma === l ? '#006D77' : '#444', cursor: 'pointer', textAlign: 'left', boxSizing: 'border-box' }}
+                  <button key={l} onClick={() => { setIdioma(l); setIdiomaOpen(false) }} style={{ border: 'none', outline: 'none', background: 'transparent', display: 'block', width: '100%', padding: '9px 16px', fontSize: 13, fontWeight: idioma === l ? 700 : 400, color: idioma === l ? '#006D77' : '#444', cursor: 'pointer', textAlign: 'left', boxSizing: 'border-box', touchAction: 'manipulation', userSelect: 'none' }}
                     onMouseEnter={e => e.currentTarget.style.background = '#f0fafb'}
                     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}>
                     {l.toUpperCase()}
