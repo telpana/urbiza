@@ -406,7 +406,7 @@ export default function Admin() {
         )}
 
         {/* CONTENIDO */}
-        <div style={{ marginLeft: isMobile ? 0 : 220, padding: isMobile ? '16px' : '28px 32px', overflowX: 'hidden', minHeight: 'calc(100vh - 54px)' }}>
+        <div style={{ marginLeft: isMobile ? 0 : 220, padding: isMobile ? '16px' : '28px 32px', minHeight: 'calc(100vh - 54px)', minWidth: 0 }}>
 
           {/* DASHBOARD */}
           {seccion === 'dashboard' && (
@@ -756,7 +756,7 @@ export default function Admin() {
           {seccion === 'destacados' && (
             <Seccion titulo="Destacados" desc="Anuncios con destacado activo por tipo de plan">
               {/* 3 columnas por duración */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 16, marginBottom: 24 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : '1fr 1fr 1fr 1fr', gap: 16, marginBottom: 24 }}>
                 <Card style={{ padding: 20, borderTop: `3px solid #006D77` }}>
                   <div style={{ fontSize: 12, color: '#888', fontWeight: 500, marginBottom: 8 }}>Total activos</div>
                   <div style={{ fontSize: 36, fontWeight: 800, color: '#006D77' }}>{destacadosLoading ? '…' : destacadosActivos.length}</div>
