@@ -1,5 +1,5 @@
 ﻿'use client'
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useLayoutEffect, useCallback, useRef } from 'react'
 
 const C = { verde: '#006D77', azul: '#17A6B4', oscuro: '#004E57', bg: '#f4f5f6' }
 
@@ -31,6 +31,8 @@ export default function Admin() {
   const [loginError, setLoginError] = useState('')
   const [loginLoading, setLoginLoading] = useState(false)
   const [seccion, setSeccion] = useState('dashboard')
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const [token, setToken] = useState('')
 
   // --- DATA STATES ---
@@ -78,6 +80,13 @@ export default function Admin() {
   }), [token])
 
   // Verificar token al cargar
+  useLayoutEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 900)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+
   useEffect(() => {
     const stored = localStorage.getItem('habitade_admin_token')
     if (!stored) { setAuthed(false); return }
@@ -329,41 +338,80 @@ export default function Admin() {
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: C.bg, minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
 
+      {/* MOBILE FULL-SCREEN MENU */}
+      {isMobile && sidebarOpen && (
+        <div style={{ position: 'fixed', inset: 0, background: C.oscuro, zIndex: 600, display: 'flex', flexDirection: 'column', overflowY: 'auto' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', height: 54, background: C.verde, flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <a href="/" style={{ fontSize: 20, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>habitade.</a>
+              <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>ADMIN</span>
+            </div>
+            <button onClick={() => setSidebarOpen(false)} style={{ all: 'unset', cursor: 'pointer', color: '#fff', padding: '8px', display: 'flex', alignItems: 'center' }}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div style={{ flex: 1, padding: '8px 0' }}>
+            {menuItems.map(item => (
+              <button key={item.id} onClick={() => { setSeccion(item.id); setSidebarOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', fontSize: 14, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.65)', background: seccion === item.id ? 'rgba(255,255,255,0.12)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? '3px solid #83D4DB' : '3px solid transparent', boxSizing: 'border-box' }}>
+                {item.icon}{item.label}
+              </button>
+            ))}
+            {stats?.aeiPend > 0 && seccion !== 'aei' && (
+              <button onClick={() => { setSeccion('aei'); setSidebarOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px 12px 40px', fontSize: 13, color: '#fbbf24', cursor: 'pointer', boxSizing: 'border-box' }}>
+                ⚠ {stats.aeiPend} pendiente{stats.aeiPend !== 1 ? 's' : ''}
+              </button>
+            )}
+          </div>
+          <div style={{ padding: '16px 20px 24px', borderTop: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <a href="/" style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', textDecoration: 'none' }}>Ver web</a>
+            <button onClick={logout} style={{ all: 'unset', fontSize: 14, color: '#fff', border: '1.5px solid rgba(255,255,255,0.4)', padding: '10px 16px', borderRadius: 6, cursor: 'pointer', textAlign: 'center' }}>Cerrar sesión</button>
+          </div>
+        </div>
+      )}
+
       {/* NAV */}
-      <nav style={{ background: C.verde, height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', position: 'sticky', top: 0, zIndex: 100 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+      <nav style={{ background: C.verde, height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', position: 'sticky', top: 0, zIndex: 100 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <a href="/" style={{ fontSize: 22, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>habitade.</a>
           <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 11, fontWeight: 600, padding: '2px 10px', borderRadius: 10 }}>ADMIN</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <a href="/" style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>Ver web</a>
-          <button onClick={logout} style={{ all: 'unset', fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.4)', padding: '5px 14px', borderRadius: 4, cursor: 'pointer' }}>Cerrar sesión</button>
-        </div>
+        {isMobile ? (
+          <button onClick={() => setSidebarOpen(true)} style={{ all: 'unset', cursor: 'pointer', color: '#fff', padding: '8px', display: 'flex', alignItems: 'center' }}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <a href="/" style={{ fontSize: 12, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>Ver web</a>
+            <button onClick={logout} style={{ all: 'unset', fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.4)', padding: '5px 14px', borderRadius: 4, cursor: 'pointer' }}>Cerrar sesión</button>
+          </div>
+        )}
       </nav>
 
-      <div style={{ display: 'flex', flex: 1 }}>
+      <div style={{ flex: 1, position: 'relative' }}>
 
-        {/* SIDEBAR */}
-        <div style={{ width: 220, background: C.oscuro, minHeight: 'calc(100vh - 54px)', padding: '20px 0', flexShrink: 0 }}>
-          {menuItems.map(item => (
-            <button key={item.id} onClick={() => setSeccion(item.id)} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.6)', background: seccion === item.id ? 'rgba(255,255,255,0.12)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? `3px solid #83D4DB` : '3px solid transparent', boxSizing: 'border-box' }}>
-              {item.icon}{item.label}
-            </button>
-          ))}
-          {stats?.aeiPend > 0 && seccion !== 'aei' && (
-            <button onClick={() => setSeccion('aei')} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px 10px 40px', fontSize: 12, color: '#fbbf24', cursor: 'pointer', boxSizing: 'border-box' }}>
-              ⚠ {stats.aeiPend} pendiente{stats.aeiPend !== 1 ? 's' : ''}
-            </button>
-          )}
-        </div>
+        {/* DESKTOP SIDEBAR — only rendered when not mobile */}
+        {!isMobile && (
+          <div style={{ position: 'fixed', top: 54, left: 0, width: 220, height: 'calc(100vh - 54px)', background: C.oscuro, zIndex: 200, overflowY: 'auto', padding: '20px 0' }}>
+            {menuItems.map(item => (
+              <button key={item.id} onClick={() => setSeccion(item.id)} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.6)', background: seccion === item.id ? 'rgba(255,255,255,0.12)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? `3px solid #83D4DB` : '3px solid transparent', boxSizing: 'border-box' }}>
+                {item.icon}{item.label}
+              </button>
+            ))}
+            {stats?.aeiPend > 0 && seccion !== 'aei' && (
+              <button onClick={() => setSeccion('aei')} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '10px 20px 10px 40px', fontSize: 12, color: '#fbbf24', cursor: 'pointer', boxSizing: 'border-box' }}>
+                ⚠ {stats.aeiPend} pendiente{stats.aeiPend !== 1 ? 's' : ''}
+              </button>
+            )}
+          </div>
+        )}
 
         {/* CONTENIDO */}
-        <div style={{ flex: 1, padding: '28px 32px', overflowY: 'auto' }}>
+        <div style={{ marginLeft: isMobile ? 0 : 220, padding: isMobile ? '16px' : '28px 32px', overflowX: 'hidden', minHeight: 'calc(100vh - 54px)' }}>
 
           {/* DASHBOARD */}
           {seccion === 'dashboard' && (
             <Seccion titulo="Dashboard">
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 28 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 16, marginBottom: 28 }}>
                 {[
                   { label: 'Anuncios activos', val: stats?.totalProp ?? '—', color: C.verde, icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={C.verde} strokeWidth="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> },
                   { label: 'Usuarios registrados', val: stats?.totalUsers ?? '—', color: C.azul, icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={C.azul} strokeWidth="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> },

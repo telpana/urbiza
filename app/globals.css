@@ -38,6 +38,8 @@ img { max-width: 100%; }
 .panel-hamburger         { display: none; }
 .panel-sidebar-overlay   { display: none; }
 .buscar-filtros-toggle   { display: none; }
+.admin-hamburger         { display: none; }
+.admin-sidebar-overlay   { display: none; }
 
 .slide-cards {
   display: grid;
@@ -283,6 +285,45 @@ img { max-width: 100%; }
   .kpi-grid             { grid-template-columns: 1fr !important; }
   .plan-beneficios-grid { grid-template-columns: 1fr !important; }
   .panel-main           { padding: 12px !important; }
+}
+
+/* ══════════════════════════════════
+   ADMIN ≤ 768px
+══════════════════════════════════ */
+@media (max-width: 768px) {
+  .admin-hamburger { display: flex !important; align-items: center !important; }
+  .admin-nav-actions { display: none !important; }
+
+  .admin-sidebar {
+    display: none !important;
+    position: fixed !important;
+    top: 0 !important; left: 0 !important;
+    width: 240px !important;
+    height: 100vh !important;
+    z-index: 500 !important;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.3) !important;
+    overflow-y: auto !important;
+    padding-top: 0 !important;
+  }
+  .admin-sidebar.open {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  .admin-sidebar-overlay {
+    display: block !important;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 499;
+  }
+  .admin-sidebar-close { display: flex !important; }
+  .admin-content { padding: 16px !important; }
+  .admin-kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+@media (max-width: 480px) {
+  .admin-kpi-grid { grid-template-columns: 1fr !important; }
+  .admin-content  { padding: 12px !important; }
 }
 
 /* ══════════════════════════════════
