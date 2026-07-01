@@ -4,14 +4,11 @@ import { useEffect } from 'react'
 export default function DynamicFavicon() {
   useEffect(() => {
     const apply = (url: string) => {
-      let link = document.getElementById('favicon-link') as HTMLLinkElement | null
-      if (!link) {
-        link = document.createElement('link')
-        link.rel = 'icon'
-        link.id = 'favicon-link'
-        document.head.appendChild(link)
-      }
+      document.querySelectorAll('link[rel~="icon"]').forEach(el => el.remove())
+      const link = document.createElement('link')
+      link.rel = 'icon'
       link.href = url
+      document.head.appendChild(link)
     }
 
     try {

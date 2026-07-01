@@ -63,7 +63,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es">
       <head>
-        <link rel="icon" href="/favicon.ico" id="favicon-link" />
         <link rel="canonical" href="https://www.habitade.com" />
         <meta name="geo.region" content="DO" />
         <meta name="geo.country" content="DO" />
