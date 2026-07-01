@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import "./responsive.css";
 import { IdiomaProvider } from "../IdiomaContext";
+import DynamicFavicon from "./components/DynamicFavicon";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.habitade.com'),
@@ -79,6 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <IdiomaProvider>
+          <DynamicFavicon />
           {children}
         </IdiomaProvider>
       </body>

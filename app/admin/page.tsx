@@ -895,8 +895,16 @@ export default function Admin() {
                 </div>
                 {faviconUrl && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16, padding: '10px 14px', background: '#f9fafb', borderRadius: 6 }}>
-                    <img src={faviconUrl} alt="favicon" style={{ width: 32, height: 32, objectFit: 'contain' }} />
-                    <span style={{ fontSize: 12, color: '#666' }}>Favicon actual</span>
+                    <img
+                      src={faviconUrl + '?t=' + Date.now()}
+                      alt="favicon"
+                      style={{ width: 32, height: 32, objectFit: 'contain', imageRendering: 'pixelated' }}
+                      onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+                    />
+                    <div>
+                      <div style={{ fontSize: 12, color: '#666' }}>Favicon actual</div>
+                      <div style={{ fontSize: 11, color: '#aaa', wordBreak: 'break-all', maxWidth: 260 }}>{faviconUrl.split('/').pop()}</div>
+                    </div>
                   </div>
                 )}
                 <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#f0fafb', border: `1.5px solid ${C.verde}`, borderRadius: 6, padding: '9px 18px', fontSize: 13, fontWeight: 600, color: C.verde, cursor: 'pointer' }}>
