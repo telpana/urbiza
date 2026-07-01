@@ -865,12 +865,12 @@ function BuscarContent() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
             {filtradasPagina.map(p => (
-              <div key={p.id} className="prop-card" style={{ display: 'flex', background: '#fff', borderBottom: '8px solid #f4f5f6', cursor: 'pointer', alignItems: 'flex-start', boxShadow: p.dest ? '0 2px 12px rgba(0,109,119,0.10)' : 'none' }}
+              <div key={p.id} className="prop-card" style={{ display: 'flex', background: '#fff', borderBottom: '8px solid #f4f5f6', cursor: 'pointer', boxShadow: p.dest ? '0 2px 12px rgba(0,109,119,0.10)' : 'none' }}
                 onClick={() => window.location.href = `/propiedad/${p.id}`}
                 onMouseEnter={e => (e.currentTarget.style.background = '#fafefe')}
                 onMouseLeave={e => (e.currentTarget.style.background = '#fff')}>
                 <div className="prop-card-img prop-card-img-slider"
-                  style={{ width: 300, minWidth: 300, height: 220, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer', borderLeft: p.dest ? '4px solid #006D77' : 'none' }}>
+                  style={{ width: 300, minWidth: 300, background: p.dest ? '#e0f5f7' : p.bg, position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', cursor: 'pointer', borderLeft: p.dest ? '4px solid #006D77' : 'none' }}>
                   {p.fotos && p.fotos.length > 0
                     ? <img src={p.fotos[fotoIdx[String(p.id)] ?? 0]} alt={p.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity 0.2s' }} />
                     : <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -911,7 +911,6 @@ function BuscarContent() {
                       US$ {p.precio.toLocaleString('en-US')}
                       {p.m2 > 0 && <span style={{ fontSize: 13, color: '#aaa', fontWeight: 400, marginLeft: 10 }}>US$ {Math.round(p.precio / p.m2).toLocaleString('en-US')}/m²</span>}
                     </div>
-                    <div className="pc-dop" style={{ fontSize: 12, color: '#aaa', marginBottom: 12 }}>{formatDOP(p.precio)}</div>
                     <div className="pc-feats" style={{ fontSize: 13, color: '#444', marginBottom: 0 }}>
                       {p.hab > 0 && <span>{p.hab} {Tb.hab} &nbsp;·&nbsp; </span>}
                       <span>{p.m2} m² &nbsp;·&nbsp; </span>
