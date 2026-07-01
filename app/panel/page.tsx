@@ -276,6 +276,10 @@ export default function Panel() {
 
 
   useEffect(() => {
+    history.replaceState(null, '', `?s=${seccion}`)
+  }, [seccion])
+
+  useEffect(() => {
     if ((seccion === 'anuncios' || seccion === 'estadisticas') && usuario?.id) {
       supabase.from('propiedades').select('*').eq('usuario_id', usuario.id).order('created_at', { ascending: false })
         .then(({ data }) => { if (data) setAnunciosReales(data) })
