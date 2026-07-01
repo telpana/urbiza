@@ -776,7 +776,40 @@ export default function Admin() {
 
               {/* Tabla */}
               <Card style={{ overflow: 'auto' }}>
-                {destacadosLoading ? <div style={{ padding: 24, color: '#aaa', fontSize: 13 }}>Cargando...</div> : (
+                {destacadosLoading ? <div style={{ padding: 24, color: '#aaa', fontSize: 13 }}>Cargando...</div> : destacadosActivos.length === 0 ? (
+                  <div style={{ padding: 24, fontSize: 13, color: '#aaa', textAlign: 'center' }}>Sin destacados activos</div>
+                ) : isMobile ? (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 0 }}>
+                    {destacadosActivos.map((p: any, i: number) => {
+                      const hasta = new Date(p.destacado_hasta)
+                      const diasRestantes = Math.ceil((hasta.getTime() - Date.now()) / 86400000)
+                      const urgent = diasRestantes <= 3
+                      return (
+                        <div key={p.id} style={{ display: 'flex', gap: 12, padding: '14px 16px', borderBottom: i < destacadosActivos.length - 1 ? '1px solid #f0f0f0' : 'none', alignItems: 'flex-start' }}>
+                          <div style={{ width: 60, height: 48, borderRadius: 6, overflow: 'hidden', flexShrink: 0, background: '#e8f5f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            {Array.isArray(p.fotos) && p.fotos[0]
+                              ? <img src={p.fotos[0]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            }
+                          </div>
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <a href={`/propiedad/${p.id}`} target="_blank" rel="noreferrer" style={{ color: C.verde, fontWeight: 600, textDecoration: 'none', fontSize: 13, display: 'block', marginBottom: 3 }}>{p.titulo}</a>
+                            <div style={{ fontSize: 11, color: '#888', marginBottom: 4 }}>{p.zona}</div>
+                            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+                              <Badge txt={p.tipo} color="#555" bg="#f0f0f0" />
+                              <span style={{ fontSize: 11, color: urgent ? '#ef4444' : '#aaa', fontWeight: urgent ? 600 : 400 }}>
+                                {urgent ? '⚠ ' : ''}{diasRestantes === 1 ? 'Vence mañana' : `${diasRestantes}d restantes`}
+                              </span>
+                            </div>
+                            {(p.usuarios as any)?.nombre && (
+                              <div style={{ fontSize: 11, color: '#aaa', marginTop: 3 }}>{(p.usuarios as any).nombre}</div>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                ) : (
                   <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 620 }}>
                     <thead>
                       <tr style={{ borderBottom: '1.5px solid #f0f0f0', background: '#fafafa' }}>
@@ -786,9 +819,6 @@ export default function Admin() {
                       </tr>
                     </thead>
                     <tbody>
-                      {destacadosActivos.length === 0 && (
-                        <tr><td colSpan={5} style={{ padding: 24, fontSize: 13, color: '#aaa', textAlign: 'center' }}>Sin destacados activos</td></tr>
-                      )}
                       {destacadosActivos.map((p: any) => {
                         const hasta = new Date(p.destacado_hasta)
                         const diasRestantes = Math.ceil((hasta.getTime() - Date.now()) / 86400000)
