@@ -199,7 +199,10 @@ export default function Panel() {
   const Tpanel = trLang.panel
   const Tn = trLang.nav
   const menuItems = getMenuItems(Tpanel)
-  const [seccion, setSeccion] = useState('anuncios')
+  const [seccion, setSeccion] = useState(() => {
+    if (typeof window === 'undefined') return 'anuncios'
+    return new URLSearchParams(window.location.search).get('s') || 'anuncios'
+  })
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [panelNavOpen, setPanelNavOpen] = useState(false)
   const [navUserMenuOpen, setNavUserMenuOpen] = useState(false)
@@ -270,12 +273,7 @@ export default function Panel() {
   const [promoLoading, setPromoLoading] = useState(false)
   const [promoError, setPromoError] = useState('')
 
-  // Leer sección desde URL (?s=mensajes, ?s=anuncios, etc.)
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const s = params.get('s')
-    if (s) setSeccion(s)
-  }, [])
+
 
   useEffect(() => {
     if ((seccion === 'anuncios' || seccion === 'estadisticas') && usuario?.id) {
