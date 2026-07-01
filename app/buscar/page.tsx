@@ -912,13 +912,12 @@ function BuscarContent() {
                       {p.m2 > 0 && <span style={{ fontSize: 13, color: '#aaa', fontWeight: 400, marginLeft: 10 }}>US$ {Math.round(p.precio / p.m2).toLocaleString('en-US')}/m²</span>}
                     </div>
                     <div className="pc-dop" style={{ fontSize: 12, color: '#aaa', marginBottom: 12 }}>{formatDOP(p.precio)}</div>
-                    <div className="pc-feats" style={{ fontSize: 13, color: '#444', marginBottom: 12 }}>
+                    <div className="pc-feats" style={{ fontSize: 13, color: '#444', marginBottom: 0 }}>
                       {p.hab > 0 && <span>{p.hab} {Tb.hab} &nbsp;·&nbsp; </span>}
                       <span>{p.m2} m² &nbsp;·&nbsp; </span>
                       {p.banos > 0 && <span>{p.banos} {p.banos > 1 ? Tb.banos2 : Tb.bano} &nbsp;·&nbsp; </span>}
                       {p.parqueos > 0 && <span>{p.parqueos} {p.parqueos > 1 ? Tb.parqueos2 : Tb.parqueos}</span>}
                     </div>
-                    <div className="pc-desc" style={{ fontSize: 13, color: '#777', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', marginBottom: 14 }}>{p.desc}</div>
                   </div>
                   <div className="pc-footer" style={{ paddingTop: 12, borderTop: '1px solid #f0f0f0' }}>
                     <div className="pc-zona" style={{ display: 'flex', alignItems: 'center', gap: 4, background: '#f0fafb', border: '1px solid #c5e8ea', padding: '3px 10px', borderRadius: 20, marginBottom: 10, width: 'fit-content' }}>
