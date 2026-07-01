@@ -3,6 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  color-scheme: light;
 }
 
 @theme inline {
@@ -10,13 +11,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
@@ -396,14 +390,6 @@ a, button, [role="button"], input, select, textarea, label {
   }
 }
 
-/* Evitar que el modo oscuro del sistema rompa colores de inputs */
-@media (prefers-color-scheme: dark) {
-  input, textarea, select {
-    background-color: #fff;
-    color: #111;
-    -webkit-text-fill-color: #111;
-  }
-}
 
 @keyframes shimmer {
   0%   { background-position: -600px 0 }

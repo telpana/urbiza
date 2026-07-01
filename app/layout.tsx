@@ -62,6 +62,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es">
       <head>
+        <meta name="color-scheme" content="light" />
+        <meta name="theme-color" content="#006D77" />
         <link rel="canonical" href="https://www.habitade.com" />
         <meta name="geo.region" content="DO" />
         <meta name="geo.country" content="DO" />
