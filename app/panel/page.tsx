@@ -463,7 +463,7 @@ export default function Panel() {
       nombre: perfilNombre,
       telefono: perfilTelefono,
       inmobiliaria: perfilInmobiliaria,
-      numero_aei: perfilAei || null,
+      numero_aei: perfilAei ? (perfilAei.startsWith('AEI-') ? perfilAei : `AEI-${perfilAei}`) : null,
       idiomas: perfilIdiomas,
     }
     if (perfilAei) updates.tipo = 'profesional'
@@ -2077,7 +2077,19 @@ export default function Panel() {
                   {tipoUsuario === 'profesional' && usuario?.plan === 'profesional' && (
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.aei}</label>
-                      <input value={perfilAei} onChange={e => setPerfilAei(e.target.value)} placeholder='AEI-0000' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                      <input
+                        value={perfilAei}
+                        readOnly={usuario?.aei_aprobado === true}
+                        onChange={e => {
+                          let v = e.target.value
+                          if (!v.startsWith('AEI-')) v = 'AEI-' + v.replace(/^AEI-?/i, '')
+                          setPerfilAei(v)
+                        }}
+                        placeholder='AEI-0000'
+                        style={{ width: '100%', border: `1.5px solid ${usuario?.aei_aprobado === true ? '#d1fae5' : '#e0e0e0'}`, borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box', background: usuario?.aei_aprobado === true ? '#f0fdf4' : '#fff', color: usuario?.aei_aprobado === true ? '#065f46' : '#111', cursor: usuario?.aei_aprobado === true ? 'not-allowed' : 'text', fontWeight: usuario?.aei_aprobado === true ? 700 : 400 }}
+                        onFocus={e => { if (usuario?.aei_aprobado !== true) e.target.style.borderColor='#006D77' }}
+                        onBlur={e => { if (usuario?.aei_aprobado !== true) e.target.style.borderColor='#e0e0e0' }}
+                      />
                       {perfilAei && usuario?.aei_aprobado !== true && (
                         <div style={{ fontSize: 11, color: '#92400e', marginTop: 5, display: 'flex', alignItems: 'center', gap: 4 }}>
                           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
