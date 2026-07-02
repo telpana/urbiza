@@ -7,6 +7,10 @@ const PREVIEW_SECRET = process.env.PREVIEW_SECRET || 'habitade2025preview'
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  if (pathname === '/favicon.ico') {
+    return NextResponse.redirect(new URL('/icon', request.url), { status: 302 })
+  }
+
   if (OPEN) {
     // Cuando abierto: bloquear indexación de panel/admin
     if (pathname.startsWith('/panel') || pathname.startsWith('/admin')) {
@@ -63,5 +67,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image).*)'],
 }
