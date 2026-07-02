@@ -56,6 +56,10 @@ export const metadata: Metadata = {
       'en': 'https://www.habitade.com',
     }
   },
+  icons: {
+    icon: [{ url: '/icon', type: 'image/svg+xml' }, { url: '/favicon.ico' }],
+    shortcut: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -70,6 +74,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="geo.placename" content="República Dominicana" />
         <meta name="language" content="Spanish" />
         <meta name="revisit-after" content="7 days" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Habitade",
+          "alternateName": "Habitade - Portal Inmobiliario República Dominicana",
+          "url": "https://www.habitade.com",
+          "description": "El portal inmobiliario líder del Caribe. Compra, vende o alquila apartamentos, casas, villas y terrenos en República Dominicana.",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": { "@type": "EntryPoint", "urlTemplate": "https://www.habitade.com/buscar?q={search_term_string}" },
+            "query-input": "required name=search_term_string"
+          }
+        }) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "Habitade",
+          "url": "https://www.habitade.com",
+          "logo": { "@type": "ImageObject", "url": "https://www.habitade.com/icon", "width": 512, "height": 512 },
+          "areaServed": { "@type": "Country", "name": "Dominican Republic", "alternateName": "República Dominicana" },
+          "sameAs": ["https://www.habitade.com"]
+        }) }} />
         <style dangerouslySetInnerHTML={{__html:`
           .sc-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
           @media(max-width:768px){
