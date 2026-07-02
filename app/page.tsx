@@ -271,10 +271,10 @@ export default function Home() {
   const inputHomeRef = useRef<HTMLInputElement>(null)
   const [mostrarSugHome, setMostrarSugHome] = useState(false)
   const lsGet = (k: string) => { try { return typeof window !== 'undefined' ? JSON.parse(localStorage.getItem(k) || '[]') : [] } catch { return [] } }
+  const lsGetDaily = (k: string) => { try { if (typeof window === 'undefined') return []; const raw = localStorage.getItem(k); if (!raw) return []; const { data, date } = JSON.parse(raw); return date === new Date().toDateString() ? (data || []) : [] } catch { return [] } }
   const [destReales, setDestReales] = useState<any[]>(() => lsGet('hb_dest'))
-  const [masVistasReales, setMasVistasReales] = useState<any[]>(() => lsGet('hb_masvistos'))
+  const [masVistasReales, setMasVistasReales] = useState<any[]>(() => lsGetDaily('hb_masvistos'))
   const [slideIdx, setSlideIdx] = useState(0)
-  const [masIdx, setMasIdx] = useState(0)
   const [novedadesSantoDomingo, setNovedadesSantoDomingo] = useState<any[]>(() => lsGet('hb_nov_sd'))
   const [novedadesPuntaCana, setNovedadesPuntaCana] = useState<any[]>(() => lsGet('hb_nov_pc'))
   const [novedadesLasTerrenas, setNovedadesLasTerrenas] = useState<any[]>(() => lsGet('hb_nov_lt'))
@@ -347,8 +347,8 @@ export default function Home() {
         .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos').eq('destacado', true).eq('estado', 'activo').limit(12)
       if (dest && dest.length > 0) { setDestReales(dest); try { localStorage.setItem('hb_dest', JSON.stringify(dest)) } catch {} }
       const { data: vistas } = await supabase.from('propiedades')
-        .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos').eq('estado', 'activo').order('visitas', { ascending: false }).limit(3)
-      if (vistas && vistas.length > 0) { setMasVistasReales(vistas); try { localStorage.setItem('hb_masvistos', JSON.stringify(vistas)) } catch {} }
+        .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos').eq('estado', 'activo').order('visitas', { ascending: false }).limit(100)
+      if (vistas && vistas.length > 0) { setMasVistasReales(vistas); try { localStorage.setItem('hb_masvistos', JSON.stringify({ data: vistas, date: new Date().toDateString() })) } catch {} }
 
       const campos = 'id,titulo,precio,zona,habitaciones,m2,tipo,operacion,fotos'
       const [{ data: sd }, { data: pc }, { data: stg }] = await Promise.all([
@@ -375,11 +375,16 @@ export default function Home() {
     return () => clearInterval(t)
   }, [destReales.length])
 
-  useEffect(() => {
-    if (masVistasReales.length <= 3) return
-    const t = setInterval(() => setMasIdx(i => (i + 1) % masVistasReales.length), 4500)
-    return () => clearInterval(t)
-  }, [masVistasReales.length])
+  const getDailyMasVistos = (pool: any[]) => {
+    if (pool.length === 0) return []
+    const seed = new Date().toDateString().split('').reduce((a, c) => a + c.charCodeAt(0), 0)
+    const start = seed % pool.length
+    const picks: any[] = []
+    for (let i = 0; picks.length < 3 && i < pool.length; i++) {
+      picks.push(pool[(start + i) % pool.length])
+    }
+    return picks
+  }
 
   const zonasRD = ['Piantini, Distrito Nacional', 'Naco, Distrito Nacional', 'Serrallés, Distrito Nacional', 'Bella Vista, Distrito Nacional', 'Arroyo Hondo, Distrito Nacional', 'Los Cacicazgos, Distrito Nacional', 'Gazcue, Distrito Nacional', 'Ciudad Colonial, Distrito Nacional', 'Evaristo Morales, Distrito Nacional', 'Miramar, Distrito Nacional', 'La Esperilla, Distrito Nacional', 'Urbanización Real, Distrito Nacional', 'Viejo Arroyo Hondo, Distrito Nacional', 'Los Prados, Distrito Nacional', 'Jardines del Norte, Distrito Nacional', 'Ensanche Naco, Distrito Nacional', 'Ensanche Ozama, Distrito Nacional', 'Villa Consuelo, Distrito Nacional', 'Cristo Rey, Distrito Nacional', 'Alma Rosa, Santo Domingo Este', 'Los Tres Brazos, Santo Domingo Este', 'Ensanche Isabelita, Santo Domingo Este', 'San Isidro, Santo Domingo Este', 'Los Mina, Santo Domingo Este', 'Bávaro, La Altagracia', 'Punta Cana, La Altagracia', 'Downtown Punta Cana, La Altagracia', 'Cap Cana, La Altagracia', 'Cabeza de Toro, La Altagracia', 'Los Corales, La Altagracia', 'Uvero Alto, La Altagracia', 'Macao, La Altagracia', 'Cortecito, La Altagracia', 'El Cortecito, La Altagracia', 'Higüey, La Altagracia', 'San Rafael del Yuma, La Altagracia', 'Los Jardines, Santiago', 'Cerros de Gurabo, Santiago', 'Reparto Conuco, Santiago', 'Bella Vista, Santiago', 'Villa Olga, Santiago', 'Pontezuela, Santiago', 'Urbanización Tropical, Santiago', 'Las Colinas, Santiago', 'El Dorado, Santiago', 'Las Terrenas, Samaná', 'Samaná', 'El Portillo, Samaná', 'Cosón, Samaná', 'Las Galeras, Samaná', 'El Limón, Samaná', 'Rancho Español, Samaná', 'Puerto Plata', 'Sosúa, Puerto Plata', 'Cabarete, Puerto Plata', 'Costámbar, Puerto Plata', 'Cofresí, Puerto Plata', 'Playa Dorada, Puerto Plata', 'La Romana', 'Casa de Campo, La Romana', 'Bayahíbe, La Romana', 'Dominicus, La Romana', 'Jarabacoa, La Vega', 'Constanza, La Vega', 'La Vega', 'San Pedro de Macorís', 'Juan Dolio, San Pedro de Macorís', 'Guayacanes, San Pedro de Macorís', 'Boca Chica, Santo Domingo', 'Andrés, Boca Chica', 'San Cristóbal', 'Baní, Peravia', 'Azua', 'Barahona', 'Monte Plata', 'Hato Mayor', 'El Seibo', 'Miches, El Seibo', 'Moca, Espaillat', 'San Francisco de Macorís, Duarte', 'Nagua, María Trinidad Sánchez', 'Monte Cristi', 'Dajabón', 'Pedernales', 'Neiba, Baoruco', 'San Juan de la Maguana']
   const PROVINCIAS_LIST = ['Punta Cana', 'La Altagracia', 'Bávaro', 'Distrito Nacional', 'Santo Domingo', 'Santiago', 'Puerto Plata', 'Samaná', 'Las Terrenas', 'La Romana', 'San Pedro de Macorís', 'La Vega', 'María Trinidad Sánchez', 'El Seibo', 'Hato Mayor', 'San Cristóbal', 'Peravia', 'Espaillat', 'Duarte', 'Monseñor Nouel', 'Valverde', 'Monte Cristi', 'Dajabón', 'Azua', 'Barahona', 'Pedernales']
@@ -673,10 +678,9 @@ export default function Home() {
           {/* Más vistos */}
           {(() => {
             const bgs = ['#f0ebe0','#e8f0e0','#f0e8f0']
-            const src = masVistasReales.length > 0 ? masVistasReales : propiedadesDestacadas.filter(p => p.tipo === 'visitas').map((p,i) => ({ id: i, titulo: p.title, precio: p.price, zona: p.loc, habitaciones: null, m2: null }))
-            if (src.length === 0) return null
-            const masTotal = src.length
-            const masVisibles = [src[masIdx % masTotal], src[(masIdx+1) % masTotal], src[(masIdx+2) % masTotal]].filter(Boolean)
+            const pool = masVistasReales.length > 0 ? masVistasReales : propiedadesDestacadas.filter(p => p.tipo === 'visitas').map((p,i) => ({ id: i, titulo: p.title, precio: p.price, zona: p.loc, habitaciones: null, m2: null }))
+            if (pool.length === 0) return null
+            const masVisibles = masVistasReales.length > 0 ? getDailyMasVistos(pool) : pool.slice(0, 3)
             return (
               <div className="home-cards-section" style={{ marginBottom: 32 }}>
                 <div className="home-section-hdr" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
