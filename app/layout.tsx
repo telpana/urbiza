@@ -57,7 +57,10 @@ export const metadata: Metadata = {
     }
   },
   icons: {
-    icon: [{ url: '/icon', type: 'image/svg+xml' }, { url: '/favicon.ico' }],
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
     shortcut: '/favicon.ico',
   },
 };
@@ -74,6 +77,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="geo.placename" content="República Dominicana" />
         <meta name="language" content="Spanish" />
         <meta name="revisit-after" content="7 days" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "WebSite",
