@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { emailBienvenida } from '@/lib/emails'
 
 const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -37,6 +38,8 @@ export async function POST(req: Request) {
   }, { onConflict: 'id' })
 
   if (dbError) return NextResponse.json({ error: dbError.message }, { status: 500 })
+
+  emailBienvenida(email, nombre || '').catch(e => console.error('email bienvenida error:', e))
 
   return NextResponse.json({ ok: true })
 }

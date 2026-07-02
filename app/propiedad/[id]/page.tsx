@@ -406,15 +406,12 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
     if (bloq) { setErrorContacto(Tp.err_bloqueado); setEnviando(false); return }
     setEnviando(true)
     setErrorContacto('')
-    const { error } = await supabase.from('mensajes').insert({
-      propiedad_id: id,
-      vendedor_id: propiedad?.usuario_id,
-      remitente_id: userId,
-      nombre_cliente: nombreContacto,
-      telefono_cliente: telefonoContacto || null,
-      mensaje,
+    const res = await fetch('/api/mensajes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ propiedad_id: id, vendedor_id: propiedad?.usuario_id, remitente_id: userId, nombre_cliente: nombreContacto, telefono_cliente: telefonoContacto || null, mensaje }),
     })
-    if (error) { setErrorContacto(Tp.err_envio); setEnviando(false); return }
+    if (!res.ok) { setErrorContacto(Tp.err_envio); setEnviando(false); return }
     setEnviado(true)
     setEnviando(false)
     setMensaje('')

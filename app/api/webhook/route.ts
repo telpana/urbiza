@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
+import { emailPagoConfirmado, emailPlanCancelado } from '@/lib/emails'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2026-05-27.dahlia',
@@ -15,15 +16,17 @@ const DIAS_GRACIA = 15
 
 // Stripe agotó reintentos — dejar en gratis, el cron borra a los 15 días
 async function bajarAPlaGratis(subscriptionId: string) {
-  const { data: usuario } = await supabase.from('usuarios').select('id, plan, plan_activo_hasta').eq('stripe_subscription_id', subscriptionId).single()
+  const { data: usuario } = await supabase.from('usuarios').select('id, email, nombre, plan, plan_activo_hasta').eq('stripe_subscription_id', subscriptionId).single()
   if (!usuario) return
-  // Si ya está en past_due, respetar el plan_activo_hasta del invoice.payment_failed (15 días desde el fallo)
-  // Si no, poner fecha de hoy para que el cron limpie pronto
   const vencimiento = usuario.plan === 'past_due' && usuario.plan_activo_hasta
     ? usuario.plan_activo_hasta
     : new Date().toISOString()
   await supabase.from('usuarios').update({ plan: 'gratis', tipo: 'particular', stripe_subscription_id: null, plan_activo_hasta: vencimiento }).eq('id', usuario.id)
   console.log('[webhook] suscripción cancelada, anuncios se borran vía cron en:', vencimiento)
+  if (usuario.email) {
+    const fechaStr = new Date(vencimiento).toLocaleDateString('es-DO', { day: 'numeric', month: 'long', year: 'numeric' })
+    emailPlanCancelado(usuario.email, usuario.nombre || '', fechaStr).catch(e => console.error('email cancelacion error:', e))
+  }
 }
 
 export async function POST(req: Request) {
@@ -43,14 +46,21 @@ export async function POST(req: Request) {
     const userId = session.metadata?.userId
     const subscriptionId = session.subscription as string
     if (userId && subscriptionId) {
+      const proximaFactura = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
       const { error } = await supabase.from('usuarios').update({
         plan: 'profesional',
         tipo: 'profesional',
         stripe_subscription_id: subscriptionId,
-        plan_activo_hasta: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+        plan_activo_hasta: proximaFactura.toISOString(),
         ya_suscrito: true,
       }).eq('id', userId)
       if (error) console.error('[webhook] error actualizando plan:', error)
+      // Email 4: pago confirmado
+      const { data: u } = await supabase.from('usuarios').select('email, nombre').eq('id', userId).single()
+      if (u?.email) {
+        const fechaStr = proximaFactura.toLocaleDateString('es-DO', { day: 'numeric', month: 'long', year: 'numeric' })
+        emailPagoConfirmado(u.email, u.nombre || '', fechaStr).catch(e => console.error('email pago error:', e))
+      }
     }
   }
 
