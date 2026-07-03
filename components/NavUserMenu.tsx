@@ -15,14 +15,8 @@ export default function NavUserMenu({ dark = false }: Props) {
       return stored ? !!JSON.parse(localStorage.getItem(stored) || 'null') : false
     } catch { return false }
   })
-  const [fotoUrl, setFotoUrl] = useState<string | null>(() => {
-    if (typeof window === 'undefined') return null
-    try { return localStorage.getItem('hb_perfil_foto') || null } catch { return null }
-  })
-  const [inicial, setInicial] = useState(() => {
-    if (typeof window === 'undefined') return 'U'
-    try { return localStorage.getItem('hb_perfil_inicial') || 'U' } catch { return 'U' }
-  })
+  const [fotoUrl, setFotoUrl] = useState<string | null>(null)
+  const [inicial, setInicial] = useState('U')
   const [noLeidos, setNoLeidos] = useState(0)
   const [noLeidosGuardados, setNoLeidosGuardados] = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -36,17 +30,33 @@ export default function NavUserMenu({ dark = false }: Props) {
         setSesion(false)
         setFotoUrl(null)
         setInicial('U')
-        try { localStorage.removeItem('hb_perfil_foto'); localStorage.removeItem('hb_perfil_inicial') } catch {}
+        try { localStorage.removeItem('hb_perfil_foto'); localStorage.removeItem('hb_perfil_inicial'); localStorage.removeItem('hb_perfil_uid') } catch {}
         return
       }
       setSesion(true)
+
+      // Cargar caché solo si pertenece al usuario actual
+      try {
+        const cachedId = localStorage.getItem('hb_perfil_uid')
+        if (cachedId === user.id) {
+          const foto = localStorage.getItem('hb_perfil_foto')
+          const ini = localStorage.getItem('hb_perfil_inicial')
+          if (foto) setFotoUrl(foto)
+          if (ini) setInicial(ini)
+        } else {
+          // Usuario distinto — limpiar caché vieja
+          localStorage.removeItem('hb_perfil_foto')
+          localStorage.removeItem('hb_perfil_inicial')
+          localStorage.removeItem('hb_perfil_uid')
+        }
+      } catch {}
 
       const { data: perfil } = await supabase
         .from('usuarios')
         .select('foto_url, nombre')
         .eq('id', user.id)
         .single()
-      if (perfil?.foto_url) { setFotoUrl(perfil.foto_url); try { localStorage.setItem('hb_perfil_foto', perfil.foto_url) } catch {} }
+      if (perfil?.foto_url) { setFotoUrl(perfil.foto_url); try { localStorage.setItem('hb_perfil_foto', perfil.foto_url); localStorage.setItem('hb_perfil_uid', user.id) } catch {} }
       if (perfil?.nombre) { const ini = perfil.nombre[0].toUpperCase(); setInicial(ini); try { localStorage.setItem('hb_perfil_inicial', ini) } catch {} }
 
       // Contar mensajes no leídos
