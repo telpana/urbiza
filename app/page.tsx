@@ -219,11 +219,11 @@ const propiedadesPuntaCana = [
   { price: 185000, title: 'Apartamento en Bávaro', feats: 'Apartamento · 2 hab · 105 m²', bg: '#f0ebe0' },
 ]
 
-const propiedadesLasTerrenas = [
+const propiedadesSamana = [
   { price: 185000, title: 'Villa en Las Terrenas', feats: 'Villa · 3 hab · 180 m²', bg: '#e0f5f7' },
-  { price: 95000, title: 'Apartamento en El Portillo', feats: 'Apartamento · 2 hab · 80 m²', bg: '#ddf0e8' },
+  { price: 95000, title: 'Casa en Las Galeras', feats: 'Casa · 2 hab · 90 m²', bg: '#ddf0e8' },
   { price: 320000, title: 'Villa en Cosón', feats: 'Villa · 4 hab · 350 m²', bg: '#f0ebe0' },
-  { price: 130000, title: 'Casa en Las Terrenas', feats: 'Casa · 3 hab · 150 m²', bg: '#e8eaf0' },
+  { price: 130000, title: 'Apartamento en Samaná', feats: 'Apartamento · 3 hab · 150 m²', bg: '#e8eaf0' },
 ]
 
 const zonas = [
@@ -232,7 +232,7 @@ const zonas = [
   { nombre: 'Santiago', tipo: 'Casas en venta', slug: 'santiago' },
   { nombre: 'La Romana', tipo: 'Propiedades en venta', slug: 'la-romana' },
   { nombre: 'Naco', tipo: 'Apartamentos en venta', slug: 'naco' },
-  { nombre: 'Las Terrenas', tipo: 'Villas y casas en venta', slug: 'las-terrenas' },
+  { nombre: 'Samaná', tipo: 'Villas y casas en venta', slug: 'samana' },
   { nombre: 'Bávaro', tipo: 'Apartamentos frente al mar', slug: 'bavaro' },
   { nombre: 'Cap Cana', tipo: 'Villas de lujo en venta', slug: 'cap-cana' },
   { nombre: 'Piantini', tipo: 'Apartamentos de lujo', slug: 'piantini' },
@@ -243,8 +243,8 @@ const zonas = [
 
 const bgsNovedad = ['#e0f5f7','#ddf0e8','#e8eaf0','#f0ebe0']
 
-function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona }: {
-  titulo: string, subtitulo: string, zona: string,
+function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href }: {
+  titulo: string, subtitulo: string, zona: string, href?: string,
   reales: any[],
   ejemplos: { price: number, title: string, feats: string, bg: string }[]
 }) {
@@ -255,7 +255,7 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona }: {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
         <div>
           <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 4 }}>{titulo}</h2>
-          <a href={`/buscar?zona=${encodeURIComponent(zona)}`} style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>{subtitulo}</a>
+          <a href={href || `/buscar?zona=${encodeURIComponent(zona)}`} style={{ fontSize: 13, color: '#006D77', fontWeight: 500, textDecoration: 'none' }}>{subtitulo}</a>
         </div>
       </div>
       <div className="novedades-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, paddingBottom: 32 }}>
@@ -323,7 +323,7 @@ export default function Home() {
   const [slideIdx, setSlideIdx] = useState(0)
   const [novedadesSantoDomingo, setNovedadesSantoDomingo] = useState<any[]>(() => lsGet('hb_nov_sd'))
   const [novedadesPuntaCana, setNovedadesPuntaCana] = useState<any[]>(() => lsGet('hb_nov_pc'))
-  const [novedadesLasTerrenas, setNovedadesLasTerrenas] = useState<any[]>(() => lsGet('hb_nov_lt'))
+  const [novedadesSamana, setNovedadesSamana] = useState<any[]>(() => lsGet('hb_nov_lt'))
   const [sesionActiva, setSesionActiva] = useState(false)
   const [authReady, setAuthReady] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -405,12 +405,12 @@ export default function Home() {
           .or('zona.ilike.%Punta Cana%,zona.ilike.%Bávaro%,zona.ilike.%La Altagracia%,zona.ilike.%Cap Cana%')
           .order('created_at', { ascending: false }).limit(4),
         supabase.from('propiedades').select(campos).eq('estado', 'activo')
-          .or('zona.ilike.%Las Terrenas%,zona.ilike.%El Portillo%,zona.ilike.%Cosón%')
+          .or('zona.ilike.%Samaná%,zona.ilike.%Las Terrenas%,zona.ilike.%Las Galeras%,zona.ilike.%Sánchez%,zona.ilike.%El Portillo%,zona.ilike.%Cosón%,zona.ilike.%El Limón%,zona.ilike.%Santa Bárbara%')
           .order('created_at', { ascending: false }).limit(4),
       ])
       if (sd && sd.length > 0) { setNovedadesSantoDomingo(sd); try { localStorage.setItem('hb_nov_sd', JSON.stringify(sd)) } catch {} }
       if (pc && pc.length > 0) { setNovedadesPuntaCana(pc); try { localStorage.setItem('hb_nov_pc', JSON.stringify(pc)) } catch {} }
-      if (stg && stg.length > 0) { setNovedadesLasTerrenas(stg); try { localStorage.setItem('hb_nov_lt', JSON.stringify(stg)) } catch {} }
+      if (stg && stg.length > 0) { setNovedadesSamana(stg); try { localStorage.setItem('hb_nov_lt', JSON.stringify(stg)) } catch {} }
     }
     cargar()
   }, [])
@@ -781,7 +781,7 @@ export default function Home() {
         {/* NOVEDADES POR ZONA */}
         <SeccionNovedad titulo={tr.novedades.santoDomingo} subtitulo={tr.novedades.verTodas} zona="Santo Domingo" reales={novedadesSantoDomingo} ejemplos={propiedadesSantoDomingo} />
         <SeccionNovedad titulo={tr.novedades.puntaCana} subtitulo={tr.novedades.verTodas} zona="Punta Cana" reales={novedadesPuntaCana} ejemplos={propiedadesPuntaCana} />
-        <SeccionNovedad titulo={tr.novedades.lasTerrenas} subtitulo={tr.novedades.verTodas} zona="Las Terrenas" reales={novedadesLasTerrenas} ejemplos={propiedadesLasTerrenas} />
+        <SeccionNovedad titulo={tr.novedades.samana} subtitulo={tr.novedades.verTodas} zona="Samaná" href="/comprar/samana" reales={novedadesSamana} ejemplos={propiedadesSamana} />
       </div>
 
       {/* ZONAS MÁS BUSCADAS */}

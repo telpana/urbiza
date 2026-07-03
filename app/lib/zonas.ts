@@ -1,5 +1,5 @@
 export type ZonaSlug =
-  | 'santo-domingo' | 'punta-cana' | 'santiago' | 'las-terrenas'
+  | 'santo-domingo' | 'punta-cana' | 'santiago' | 'las-terrenas' | 'samana'
   | 'bavaro' | 'cap-cana' | 'la-romana' | 'sosua' | 'cabarete'
   | 'naco' | 'piantini' | 'bella-vista'
 
@@ -19,6 +19,10 @@ export const zonasMeta: Record<string, { nombre: string; texto: string }> = {
   'las-terrenas': {
     nombre: 'Las Terrenas',
     texto: 'Las Terrenas, en la Península de Samaná, es uno de los destinos más exclusivos de RD. Con playas vírgenes y un ambiente cosmopolita, atrae inversores internacionales que buscan villas, casas de playa y apartamentos en entornos naturales privilegiados.',
+  },
+  'samana': {
+    nombre: 'Samaná',
+    texto: 'La Península de Samaná es uno de los rincones más espectaculares del Caribe. Con municipios como Las Terrenas, Las Galeras y Santa Bárbara de Samaná, ofrece una naturaleza exuberante, playas de ensueño y una creciente comunidad internacional. Ideal para villas, casas de playa y proyectos de ecoturismo.',
   },
   'bavaro': {
     nombre: 'Bávaro',
@@ -59,6 +63,7 @@ export const slugToZona: Record<string, string> = {
   'punta-cana': 'Punta Cana',
   'santiago': 'Santiago',
   'las-terrenas': 'Las Terrenas',
+  'samana': 'Samaná',
   'bavaro': 'Bávaro',
   'cap-cana': 'Cap Cana',
   'la-romana': 'La Romana',
@@ -78,6 +83,7 @@ export const zonaGrupos: Record<string, string[]> = {
   'santo-domingo': ['Santo Domingo', 'Piantini', 'Naco', 'Serrallés', 'Bella Vista', 'Arroyo Hondo', 'Evaristo Morales', 'Los Cacicazgos', 'Gazcue', 'Ciudad Colonial', 'La Esperilla', 'Distrito Nacional', 'Santo Domingo Este', 'Santo Domingo Norte', 'Santo Domingo Oeste'],
   'santiago':      ['Santiago', 'Los Jardines', 'Cerros de Gurabo', 'Reparto Conuco', 'Villa Olga', 'Pontificia', 'Nibaje'],
   'las-terrenas':  ['Las Terrenas', 'El Portillo', 'Cosón'],
+  'samana':        ['Samaná', 'Las Terrenas', 'Las Galeras', 'Sánchez', 'El Portillo', 'Cosón', 'El Limón', 'Santa Bárbara de Samaná'],
   'la-romana':     ['La Romana', 'Casa de Campo'],
   'sosua':         ['Sosúa', 'Costámbar', 'Cofresí'],
   'cabarete':      ['Cabarete', 'Playa Dorada', 'Puerto Plata'],
