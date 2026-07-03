@@ -141,7 +141,7 @@ function MapaMini({ zona }: { zona: string }) {
         dragging: false,
         scrollWheelZoom: false,
       })
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map)
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}').addTo(map)
       if (zona) {
         const icono = L.divIcon({
           className: '',
@@ -183,7 +183,7 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: any[], onCerrar:
         zoomControl: true,
         attributionControl: false,
       })
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map)
+      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer/tile/{z}/{y}/{x}').addTo(map)
 
       const marcadores: any[] = []
       propiedades.forEach(p => {
