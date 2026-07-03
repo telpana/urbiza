@@ -32,7 +32,13 @@ export default function NavUserMenu({ dark = false }: Props) {
     const init = async () => {
       const { data: { session } } = await supabase.auth.getSession()
       const user = session?.user
-      if (!user) { setSesion(false); return }
+      if (!user) {
+        setSesion(false)
+        setFotoUrl(null)
+        setInicial('U')
+        try { localStorage.removeItem('hb_perfil_foto'); localStorage.removeItem('hb_perfil_inicial') } catch {}
+        return
+      }
       setSesion(true)
 
       const { data: perfil } = await supabase
