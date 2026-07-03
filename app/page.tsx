@@ -140,7 +140,7 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
             onClick={onCerrar}
             style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 0', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: 'pointer', textAlign: 'center', touchAction: 'manipulation' }}
           >
-            ← {tr.buscar.volver}
+            {tr.buscar.volver}
           </button>
         </div>
       )}
