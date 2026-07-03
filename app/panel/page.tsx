@@ -44,11 +44,11 @@ const planesDestacado = [
 const provinciasZonas: Record<string, string[]> = {
   'Distrito Nacional': ['Piantini', 'Naco', 'Serrallés', 'Bella Vista', 'Arroyo Hondo', 'Los Cacicazgos', 'Gazcue', 'Ciudad Colonial', 'Evaristo Morales', 'Miramar', 'La Esperilla', 'Viejo Arroyo Hondo', 'Urbanización Real', 'Cristo Rey', 'Villa Consuelo', 'Ensanche Ozama'],
   'Santo Domingo': ['Santo Domingo Este', 'Santo Domingo Norte', 'Santo Domingo Oeste', 'Boca Chica', 'Los Tres Brazos', 'Alma Rosa', 'Los Mina', 'San Isidro', 'Ensanche Isabelita'],
-  'La Altagracia': ['Bávaro', 'Punta Cana', 'Downtown Punta Cana', 'Cap Cana', 'Cabeza de Toro', 'Los Corales', 'Uvero Alto', 'Macao', 'Cortecito', 'Higüey', 'San Rafael del Yuma'],
+  'La Altagracia': ['Bávaro', 'Punta Cana', 'Downtown Punta Cana', 'Cap Cana', 'Cabeza de Toro', 'Los Corales', 'Uvero Alto', 'Macao', 'Cortecito', 'Higüey', 'San Rafael del Yuma', 'Bayahibe', 'Dominicus'],
   'Santiago': ['Los Jardines', 'Cerros de Gurabo', 'Reparto Conuco', 'Bella Vista', 'Villa Olga', 'Pontezuela', 'Las Colinas', 'El Dorado', 'Urbanización Tropical'],
   'Samaná': ['Las Terrenas', 'Samaná', 'El Portillo', 'Cosón', 'Las Galeras', 'Sánchez', 'El Limón', 'Rancho Español'],
   'Puerto Plata': ['Puerto Plata', 'Sosúa', 'Cabarete', 'Costámbar', 'Cofresí', 'Playa Dorada', 'Luperón', 'Villa Isabela', 'La Isabela'],
-  'La Romana': ['La Romana', 'Casa de Campo', 'Bayahibe', 'Dominicus'],
+  'La Romana': ['La Romana', 'Casa de Campo'],
   'La Vega': ['Jarabacoa', 'Constanza', 'La Vega'],
   'San Pedro de Macorís': ['San Pedro de Macorís', 'Juan Dolio', 'Guayacanes'],
   'San Cristóbal': ['San Cristóbal'],

@@ -237,13 +237,13 @@ const gruposZona: Record<string, string[]> = {
   // Provincias (clave sin acentos)
   'distrito nacional':     ['Piantini', 'Naco', 'Serrallés', 'Bella Vista', 'Arroyo Hondo', 'Evaristo Morales', 'Los Cacicazgos', 'Gazcue', 'Ciudad Colonial', 'Miramar', 'La Esperilla', 'Distrito Nacional', 'Quisqueya', 'Mirador Norte', 'Mirador Sur', 'Altos de Arroyo Hondo', 'Los Prados', 'Fernández'],
   'santo domingo':         ['Santo Domingo', 'Piantini', 'Naco', 'Serrallés', 'Bella Vista', 'Arroyo Hondo', 'Evaristo Morales', 'Los Cacicazgos', 'Gazcue', 'Ciudad Colonial', 'Miramar', 'La Esperilla', 'Distrito Nacional', 'Santo Domingo Este', 'Santo Domingo Norte', 'Santo Domingo Oeste', 'Boca Chica'],
-  'la altagracia':         ['La Altagracia', 'Bávaro', 'Punta Cana', 'Downtown Punta Cana', 'Cap Cana', 'Los Corales', 'Cabeza de Toro', 'Uvero Alto', 'Macao', 'Cortecito', 'Higüey', 'San Rafael del Yuma', 'Boca de Yuma', 'Verón', 'Pueblo Bávaro', 'Arena Gorda'],
+  'la altagracia':         ['La Altagracia', 'Bávaro', 'Punta Cana', 'Downtown Punta Cana', 'Cap Cana', 'Los Corales', 'Cabeza de Toro', 'Uvero Alto', 'Macao', 'Cortecito', 'Higüey', 'San Rafael del Yuma', 'Boca de Yuma', 'Verón', 'Pueblo Bávaro', 'Arena Gorda', 'Bayahibe', 'Dominicus'],
   'santiago':              ['Santiago', 'Los Jardines', 'Cerros de Gurabo', 'Reparto Conuco', 'Villa Olga', 'Pontificia', 'Nibaje'],
   'puerto plata':          ['Puerto Plata', 'Sosúa', 'Cabarete', 'Costámbar', 'Cofresí', 'Playa Dorada', 'Luperón', 'Villa Isabela', 'La Isabela'],
   'samana':                ['Samaná', 'Las Terrenas', 'Las Galeras', 'Sánchez', 'El Portillo', 'Cosón', 'El Limón', 'Rancho Español'],
   'el limon':              ['El Limón', 'El Limon'],
   'rancho espanol':        ['Rancho Español', 'Rancho Espanol'],
-  'la romana':             ['La Romana', 'Casa de Campo', 'Bayahibe', 'Dominicus'],
+  'la romana':             ['La Romana', 'Casa de Campo'],
   'san pedro de macoris':  ['San Pedro de Macorís', 'Juan Dolio', 'Guayacanes'],
   'la vega':               ['La Vega', 'Jarabacoa', 'Constanza'],
   'maria trinidad sanchez':['Nagua', 'Río San Juan', 'María Trinidad Sánchez'],
@@ -303,7 +303,7 @@ const zonasSugerencias = [
   'Samaná, Samaná', 'Las Terrenas, Samaná', 'Las Galeras, Samaná',
   'Sánchez, Samaná', 'El Portillo, Samaná', 'Cosón, Samaná', 'El Limón, Samaná', 'Rancho Español, Samaná',
   // --- Sectores: La Romana ---
-  'La Romana, La Romana', 'Casa de Campo, La Romana', 'Bayahibe, La Romana', 'Dominicus, La Romana',
+  'La Romana, La Romana', 'Casa de Campo, La Romana', 'Bayahibe, La Altagracia', 'Dominicus, La Altagracia',
   // --- Sectores: La Vega ---
   'Jarabacoa, La Vega', 'Constanza, La Vega', 'La Vega, La Vega',
   // --- Sectores: San Pedro de Macorís ---

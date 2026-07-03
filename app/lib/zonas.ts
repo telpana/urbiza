@@ -73,12 +73,12 @@ export const slugs = Object.keys(zonasMeta)
 
 // Sub-zonas que se incluyen al buscar por una zona principal
 export const zonaGrupos: Record<string, string[]> = {
-  'punta-cana':    ['Punta Cana', 'Bávaro', 'Pueblo Bávaro', 'Downtown Punta Cana', 'Cap Cana', 'Bávaro Hills', 'Los Corales', 'Cabeza de Toro', 'Uvero Alto', 'Macao', 'Cortecito', 'Verón', 'Arena Gorda'],
+  'punta-cana':    ['Punta Cana', 'Bávaro', 'Pueblo Bávaro', 'Downtown Punta Cana', 'Cap Cana', 'Bávaro Hills', 'Los Corales', 'Cabeza de Toro', 'Uvero Alto', 'Macao', 'Cortecito', 'Verón', 'Arena Gorda', 'Bayahibe', 'Dominicus'],
   'bavaro':        ['Bávaro', 'Pueblo Bávaro', 'Cortecito', 'Los Corales', 'Cabeza de Toro', 'Arena Gorda', 'Bávaro Hills'],
   'santo-domingo': ['Santo Domingo', 'Piantini', 'Naco', 'Serrallés', 'Bella Vista', 'Arroyo Hondo', 'Evaristo Morales', 'Los Cacicazgos', 'Gazcue', 'Ciudad Colonial', 'La Esperilla', 'Distrito Nacional', 'Santo Domingo Este', 'Santo Domingo Norte', 'Santo Domingo Oeste'],
   'santiago':      ['Santiago', 'Los Jardines', 'Cerros de Gurabo', 'Reparto Conuco', 'Villa Olga', 'Pontificia', 'Nibaje'],
   'las-terrenas':  ['Las Terrenas', 'El Portillo', 'Cosón'],
-  'la-romana':     ['La Romana', 'Casa de Campo', 'Bayahibe', 'Dominicus'],
+  'la-romana':     ['La Romana', 'Casa de Campo'],
   'sosua':         ['Sosúa', 'Costámbar', 'Cofresí'],
   'cabarete':      ['Cabarete', 'Playa Dorada', 'Puerto Plata'],
 }
