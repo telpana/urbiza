@@ -96,8 +96,21 @@ function getLatLngFromZona(zona: string): [number, number] {
   return matchZona(zona) ?? [18.4861, -69.9312]
 }
 
+const provinciaCoords: Record<string, { center: [number, number], zoom: number }> = {
+  'samana':        { center: [19.27, -69.43], zoom: 10 },
+  'la altagracia': { center: [18.62, -68.70], zoom: 10 },
+  'punta cana':    { center: [18.62, -68.70], zoom: 10 },
+  'santo domingo': { center: [18.49, -69.95], zoom: 11 },
+  'puerto plata':  { center: [19.77, -70.65], zoom: 10 },
+  'santiago':      { center: [19.45, -70.69], zoom: 11 },
+}
+
 function getZonaCoords(zona: string): { center: [number, number], zoom: number } {
   if (!zona) return { center: [18.735, -70.165], zoom: 7 }
+  const n = zona.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+  for (const [key, val] of Object.entries(provinciaCoords)) {
+    if (n === key || n.startsWith(key) || key.startsWith(n)) return val
+  }
   const coords = matchZona(zona)
   return coords ? { center: coords, zoom: 11 } : { center: [18.735, -70.165], zoom: 7 }
 }
