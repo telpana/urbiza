@@ -181,18 +181,18 @@ const propiedadesLasTerrenas = [
 ]
 
 const zonas = [
-  { nombre: 'Santo Domingo', tipo: 'Apartamentos en venta' },
-  { nombre: 'Punta Cana', tipo: 'Villas en venta' },
-  { nombre: 'Santiago', tipo: 'Casas en venta' },
-  { nombre: 'La Romana', tipo: 'Propiedades en venta' },
-  { nombre: 'Puerto Plata', tipo: 'Apartamentos en venta' },
-  { nombre: 'Las Terrenas', tipo: 'Villas en alquiler' },
-  { nombre: 'Samaná', tipo: 'Casas en venta' },
-  { nombre: 'Bávaro', tipo: 'Apartamentos en venta' },
-  { nombre: 'Cap Cana', tipo: 'Villas en venta' },
-  { nombre: 'Jarabacoa', tipo: 'Casas en venta' },
-  { nombre: 'San Pedro de Macorís', tipo: 'Apartamentos en venta' },
-  { nombre: 'La Vega', tipo: 'Casas en venta' },
+  { nombre: 'Santo Domingo', tipo: 'Apartamentos en venta', slug: 'santo-domingo' },
+  { nombre: 'Punta Cana', tipo: 'Villas en venta', slug: 'punta-cana' },
+  { nombre: 'Santiago', tipo: 'Casas en venta', slug: 'santiago' },
+  { nombre: 'La Romana', tipo: 'Propiedades en venta', slug: 'la-romana' },
+  { nombre: 'Naco', tipo: 'Apartamentos en venta', slug: 'naco' },
+  { nombre: 'Las Terrenas', tipo: 'Villas y casas en venta', slug: 'las-terrenas' },
+  { nombre: 'Bávaro', tipo: 'Apartamentos frente al mar', slug: 'bavaro' },
+  { nombre: 'Cap Cana', tipo: 'Villas de lujo en venta', slug: 'cap-cana' },
+  { nombre: 'Piantini', tipo: 'Apartamentos de lujo', slug: 'piantini' },
+  { nombre: 'Bella Vista', tipo: 'Casas y apartamentos', slug: 'bella-vista' },
+  { nombre: 'Sosúa', tipo: 'Propiedades frente al mar', slug: 'sosua' },
+  { nombre: 'Cabarete', tipo: 'Casas y villas en venta', slug: 'cabarete' },
 ]
 
 const bgsNovedad = ['#e0f5f7','#ddf0e8','#e8eaf0','#f0ebe0']
@@ -729,7 +729,7 @@ export default function Home() {
           <div className="zonas-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 }}>
             {zonas.map((z) => (
               <div key={z.nombre + z.tipo} style={{ padding: '10px 0', borderBottom: '1px solid #f5f5f5' }}>
-                <a href={`/buscar?zona=${encodeURIComponent(z.nombre)}`} style={{ display: 'block', fontSize: 14, color: '#006D77', fontWeight: 500, textDecoration: 'none', marginBottom: 3 }}>{z.nombre}</a>
+                <a href={`/comprar/${z.slug}`} style={{ display: 'block', fontSize: 14, color: '#006D77', fontWeight: 500, textDecoration: 'none', marginBottom: 3 }}>{z.nombre}</a>
                 <div style={{ fontSize: 12, color: '#888' }}>{z.tipo}</div>
               </div>
             ))}

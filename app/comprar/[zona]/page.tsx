@@ -70,9 +70,20 @@ export default async function ComprarZonaPage({ params }: { params: Promise<{ zo
     })),
   }
 
+  const breadcrumb = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Habitade', item: 'https://www.habitade.com' },
+      { '@type': 'ListItem', position: 2, name: 'Comprar', item: 'https://www.habitade.com/buscar?operacion=Venta' },
+      { '@type': 'ListItem', position: 3, name: meta.nombre, item: `https://www.habitade.com/comprar/${zona}` },
+    ],
+  }
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumb) }} />
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 20px', fontFamily: 'sans-serif' }}>
         <nav style={{ fontSize: 13, color: '#888', marginBottom: 20 }}>
           <a href="/" style={{ color: '#006D77', textDecoration: 'none' }}>Habitade</a>
