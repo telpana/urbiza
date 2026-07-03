@@ -3,6 +3,16 @@
 img { max-width: 100%; }
 
 /* ════════════════════════════════
+   MAPA HOME (MapaCompletoPropiedades)
+════════════════════════════════ */
+.mapa-home-burger { display: none; }
+
+@media (max-width: 768px) {
+  .mapa-home-burger { display: flex !important; }
+  .mapa-home-desk   { display: none !important; }
+}
+
+/* ════════════════════════════════
    HOME
 ════════════════════════════════ */
 .nav-mobile-hamburger { display: none; }

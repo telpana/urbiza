@@ -21,6 +21,7 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
   const mapInstanceRef = useRef<any>(null)
   const markersRef = useRef<any[]>([])
   const [filtroTipo, setFiltroTipo] = useState('Todos')
+  const [menuAbierto, setMenuAbierto] = useState(false)
   const { tr } = useIdioma()
 
   const tipos = ['Todos', 'Apartamento', 'Villa', 'Terreno', 'Oficina', 'Local comercial']
@@ -88,17 +89,62 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', flexDirection: 'column' }}>
-      <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <div style={{ fontSize: 15, fontWeight: 600, color: '#111' }}>{visibles} {tr.buscar.titulo}</div>
-          <select value={filtroTipo} onChange={e => setFiltroTipo(e.target.value)} style={{ border: '1.5px solid #006D77', borderRadius: 4, padding: '6px 12px', fontSize: 13, color: '#333', outline: 'none', cursor: 'pointer', background: '#fff' }}>
-            {tipos.map(t => <option key={t} value={t}>{tipoLabel(t)}</option>)}
-          </select>
-        </div>
-        <button onClick={onCerrar} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '8px 18px', borderRadius: 4, fontSize: 13, fontWeight: 500, cursor: 'pointer' }}>
-          {tr.buscar.volver}
+      {/* Header — una línea */}
+      <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', height: 46, display: 'flex', alignItems: 'center', padding: '0 12px', gap: 8, flexShrink: 0 }}>
+        {/* Hamburger — solo móvil vía CSS */}
+        <button
+          onClick={() => setMenuAbierto(o => !o)}
+          className="mapa-home-burger"
+          style={{ all: 'unset', display: 'none', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, cursor: 'pointer', flexShrink: 0, touchAction: 'manipulation' }}
+        >
+          {menuAbierto
+            ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          }
+        </button>
+
+        {/* Contador */}
+        <span style={{ fontSize: 12, fontWeight: 600, color: '#333', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {visibles} {tr.buscar.titulo}
+        </span>
+
+        {/* Desktop: filtro + volver */}
+        <select
+          value={filtroTipo}
+          onChange={e => setFiltroTipo(e.target.value)}
+          className="mapa-home-desk"
+          style={{ border: '1.5px solid #d0d0d0', borderRadius: 4, padding: '5px 10px', fontSize: 12, color: '#333', outline: 'none', cursor: 'pointer', background: '#fff' }}
+        >
+          {tipos.map(t => <option key={t} value={t}>{tipoLabel(t)}</option>)}
+        </select>
+        <button
+          onClick={onCerrar}
+          className="mapa-home-desk"
+          style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '6px 14px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer', flexShrink: 0, touchAction: 'manipulation' }}
+        >
+          ← {tr.buscar.volver}
         </button>
       </div>
+
+      {/* Menú móvil desplegable */}
+      {menuAbierto && (
+        <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <select
+            value={filtroTipo}
+            onChange={e => { setFiltroTipo(e.target.value); setMenuAbierto(false) }}
+            style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 12px', fontSize: 14, color: '#333', outline: 'none', width: '100%', background: '#fff' }}
+          >
+            {tipos.map(t => <option key={t} value={t}>{tipoLabel(t)}</option>)}
+          </select>
+          <button
+            onClick={onCerrar}
+            style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 0', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: 'pointer', textAlign: 'center', touchAction: 'manipulation' }}
+          >
+            ← {tr.buscar.volver}
+          </button>
+        </div>
+      )}
+
       <div ref={mapRef} style={{ flex: 1 }} />
     </div>
   )
