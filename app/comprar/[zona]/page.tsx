@@ -50,7 +50,7 @@ export default async function ComprarZonaPage({ params }: { params: Promise<{ zo
     .from('propiedades')
     .select('id, titulo, precio, tipo, habitaciones, m2, fotos, zona')
     .eq('estado', 'activo')
-    .eq('operacion', 'Venta')
+    .eq('operacion', 'venta')
     .or(subZonas.map(s => `zona.ilike.%${s}%`).join(','))
     .order('destacado', { ascending: false })
     .limit(24)
