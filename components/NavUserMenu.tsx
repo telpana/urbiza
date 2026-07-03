@@ -57,7 +57,14 @@ export default function NavUserMenu({ dark = false }: Props) {
         .eq('id', user.id)
         .single()
       if (perfil?.foto_url) { setFotoUrl(perfil.foto_url); try { localStorage.setItem('hb_perfil_foto', perfil.foto_url); localStorage.setItem('hb_perfil_uid', user.id) } catch {} }
-      if (perfil?.nombre) { const ini = perfil.nombre[0].toUpperCase(); setInicial(ini); try { localStorage.setItem('hb_perfil_inicial', ini) } catch {} }
+      if (perfil?.nombre) {
+        const partes = perfil.nombre.trim().split(/\s+/)
+        const ini = partes.length >= 2
+          ? (partes[0][0] + partes[partes.length - 1][0]).toUpperCase()
+          : partes[0][0].toUpperCase()
+        setInicial(ini)
+        try { localStorage.setItem('hb_perfil_inicial', ini) } catch {}
+      }
 
       // Contar mensajes no leídos
       const { data: msgs } = await supabase
@@ -134,7 +141,7 @@ export default function NavUserMenu({ dark = false }: Props) {
           style={{ all: 'unset', display: 'flex', alignItems: 'center', gap: 6, cursor: 'pointer', border: dark ? '1.5px solid rgba(255,255,255,0.4)' : '1.5px solid #e0e0e0', borderRadius: 20, padding: '4px 10px 4px 4px', background: dark ? 'rgba(255,255,255,0.08)' : '#fafafa' }}>
           {fotoUrl
             ? <img src={fotoUrl} alt="" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} referrerPolicy="no-referrer" />
-            : <div style={{ width: 28, height: 28, borderRadius: '50%', background: dark ? '#83D4DB' : '#006D77', color: dark ? '#004E57' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, flexShrink: 0 }}>{inicial}</div>
+            : <div style={{ width: 28, height: 28, borderRadius: '50%', background: dark ? '#83D4DB' : '#006D77', color: dark ? '#004E57' : '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: inicial.length > 1 ? 10 : 12, fontWeight: 700, flexShrink: 0, letterSpacing: -0.5 }}>{inicial}</div>
           }
           {/* Hamburger */}
           <svg width="16" height="12" viewBox="0 0 16 12" fill="none" style={{ flexShrink: 0 }}>
