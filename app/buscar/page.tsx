@@ -37,7 +37,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'punta cana': [18.5674, -68.3634], 'downtown punta cana': [18.638436, -68.391718], 'bavaro': [18.6950, -68.4300], 'pueblo bavaro': [18.7300, -68.4300], 'cap cana': [18.5100, -68.3900],
   'los corales': [18.6600, -68.4500], 'cabeza de toro': [18.7100, -68.4600], 'uvero alto': [18.7800, -68.3800],
   'macao': [18.7536, -68.5625], 'cortecito': [18.7080, -68.4220], 'el cortecito': [18.7080, -68.4220],
-  'veron': [18.6700, -68.4600], 'verón': [18.6700, -68.4600],
+  'veron': [18.6200, -68.4600], 'verón': [18.6200, -68.4600],
   'higuey': [18.6142, -68.7073], 'san rafael del yuma': [18.3570, -68.5720], 'boca de yuma': [18.3230, -68.6210],
   'la altagracia': [18.5654, -68.4500],
   // Santiago
