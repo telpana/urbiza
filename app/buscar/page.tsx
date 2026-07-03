@@ -47,7 +47,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'costambar': [19.7900, -70.7200], 'cofresí': [19.8100, -70.7500], 'playa dorada': [19.8100, -70.6800],
   'luperon': [19.8977, -70.9480], 'villa isabela': [19.8400, -71.0700], 'la isabela': [19.8400, -71.0700],
   // Samaná
-  'las terrenas': [19.3100, -69.5200], 'samana': [19.2060, -69.3360], 'las galeras': [19.3800, -69.2200],
+  'las terrenas': [19.3100, -69.5200], 'samana': [19.2060, -69.3360], 'las galeras': [19.3400, -69.2200],
   'el portillo': [19.3300, -69.4800], 'coson': [19.3400, -69.4500], 'sanchez': [19.2317, -69.6088],
   'el limon': [19.2750, -69.4800], 'rancho espanol': [19.2514, -69.4548],
   // La Romana
