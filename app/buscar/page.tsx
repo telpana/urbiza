@@ -35,7 +35,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'boca chica': [18.4490, -69.6080],
   // La Altagracia
   'punta cana': [18.5674, -68.3634], 'downtown punta cana': [18.638436, -68.391718], 'bavaro': [18.6950, -68.4300], 'pueblo bavaro': [18.6250, -68.4300], 'cap cana': [18.5100, -68.3900],
-  'los corales': [18.6600, -68.4500], 'cabeza de toro': [18.7100, -68.4600], 'uvero alto': [18.8100, -68.5700],
+  'los corales': [18.6600, -68.4500], 'cabeza de toro': [18.7100, -68.4600], 'uvero alto': [18.8100, -68.5850],
   'macao': [18.7536, -68.5625], 'cortecito': [18.7080, -68.4220], 'el cortecito': [18.7080, -68.4220],
   'veron': [18.6050, -68.4200], 'verón': [18.6050, -68.4200],
   'higuey': [18.6142, -68.7073], 'san rafael del yuma': [18.3570, -68.5720], 'boca de yuma': [18.3230, -68.6210],
@@ -100,7 +100,7 @@ function getLatLngFromZona(zona: string): [number, number] {
 const provinciaCoords: Record<string, { center: [number, number], zoom: number }> = {
   'samana':        { center: [19.27, -69.43], zoom: 9 },
   'las galeras':   { center: [19.2750, -69.1900], zoom: 12 },
-  'uvero alto':    { center: [18.8100, -68.5700], zoom: 12 },
+  'uvero alto':    { center: [18.8100, -68.5850], zoom: 12 },
   'la romana':     { center: [18.4270, -68.9720], zoom: 10 },
   'la altagracia': { center: [18.62, -68.55], zoom: 8.5 },
   'punta cana':    { center: [18.60, -68.37], zoom: 10 },
