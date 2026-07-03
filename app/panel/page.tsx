@@ -1251,10 +1251,23 @@ export default function Panel() {
                     </div>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>
-                      {descLang === 'es' ? Tpanel.publicar.titulo_anuncio : descLang === 'en' ? 'Listing title (EN)' : 'Titre de l\'annonce (FR)'}
-                      {descLang !== 'es' && <span style={{ fontWeight: 400, color: '#aaa', fontSize: 12, marginLeft: 6 }}>(optional)</span>}
-                    </label>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                      <label style={{ fontSize: 13, fontWeight: 600, color: '#333' }}>
+                        {descLang === 'es' ? Tpanel.publicar.titulo_anuncio : descLang === 'en' ? 'Listing title (EN)' : 'Titre de l\'annonce (FR)'}
+                        {descLang !== 'es' && <span style={{ fontWeight: 400, color: '#aaa', fontSize: 12, marginLeft: 6 }}>(optional)</span>}
+                      </label>
+                      <div style={{ display: 'flex', gap: 4, background: '#f0f0f0', borderRadius: 6, padding: 3 }}>
+                        {([['es','ES'], ['en','EN'], ['fr','FR']] as const).map(([l, label]) => (
+                          <button key={l} type="button" onClick={() => setDescLang(l)}
+                            style={{ border: 'none', outline: 'none', padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: descLang === l ? '#006D77' : 'transparent', color: descLang === l ? '#fff' : '#888', transition: 'background 0.15s, color 0.15s', position: 'relative', touchAction: 'manipulation', userSelect: 'none' }}>
+                            {label}
+                            {l !== 'es' && ((l === 'en' ? pubTituloEn : pubTituloFr).trim()) && (
+                              <span style={{ position: 'absolute', top: 1, right: 1, width: 5, height: 5, background: '#10b981', borderRadius: '50%' }} />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                     {descLang === 'es' && (
                       <input type="text" value={pubTitulo} onChange={e => setPubTitulo(e.target.value.slice(0, 50))} maxLength={50} placeholder={Tpanel.publicar.tituloPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                     )}
