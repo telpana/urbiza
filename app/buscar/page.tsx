@@ -98,7 +98,7 @@ function getLatLngFromZona(zona: string): [number, number] {
 
 const provinciaCoords: Record<string, { center: [number, number], zoom: number }> = {
   'samana':        { center: [19.27, -69.43], zoom: 9 },
-  'la altagracia': { center: [18.62, -68.55], zoom: 9 },
+  'la altagracia': { center: [18.62, -68.55], zoom: 8.5 },
   'punta cana':    { center: [18.60, -68.37], zoom: 10 },
   'santo domingo': { center: [18.49, -69.95], zoom: 11 },
   'puerto plata':  { center: [19.77, -70.65], zoom: 10 },
@@ -134,6 +134,7 @@ function MapaMini({ zona }: { zona: string }) {
       const map = L.map(mapRef.current, {
         center,
         zoom,
+        zoomSnap: 0.5,
         zoomControl: false,
         attributionControl: false,
         dragging: false,
