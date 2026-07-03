@@ -1,8 +1,7 @@
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
-// TODO: cambiar a 'hola@habitade.com' cuando el dominio esté verificado en Resend
-const FROM = 'Habitade <onboarding@resend.dev>'
+const FROM = 'hola@habitade.com'
 const BASE = 'https://www.habitade.com'
 
 function layout(content: string) {
