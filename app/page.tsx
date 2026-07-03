@@ -781,7 +781,7 @@ export default function Home() {
         {/* NOVEDADES POR ZONA */}
         <SeccionNovedad titulo={tr.novedades.santoDomingo} subtitulo={tr.novedades.verTodas} zona="Santo Domingo" reales={novedadesSantoDomingo} ejemplos={propiedadesSantoDomingo} />
         <SeccionNovedad titulo={tr.novedades.puntaCana} subtitulo={tr.novedades.verTodas} zona="Punta Cana" reales={novedadesPuntaCana} ejemplos={propiedadesPuntaCana} />
-        <SeccionNovedad titulo={tr.novedades.samana} subtitulo={tr.novedades.verTodas} zona="Samaná" href="/comprar/samana" reales={novedadesSamana} ejemplos={propiedadesSamana} />
+        <SeccionNovedad titulo={tr.novedades.samana} subtitulo={tr.novedades.verTodas} zona="Samaná" reales={novedadesSamana} ejemplos={propiedadesSamana} />
       </div>
 
       {/* ZONAS MÁS BUSCADAS */}
@@ -791,7 +791,7 @@ export default function Home() {
           <div className="zonas-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 }}>
             {zonas.map((z) => (
               <div key={z.nombre + z.tipo} style={{ padding: '10px 0', borderBottom: '1px solid #f5f5f5' }}>
-                <a href={`/comprar/${z.slug}`} style={{ display: 'block', fontSize: 14, color: '#006D77', fontWeight: 500, textDecoration: 'none', marginBottom: 3 }}>{z.nombre}</a>
+                <a href={`/buscar?zona=${encodeURIComponent(z.nombre)}&operacion=venta`} style={{ display: 'block', fontSize: 14, color: '#006D77', fontWeight: 500, textDecoration: 'none', marginBottom: 3 }}>{z.nombre}</a>
                 <div style={{ fontSize: 12, color: '#888' }}>{z.tipo}</div>
               </div>
             ))}
