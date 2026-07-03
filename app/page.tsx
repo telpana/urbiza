@@ -556,10 +556,26 @@ export default function Home() {
           </>}
         </div>
 
-        {/* Móvil: hamburger */}
-        <button className="nav-mobile-hamburger" onClick={() => setMobileMenuOpen(true)} style={{ display: 'none', background: 'none', cursor: 'pointer', padding: '8px', borderRadius: 6, border: '1.5px solid #e0e0e0' }}>
-          <svg width="20" height="16" viewBox="0 0 20 16" fill="none"><rect y="0" width="20" height="2.5" rx="1.25" fill="#006D77"/><rect y="6.5" width="20" height="2.5" rx="1.25" fill="#006D77"/><rect y="13" width="20" height="2.5" rx="1.25" fill="#006D77"/></svg>
-        </button>
+        {/* Móvil: hamburger con avatar */}
+        {(() => {
+          const ini = nombreUsuario.trim().split(/\s+/).filter(Boolean).slice(0, 2).map(p => p[0].toUpperCase()).join('')
+          return (
+            <button className="nav-mobile-hamburger" onClick={() => setMobileMenuOpen(true)} style={{ display: 'none', background: 'none', cursor: 'pointer', padding: 0, border: 'none', touchAction: 'manipulation' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, border: '1.5px solid #e0e0e0', borderRadius: 20, padding: '4px 10px 4px 4px', background: '#fafafa' }}>
+                {sesionActiva ? (
+                  fotoUrl
+                    ? <img src={fotoUrl} alt="" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} referrerPolicy="no-referrer" />
+                    : <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#006D77', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: ini.length > 1 ? 10 : 12, fontWeight: 700, letterSpacing: -0.5, flexShrink: 0 }}>{ini || 'U'}</div>
+                ) : (
+                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                  </div>
+                )}
+                <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M0 1h16M0 6h16M0 11h16" stroke="#555" strokeWidth="1.8" strokeLinecap="round"/></svg>
+              </div>
+            </button>
+          )
+        })()}
       </nav>
 
       {/* BANNER CON IMAGEN — imagen configurable desde panel de administración */}
