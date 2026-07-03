@@ -885,8 +885,19 @@ export default function Panel() {
             )}
           </div>
         </div>
-        <button className="panel-nav-hamburger-right" onClick={() => setPanelNavOpen(v => !v)} style={{ display: 'none', background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 6, padding: '6px 8px', cursor: 'pointer' }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <button className="panel-nav-hamburger-right" onClick={() => setPanelNavOpen(v => !v)} style={{ display: 'none', background: 'none', border: 'none', padding: 0, cursor: 'pointer', touchAction: 'manipulation' }}>
+          {(() => {
+            const ini = (perfilNombre || usuario?.nombre || '').trim().split(/\s+/).filter(Boolean).slice(0,2).map((n: string) => n[0].toUpperCase()).join('')
+            return (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, border: '1.5px solid rgba(255,255,255,0.35)', borderRadius: 20, padding: '4px 10px 4px 4px', background: 'rgba(255,255,255,0.12)' }}>
+                {fotoPerfilUrl
+                  ? <img src={fotoPerfilUrl} alt="" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} referrerPolicy="no-referrer" />
+                  : <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#83D4DB', color: '#004E57', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: ini.length > 1 ? 10 : 12, fontWeight: 700, letterSpacing: -0.5, flexShrink: 0 }}>{ini || 'U'}</div>
+                }
+                <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M0 1h16M0 6h16M0 11h16" stroke="rgba(255,255,255,0.85)" strokeWidth="1.8" strokeLinecap="round"/></svg>
+              </div>
+            )
+          })()}
         </button>
       </nav>
 
