@@ -319,12 +319,22 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   const [errorContacto, setErrorContacto] = useState('')
   const [telVisible, setTelVisible] = useState(searchParams.get('tel') === '1')
   const [verConversion, setVerConversion] = useState(false)
-  const [sesionActiva, setSesionActiva] = useState(false)
+  const [sesionActiva, setSesionActiva] = useState(() => {
+    if (typeof window === 'undefined') return false
+    try { return !!localStorage.getItem('hb_perfil_uid') } catch { return false }
+  })
   const [authReady, setAuthReady] = useState(false)
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [noLeidosNav, setNoLeidosNav] = useState(0)
-  const [fotoUrlNav, setFotoUrlNav] = useState<string>('')
+  const [fotoUrlNav, setFotoUrlNav] = useState<string>(() => {
+    if (typeof window === 'undefined') return ''
+    try { return localStorage.getItem('hb_perfil_foto') || '' } catch { return '' }
+  })
+  const [iniCacheNav, setIniCacheNav] = useState<string>(() => {
+    if (typeof window === 'undefined') return ''
+    try { return localStorage.getItem('hb_perfil_inicial') || '' } catch { return '' }
+  })
   const [guardado, setGuardado] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
   const [nombreUsuario, setNombreUsuario] = useState('')
@@ -342,7 +352,12 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
       setUserId(data.user.id)
       const { data: usr } = await supabase.from('usuarios').select('plan, nombre, telefono, foto_url').eq('id', data.user.id).single()
       if (usr?.plan) setPlanUsuario(usr.plan)
-      if (usr?.nombre) { setNombreUsuario(usr.nombre); setNombreContacto(usr.nombre) }
+      if (usr?.nombre) {
+        setNombreUsuario(usr.nombre); setNombreContacto(usr.nombre)
+        const partes = usr.nombre.trim().split(/\s+/).filter(Boolean)
+        const ini = partes.length >= 2 ? (partes[0][0] + partes[1][0]).toUpperCase() : partes[0]?.[0]?.toUpperCase() || ''
+        setIniCacheNav(ini)
+      }
       if (usr?.telefono) { setTelefonoUsuario(usr.telefono); setTelefonoContacto(usr.telefono) }
       const foto = usr?.foto_url || data.user.user_metadata?.avatar_url || data.user.user_metadata?.picture || ''
       if (foto) setFotoUrlNav(foto)
@@ -535,8 +550,19 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
             <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.publicar}</a>
           </>}
         </div>
-        <button className="prop-nav-hamburger" onClick={() => setMobileMenuOpen(v => !v)} style={{ display: 'none', background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 6, padding: '6px 8px', cursor: 'pointer' }}>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        <button className="prop-nav-hamburger" onClick={() => setMobileMenuOpen(v => !v)} style={{ display: 'none', background: 'none', border: 'none', padding: 0, cursor: 'pointer', touchAction: 'manipulation' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, border: '1.5px solid rgba(255,255,255,0.35)', borderRadius: 20, padding: '4px 10px 4px 4px', background: 'rgba(255,255,255,0.12)' }}>
+            {sesionActiva ? (
+              fotoUrlNav
+                ? <img src={fotoUrlNav} alt="" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} referrerPolicy="no-referrer" />
+                : <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#83D4DB', color: '#004E57', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: iniCacheNav.length > 1 ? 10 : 12, fontWeight: 700, letterSpacing: -0.5, flexShrink: 0 }}>{iniCacheNav || 'U'}</div>
+            ) : (
+              <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+              </div>
+            )}
+            <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M0 1h16M0 6h16M0 11h16" stroke="rgba(255,255,255,0.85)" strokeWidth="1.8" strokeLinecap="round"/></svg>
+          </div>
         </button>
       </nav>
 

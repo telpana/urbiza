@@ -296,9 +296,16 @@ export default function Panel() {
   const [pubExito, setPubExito] = useState(false)
   const [anuncioEditando, setAnuncioEditando] = useState<any>(null)
   const [fotosExistentes, setFotosExistentes] = useState<string[]>([]) // legacy, unused after unification
-  const [fotoPerfilUrl, setFotoPerfilUrl] = useState<string | null>(null)
+  const [fotoPerfilUrl, setFotoPerfilUrl] = useState<string | null>(() => {
+    if (typeof window === 'undefined') return null
+    try { return localStorage.getItem('hb_perfil_foto') || null } catch { return null }
+  })
   const [fotoPerfilFile, setFotoPerfilFile] = useState<File | null>(null)
   const [perfilNombre, setPerfilNombre] = useState('')
+  const [perfilIniCache, setPerfilIniCache] = useState<string>(() => {
+    if (typeof window === 'undefined') return ''
+    try { return localStorage.getItem('hb_perfil_inicial') || '' } catch { return '' }
+  })
   const [perfilTelefono, setPerfilTelefono] = useState('')
   const [perfilInmobiliaria, setPerfilInmobiliaria] = useState('')
   const [perfilAei, setPerfilAei] = useState('')
@@ -892,7 +899,7 @@ export default function Panel() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, border: '1.5px solid rgba(255,255,255,0.35)', borderRadius: 20, padding: '4px 10px 4px 4px', background: 'rgba(255,255,255,0.12)' }}>
                 {fotoPerfilUrl
                   ? <img src={fotoPerfilUrl} alt="" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} referrerPolicy="no-referrer" />
-                  : <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#83D4DB', color: '#004E57', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: ini.length > 1 ? 10 : 12, fontWeight: 700, letterSpacing: -0.5, flexShrink: 0 }}>{ini || 'U'}</div>
+                  : <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#83D4DB', color: '#004E57', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: (ini || perfilIniCache).length > 1 ? 10 : 12, fontWeight: 700, letterSpacing: -0.5, flexShrink: 0 }}>{ini || perfilIniCache || 'U'}</div>
                 }
                 <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M0 1h16M0 6h16M0 11h16" stroke="rgba(255,255,255,0.85)" strokeWidth="1.8" strokeLinecap="round"/></svg>
               </div>

@@ -357,12 +357,22 @@ function BuscarContent() {
     try { if (typeof window !== 'undefined') return !sessionStorage.getItem('hb_buscar_' + window.location.search) } catch {} return true
   })
   const [verMapa, setVerMapa] = useState(false)
-  const [sesionActiva, setSesionActiva] = useState(false)
+  const [sesionActiva, setSesionActiva] = useState(() => {
+    if (typeof window === 'undefined') return false
+    try { return !!localStorage.getItem('hb_perfil_uid') } catch { return false }
+  })
   const [authReady, setAuthReady] = useState(false)
   const [noLeidosNav, setNoLeidosNav] = useState(0)
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
   const [tipoUsuario, setTipoUsuario] = useState<string>('')
-  const [fotoUrl, setFotoUrl] = useState<string>('')
+  const [fotoUrl, setFotoUrl] = useState<string>(() => {
+    if (typeof window === 'undefined') return ''
+    try { return localStorage.getItem('hb_perfil_foto') || '' } catch { return '' }
+  })
+  const [iniCache, setIniCache] = useState<string>(() => {
+    if (typeof window === 'undefined') return ''
+    try { return localStorage.getItem('hb_perfil_inicial') || '' } catch { return '' }
+  })
   const [amenidadesFiltro, setAmenidadesFiltro] = useState<string[]>([])
   const [soloAei, setSoloAei] = useState(false)
   const [pisosMin, setPisosMin] = useState(0)
@@ -414,11 +424,16 @@ function BuscarContent() {
         const leidos: Record<string, boolean> = JSON.parse(localStorage.getItem(`habitade_leidos_${data.user.id}`) || '{}')
         setNoLeidosNav(msgs.filter((m: any) => !leidos[m.id]).length)
       }
-      const { data: usr } = await supabase.from('usuarios').select('plan,tipo,foto_url').eq('id', data.user.id).single()
+      const { data: usr } = await supabase.from('usuarios').select('plan,tipo,foto_url,nombre').eq('id', data.user.id).single()
       if (usr?.plan) setPlanUsuario(usr.plan)
       if (usr?.tipo) setTipoUsuario(usr.tipo)
       const foto = usr?.foto_url || data.user.user_metadata?.avatar_url || data.user.user_metadata?.picture || ''
       if (foto) setFotoUrl(foto)
+      if (usr?.nombre) {
+        const partes = usr.nombre.trim().split(/\s+/).filter(Boolean)
+        const ini = partes.length >= 2 ? (partes[0][0] + partes[1][0]).toUpperCase() : partes[0]?.[0]?.toUpperCase() || ''
+        setIniCache(ini)
+      }
       const { data: favs } = await supabase.from('favoritos').select('propiedad_id').eq('usuario_id', data.user.id)
       if (favs) setFavoritosSet(new Set(favs.map((f: any) => f.propiedad_id)))
     })
@@ -666,8 +681,19 @@ function BuscarContent() {
               <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.publicar}</a>
             </>}
           </div>
-          <button className="buscar-mobile-hamburger" onClick={() => setMobileMenuOpen(true)} style={{ background: 'rgba(255,255,255,0.15)', cursor: 'pointer', padding: '6px 8px', borderRadius: 6, border: 'none' }}>
-            <svg width="20" height="16" viewBox="0 0 20 16" fill="none"><rect y="0" width="20" height="2.5" rx="1.25" fill="white"/><rect y="6.5" width="20" height="2.5" rx="1.25" fill="white"/><rect y="13" width="20" height="2.5" rx="1.25" fill="white"/></svg>
+          <button className="buscar-mobile-hamburger" onClick={() => setMobileMenuOpen(true)} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', touchAction: 'manipulation' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, border: '1.5px solid rgba(255,255,255,0.35)', borderRadius: 20, padding: '4px 10px 4px 4px', background: 'rgba(255,255,255,0.12)' }}>
+              {sesionActiva ? (
+                fotoUrl
+                  ? <img src={fotoUrl} alt="" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} referrerPolicy="no-referrer" />
+                  : <div style={{ width: 28, height: 28, borderRadius: '50%', background: '#83D4DB', color: '#004E57', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: iniCache.length > 1 ? 10 : 12, fontWeight: 700, letterSpacing: -0.5, flexShrink: 0 }}>{iniCache || 'U'}</div>
+              ) : (
+                <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                </div>
+              )}
+              <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M0 1h16M0 6h16M0 11h16" stroke="rgba(255,255,255,0.85)" strokeWidth="1.8" strokeLinecap="round"/></svg>
+            </div>
           </button>
         </div>
       </nav>
