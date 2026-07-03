@@ -60,7 +60,7 @@ export default function NavUserMenu({ dark = false }: Props) {
       if (perfil?.nombre) {
         const partes = perfil.nombre.trim().split(/\s+/)
         const ini = partes.length >= 2
-          ? (partes[0][0] + partes[partes.length - 1][0]).toUpperCase()
+          ? (partes[0][0] + partes[1][0]).toUpperCase()
           : partes[0][0].toUpperCase()
         setInicial(ini)
         try { localStorage.setItem('hb_perfil_inicial', ini) } catch {}
