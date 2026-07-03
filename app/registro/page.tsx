@@ -182,7 +182,7 @@ export default function Registro() {
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{T.telefono} *</label>
-                    <input value={telefono} onChange={e => setTelefono(e.target.value)} type="tel" placeholder="+1 809 000 0000" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 14px', fontSize: 14, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    <input value={telefono} onChange={e => setTelefono(e.target.value.replace(/[^0-9+\s\-()]/g, ''))} type="tel" inputMode="tel" placeholder="+1 809 000 0000" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 14px', fontSize: 14, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
                   {tipoCuenta === 'profesional' && (
                     <>
