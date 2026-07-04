@@ -727,22 +727,20 @@ export default function Home() {
       <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', position: 'relative', zIndex: 0, isolation: 'isolate' }}>
         <div className="home-actions-grid" style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
           <a href="#" onClick={e => { e.preventDefault(); setVerMapa(true) }}
-            style={{ display: 'flex', gap: 20, padding: '28px 32px', textDecoration: 'none', borderRight: '1px solid #e8e8e8', alignItems: 'stretch', transition: 'background 0.15s' }}
+            style={{ display: 'flex', gap: 20, padding: '28px 32px', textDecoration: 'none', borderRight: '1px solid #e8e8e8', alignItems: 'center', transition: 'background 0.15s' }}
             onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = '#f8fdfd'}
             onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'}>
             <div style={{ width: 120, height: 90, borderRadius: 8, flexShrink: 0, overflow: 'hidden', border: '1.5px solid #c5e8ea' }}>
               <MapaMiniHome />
             </div>
-            <div style={{ height: 90, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflow: 'hidden' }}>
-              <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: '#111', marginBottom: 4 }}>{tr.secciones.mapaTitle}</div>
-                <div style={{ fontSize: 12.5, color: '#777', lineHeight: 1.5 }}>{tr.secciones.mapaDesc}</div>
-              </div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: '#006D77', background: '#e0f5f7', padding: '4px 12px', borderRadius: 20, alignSelf: 'flex-start' }}>{tr.secciones.mapaLink}</span>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#111', marginBottom: 4 }}>{tr.secciones.mapaTitle}</div>
+              <div style={{ fontSize: 12.5, color: '#777', lineHeight: 1.5, marginBottom: 12 }}>{tr.secciones.mapaDesc}</div>
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#006D77', background: '#e0f5f7', padding: '4px 12px', borderRadius: 20 }}>{tr.secciones.mapaLink}</span>
             </div>
           </a>
           <a href="/registro"
-            style={{ display: 'flex', gap: 20, padding: '28px 32px', textDecoration: 'none', alignItems: 'stretch', transition: 'background 0.15s' }}
+            style={{ display: 'flex', gap: 20, padding: '28px 32px', textDecoration: 'none', alignItems: 'center', transition: 'background 0.15s' }}
             onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = '#f8fdfd'}
             onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'}>
             <div style={{ width: 120, height: 90, borderRadius: 8, flexShrink: 0, background: '#006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
@@ -760,12 +758,10 @@ export default function Home() {
               }
               <div style={{ position: 'absolute', top: 6, right: 6, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 10 }}>{tr.destacadas.gratis}</div>
             </div>
-            <div style={{ height: 90, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', overflow: 'hidden' }}>
-              <div>
-                <div style={{ fontSize: 15, fontWeight: 700, color: '#111', marginBottom: 4 }}>{tr.secciones.publicarTitle}</div>
-                <div style={{ fontSize: 12.5, color: '#777', lineHeight: 1.5 }}>{tr.secciones.publicarDesc}</div>
-              </div>
-              <span style={{ fontSize: 12, fontWeight: 600, color: '#006D77', background: '#e0f5f7', padding: '4px 12px', borderRadius: 20, alignSelf: 'flex-start' }}>{tr.secciones.publicarLink}</span>
+            <div>
+              <div style={{ fontSize: 15, fontWeight: 700, color: '#111', marginBottom: 4 }}>{tr.secciones.publicarTitle}</div>
+              <div style={{ fontSize: 12.5, color: '#777', lineHeight: 1.5, marginBottom: 12 }}>{tr.secciones.publicarDesc}</div>
+              <span style={{ fontSize: 12, fontWeight: 600, color: '#006D77', background: '#e0f5f7', padding: '4px 12px', borderRadius: 20 }}>{tr.secciones.publicarLink}</span>
             </div>
           </a>
         </div>
