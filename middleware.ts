@@ -55,8 +55,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // API: solo permitir auth (Supabase callbacks) y webhooks (Stripe)
-  if (pathname.startsWith('/api/auth') || pathname.startsWith('/api/webhook')) {
+  // API: solo permitir auth, webhooks y admin
+  if (pathname.startsWith('/api/auth') || pathname.startsWith('/api/webhook') || pathname.startsWith('/api/admin')) {
     return NextResponse.next()
   }
 

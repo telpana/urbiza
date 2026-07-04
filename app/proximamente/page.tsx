@@ -14,7 +14,7 @@ export default function Proximamente() {
           <div style={{ fontSize: 13, color: '#888', marginBottom: 6 }}>¿Quieres ser el primero en saber cuándo abrimos?</div>
           <a href="mailto:hola@habitade.com" style={{ fontSize: 14, fontWeight: 600, color: '#006D77', textDecoration: 'none' }}>hola@habitade.com</a>
         </div>
-        <div style={{ marginTop: 40, fontSize: 12, color: '#bbb' }}>© 2025 habitade.com · República Dominicana</div>
+        <div style={{ marginTop: 40, fontSize: 12, color: '#bbb' }}>© 2026 habitade.com · República Dominicana</div>
       </div>
     </main>
   )

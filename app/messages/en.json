@@ -23,9 +23,9 @@
     "local": "Commercial space"
   },
   "secciones": {
-    "mapaTitle": "Select areas on the map",
-    "mapaDesc": "Search multiple areas at once by selecting them directly on the map of the Dominican Republic.",
-    "mapaLink": "Start selecting areas →",
+    "mapaTitle": "Explore the map",
+    "mapaDesc": "Find all active properties on the interactive map of the Dominican Republic.",
+    "mapaLink": "Open the map →",
     "publicarTitle": "List your property",
     "publicarDesc": "Your first 2 listings are completely free. Apartments, houses, villas, land... Everything fits!",
     "publicarLink": "Post your listing →"

@@ -1,7 +1,7 @@
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
-const FROM = 'hola@habitade.com'
+const FROM = 'Habitade <hola@habitade.com>'
 const BASE = 'https://www.habitade.com'
 
 function layout(content: string) {
@@ -17,7 +17,7 @@ function layout(content: string) {
     ${content}
   </td></tr>
   <tr><td style="padding:20px 32px;border-top:1px solid #ebebeb;text-align:center">
-    <p style="margin:0;font-size:12px;color:#aaa">© 2025 Habitade &middot; <a href="${BASE}" style="color:#006D77;text-decoration:none">habitade.com</a> &middot; <a href="${BASE}/panel" style="color:#aaa;text-decoration:none">Dar de baja</a></p>
+    <p style="margin:0;font-size:12px;color:#aaa">© 2026 Habitade &middot; <a href="${BASE}" style="color:#006D77;text-decoration:none">habitade.com</a> &middot; <a href="${BASE}/panel" style="color:#aaa;text-decoration:none">Dar de baja</a></p>
   </td></tr>
 </table>
 </td></tr>
@@ -38,10 +38,65 @@ function p(text: string) {
 }
 
 // ── 1. BIENVENIDA ─────────────────────────────────────────────────────────────
-export async function emailBienvenida(email: string, nombre: string) {
-  const html = layout(`
+export async function emailBienvenida(email: string, nombre: string, tipo?: string) {
+  const esProfesional = tipo && tipo !== 'particular'
+  const contenido = esProfesional ? `
     ${h1(`Bienvenido a Habitade${nombre ? `, ${nombre}` : ''}`)}
-    ${p('Nos alegra que estés aquí. Habitade es el portal inmobiliario líder del Caribe, y ahora formas parte de él.')}
+    ${p('Tu cuenta profesional ya está activa. Habitade es el portal inmobiliario de referencia en República Dominicana y estamos aquí para ayudarte a vender más y mejor.')}
+    <div style="background:#006D77;border-radius:8px;padding:14px 20px;margin:0 0 20px;text-align:center">
+      <span style="color:rgba(255,255,255,0.8);font-size:13px">Plan Profesional · Todo incluido por solo </span>
+      <span style="color:#fff;font-size:18px;font-weight:700">US$9.99/mes</span>
+    </div>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0">
+      <tr>
+        <td style="padding:0 6px 12px 0" width="50%">
+          <div style="background:#f0fafb;border-radius:8px;padding:16px;border-left:3px solid #006D77">
+            <div style="font-size:13px;font-weight:700;color:#006D77;margin-bottom:4px">Anuncios ilimitados</div>
+            <div style="font-size:13px;color:#555;line-height:1.5">Publica todas las propiedades que necesites sin límite.</div>
+          </div>
+        </td>
+        <td style="padding:0 0 12px 6px" width="50%">
+          <div style="background:#f0fafb;border-radius:8px;padding:16px;border-left:3px solid #006D77">
+            <div style="font-size:13px;font-weight:700;color:#006D77;margin-bottom:4px">Posición destacada</div>
+            <div style="font-size:13px;color:#555;line-height:1.5">Tus propiedades aparecen primero en los resultados de búsqueda.</div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:0 6px 12px 0" width="50%">
+          <div style="background:#f0fafb;border-radius:8px;padding:16px;border-left:3px solid #006D77">
+            <div style="font-size:13px;font-weight:700;color:#006D77;margin-bottom:4px">Estadísticas y KPIs</div>
+            <div style="font-size:13px;color:#555;line-height:1.5">Visitas, impresiones y contactos de cada anuncio en tiempo real.</div>
+          </div>
+        </td>
+        <td style="padding:0 0 12px 6px" width="50%">
+          <div style="background:#f0fafb;border-radius:8px;padding:16px;border-left:3px solid #006D77">
+            <div style="font-size:13px;font-weight:700;color:#006D77;margin-bottom:4px">Mensajes directos</div>
+            <div style="font-size:13px;color:#555;line-height:1.5">Recibe consultas de compradores e interesados directamente en tu panel.</div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:0 6px 0 0" width="50%">
+          <div style="background:#f0fafb;border-radius:8px;padding:16px;border-left:3px solid #006D77">
+            <div style="font-size:13px;font-weight:700;color:#006D77;margin-bottom:4px">Tarjeta profesional</div>
+            <div style="font-size:13px;color:#555;line-height:1.5">Tu perfil verificado genera confianza en compradores e inversores.</div>
+          </div>
+        </td>
+        <td style="padding:0 0 0 6px" width="50%">
+          <div style="background:#f0fafb;border-radius:8px;padding:16px;border-left:3px solid #006D77">
+            <div style="font-size:13px;font-weight:700;color:#006D77;margin-bottom:4px">Soporte prioritario</div>
+            <div style="font-size:13px;color:#555;line-height:1.5">Nuestro equipo te ayuda con cualquier duda o problema que tengas.</div>
+          </div>
+        </td>
+      </tr>
+    </table>
+    ${p('¿Todo listo? Entra a tu panel y publica tu primera propiedad ahora.')}
+    ${btn('Ir a mi panel', `${BASE}/panel`)}
+    <p style="margin:16px 0 0;font-size:13px;color:#999;text-align:center">¿Necesitas ayuda? Escríbenos a <a href="mailto:hola@habitade.com" style="color:#006D77">hola@habitade.com</a></p>
+  ` : `
+    ${h1(`Bienvenido a Habitade${nombre ? `, ${nombre}` : ''}`)}
+    ${p('Nos alegra que estés aquí. Habitade es el portal inmobiliario de referencia en República Dominicana, y ahora formas parte de él.')}
     ${p('Con tu cuenta <strong>gratis</strong> puedes:')}
     <ul style="margin:0 0 16px;padding-left:20px;font-size:15px;color:#444;line-height:1.8">
       <li>Publicar hasta <strong>2 propiedades gratis</strong></li>
@@ -50,7 +105,8 @@ export async function emailBienvenida(email: string, nombre: string) {
     </ul>
     ${p('¿Listo para publicar tu primera propiedad?')}
     ${btn('Ir a mi panel', `${BASE}/panel`)}
-  `)
+  `
+  const html = layout(contenido)
   return resend.emails.send({ from: FROM, to: email, subject: `Bienvenido a Habitade${nombre ? `, ${nombre}` : ''}`, html })
 }
 

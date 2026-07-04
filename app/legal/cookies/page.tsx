@@ -4,7 +4,7 @@ export default function Cookies() {
     <main style={{ fontFamily: 'Arial, sans-serif', maxWidth: 800, margin: '0 auto', padding: '48px 24px 80px', color: '#222', lineHeight: 1.7 }}>
       <a href="/" style={{ color: '#006D77', fontSize: 13, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>← Volver al inicio</a>
       <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 6 }}>Política de Cookies</h1>
-      <p style={{ fontSize: 13, color: '#888', marginBottom: 40 }}>Última actualización: junio 2025</p>
+      <p style={{ fontSize: 13, color: '#888', marginBottom: 40 }}>Última actualización: julio 2026</p>
 
       <h2 style={{ fontSize: 16, fontWeight: 700, marginTop: 32, marginBottom: 8 }}>¿Qué son las cookies?</h2>
       <p>Las cookies son pequeños archivos de texto que se almacenan en tu dispositivo cuando visitas un sitio web. Permiten que la plataforma recuerde tus preferencias y mejore tu experiencia de navegación.</p>

@@ -8,16 +8,24 @@ const sb = createClient(
 )
 
 export async function POST(req: NextRequest) {
-  const { propiedad_id, vendedor_id, remitente_id, nombre_cliente, telefono_cliente, mensaje } = await req.json()
+  const { propiedad_id, vendedor_id, nombre_cliente, telefono_cliente, mensaje } = await req.json()
 
   if (!propiedad_id || !vendedor_id || !nombre_cliente || !mensaje) {
     return NextResponse.json({ error: 'Faltan datos' }, { status: 400 })
   }
 
+  // Derivar remitente_id del token si el usuario está autenticado — nunca del body
+  const token = req.headers.get('authorization')?.replace('Bearer ', '')
+  let remitente_id: string | null = null
+  if (token) {
+    const { data: { user } } = await sb.auth.getUser(token)
+    if (user) remitente_id = user.id
+  }
+
   const { error } = await sb.from('mensajes').insert({
     propiedad_id,
     vendedor_id,
-    remitente_id: remitente_id || null,
+    remitente_id,
     nombre_cliente,
     telefono_cliente: telefono_cliente || null,
     mensaje,

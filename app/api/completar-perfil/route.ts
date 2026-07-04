@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { emailBienvenida } from '@/lib/emails'
 
 const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -14,6 +15,10 @@ export async function POST(req: Request) {
   if (authError || !user) return NextResponse.json({ error: 'Token inválido' }, { status: 401 })
 
   const { nombre, tipo, telefono, cedula, numero_aei } = await req.json()
+
+  // Detectar si es usuario nuevo (creado hace menos de 5 minutos)
+  const creadoEn = new Date(user.created_at).getTime()
+  const esNuevo = Date.now() - creadoEn < 5 * 60 * 1000
 
   const { error } = await sb.from('usuarios').upsert({
     id: user.id,
@@ -33,6 +38,10 @@ export async function POST(req: Request) {
       )
     }
     return NextResponse.json({ error: error.message }, { status: 500 })
+  }
+
+  if (esNuevo && user.email) {
+    emailBienvenida(user.email, nombre || '', tipo).catch(e => console.error('email bienvenida error:', e))
   }
 
   return NextResponse.json({ ok: true })

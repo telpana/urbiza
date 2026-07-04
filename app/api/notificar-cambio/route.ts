@@ -9,8 +9,19 @@ const sb = createClient(
 
 export async function POST(req: NextRequest) {
   try {
-    const { propiedadId, tipo, precioAnterior, precioNuevo, propietarioId } = await req.json()
+    const token = req.headers.get('authorization')?.replace('Bearer ', '')
+    if (!token) return NextResponse.json({ ok: false }, { status: 401 })
+    const { data: { user }, error: authError } = await sb.auth.getUser(token)
+    if (authError || !user) return NextResponse.json({ ok: false }, { status: 401 })
+
+    const { propiedadId, tipo, precioAnterior, precioNuevo } = await req.json()
     if (!propiedadId || !tipo) return NextResponse.json({ ok: false }, { status: 400 })
+
+    // Verificar que el usuario autenticado es el dueño de la propiedad
+    const { data: propCheck } = await sb.from('propiedades').select('usuario_id').eq('id', propiedadId).single()
+    if (!propCheck || propCheck.usuario_id !== user.id) return NextResponse.json({ ok: false }, { status: 403 })
+
+    const propietarioId = user.id
 
     const { data: favs } = await sb
       .from('favoritos')

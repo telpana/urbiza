@@ -35,20 +35,28 @@ async function validarCodigoPromo(codigo: string): Promise<{ ok: boolean; error?
 
 export async function POST(req: Request) {
   try {
+    // Verificar identidad del usuario desde el token
+    const token = req.headers.get('authorization')?.replace('Bearer ', '')
+    if (!token) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    const { data: { user: authUser }, error: authError } = await supabase.auth.getUser(token)
+    if (authError || !authUser) return NextResponse.json({ error: 'Sesión inválida' }, { status: 401 })
+
     const contentType = req.headers.get('content-type') || ''
-    let userId: string, email: string, tipo: string, codigoPromo: string | undefined, propiedadId: string | undefined, locale: string | undefined
+    let email: string, tipo: string, codigoPromo: string | undefined, propiedadId: string | undefined, locale: string | undefined
 
     if (contentType.includes('application/json')) {
       const body = await req.json();
-      ;({ userId, email, tipo, codigoPromo, propiedadId, locale } = body)
+      ;({ email, tipo, codigoPromo, propiedadId, locale } = body)
     } else {
       const form = await req.formData()
-      userId = form.get('userId') as string
       email = form.get('email') as string
       tipo = form.get('tipo') as string
       codigoPromo = form.get('codigoPromo') as string || undefined
       propiedadId = form.get('propiedadId') as string || undefined
     }
+
+    // Siempre usar el userId del token, nunca del body
+    const userId = authUser.id
 
     const priceId = PRECIOS[tipo || 'profesional']
     const esDestacado = ['15', '30', '60'].includes(tipo)

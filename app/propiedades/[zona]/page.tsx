@@ -105,7 +105,7 @@ export default function ZonaPage({ params }: { params: { zona: string } }) {
           </div>
         </div>
         <footer style={{ borderTop: '1px solid #e8e8e8', padding: '20px', textAlign: 'center', fontSize: 12, color: '#aaa' }}>
-          © 2025 habitade.com · Portal Inmobiliario República Dominicana
+          © 2026 habitade.com · Portal Inmobiliario República Dominicana
         </footer>
       </main>
     </>

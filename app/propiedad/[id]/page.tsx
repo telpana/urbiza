@@ -544,7 +544,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
           </div>
         </div>
         <div className="prop-nav-desktop" style={{ display: 'flex', alignItems: 'center', gap: 8, visibility: authReady ? 'visible' : 'hidden', justifyContent: 'flex-end', flexShrink: 0 }}>
-          <NavUserMenu dark={true} />
+          {sesionActiva && <NavUserMenu dark={true} />}
           {authReady && !sesionActiva && <>
             <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.entrar}</a>
             <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.publicar}</a>
@@ -857,7 +857,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
       <ReportarAnuncio propiedadId={propiedad.id} />
 
       <footer style={{ background: '#004E57', color: 'rgba(255,255,255,0.5)', padding: '20px', fontSize: 12, textAlign: 'center' }}>
-        <strong style={{ color: 'rgba(255,255,255,0.8)' }}>habitade.com</strong> · © 2025 · {tr.footer.derechos.split('·').pop()?.trim()}
+        <strong style={{ color: 'rgba(255,255,255,0.8)' }}>habitade.com</strong> · © 2026 · {tr.footer.derechos.split('·').pop()?.trim()}
       </footer>
     </main>
   )

@@ -23,9 +23,9 @@
     "local": "Local commercial"
   },
   "secciones": {
-    "mapaTitle": "Sélectionner des zones sur la carte",
-    "mapaDesc": "Recherchez plusieurs zones à la fois en les sélectionnant directement sur la carte de la République Dominicaine.",
-    "mapaLink": "Commencer à sélectionner →",
+    "mapaTitle": "Explorer la carte",
+    "mapaDesc": "Localisez toutes les annonces actives sur la carte interactive de la République Dominicaine.",
+    "mapaLink": "Ouvrir la carte →",
     "publicarTitle": "Publier votre annonce",
     "publicarDesc": "Vos 2 premières annonces sont entièrement gratuites. Appartements, maisons, villas, terrains... Tout est possible!",
     "publicarLink": "Déposer mon annonce →"

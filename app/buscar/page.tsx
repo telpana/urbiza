@@ -368,12 +368,14 @@ function BuscarContent() {
   const [banosMin, setBanosMin] = useState(0)
   const [sugerencias, setSugerencias] = useState<string[]>([])
   const [mostrarSugerencias, setMostrarSugerencias] = useState(false)
-  const [propiedadesReales, setPropiedadesReales] = useState<any[]>(() => {
-    try { if (typeof window !== 'undefined') { const c = sessionStorage.getItem('hb_buscar_' + window.location.search); return c ? JSON.parse(c) : [] } } catch {} return []
-  })
-  const [cargando, setCargando] = useState(() => {
-    try { if (typeof window !== 'undefined') return !sessionStorage.getItem('hb_buscar_' + window.location.search) } catch {} return true
-  })
+  const [totalEnBD, setTotalEnBD] = useState(0)
+  const [debouncedPrecioMin, setDebouncedPrecioMin] = useState('')
+  const [debouncedPrecioMax, setDebouncedPrecioMax] = useState('')
+  const [debouncedM2Min, setDebouncedM2Min] = useState('')
+  const [debouncedM2Max, setDebouncedM2Max] = useState('')
+  const cargarRef = useRef<(pag: number) => void>(() => {})
+  const [propiedadesReales, setPropiedadesReales] = useState<any[]>([])
+  const [cargando, setCargando] = useState(true)
   const [verMapa, setVerMapa] = useState(false)
   const [sesionActiva, setSesionActiva] = useState(() => {
     if (typeof window === 'undefined') return false
@@ -471,15 +473,19 @@ function BuscarContent() {
     }
   }
 
+  useEffect(() => { const t = setTimeout(() => setDebouncedPrecioMin(precioMin), 600); return () => clearTimeout(t) }, [precioMin])
+  useEffect(() => { const t = setTimeout(() => setDebouncedPrecioMax(precioMax), 600); return () => clearTimeout(t) }, [precioMax])
+  useEffect(() => { const t = setTimeout(() => setDebouncedM2Min(m2Min), 600); return () => clearTimeout(t) }, [m2Min])
+  useEffect(() => { const t = setTimeout(() => setDebouncedM2Max(m2Max), 600); return () => clearTimeout(t) }, [m2Max])
+
   useEffect(() => {
-    const cargar = async () => {
+    const doCargar = async (pag: number) => {
       setCargando(true)
       let q = supabase
         .from('propiedades')
-        .select('*, usuarios(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado)')
+        .select('*, usuarios(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado)', { count: 'exact' })
         .eq('estado', 'activo')
-      // operacion se filtra en cliente para que el sidebar funcione sin recargar
-      if (tipoParam) q = q.eq('tipo', tipoParam)
+
       if (zonaParam) {
         const sectores = expandirGrupo(zonaParam)
         if (sectores) {
@@ -488,16 +494,41 @@ function BuscarContent() {
           q = q.ilike('zona', `%${zonaParam}%`)
         }
       }
-      const { data, error } = await q
-        .order('created_at', { ascending: false })
+      if (tipo !== 'Todos') q = q.eq('tipo', tipo)
+      if (operacion) q = q.eq('operacion', operacion)
+      const pMin = debouncedPrecioMin ? Number(debouncedPrecioMin.replace(/\D/g, '')) : null
+      const pMax = debouncedPrecioMax ? Number(debouncedPrecioMax.replace(/\D/g, '')) : null
+      if (pMin) q = q.gte('precio', pMin)
+      if (pMax) q = q.lte('precio', pMax)
+      if (habMin > 0) q = q.gte('habitaciones', habMin)
+      if (banosMin > 0) q = q.gte('banos', banosMin)
+      const mMin = debouncedM2Min ? Number(debouncedM2Min.replace(/\D/g, '')) : null
+      const mMax = debouncedM2Max ? Number(debouncedM2Max.replace(/\D/g, '')) : null
+      if (mMin) q = q.gte('m2', mMin)
+      if (mMax) q = q.lte('m2', mMax)
+      if (amenidadesFiltro.length > 0) q = q.contains('amenidades', amenidadesFiltro)
+
+      if (orden === 'Baratos') q = q.order('precio', { ascending: true })
+      else if (orden === 'Caros') q = q.order('precio', { ascending: false })
+      else if (orden === 'Relevancia') q = q.order('destacado', { ascending: false }).order('created_at', { ascending: false })
+      else q = q.order('created_at', { ascending: false })
+
+      const offset = (pag - 1) * POR_PAGINA
+      q = q.range(offset, offset + POR_PAGINA - 1)
+
+      const { data, count, error } = await q
       if (!error && data) {
         setPropiedadesReales(data)
-        try { sessionStorage.setItem('hb_buscar_' + window.location.search, JSON.stringify(data)) } catch {}
+        setTotalEnBD(count ?? 0)
       }
       setCargando(false)
     }
-    cargar()
-  }, [])
+
+    cargarRef.current = doCargar
+    setPagina(1)
+    doCargar(1)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tipo, operacion, orden, debouncedPrecioMin, debouncedPrecioMax, habMin, banosMin, debouncedM2Min, debouncedM2Max, amenidadesFiltro])
 
   const propiedadesActivas: any[] = propiedadesReales.length > 0 ? propiedadesReales.map(p => ({
     id: p.id,
@@ -523,7 +554,7 @@ function BuscarContent() {
     fotos: Array.isArray(p.fotos) ? p.fotos : [],
     vendedor: p.usuarios || {},
     created_at: p.created_at || '',
-  })) : propiedadesEjemplo
+  })) : []
 
   const tipos = ['Todos', 'Apartamento', 'Casa', 'Villa', 'Edificio', 'Oficina', 'Terreno', 'Local comercial']
   const tipoLabel = (t: string) => {
@@ -539,38 +570,18 @@ function BuscarContent() {
   ]
 
   const filtradas = propiedadesActivas.filter((p: any) => {
-    if (operacion && p.operacion !== operacion) return false
-    if (tipo !== 'Todos' && p.tipo !== tipo) return false
-    if (precioMax && p.precio > Number(precioMax.replace(/\D/g, ''))) return false
-    if (precioMin && p.precio < Number(precioMin.replace(/\D/g, ''))) return false
-    if (m2Max && p.m2 > Number(m2Max.replace(/\D/g, ''))) return false
-    if (m2Min && p.m2 < Number(m2Min.replace(/\D/g, ''))) return false
-    if (habMin > 0 && p.hab < habMin) return false
-    if (banosMin > 0 && p.banos < banosMin) return false
-    if (query) {
-      const sectores = expandirGrupo(query)
-      if (sectores) {
-        if (!sectores.some(s => normalize(p.zona).includes(normalize(s)))) return false
-      } else if (!normalize(p.titulo).includes(normalize(query)) && !(p.titulo_en && normalize(p.titulo_en).includes(normalize(query))) && !(p.titulo_fr && normalize(p.titulo_fr).includes(normalize(query))) && !normalize(p.zona).includes(normalize(query))) {
-        return false
-      }
-    }
     if (soloAei && !p.aei) return false
-    if (amenidadesFiltro.length > 0 && !amenidadesFiltro.every(a => p.amenidades.includes(a))) return false
     return true
-  }).sort((a, b) => {
-    // Destacadas solo tienen prioridad en Relevancia
-    if (orden === 'Relevancia' && b.dest !== a.dest) return (b.dest ? 1 : 0) - (a.dest ? 1 : 0)
-    if (orden === 'Baratos') return a.precio - b.precio
-    if (orden === 'Caros') return b.precio - a.precio
-    if (orden === 'Recientes') return (b.created_at || '').localeCompare(a.created_at || '')
-    return (b.created_at || '').localeCompare(a.created_at || '')
   })
 
-  useEffect(() => { setPagina(1) }, [query, tipo, orden, precioMin, precioMax, habMin, banosMin])
+  const handlePaginaChange = (n: number) => {
+    setPagina(n)
+    cargarRef.current(n)
+    window.scrollTo(0, 0)
+  }
 
-  const totalPaginas = Math.ceil(filtradas.length / POR_PAGINA)
-  const filtradasPagina = filtradas.slice((pagina - 1) * POR_PAGINA, pagina * POR_PAGINA)
+  const totalPaginas = Math.ceil(totalEnBD / POR_PAGINA)
+  const filtradasPagina = filtradas
 
   const handleQueryChange = (val: string) => {
     setQuery(val)
@@ -587,7 +598,8 @@ function BuscarContent() {
   }
 
   const tituloOperacion = operacion === 'alquiler' ? Tb.operacion.alquiler : Tb.operacion.venta
-  const tituloPagina = `${filtradas.length} ${query ? `${Tb.propiedadesEn} ${query.split(',')[0].trim()}` : Tb.titulo}`
+  const totalMostrado = totalEnBD > 0 ? totalEnBD.toLocaleString('es-DO') : `${filtradas.length}`
+  const tituloPagina = `${totalMostrado} ${query ? `${Tb.propiedadesEn} ${query.split(',')[0].trim()}` : Tb.titulo}`
 
   return (
     <>
@@ -693,7 +705,7 @@ function BuscarContent() {
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexShrink: 0 }}>
           <div className="buscar-nav-desktop" style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <NavUserMenu dark={true} />
+            {sesionActiva && <NavUserMenu dark={true} />}
             {authReady && !sesionActiva && <>
               <a href="/login" style={{ fontSize: 12, color: '#fff', border: '1.5px solid rgba(255,255,255,0.7)', padding: '5px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.entrar}</a>
               <a href="/registro" style={{ fontSize: 12, color: '#006D77', background: '#fff', padding: '6px 14px', borderRadius: 4, textDecoration: 'none', fontWeight: 500, whiteSpace: 'nowrap' }}>{Tn.publicar}</a>
@@ -1016,26 +1028,29 @@ function BuscarContent() {
 
           {totalPaginas > 1 && (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 6, padding: '24px', background: '#f4f5f6', flexWrap: 'wrap' }}>
-              <button onClick={() => { setPagina(p => Math.max(1, p - 1)); window.scrollTo(0,0) }}
+              <button onClick={() => handlePaginaChange(Math.max(1, pagina - 1))}
                 disabled={pagina === 1}
                 style={{ border: '1.5px solid #e0e0e0', background: '#fff', color: pagina === 1 ? '#ccc' : '#333', padding: '8px 14px', borderRadius: 4, fontSize: 13, cursor: pagina === 1 ? 'default' : 'pointer' }}>
                 {Tb.anterior}
               </button>
-              {Array.from({ length: totalPaginas }, (_, i) => i + 1)
-                .filter(n => n === 1 || n === totalPaginas || Math.abs(n - pagina) <= 2)
-                .reduce<(number | '...')[]>((acc, n, idx, arr) => {
+              {(() => {
+                const nums = Array.from({ length: totalPaginas }, (_, i) => i + 1)
+                  .filter(n => n === 1 || Math.abs(n - pagina) <= 2)
+                const items = nums.reduce<(number | '...')[]>((acc, n, idx, arr) => {
                   if (idx > 0 && n - (arr[idx - 1] as number) > 1) acc.push('...')
                   acc.push(n)
                   return acc
                 }, [])
-                .map((n, i) => n === '...'
+                if (nums[nums.length - 1] < totalPaginas) items.push('...')
+                return items.map((n, i) => n === '...'
                   ? <span key={`dots-${i}`} style={{ padding: '0 4px', color: '#888' }}>…</span>
-                  : <button key={n} onClick={() => { setPagina(n as number); window.scrollTo(0,0) }}
+                  : <button key={n} onClick={() => handlePaginaChange(n as number)}
                       style={{ border: `1.5px solid ${pagina === n ? '#006D77' : '#e0e0e0'}`, background: pagina === n ? '#006D77' : '#fff', color: pagina === n ? '#fff' : '#333', padding: '8px 13px', borderRadius: 4, fontSize: 13, cursor: 'pointer', fontWeight: pagina === n ? 600 : 400 }}>
                       {n}
                     </button>
-                )}
-              <button onClick={() => { setPagina(p => Math.min(totalPaginas, p + 1)); window.scrollTo(0,0) }}
+                )
+              })()}
+              <button onClick={() => handlePaginaChange(Math.min(totalPaginas, pagina + 1))}
                 disabled={pagina === totalPaginas}
                 style={{ border: '1.5px solid #e0e0e0', background: '#fff', color: pagina === totalPaginas ? '#ccc' : '#333', padding: '8px 14px', borderRadius: 4, fontSize: 13, cursor: pagina === totalPaginas ? 'default' : 'pointer' }}>
                 Siguiente
@@ -1077,3 +1092,4 @@ export default function Buscar() {
     </Suspense>
   )
 }
+

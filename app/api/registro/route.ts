@@ -39,7 +39,7 @@ export async function POST(req: Request) {
 
   if (dbError) return NextResponse.json({ error: dbError.message }, { status: 500 })
 
-  emailBienvenida(email, nombre || '').catch(e => console.error('email bienvenida error:', e))
+  emailBienvenida(email, nombre || '', tipo).catch(e => console.error('email bienvenida error:', e))
 
   return NextResponse.json({ ok: true })
 }

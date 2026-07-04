@@ -16,40 +16,109 @@ const propiedadesMapaHome = [
   { id: 9, precio: 120000, titulo: 'Local comercial en Santiago', zona: 'Santiago', tipo: 'Local comercial', hab: 0, m2: 150, banos: 1, lat: 19.4600, lng: -70.6850, desc: 'Local comercial en zona de alto tráfico.' },
 ]
 
+const ZONAS_COORDS_HOME: Record<string, [number, number]> = {
+  'piantini': [18.4890, -69.9370], 'naco': [18.4950, -69.9450], 'bella vista': [18.4760, -69.9450],
+  'arroyo hondo': [18.5050, -69.9650], 'serralles': [18.4850, -69.9500], 'gazcue': [18.4720, -69.9300],
+  'evaristo morales': [18.4870, -69.9420], 'la esperilla': [18.4780, -69.9330], 'miramar': [18.4800, -69.9200],
+  'ciudad colonial': [18.4740, -69.8880], 'los cacicazgos': [18.4670, -69.9500],
+  'los prados': [18.5000, -69.9550], 'distrito nacional': [18.4861, -69.9312],
+  'santo domingo este': [18.4900, -69.8600], 'santo domingo norte': [18.5500, -69.9500],
+  'santo domingo oeste': [18.4800, -70.0200], 'santo domingo': [18.4861, -69.9312],
+  'boca chica': [18.4490, -69.6080],
+  'punta cana': [18.5674, -68.3634], 'downtown punta cana': [18.6384, -68.3917],
+  'bavaro': [18.6950, -68.4300], 'cap cana': [18.5100, -68.3900],
+  'los corales': [18.6600, -68.4500], 'cabeza de toro': [18.7100, -68.4600],
+  'uvero alto': [18.8100, -68.5850], 'macao': [18.7536, -68.5625],
+  'cortecito': [18.7080, -68.4220], 'el cortecito': [18.7080, -68.4220],
+  'higuey': [18.6142, -68.7073], 'san rafael del yuma': [18.3570, -68.5720],
+  'la altagracia': [18.5654, -68.4500],
+  'santiago': [19.4517, -70.6970], 'los jardines': [19.4600, -70.7100],
+  'cerros de gurabo': [19.4700, -70.6500], 'reparto conuco': [19.4400, -70.6900],
+  'puerto plata': [19.7950, -70.6910], 'sosua': [19.7600, -70.5200],
+  'cabarete': [19.7700, -70.4100], 'costambar': [19.7900, -70.7200],
+  'cofresí': [19.8100, -70.7500], 'playa dorada': [19.8100, -70.6800],
+  'las terrenas': [19.3100, -69.5200], 'samana': [19.2060, -69.3360],
+  'las galeras': [19.2750, -69.1900], 'el portillo': [19.3300, -69.4800],
+  'coson': [19.3400, -69.4500], 'sanchez': [19.2317, -69.6088],
+  'la romana': [18.4273, -68.9728], 'casa de campo': [18.4080, -68.9130],
+  'bayahibe': [18.3650, -68.8280], 'dominicus': [18.3600, -68.8600],
+  'jarabacoa': [19.1130, -70.6380], 'constanza': [18.9090, -70.7490], 'la vega': [19.2211, -70.5286],
+  'san pedro de macoris': [18.4530, -69.3090], 'juan dolio': [18.4400, -69.5300],
+  'nagua': [19.3730, -69.8470], 'bani': [18.2790, -70.3310],
+  'azua': [18.4530, -70.7350], 'moca': [19.3960, -70.5150],
+  'san cristobal': [18.4153, -70.1062], 'barahona': [18.2090, -71.0990],
+  'pedernales': [18.0380, -71.7430], 'hato mayor': [18.7600, -69.2545],
+  'miches': [18.9803, -69.0424],
+}
+
+function coordsDeZona(zona: string): [number, number] {
+  if (!zona) return [18.4861, -69.9312]
+  const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+  const partes = zona.split(',').map(p => norm(p.trim()))
+  for (const parte of partes) {
+    if (ZONAS_COORDS_HOME[parte]) return ZONAS_COORDS_HOME[parte]
+  }
+  const sorted = Object.entries(ZONAS_COORDS_HOME).sort((a, b) => b[0].length - a[0].length)
+  const z = norm(zona)
+  for (const [key, coords] of sorted) {
+    if (partes[0] && partes[0].includes(norm(key))) return coords
+  }
+  for (const [key, coords] of sorted) {
+    if (z.includes(norm(key))) return coords
+  }
+  return [18.4861, -69.9312]
+}
+
 function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<any>(null)
   const markersRef = useRef<any[]>([])
   const [filtroTipo, setFiltroTipo] = useState('Todos')
   const [menuAbierto, setMenuAbierto] = useState(false)
+  const [propiedades, setPropiedades] = useState<any[]>([])
   const { tr } = useIdioma()
 
-  const tipos = ['Todos', 'Apartamento', 'Villa', 'Terreno', 'Oficina', 'Local comercial']
+  useEffect(() => {
+    supabase.from('propiedades')
+      .select('id,titulo,precio,zona,habitaciones,m2,tipo,operacion,fotos')
+      .eq('estado', 'activo')
+      .limit(300)
+      .then(({ data }) => { if (data) setPropiedades(data) })
+  }, [])
+
+  const tipos = ['Todos', 'Apartamento', 'Villa', 'Casa', 'Terreno', 'Oficina', 'Local comercial']
   const tipoLabel = (t: string) => {
     if (t === 'Todos') return tr.buscar.todos
-    const map: Record<string, keyof typeof tr.tipos> = { 'Apartamento': 'apartamento', 'Villa': 'villa', 'Terreno': 'terreno', 'Oficina': 'oficina', 'Local comercial': 'local' }
+    const map: Record<string, keyof typeof tr.tipos> = { 'Apartamento': 'apartamento', 'Villa': 'villa', 'Casa': 'casa', 'Terreno': 'terreno', 'Oficina': 'oficina', 'Local comercial': 'local' }
     return tr.tipos[map[t]] || t
   }
 
-  function actualizarMarkers(L: any, map: any, filtro: string) {
+  function actualizarMarkers(L: any, map: any, filtro: string, data: any[]) {
     markersRef.current.forEach(m => map.removeLayer(m))
     markersRef.current = []
-    const filtradas = filtro === 'Todos' ? propiedadesMapaHome : propiedadesMapaHome.filter(p => p.tipo === filtro)
+    const filtradas = filtro === 'Todos' ? data : data.filter(p => p.tipo === filtro)
     filtradas.forEach(p => {
+      const [lat, lng] = coordsDeZona(p.zona || '')
       const icono = L.divIcon({
         className: '',
         html: `<svg width="22" height="30" viewBox="0 0 22 30" xmlns="http://www.w3.org/2000/svg"><path d="M11 0C4.925 0 0 4.925 0 11c0 7.667 11 19 11 19s11-11.333 11-19C22 4.925 17.075 0 11 0z" fill="#006D77" stroke="#fff" stroke-width="1.5"/><circle cx="11" cy="11" r="4.5" fill="#fff"/></svg>`,
         iconSize: [22, 30], iconAnchor: [11, 30], popupAnchor: [0, -30],
       })
-      const marker = L.marker([p.lat, p.lng], { icon: icono }).addTo(map).bindPopup(`
-        <div style="min-width:180px;font-family:sans-serif;">
-          <div style="font-size:11px;color:#17A6B4;font-weight:600;margin-bottom:3px;">${p.tipo.toUpperCase()}</div>
-          <div style="font-size:13px;font-weight:600;color:#006D77;margin-bottom:4px;">${p.titulo}</div>
-          <div style="font-size:16px;font-weight:700;color:#111;margin-bottom:2px;">US$ ${p.precio.toLocaleString('en-US')}</div>
-          <div style="font-size:12px;color:#555;margin-bottom:8px;">${p.hab > 0 ? p.hab + ' hab · ' : ''}${p.m2} m²${p.banos > 0 ? ' · ' + p.banos + ' baños' : ''}</div>
-          <a href="/propiedad/${p.id}" style="display:block;background:#006D77;color:#fff;padding:6px 10px;border-radius:4px;text-align:center;text-decoration:none;font-size:12px;font-weight:500;">Ver propiedad</a>
+      const fotos = Array.isArray(p.fotos) ? p.fotos : (typeof p.fotos === 'string' ? (() => { try { return JSON.parse(p.fotos) } catch { return [] } })() : [])
+      const fotoHtml = fotos.length > 0
+        ? `<img src="${fotos[0]}" style="width:100%;height:120px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block">`
+        : `<div style="width:100%;height:80px;background:#e0f5f7;border-radius:6px;display:flex;align-items:center;justify-content:center;margin-bottom:10px"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#006D77" stroke-width="1" opacity="0.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>`
+      const marker = L.marker([lat, lng], { icon: icono }).addTo(map).bindPopup(`
+        <div style="width:200px;font-family:Arial,sans-serif;padding:4px 0">
+          ${fotoHtml}
+          <div style="font-size:10px;color:#17A6B4;font-weight:700;letter-spacing:0.5px;margin-bottom:4px">${(p.tipo||'').toUpperCase()}</div>
+          <div style="font-size:13px;font-weight:600;color:#111;margin-bottom:6px;line-height:1.35">${p.titulo||''}</div>
+          <div style="font-size:18px;font-weight:700;color:#006D77;margin-bottom:2px">US$ ${(p.precio||0).toLocaleString('en-US')}</div>
+          <div style="font-size:11px;color:#bbb;margin-bottom:8px">${formatDOP(p.precio||0)}</div>
+          ${[p.habitaciones > 0 && `<span>${p.habitaciones} hab</span>`, p.m2 && `<span>${p.m2} m²</span>`].filter(Boolean).join('<span style="color:#ddd;margin:0 4px">·</span>')}
+          <a href="/propiedad/${p.id}" style="display:block;background:#006D77;color:#fff;padding:8px;border-radius:6px;text-align:center;text-decoration:none;font-size:13px;font-weight:600;margin-top:10px">Ver propiedad</a>
         </div>
-      `)
+      `, { maxWidth: 240 })
       markersRef.current.push(marker)
     })
   }
@@ -59,9 +128,8 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
     const load = () => {
       const L = (window as any).L
       if (!L || !mapRef.current) return
-      const map = L.map(mapRef.current, { center: [18.7357, -70.1627], zoom: 7, zoomControl: true, attributionControl: false })
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
-      actualizarMarkers(L, map, 'Todos')
+      const map = L.map(mapRef.current, { center: [18.7357, -70.1627], zoom: 8, zoomControl: true, attributionControl: false })
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map)
       mapInstanceRef.current = { map, L }
     }
     if ((window as any).L) { load() }
@@ -80,12 +148,12 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
   }, [])
 
   useEffect(() => {
-    if (!mapInstanceRef.current) return
+    if (!mapInstanceRef.current || propiedades.length === 0) return
     const { L, map } = mapInstanceRef.current
-    actualizarMarkers(L, map, filtroTipo)
-  }, [filtroTipo])
+    actualizarMarkers(L, map, filtroTipo, propiedades)
+  }, [filtroTipo, propiedades])
 
-  const visibles = filtroTipo === 'Todos' ? propiedadesMapaHome.length : propiedadesMapaHome.filter(p => p.tipo === filtroTipo).length
+  const visibles = filtroTipo === 'Todos' ? propiedades.length : propiedades.filter(p => p.tipo === filtroTipo).length
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', flexDirection: 'column' }}>
@@ -122,7 +190,7 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
           className="mapa-home-desk"
           style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '6px 14px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer', flexShrink: 0, touchAction: 'manipulation' }}
         >
-          ← {tr.buscar.volver}
+          {tr.buscar.volver}
         </button>
       </div>
 
@@ -166,14 +234,23 @@ function MapaMiniHome() {
       const L = (window as any).L
       if (!L || !mapRef.current) return
       const map = L.map(mapRef.current, {
-        center: [18.7357, -70.1627],
+        center: [18.85, -70.35],
         zoom: 6,
+        zoomSnap: 0.5,
         zoomControl: false,
         attributionControl: false,
         dragging: false,
         scrollWheelZoom: false,
       })
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map)
+      // Santo Domingo, Bávaro, Santiago
+      [[18.4890, -69.9370], [18.6835, -68.4070], [19.4517, -70.6970]].forEach(([lat, lng]) => {
+        L.divIcon && L.marker([lat, lng], { icon: L.divIcon({
+          className: '',
+          html: `<svg width="8" height="11" viewBox="0 0 22 30" xmlns="http://www.w3.org/2000/svg"><path d="M11 0C4.925 0 0 4.925 0 11c0 7.667 11 19 11 19s11-11.333 11-19C22 4.925 17.075 0 11 0z" fill="#006D77" stroke="#fff" stroke-width="2"/></svg>`,
+          iconSize: [8, 11], iconAnchor: [4, 11],
+        }) }).addTo(map)
+      })
       mapInstanceRef.current = map
     }
     if ((window as any).L) { load() }
@@ -549,7 +626,7 @@ export default function Home() {
               </div>
             )}
           </div>
-          <NavUserMenu dark={false} />
+          {sesionActiva && <NavUserMenu dark={false} />}
           {authReady && !sesionActiva && <>
             <a href="/login" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.entrar}</a>
             <a href="/registro" style={{ fontSize: 13, color: '#fff', background: '#006D77', padding: '8px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.publicar}</a>

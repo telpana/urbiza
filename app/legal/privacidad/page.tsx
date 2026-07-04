@@ -4,7 +4,7 @@ export default function Privacidad() {
     <main style={{ fontFamily: 'Arial, sans-serif', maxWidth: 800, margin: '0 auto', padding: '48px 24px 80px', color: '#222', lineHeight: 1.7 }}>
       <a href="/" style={{ color: '#006D77', fontSize: 13, textDecoration: 'none', display: 'inline-block', marginBottom: 32 }}>← Volver al inicio</a>
       <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 6 }}>Política de Privacidad</h1>
-      <p style={{ fontSize: 13, color: '#888', marginBottom: 40 }}>Última actualización: junio 2025</p>
+      <p style={{ fontSize: 13, color: '#888', marginBottom: 40 }}>Última actualización: julio 2026</p>
 
       <h2 style={{ fontSize: 16, fontWeight: 700, marginTop: 32, marginBottom: 8 }}>1. Responsable del tratamiento</h2>
       <p>Habitade, operado por una LLC registrada fuera de la República Dominicana, es el responsable del tratamiento de los datos personales recogidos a través de <strong>habitade.com</strong>. Nos comprometemos a proteger tu privacidad y tratar tus datos conforme a la normativa aplicable, incluyendo la Ley 172-13 de la República Dominicana sobre protección de datos de carácter personal.</p>
