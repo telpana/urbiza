@@ -159,6 +159,14 @@ export default function NavUserMenu({ dark = false }: Props) {
                 {item.label}
               </a>
             ))}
+            <button
+              onClick={async () => { await supabase.auth.signOut(); window.location.href = '/' }}
+              style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', fontSize: 13, color: '#e63946', cursor: 'pointer', boxSizing: 'border-box' }}
+              onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.background = '#fff5f5'}
+              onMouseLeave={e => (e.currentTarget as HTMLButtonElement).style.background = 'transparent'}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e63946" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              {tr.nav.cerrarSesion}
+            </button>
           </div>
         )}
       </div>

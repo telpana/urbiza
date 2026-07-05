@@ -94,7 +94,15 @@ export default function Login() {
       redirectTo: `${window.location.origin}/login`
     })
     if (resetError) {
-      setError('No pudimos enviar el email. Espera unos minutos e inténtalo de nuevo.')
+      console.error('[recuperarPassword] Supabase error:', resetError.message, resetError)
+      const msg = resetError.message?.toLowerCase() ?? ''
+      if (msg.includes('rate limit') || msg.includes('too many')) {
+        setError('Demasiados intentos. Espera unos minutos e inténtalo de nuevo.')
+      } else if (msg.includes('redirect') || msg.includes('not allowed')) {
+        setError('Error de configuración. Contacta con soporte.')
+      } else {
+        setError(`No pudimos enviar el email. (${resetError.message})`)
+      }
       setRecuperando(false)
       return
     }
