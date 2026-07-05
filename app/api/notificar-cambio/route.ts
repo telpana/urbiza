@@ -64,6 +64,7 @@ export async function POST(req: NextRequest) {
         tipo,
         precio_anterior: precioAnterior ?? null,
         precio_nuevo: precioNuevo ?? null,
+        leida: false,
       }))
     )
     if (insertError) {
