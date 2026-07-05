@@ -39,13 +39,23 @@ export default function Login() {
     return () => subscription.unsubscribe()
   }, [])
 
-  // Mantener ref sincronizada para poder leerla en cleanup de useEffect
+  // Mantener ref sincronizada para poder leerla en handlers síncronos
   useEffect(() => { resetDoneRef.current = resetDone }, [resetDone])
 
-  // Si el usuario navega fuera sin completar el cambio de contraseña, cerrar sesión
+  // Protección contra navegación fuera del reset sin completar
   useEffect(() => {
     if (!resetMode) return
-    return () => { if (!resetDoneRef.current) supabase.auth.signOut() }
+    const handleBeforeUnload = () => {
+      if (resetDoneRef.current) return
+      // Borrar todas las claves de sesión de Supabase de localStorage de forma síncrona
+      try {
+        Object.keys(localStorage).forEach(k => {
+          if (k.startsWith('sb-') && k.includes('-auth-token')) localStorage.removeItem(k)
+        })
+      } catch {}
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, [resetMode])
 
   const actualizarPassword = async () => {
@@ -92,10 +102,16 @@ export default function Login() {
     await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/completar-perfil` } })
   }
 
+  const logoResetClick = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (!resetDoneRef.current) await supabase.auth.signOut()
+    window.location.href = '/'
+  }
+
   if (resetMode) return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
       <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', padding: '0 24px' }}>
-        <a href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>habitade.</a>
+        <a href="/" onClick={logoResetClick} style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>habitade.</a>
       </nav>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 54px)', padding: '40px 20px' }}>
         <div style={{ width: '100%', maxWidth: 420 }}>
