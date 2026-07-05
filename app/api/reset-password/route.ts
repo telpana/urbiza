@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL}/login`
 
     const { data, error } = await supabaseAdmin.auth.admin.generateLink({
-      type: 'recovery',
+      type: 'magiclink',
       email: email.toLowerCase().trim(),
       options: { redirectTo }
     })

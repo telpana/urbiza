@@ -26,8 +26,8 @@ export default function Login() {
     const params = new URLSearchParams(window.location.search)
     const tokenHash = params.get('token_hash')
     const type = params.get('type')
-    if (tokenHash && type === 'recovery') {
-      supabase.auth.verifyOtp({ token_hash: tokenHash, type: 'recovery' }).then(({ error }) => {
+    if (tokenHash && (type === 'recovery' || type === 'magiclink')) {
+      supabase.auth.verifyOtp({ token_hash: tokenHash, type: type as 'recovery' | 'magiclink' }).then(({ error }) => {
         if (!error) setResetMode(true)
       })
       return
