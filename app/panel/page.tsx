@@ -190,10 +190,10 @@ function GuardadosSeccion({ onLeer }: { onLeer?: (n: number) => void }) {
             if (!p) return null
             const foto = Array.isArray(p.fotos) && p.fotos[0]
             const notifsCard = notificaciones.filter(n => String(n.propiedad_id) === String(f.propiedad_id))
-            const hasPrecio = notifsCard.some(n => n.tipo === 'precio')
-            const hasFotos = notifsCard.some(n => n.tipo === 'fotos')
+            const hasPrecio = notifsCard.some(n => n.tipo === 'cambioPrecio' || n.tipo === 'precio')
+            const hasFotos = notifsCard.some(n => n.tipo === 'nuevasFotos' || n.tipo === 'fotos')
             const tieneNotif = hasPrecio || hasFotos
-            const notifPrecio = notifsCard.find(n => n.tipo === 'precio')
+            const notifPrecio = notifsCard.find(n => n.tipo === 'cambioPrecio' || n.tipo === 'precio')
             return (
               <div key={f.propiedad_id} className="guardado-card" style={{ background: '#fff', borderRadius: 8, border: tieneNotif ? '1.5px solid #006D77' : '1px solid #e8e8e8', display: 'flex', overflow: 'hidden', cursor: 'pointer', position: 'relative' }} onClick={() => abrirPropiedad(f.propiedad_id, `/propiedad/${p.id}`)}>
                 {tieneNotif && (
