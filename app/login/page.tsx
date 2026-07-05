@@ -1,5 +1,5 @@
 ﻿'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '../../supabase'
 import { useIdioma } from '../../IdiomaContext'
 
@@ -18,6 +18,7 @@ export default function Login() {
   const [resetMode, setResetMode] = useState(false)
   const [newPassword, setNewPassword] = useState('')
   const [resetDone, setResetDone] = useState(false)
+  const resetDoneRef = useRef(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   useEffect(() => {
@@ -38,12 +39,22 @@ export default function Login() {
     return () => subscription.unsubscribe()
   }, [])
 
+  // Mantener ref sincronizada para poder leerla en cleanup de useEffect
+  useEffect(() => { resetDoneRef.current = resetDone }, [resetDone])
+
+  // Si el usuario navega fuera sin completar el cambio de contraseña, cerrar sesión
+  useEffect(() => {
+    if (!resetMode) return
+    return () => { if (!resetDoneRef.current) supabase.auth.signOut() }
+  }, [resetMode])
+
   const actualizarPassword = async () => {
     if (!newPassword || newPassword.length < 6) { setError('La contraseña debe tener al menos 6 caracteres'); return }
     setLoading(true)
     setError('')
     const { error } = await supabase.auth.updateUser({ password: newPassword })
     if (error) { setError('Error al actualizar la contraseña. Inténtalo de nuevo.'); setLoading(false); return }
+    resetDoneRef.current = true
     setResetDone(true)
     setTimeout(() => { window.location.href = '/panel' }, 2000)
   }
