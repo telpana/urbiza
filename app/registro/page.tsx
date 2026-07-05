@@ -28,7 +28,6 @@ export default function Registro() {
 
   const registrarConEmail = async () => {
     if (!nombre || !email || !password || !telefono) { setError(T.err_campos); return }
-    if (tipoCuenta === 'profesional' && !cedula) { setError(T.err_cedula); return }
     setLoading(true)
     setError('')
     try {
@@ -187,7 +186,7 @@ export default function Registro() {
                   {tipoCuenta === 'profesional' && (
                     <>
                       <div>
-                        <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{T.cedula} *</label>
+                        <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{T.cedula} <span style={{ fontWeight: 400, color: '#aaa' }}>{T.opcional}</span></label>
                         <input value={cedula} onChange={e => setCedula(e.target.value)} type="text" placeholder={T.cedula} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 14px', fontSize: 14, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                       </div>
                       <div>
