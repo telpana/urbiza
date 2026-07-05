@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     const redirectTo = `${origin}/reset-password`
 
     const { data, error } = await supabaseAdmin.auth.admin.generateLink({
-      type: 'magiclink',
+      type: 'recovery',
       email: email.toLowerCase().trim(),
       options: { redirectTo }
     })

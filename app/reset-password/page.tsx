@@ -11,12 +11,22 @@ export default function ResetPassword() {
   const doneRef = useRef(false)
 
   useEffect(() => {
-    // Puede que el cliente ya haya procesado el token del fragmento antes de montar
+    // PKCE flow: token_hash en query params
+    const params = new URLSearchParams(window.location.search)
+    const tokenHash = params.get('token_hash')
+    const type = params.get('type') as 'recovery' | 'magiclink' | null
+    if (tokenHash && type) {
+      supabase.auth.verifyOtp({ token_hash: tokenHash, type }).then(({ error }) => {
+        if (!error) setListo(true)
+      })
+      return
+    }
+
+    // Implicit flow: token en el fragmento — el cliente lo procesa automáticamente
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) setListo(true)
     })
 
-    // O llega via evento SIGNED_IN cuando el cliente procesa el fragmento
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_IN' || event === 'PASSWORD_RECOVERY') setListo(true)
     })
