@@ -14,7 +14,8 @@ export async function POST(req: Request) {
       return Response.json({ ok: false, error: 'Email requerido' }, { status: 400 })
     }
 
-    const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password`
+    const origin = new URL(req.url).origin
+    const redirectTo = `${origin}/reset-password`
 
     const { data, error } = await supabaseAdmin.auth.admin.generateLink({
       type: 'magiclink',
