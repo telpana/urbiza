@@ -1,5 +1,5 @@
 ﻿'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { supabase } from '../../supabase'
 import { useIdioma } from '../../IdiomaContext'
 
@@ -15,59 +15,7 @@ export default function Login() {
   const [error, setError] = useState('')
   const [recuperando, setRecuperando] = useState(false)
   const [emailEnviado, setEmailEnviado] = useState(false)
-  const [resetMode, setResetMode] = useState(false)
-  const [newPassword, setNewPassword] = useState('')
-  const [resetDone, setResetDone] = useState(false)
-  const resetDoneRef = useRef(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-  useEffect(() => {
-    // PKCE flow: token_hash en la URL
-    const params = new URLSearchParams(window.location.search)
-    const tokenHash = params.get('token_hash')
-    const type = params.get('type')
-    if (tokenHash && (type === 'recovery' || type === 'magiclink')) {
-      supabase.auth.verifyOtp({ token_hash: tokenHash, type: type as 'recovery' | 'magiclink' }).then(({ error }) => {
-        if (!error) setResetMode(true)
-      })
-      return
-    }
-    // Implicit flow: escuchar evento PASSWORD_RECOVERY
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY') setResetMode(true)
-    })
-    return () => subscription.unsubscribe()
-  }, [])
-
-  // Mantener ref sincronizada para poder leerla en handlers síncronos
-  useEffect(() => { resetDoneRef.current = resetDone }, [resetDone])
-
-  // Protección contra navegación fuera del reset sin completar
-  useEffect(() => {
-    if (!resetMode) return
-    const handleBeforeUnload = () => {
-      if (resetDoneRef.current) return
-      // Borrar todas las claves de sesión de Supabase de localStorage de forma síncrona
-      try {
-        Object.keys(localStorage).forEach(k => {
-          if (k.startsWith('sb-') && k.includes('-auth-token')) localStorage.removeItem(k)
-        })
-      } catch {}
-    }
-    window.addEventListener('beforeunload', handleBeforeUnload)
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
-  }, [resetMode])
-
-  const actualizarPassword = async () => {
-    if (!newPassword || newPassword.length < 6) { setError('La contraseña debe tener al menos 6 caracteres'); return }
-    setLoading(true)
-    setError('')
-    const { error } = await supabase.auth.updateUser({ password: newPassword })
-    if (error) { setError('Error al actualizar la contraseña. Inténtalo de nuevo.'); setLoading(false); return }
-    resetDoneRef.current = true
-    setResetDone(true)
-    setTimeout(() => { window.location.href = '/panel' }, 2000)
-  }
 
   const loginConEmail = async () => {
     if (!email || !password) { setError(T.err_campos); return }
@@ -116,46 +64,6 @@ export default function Login() {
   const loginConGoogle = async () => {
     await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/completar-perfil` } })
   }
-
-  const logoResetClick = async (e: React.MouseEvent) => {
-    e.preventDefault()
-    if (!resetDoneRef.current) await supabase.auth.signOut()
-    window.location.href = '/'
-  }
-
-  if (resetMode) return (
-    <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
-      <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', padding: '0 24px' }}>
-        <a href="/" onClick={logoResetClick} style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none' }}>habitade.</a>
-      </nav>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 'calc(100vh - 54px)', padding: '40px 20px' }}>
-        <div style={{ width: '100%', maxWidth: 420 }}>
-          <div style={{ textAlign: 'center', marginBottom: 32 }}>
-            <div style={{ fontSize: 36, fontWeight: 700, color: '#006D77', letterSpacing: -2, marginBottom: 6 }}>habitade.</div>
-            <div style={{ fontSize: 14, color: '#888' }}>Elige tu nueva contraseña</div>
-          </div>
-          <div style={{ background: '#fff', borderRadius: 10, padding: '32px 28px', boxShadow: '0 2px 16px rgba(0,0,0,0.08)' }}>
-            {resetDone
-              ? <div style={{ textAlign: 'center', color: '#10b981', fontWeight: 600, fontSize: 15 }}>✓ Contraseña actualizada. Redirigiendo...</div>
-              : <>
-                  {error && <div style={{ background: '#fee2e2', border: '1px solid #fca5a5', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#991b1b', marginBottom: 16 }}>{error}</div>}
-                  <div style={{ marginBottom: 20 }}>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Nueva contraseña</label>
-                    <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} placeholder="Mínimo 6 caracteres"
-                      style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 14px', fontSize: 14, outline: 'none', color: '#222', boxSizing: 'border-box' }}
-                      onFocus={e => e.target.style.borderColor = '#006D77'} onBlur={e => e.target.style.borderColor = '#e0e0e0'}
-                      onKeyDown={e => e.key === 'Enter' && actualizarPassword()} />
-                  </div>
-                  <button onClick={actualizarPassword} disabled={loading} style={{ all: 'unset', width: '100%', background: loading ? '#aaa' : '#006D77', color: '#fff', padding: '13px', borderRadius: 6, fontSize: 15, fontWeight: 600, cursor: loading ? 'default' : 'pointer', textAlign: 'center', display: 'block', boxSizing: 'border-box' }}>
-                    {loading ? 'Guardando...' : 'Guardar nueva contraseña'}
-                  </button>
-                </>
-            }
-          </div>
-        </div>
-      </div>
-    </main>
-  )
 
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6', minHeight: '100vh' }}>
