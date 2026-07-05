@@ -171,7 +171,20 @@ export async function emailPlanCancelado(email: string, nombre: string, activoHa
   return resend.emails.send({ from: FROM, to: email, subject: 'Tu plan ha sido cancelado — Habitade', html })
 }
 
-// ── 6. NOVEDAD EN FAVORITO ────────────────────────────────────────────────────
+// ── 6. RESET DE CONTRASEÑA ───────────────────────────────────────────────────
+export async function emailResetPassword(email: string, link: string) {
+  const html = layout(`
+    ${h1('Restablece tu contraseña')}
+    ${p('Recibimos una solicitud para restablecer la contraseña de tu cuenta de Habitade.')}
+    ${p('Haz clic en el botón de abajo para elegir una nueva contraseña. El enlace expira en 1 hora.')}
+    ${btn('Establecer nueva contraseña', link)}
+    ${p('Si no solicitaste este cambio, ignora este email. Tu contraseña actual sigue siendo la misma.')}
+    <p style="margin:16px 0 0;font-size:13px;color:#999;word-break:break-all">Si el botón no funciona, copia este enlace en tu navegador:<br><a href="${link}" style="color:#006D77">${link}</a></p>
+  `)
+  return resend.emails.send({ from: FROM, to: email, subject: 'Restablece tu contraseña — Habitade', html })
+}
+
+// ── 7. NOVEDAD EN FAVORITO ────────────────────────────────────────────────────
 export async function emailNovedadFavorito(opts: {
   email: string
   tituloProp: string

@@ -90,19 +90,22 @@ export default function Login() {
   const recuperarPassword = async () => {
     if (!email) { setError(T.err_emailVacio); return }
     setRecuperando(true)
-    const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/login`
-    })
-    if (resetError) {
-      console.error('[recuperarPassword] Supabase error:', resetError.message, resetError)
-      const msg = resetError.message?.toLowerCase() ?? ''
-      if (msg.includes('rate limit') || msg.includes('too many')) {
-        setError('Demasiados intentos. Espera unos minutos e inténtalo de nuevo.')
-      } else if (msg.includes('redirect') || msg.includes('not allowed')) {
-        setError('Error de configuración. Contacta con soporte.')
-      } else {
-        setError(`No pudimos enviar el email. (${resetError.message})`)
+    try {
+      const res = await fetch('/api/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      })
+      const data = await res.json()
+      if (!data.ok) {
+        console.error('[recuperarPassword] error:', data.error)
+        setError('No pudimos enviar el email. Inténtalo de nuevo.')
+        setRecuperando(false)
+        return
       }
+    } catch (e) {
+      console.error('[recuperarPassword] fetch error:', e)
+      setError('No pudimos enviar el email. Inténtalo de nuevo.')
       setRecuperando(false)
       return
     }
