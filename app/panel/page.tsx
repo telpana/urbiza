@@ -690,13 +690,15 @@ export default function Panel() {
       const precioAnterior = anuncioEditando.precio
       const fotosAnteriores = JSON.stringify((anuncioEditando.fotos || []).slice().sort())
       const fotosNuevas = JSON.stringify(todasFotos.slice().sort())
-      const notifBase = { propiedadId: String(anuncioEditando.id), propietarioId: user.id }
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
+      const notifBase = { propiedadId: String(anuncioEditando.id) }
       const notificar = (body: object) =>
-        fetch('/api/notificar-cambio', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+        fetch('/api/notificar-cambio', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(token ? { 'Authorization': `Bearer ${token}` } : {}) }, body: JSON.stringify(body) })
           .then(r => r.json()).then(d => { if (!d.ok) console.error('notificar-cambio error', d) })
           .catch(e => console.error('notificar-cambio fetch error', e))
-      if (precioAnterior !== nuevoPrecio) notificar({ ...notifBase, tipo: 'precio', precioAnterior, precioNuevo: nuevoPrecio })
-      if (fotosAnteriores !== fotosNuevas) notificar({ ...notifBase, tipo: 'fotos' })
+      if (precioAnterior !== nuevoPrecio) notificar({ ...notifBase, tipo: 'cambioPrecio', precioAnterior, precioNuevo: nuevoPrecio })
+      if (fotosAnteriores !== fotosNuevas) notificar({ ...notifBase, tipo: 'nuevasFotos' })
     }
 
     const { data: anunciosActualizados } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
