@@ -94,7 +94,7 @@ export default function Login() {
       redirectTo: `${window.location.origin}/login`
     })
     if (resetError) {
-      setError('Si te registraste con Google, usa el botón "Continuar con Google" para entrar. Si usaste email y contraseña, verifica que el email sea correcto.')
+      setError('No pudimos enviar el email. Espera unos minutos e inténtalo de nuevo.')
       setRecuperando(false)
       return
     }

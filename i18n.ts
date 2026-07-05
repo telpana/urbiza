@@ -33,7 +33,7 @@ export const t = {
     login: {
       acceder: 'Accede a tu cuenta', email: 'Email', contrasena: 'Contraseña', placeholder_pass: 'Tu contraseña',
       olvidaste: '¿Olvidaste tu contraseña?', entrar: 'Entrar', entrando: 'Entrando...', enviando: 'Enviando...',
-      emailEnviado: '✓ Email de recuperación enviado', oCon: 'o continúa con',
+      emailEnviado: '✓ Email enviado. Úsalo para establecer o recuperar tu contraseña.', oCon: 'o continúa con',
       google: 'Continuar con Google', facebook: 'Continuar con Facebook',
       sinCuenta: '¿No tienes cuenta?', registrate: 'Regístrate gratis',
       err_campos: 'Introduce tu email y contraseña', err_credenciales: 'Email o contraseña incorrectos',
@@ -250,7 +250,7 @@ export const t = {
     login: {
       acceder: 'Sign in to your account', email: 'Email', contrasena: 'Password', placeholder_pass: 'Your password',
       olvidaste: 'Forgot your password?', entrar: 'Sign in', entrando: 'Signing in...', enviando: 'Sending...',
-      emailEnviado: '✓ Recovery email sent', oCon: 'or continue with',
+      emailEnviado: '✓ Email sent. Use the link to set or recover your password.', oCon: 'or continue with',
       google: 'Continue with Google', facebook: 'Continue with Facebook',
       sinCuenta: "Don't have an account?", registrate: 'Sign up for free',
       err_campos: 'Please enter your email and password', err_credenciales: 'Incorrect email or password',
