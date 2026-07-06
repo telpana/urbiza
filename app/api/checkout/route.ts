@@ -61,6 +61,7 @@ export async function POST(req: Request) {
     const priceId = PRECIOS[tipo || 'profesional']
     const esDestacado = ['15', '30', '60'].includes(tipo)
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    console.log('[checkout] NEXT_PUBLIC_SITE_URL:', process.env.NEXT_PUBLIC_SITE_URL, '| baseUrl:', baseUrl, '| tipo:', tipo, '| propiedadId:', propiedadId)
 
     // Validar código promo antes de crear sesión
     if (codigoPromo && !esDestacado) {
