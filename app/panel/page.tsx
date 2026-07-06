@@ -262,6 +262,8 @@ export default function Panel() {
   const [mensajeSeleccionado, setMensajeSeleccionado] = useState<string | null>(null)
   const [convActiva, setConvActiva] = useState<{ propiedadId: string, otherUserId: string | null, msg: any } | null>(null)
   const [anuncioADestacar, setAnuncioADestacar] = useState<any>(null)
+  const [destacarError, setDestacarError] = useState('')
+  const [destacarLoading, setDestacarLoading] = useState(false)
   const [mensajesLeidos, setMensajesLeidos] = useState<Record<string, boolean>>({})
   const [mensajesEnviados, setMensajesEnviados] = useState<any[]>([])
   const [vistaMsg, setVistaMsg] = useState<'recibidos' | 'enviados'>('recibidos')
@@ -778,11 +780,15 @@ export default function Panel() {
     setPromoLoading(true)
     try {
       const { data: { user } } = await supabase.auth.getUser()
+      const { data: { session } } = await supabase.auth.getSession()
       const body: any = { userId: user?.id, email: user?.email, tipo: 'profesional', locale: idioma }
       if (codigoPromo.trim()) body.codigoPromo = codigoPromo.trim().toUpperCase()
       const res = await fetch('/api/checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(session?.access_token ? { 'Authorization': `Bearer ${session.access_token}` } : {})
+        },
         body: JSON.stringify(body)
       })
       const data = await res.json()
@@ -1894,20 +1900,39 @@ export default function Panel() {
                     <span style={{ fontWeight: 600, color: '#006D77' }}>{anuncioADestacar.titulo}</span> · {planesDestacado.find(p => String(p.dias) === planSeleccionado)?.label} · <span style={{ fontWeight: 600, color: '#111' }}>US$ {planesDestacado.find(p => String(p.dias) === planSeleccionado)?.precio}</span>
                   </div>
                 )}
+                {destacarError && (
+                  <div style={{ background: '#fee2e2', border: '1px solid #fca5a5', borderRadius: 6, padding: '8px 12px', fontSize: 12, color: '#991b1b', marginBottom: 8, textAlign: 'center' }}>
+                    {destacarError}
+                  </div>
+                )}
                 <button onClick={async () => {
-                  if (!planSeleccionado || !anuncioADestacar) return
-                  const { data: { user } } = await supabase.auth.getUser()
-                  const res = await fetch('/api/checkout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: user?.id, email: user?.email, tipo: planSeleccionado, propiedadId: String(anuncioADestacar.id), locale: idioma })
-                  })
-                  const data = await res.json()
-                  if (data.url) window.location.href = data.url
-                }} style={{ all: 'unset', width: '100%', background: planSeleccionado && anuncioADestacar ? 'linear-gradient(135deg, #006D77, #17A6B4)' : '#d1d5db', color: '#fff', padding: '14px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: planSeleccionado && anuncioADestacar ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxSizing: 'border-box', boxShadow: planSeleccionado && anuncioADestacar ? '0 4px 20px rgba(0,109,119,0.35)' : 'none', transition: 'all 0.2s' }}>
-                  {planSeleccionado && anuncioADestacar
-                    ? Tpanel.destacar.pagar
-                    : Tpanel.destacar.ctaDefault}
+                  if (!planSeleccionado || !anuncioADestacar || destacarLoading) return
+                  setDestacarError('')
+                  setDestacarLoading(true)
+                  try {
+                    const { data: { user } } = await supabase.auth.getUser()
+                    const { data: { session } } = await supabase.auth.getSession()
+                    const res = await fetch('/api/checkout', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        ...(session?.access_token ? { 'Authorization': `Bearer ${session.access_token}` } : {})
+                      },
+                      body: JSON.stringify({ userId: user?.id, email: user?.email, tipo: planSeleccionado, propiedadId: String(anuncioADestacar.id), locale: idioma })
+                    })
+                    const data = await res.json()
+                    if (data.url) {
+                      window.location.href = data.url
+                    } else {
+                      setDestacarError(data.error || 'Error al iniciar el pago. Inténtalo de nuevo.')
+                      setDestacarLoading(false)
+                    }
+                  } catch {
+                    setDestacarError('Error de conexión. Inténtalo de nuevo.')
+                    setDestacarLoading(false)
+                  }
+                }} style={{ all: 'unset', width: '100%', background: planSeleccionado && anuncioADestacar && !destacarLoading ? 'linear-gradient(135deg, #006D77, #17A6B4)' : '#d1d5db', color: '#fff', padding: '14px', borderRadius: 10, fontSize: 15, fontWeight: 700, cursor: planSeleccionado && anuncioADestacar && !destacarLoading ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8, boxSizing: 'border-box', boxShadow: planSeleccionado && anuncioADestacar ? '0 4px 20px rgba(0,109,119,0.35)' : 'none', transition: 'all 0.2s' }}>
+                  {destacarLoading ? 'Cargando…' : planSeleccionado && anuncioADestacar ? Tpanel.destacar.pagar : Tpanel.destacar.ctaDefault}
                 </button>
               </div>
             </div>
