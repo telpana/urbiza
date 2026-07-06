@@ -146,7 +146,7 @@ function MapaUbicacion({ zona }: { zona: string }) {
       const L = (window as any).L
       if (!L || !mapRef.current) return
       const map = L.map(mapRef.current, { center: [lat, lng], zoom: 9, zoomControl: true, attributionControl: false, scrollWheelZoom: false })
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map)
       const icono = L.divIcon({
         className: '',
         html: `<svg width="22" height="30" viewBox="0 0 22 30" xmlns="http://www.w3.org/2000/svg"><path d="M11 0C4.925 0 0 4.925 0 11c0 7.667 11 19 11 19s11-11.333 11-19C22 4.925 17.075 0 11 0z" fill="#006D77" stroke="#fff" stroke-width="1.5"/><circle cx="11" cy="11" r="4.5" fill="#fff"/></svg>`,
