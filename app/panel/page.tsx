@@ -334,6 +334,8 @@ export default function Panel() {
   }, [])
 
   useEffect(() => {
+    const p = new URLSearchParams(window.location.search)
+    if (p.get('pago') === 'ok') return // preservar params de pago hasta que verificar-pago los procese
     history.replaceState(null, '', `?s=${seccion}`)
   }, [seccion])
 
@@ -371,6 +373,8 @@ export default function Panel() {
       .then(r => r.json())
       .then(data => {
         console.log('[panel] verificar-pago result:', JSON.stringify(data))
+        // Limpiar URL de params de Stripe
+        history.replaceState(null, '', `?s=${esDestacado ? 'anuncios' : 'publicar'}`)
         if (data.ok && esDestacado) {
           // Polling hasta ver destacado en la DB
           let intentos = 0
