@@ -824,7 +824,13 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ marginBottom: 6 }}>
-                        <div style={{ fontSize: 17, fontWeight: 700, color: '#111', marginBottom: 5 }}>{propiedad.usuarios?.nombre}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
+                          <div style={{ fontSize: 17, fontWeight: 700, color: '#111' }}>{propiedad.usuarios?.nombre}</div>
+                          <a href={`/agente/${propiedad.usuarios?.id}`}
+                            style={{ display: 'inline-flex', alignItems: 'center', background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 700, padding: '6px 14px', borderRadius: 8, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0, marginLeft: 10 }}>
+                            {Tp.verPerfil}
+                          </a>
+                        </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                           <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10, letterSpacing: 0.5, whiteSpace: 'nowrap' }}>{Tp.profesional}</span>
                           {propiedad.usuarios?.aei_aprobado && (
@@ -843,11 +849,6 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                           ))}
                         </div>
                       )}
-                      <a href={`/agente/${propiedad.usuarios?.id}`}
-                        style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 700, padding: '8px 16px', borderRadius: 8, textDecoration: 'none' }}>
-                        Ver perfil del agente
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                      </a>
                     </div>
                   </div>
                 </div>

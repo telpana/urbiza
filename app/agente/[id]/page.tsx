@@ -24,7 +24,7 @@ export default function AgenteProfile({ params }: { params: Promise<{ id: string
         .from('usuarios')
         .select('id, nombre, foto_url, inmobiliaria, plan, tipo, numero_aei, aei_aprobado, idiomas, telefono')
         .eq('id', id)
-        .in('plan', ['profesional'])
+        .eq('tipo', 'profesional')
         .single()
 
       if (!ag) { setNoEncontrado(true); setCargando(false); return }
