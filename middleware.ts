@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const OPEN = true
+const OPEN = false
 const PREVIEW_SECRET = process.env.PREVIEW_SECRET || 'habitade2025preview'
 
 export function middleware(request: NextRequest) {
