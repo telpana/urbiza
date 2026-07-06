@@ -922,7 +922,7 @@ function BuscarContent() {
           <div style={{ paddingBottom: 10 }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#444', cursor: 'pointer' }}>
               <input type="checkbox" checked={soloProfesional} onChange={e => setSoloProfesional(e.target.checked)} style={{ accentColor: '#006D77', width: 14, height: 14 }} />
-              <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3, marginRight: 2 }}>PRO</span> Profesional
+              Profesional <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>PRO</span>
             </label>
           </div>
 
