@@ -354,6 +354,44 @@ export default function Panel() {
     }
   }, [cargando, perfilTelefono])
 
+  // Verificar pago al volver de Stripe — useEffect propio, independiente de la carga de perfil
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('pago') !== 'ok') return
+    const sessionId = params.get('session_id')
+    const tipoParam = params.get('tipo') || 'profesional'
+    const esDestacado = ['15', '30', '60'].includes(tipoParam)
+    if (!sessionId) return
+    console.log('[panel] pago=ok detectado, sessionId:', sessionId, 'tipo:', tipoParam, 'esDestacado:', esDestacado)
+    fetch('/api/verificar-pago', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId }),
+    })
+      .then(r => r.json())
+      .then(data => {
+        console.log('[panel] verificar-pago result:', JSON.stringify(data))
+        if (data.ok && esDestacado) {
+          // Polling hasta ver destacado en la DB
+          let intentos = 0
+          const poll = () => {
+            supabase.auth.getUser().then(({ data: { user } }) => {
+              if (!user) return
+              supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
+                .then(({ data: props }) => {
+                  if (props) setAnunciosReales(props)
+                  if (props?.some((a: any) => a.destacado) || intentos >= 8) return
+                  intentos++
+                  setTimeout(poll, 1500)
+                })
+            })
+          }
+          setTimeout(poll, 500)
+        }
+      })
+      .catch(e => console.error('[panel] verificar-pago fetch error:', e))
+  }, [])
+
   useEffect(() => {
     const cargarDatos = async () => {
       const { data: { user } } = await supabase.auth.getUser()
@@ -370,64 +408,17 @@ export default function Panel() {
         setPerfilAei(perfil.numero_aei || '')
         setPerfilIdiomas(Array.isArray(perfil.idiomas) ? perfil.idiomas : [])
 
+        // Navegar a la sección correcta al volver de Stripe
         const params = new URLSearchParams(window.location.search)
         if (params.get('pago') === 'ok') {
-          const sessionId = params.get('session_id')
           const tipoParam = params.get('tipo') || 'profesional'
-          const esDestacado = ['15', '30', '60'].includes(tipoParam)
-
-          if (esDestacado) {
-            // Pago de destacar — verificar y recargar anuncios
+          if (['15', '30', '60'].includes(tipoParam)) {
             setSeccion('anuncios')
-            if (sessionId) {
-              try {
-                const vRes = await fetch('/api/verificar-pago', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ sessionId }),
-                })
-                const vData = await vRes.json()
-                if (!vData.ok) {
-                  console.error('[panel] verificar-pago falló:', vData)
-                }
-              } catch (e) {
-                console.error('[panel] verificar-pago error:', e)
-              }
-            }
-            // Polling hasta que la propiedad aparezca como destacada (máx 10 intentos)
-            let intentosDest = 0
-            const pollDestacado = async () => {
-              const { data: anunciosAct } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
-              if (anunciosAct) {
-                setAnunciosReales(anunciosAct)
-                if (anunciosAct.some((a: any) => a.destacado) || intentosDest >= 10) return
-              }
-              intentosDest++
-              setTimeout(pollDestacado, 1500)
-            }
-            await pollDestacado()
           } else {
-            // Pago de plan profesional
             setSeccion('publicar')
-            if (perfil.plan === 'profesional') {
-              // Ya activo
-            } else {
+            if (perfil.plan !== 'profesional') {
               setVerificandoPago(true)
-              if (sessionId) {
-                try {
-                  const res = await fetch('/api/verificar-pago', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sessionId }),
-                  })
-                  const data = await res.json()
-                  if (data.ok) {
-                    setUsuario((prev: any) => ({ ...prev, plan: 'profesional', tipo: 'profesional' }))
-                    setVerificandoPago(false)
-                  }
-                } catch {}
-              }
-              // Fallback polling
+              // Polling para plan profesional
               let intentos = 0
               const pollPlan = async () => {
                 const { data: act } = await supabase.from('usuarios').select('plan,tipo').eq('id', user.id).single()
