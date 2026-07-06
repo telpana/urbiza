@@ -15,6 +15,19 @@ export async function GET(req: Request) {
   let procesados = 0
   const ahora = new Date().toISOString()
 
+  // Destacados vencidos → quitar badge
+  const { data: destacadosVencidos } = await supabase
+    .from('propiedades')
+    .select('id')
+    .eq('destacado', true)
+    .lt('destacado_hasta', ahora)
+
+  if (destacadosVencidos && destacadosVencidos.length > 0) {
+    const ids = destacadosVencidos.map((p: any) => p.id)
+    await supabase.from('propiedades').update({ destacado: false }).in('id', ids)
+    console.log('[cron/cleanup] destacados vencidos quitados:', ids.length)
+  }
+
   // Usuarios past_due o gratis (ex-pro) cuyo plan_activo_hasta ya venció → borrar anuncios pausados
   const { data: vencidos } = await supabase
     .from('usuarios')

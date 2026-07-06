@@ -467,7 +467,7 @@ export default function Home() {
   useEffect(() => {
     const cargar = async () => {
       const { data: dest } = await supabase.from('propiedades')
-        .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos').eq('destacado', true).eq('estado', 'activo').order('destacado_hasta', { ascending: false }).limit(12)
+        .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos').eq('destacado', true).eq('estado', 'activo').gt('destacado_hasta', new Date().toISOString()).order('destacado_hasta', { ascending: false }).limit(12)
       if (dest && dest.length > 0) { setDestReales(dest); try { localStorage.setItem('hb_dest', JSON.stringify(dest)) } catch {} }
       const { data: vistas } = await supabase.from('propiedades')
         .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos').eq('estado', 'activo').order('visitas', { ascending: false }).limit(100)
