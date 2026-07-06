@@ -481,10 +481,14 @@ function BuscarContent() {
   useEffect(() => {
     const doCargar = async (pag: number) => {
       setCargando(true)
+      const joinStr = soloAei
+        ? '*, usuarios!inner(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado)'
+        : '*, usuarios(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado)'
       let q = supabase
         .from('propiedades')
-        .select('*, usuarios(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado)', { count: 'exact' })
+        .select(joinStr, { count: 'exact' })
         .eq('estado', 'activo')
+      if (soloAei) q = (q as any).eq('usuarios.aei_aprobado', true).not('usuarios.numero_aei', 'is', null)
 
       if (zonaParam) {
         const sectores = expandirGrupo(zonaParam)
@@ -528,7 +532,7 @@ function BuscarContent() {
     setPagina(1)
     doCargar(1)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tipo, operacion, orden, debouncedPrecioMin, debouncedPrecioMax, habMin, banosMin, debouncedM2Min, debouncedM2Max, amenidadesFiltro])
+  }, [tipo, operacion, orden, debouncedPrecioMin, debouncedPrecioMax, habMin, banosMin, debouncedM2Min, debouncedM2Max, amenidadesFiltro, soloAei])
 
   const propiedadesActivas: any[] = propiedadesReales.length > 0 ? propiedadesReales.map(p => ({
     id: p.id,
