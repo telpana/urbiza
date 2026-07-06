@@ -381,16 +381,31 @@ export default function Panel() {
             setSeccion('anuncios')
             if (sessionId) {
               try {
-                await fetch('/api/verificar-pago', {
+                const vRes = await fetch('/api/verificar-pago', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
                   body: JSON.stringify({ sessionId }),
                 })
-              } catch {}
+                const vData = await vRes.json()
+                if (!vData.ok) {
+                  console.error('[panel] verificar-pago falló:', vData)
+                }
+              } catch (e) {
+                console.error('[panel] verificar-pago error:', e)
+              }
             }
-            // Recargar anuncios para mostrar el badge destacado
-            const { data: anunciosAct } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
-            if (anunciosAct) setAnunciosReales(anunciosAct)
+            // Polling hasta que la propiedad aparezca como destacada (máx 10 intentos)
+            let intentosDest = 0
+            const pollDestacado = async () => {
+              const { data: anunciosAct } = await supabase.from('propiedades').select('*').eq('usuario_id', user.id).order('created_at', { ascending: false })
+              if (anunciosAct) {
+                setAnunciosReales(anunciosAct)
+                if (anunciosAct.some((a: any) => a.destacado) || intentosDest >= 10) return
+              }
+              intentosDest++
+              setTimeout(pollDestacado, 1500)
+            }
+            await pollDestacado()
           } else {
             // Pago de plan profesional
             setSeccion('publicar')
