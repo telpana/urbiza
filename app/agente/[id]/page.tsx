@@ -20,15 +20,11 @@ export default function AgenteProfile({ params }: { params: Promise<{ id: string
 
   useEffect(() => {
     const cargar = async () => {
-      const { data: ag } = await supabase
-        .from('usuarios')
-        .select('id, nombre, foto_url, inmobiliaria, plan, tipo, numero_aei, aei_aprobado, idiomas, telefono')
-        .eq('id', id)
-        .eq('tipo', 'profesional')
-        .single()
+      const res = await fetch(`/api/vendedor?id=${id}`)
+      const ag = res.ok ? await res.json() : null
 
-      if (!ag) { setNoEncontrado(true); setCargando(false); return }
-      setAgente(ag)
+      if (!ag || ag.tipo !== 'profesional') { setNoEncontrado(true); setCargando(false); return }
+      setAgente({ ...ag, id })
 
       const { data: props } = await supabase
         .from('propiedades')
