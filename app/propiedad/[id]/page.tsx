@@ -836,13 +836,18 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                         <div style={{ fontSize: 13, color: '#006D77', fontWeight: 500, marginBottom: 8 }}>{propiedad.usuarios.inmobiliaria}</div>
                       )}
                       {Array.isArray(propiedad.usuarios?.idiomas) && propiedad.usuarios.idiomas.length > 0 && (
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                           {propiedad.usuarios.idiomas.map((lang: string) => (
                             <span key={lang} style={{ background: '#f0fafb', border: '1px solid #c7eaee', color: '#006D77', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>{lang}</span>
                           ))}
                         </div>
                       )}
+                      <a href={`/agente/${propiedad.usuarios?.id}`}
+                        style={{ display: 'inline-flex', alignItems: 'center', gap: 6, background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 700, padding: '8px 16px', borderRadius: 8, textDecoration: 'none' }}>
+                        Ver perfil del agente
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                      </a>
                     </div>
                   </div>
                 </div>
