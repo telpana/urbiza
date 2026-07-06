@@ -60,7 +60,7 @@ export async function POST(req: Request) {
 
     const priceId = PRECIOS[tipo || 'profesional']
     const esDestacado = ['15', '30', '60'].includes(tipo)
-    const baseUrl = new URL(req.url).origin
+    const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || new URL(req.url).origin).replace(/\/$/, '')
 
     // Validar código promo antes de crear sesión
     if (codigoPromo && !esDestacado) {
@@ -86,9 +86,10 @@ export async function POST(req: Request) {
       sessionParams.subscription_data = { trial_period_days: 30 }
     }
 
-    console.log('[checkout] creating session, metadata:', JSON.stringify(sessionParams.metadata))
+    console.log('[checkout] success_url:', sessionParams.success_url)
+    console.log('[checkout] metadata:', JSON.stringify(sessionParams.metadata))
     const session = await stripe.checkout.sessions.create(sessionParams)
-    console.log('[checkout] session created:', session.id)
+    console.log('[checkout] session created:', session.id, 'url:', session.url?.substring(0, 60))
 
     if (!contentType.includes('application/json')) {
       return NextResponse.redirect(session.url!, 303)
