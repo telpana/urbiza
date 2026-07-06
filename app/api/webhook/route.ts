@@ -40,11 +40,26 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Webhook error' }, { status: 400 })
   }
 
-  // Pago inicial completado
+  // Pago completado
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session
     const userId = session.metadata?.userId
+    const tipo = session.metadata?.tipo
+    const propiedadId = session.metadata?.propiedadId
     const subscriptionId = session.subscription as string
+
+    // Destacado (pago único)
+    if (['15', '30', '60'].includes(tipo || '') && propiedadId) {
+      const dias = Number(tipo)
+      const { error } = await supabase.from('propiedades').update({
+        destacado: true,
+        destacado_hasta: new Date(Date.now() + dias * 24 * 60 * 60 * 1000).toISOString(),
+        destacado_dias: dias,
+      }).eq('id', propiedadId)
+      console.log('[webhook] destacado:', { propiedadId, dias, error: error?.message })
+    }
+
+    // Plan profesional (suscripción)
     if (userId && subscriptionId) {
       const proximaFactura = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
       const { error } = await supabase.from('usuarios').update({
@@ -55,7 +70,6 @@ export async function POST(req: Request) {
         ya_suscrito: true,
       }).eq('id', userId)
       if (error) console.error('[webhook] error actualizando plan:', error)
-      // Email 4: pago confirmado
       const { data: u } = await supabase.from('usuarios').select('email, nombre').eq('id', userId).single()
       if (u?.email) {
         const fechaStr = proximaFactura.toLocaleDateString('es-DO', { day: 'numeric', month: 'long', year: 'numeric' })

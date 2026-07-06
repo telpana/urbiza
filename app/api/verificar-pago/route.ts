@@ -36,17 +36,12 @@ export async function POST(req: Request) {
     if (['15', '30', '60'].includes(tipo) && propiedadId) {
       // Pago de destacado — marcar la propiedad como destacada
       const dias = Number(tipo)
-      const propId = Number(propiedadId)
-      if (!propId) {
-        console.error('[verificar-pago] propiedadId inválido:', propiedadId)
-        return NextResponse.json({ error: 'propiedadId inválido' }, { status: 400 })
-      }
-      const { error, count } = await supabase.from('propiedades').update({
+      const { error } = await supabase.from('propiedades').update({
         destacado: true,
         destacado_hasta: new Date(Date.now() + dias * 24 * 60 * 60 * 1000).toISOString(),
         destacado_dias: dias,
-      }).eq('id', propId)
-      console.log('[verificar-pago] destacar result:', { propId, dias, error, count })
+      }).eq('id', propiedadId)
+      console.log('[verificar-pago] destacar result:', { propiedadId, dias, error: error?.message })
       if (error) {
         console.error('[verificar-pago] error destacado:', error)
         return NextResponse.json({ error: error.message }, { status: 500 })
