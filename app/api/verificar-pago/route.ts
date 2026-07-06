@@ -14,17 +14,22 @@ const supabase = createClient(
 export async function POST(req: Request) {
   try {
     const { sessionId } = await req.json()
+    console.log('[verificar-pago] sessionId:', sessionId)
     if (!sessionId) return NextResponse.json({ error: 'Falta sessionId' }, { status: 400 })
 
     const session = await stripe.checkout.sessions.retrieve(sessionId)
+    console.log('[verificar-pago] payment_status:', session.payment_status, 'status:', session.status)
+    console.log('[verificar-pago] metadata:', JSON.stringify(session.metadata))
 
     if (session.payment_status !== 'paid' && session.status !== 'complete') {
+      console.log('[verificar-pago] pago no completado, saliendo')
       return NextResponse.json({ ok: false, status: session.status })
     }
 
     const userId = session.metadata?.userId
     const tipo = session.metadata?.tipo || 'profesional'
     const propiedadId = session.metadata?.propiedadId
+    console.log('[verificar-pago] userId:', userId, 'tipo:', tipo, 'propiedadId:', propiedadId)
 
     if (!userId) return NextResponse.json({ error: 'Sin userId en metadata' }, { status: 400 })
 

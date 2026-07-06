@@ -86,7 +86,9 @@ export async function POST(req: Request) {
       sessionParams.subscription_data = { trial_period_days: 30 }
     }
 
+    console.log('[checkout] creating session, metadata:', JSON.stringify(sessionParams.metadata))
     const session = await stripe.checkout.sessions.create(sessionParams)
+    console.log('[checkout] session created:', session.id)
 
     if (!contentType.includes('application/json')) {
       return NextResponse.redirect(session.url!, 303)
