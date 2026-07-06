@@ -394,6 +394,7 @@ function BuscarContent() {
     try { return localStorage.getItem('hb_perfil_inicial') || '' } catch { return '' }
   })
   const [amenidadesFiltro, setAmenidadesFiltro] = useState<string[]>([])
+  const [soloProfesional, setSoloProfesional] = useState(false)
   const [soloAei, setSoloAei] = useState(false)
   const [pisosMin, setPisosMin] = useState(0)
   const [favoritosSet, setFavoritosSet] = useState<Set<string>>(new Set())
@@ -481,13 +482,15 @@ function BuscarContent() {
   useEffect(() => {
     const doCargar = async (pag: number) => {
       setCargando(true)
-      const joinStr = soloAei
-        ? '*, usuarios!inner(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado)'
-        : '*, usuarios(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado)'
+      const needsInner = soloAei || soloProfesional
+      const joinStr = needsInner
+        ? '*, usuarios!inner(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado, plan)'
+        : '*, usuarios(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado, plan)'
       let q = supabase
         .from('propiedades')
         .select(joinStr, { count: 'exact' })
         .eq('estado', 'activo')
+      if (soloProfesional) q = (q as any).eq('usuarios.plan', 'profesional')
       if (soloAei) q = (q as any).eq('usuarios.aei_aprobado', true).not('usuarios.numero_aei', 'is', null)
 
       if (zonaParam) {
@@ -532,7 +535,7 @@ function BuscarContent() {
     setPagina(1)
     doCargar(1)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tipo, operacion, orden, debouncedPrecioMin, debouncedPrecioMax, habMin, banosMin, debouncedM2Min, debouncedM2Max, amenidadesFiltro, soloAei])
+  }, [tipo, operacion, orden, debouncedPrecioMin, debouncedPrecioMax, habMin, banosMin, debouncedM2Min, debouncedM2Max, amenidadesFiltro, soloProfesional, soloAei])
 
   const propiedadesActivas: any[] = propiedadesReales.length > 0 ? propiedadesReales.map(p => ({
     id: p.id,
@@ -914,6 +917,14 @@ function BuscarContent() {
               </div>
             </div>
           )}
+
+          {/* FILTRO PROFESIONAL */}
+          <div style={{ paddingBottom: 10 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#444', cursor: 'pointer' }}>
+              <input type="checkbox" checked={soloProfesional} onChange={e => setSoloProfesional(e.target.checked)} style={{ accentColor: '#006D77', width: 14, height: 14 }} />
+              <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3, marginRight: 2 }}>PRO</span> Profesional
+            </label>
+          </div>
 
           {/* FILTRO AEI */}
           <div style={{ paddingBottom: 14 }}>
