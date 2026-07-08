@@ -310,6 +310,8 @@ export default function Panel() {
   })
   const [perfilTelefono, setPerfilTelefono] = useState('')
   const [perfilInmobiliaria, setPerfilInmobiliaria] = useState('')
+  const [perfilWebUrl, setPerfilWebUrl] = useState('')
+  const [perfilInstagram, setPerfilInstagram] = useState('')
   const [perfilAei, setPerfilAei] = useState('')
   const [perfilIdiomas, setPerfilIdiomas] = useState<string[]>([])
   const [usuario, setUsuario] = useState<any>(null)
@@ -409,6 +411,8 @@ export default function Panel() {
         setPerfilNombre(perfil.nombre || '')
         setPerfilTelefono(perfil.telefono || '')
         setPerfilInmobiliaria(perfil.inmobiliaria || '')
+        setPerfilWebUrl(perfil.web_url || '')
+        setPerfilInstagram(perfil.instagram_url || '')
         setPerfilAei(perfil.numero_aei || '')
         setPerfilIdiomas(Array.isArray(perfil.idiomas) ? perfil.idiomas : [])
 
@@ -533,6 +537,8 @@ export default function Panel() {
       nombre: perfilNombre,
       telefono: perfilTelefono,
       inmobiliaria: perfilInmobiliaria,
+      web_url: perfilWebUrl || null,
+      instagram_url: perfilInstagram || null,
       numero_aei: perfilAei ? (perfilAei.startsWith('AEI-') ? perfilAei : `AEI-${perfilAei}`) : null,
       idiomas: perfilIdiomas,
     }
@@ -2296,6 +2302,18 @@ export default function Panel() {
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.inmobiliaria}</label>
                       <input value={perfilInmobiliaria} onChange={e => setPerfilInmobiliaria(e.target.value)} placeholder='Nombre de tu agencia (opcional)' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    </div>
+                  )}
+                  {tipoUsuario === 'profesional' && usuario?.plan === 'profesional' && (
+                    <div>
+                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Web / Inmobiliaria</label>
+                      <input value={perfilWebUrl} onChange={e => setPerfilWebUrl(e.target.value)} placeholder='https://tuinmobiliaria.com (opcional)' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    </div>
+                  )}
+                  {tipoUsuario === 'profesional' && usuario?.plan === 'profesional' && (
+                    <div>
+                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Instagram</label>
+                      <input value={perfilInstagram} onChange={e => setPerfilInstagram(e.target.value)} placeholder='https://instagram.com/tuagencia (opcional)' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                     </div>
                   )}
                   {tipoUsuario === 'profesional' && usuario?.plan === 'profesional' && (

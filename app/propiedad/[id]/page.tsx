@@ -826,10 +826,18 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                       <div style={{ marginBottom: 6 }}>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 5 }}>
                           <div style={{ fontSize: 17, fontWeight: 700, color: '#111' }}>{propiedad.usuarios?.nombre}</div>
-                          <a href={`/agente/${propiedad.usuarios?.id}`}
-                            style={{ display: 'inline-flex', alignItems: 'center', background: '#006D77', color: '#fff', fontSize: 12, fontWeight: 700, padding: '6px 14px', borderRadius: 8, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0, marginLeft: 10 }}>
-                            {Tp.verPerfil}
-                          </a>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            {propiedad.usuarios?.web_url && (
+                              <a href={propiedad.usuarios.web_url} target="_blank" rel="noopener noreferrer" title="Web" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: '50%', background: '#f0fafb', border: '1.5px solid #c7eaee', color: '#006D77', textDecoration: 'none', flexShrink: 0 }}>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                              </a>
+                            )}
+                            {propiedad.usuarios?.instagram_url && (
+                              <a href={propiedad.usuarios.instagram_url} target="_blank" rel="noopener noreferrer" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: '50%', background: '#f0fafb', border: '1.5px solid #c7eaee', color: '#006D77', textDecoration: 'none', flexShrink: 0 }}>
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+                              </a>
+                            )}
+                          </div>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                           <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10, letterSpacing: 0.5, whiteSpace: 'nowrap' }}>{Tp.profesional}</span>
