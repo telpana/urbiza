@@ -88,11 +88,8 @@ export default function Admin() {
   }, [])
 
   useEffect(() => {
-    const stored = localStorage.getItem('habitade_admin_token')
-    if (!stored) { setAuthed(false); return }
-    fetch('/api/admin/verify', { method: 'POST', headers: { 'Authorization': `Bearer ${stored}`, 'Content-Type': 'application/json' } })
-      .then(r => { if (r.ok) { setToken(stored); setAuthed(true) } else { localStorage.removeItem('habitade_admin_token'); setAuthed(false) } })
-      .catch(() => setAuthed(false))
+    localStorage.removeItem('habitade_admin_token')
+    setAuthed(false)
   }, [])
 
   // Cargar stats al autenticarse + polling cada 30s para actualizaciones AEI/nuevos registros
@@ -108,12 +105,12 @@ export default function Admin() {
     setLoginLoading(true); setLoginError('')
     const r = await fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: loginPass }) })
     const d = await r.json()
-    if (r.ok) { localStorage.setItem('habitade_admin_token', d.token); setToken(d.token); setAuthed(true) }
+    if (r.ok) { setToken(d.token); setAuthed(true) }
     else { setLoginError(d.error || 'Error') }
     setLoginLoading(false)
   }
 
-  const logout = () => { localStorage.removeItem('habitade_admin_token'); setAuthed(false); setToken('') }
+  const logout = () => { setAuthed(false); setToken('') }
 
   const cargarAei = useCallback(async () => {
     setAeiLoading(true)
