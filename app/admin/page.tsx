@@ -979,7 +979,6 @@ export default function Admin() {
                   { label: 'Instagram', emoji: '📸', val: instagramUrl, set: setInstagramUrl, placeholder: 'https://instagram.com/habitade' },
                   { label: 'Facebook', emoji: '👥', val: facebookUrl, set: setFacebookUrl, placeholder: 'https://facebook.com/habitade' },
                   { label: 'TikTok', emoji: '🎵', val: tiktokUrl, set: setTiktokUrl, placeholder: 'https://tiktok.com/@habitade' },
-                  { label: 'WhatsApp', emoji: '💬', val: whatsappUrl, set: setWhatsappUrl, placeholder: 'https://wa.me/18095550000' },
                 ].map(r => (
                   <div key={r.label} style={{ marginBottom: 18 }}>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{r.emoji} {r.label}</label>
@@ -987,7 +986,7 @@ export default function Admin() {
                   </div>
                 ))}
                 <button onClick={async () => {
-                  const pares = [['instagram_url', instagramUrl], ['facebook_url', facebookUrl], ['tiktok_url', tiktokUrl], ['whatsapp_url', whatsappUrl]]
+                  const pares = [['instagram_url', instagramUrl], ['facebook_url', facebookUrl], ['tiktok_url', tiktokUrl]]
                   await Promise.all(pares.map(([clave, valor]) => fetch('/api/admin/config', { method: 'POST', headers: { ...authHeader(), 'Content-Type': 'application/json' }, body: JSON.stringify({ clave, valor }) })))
                   setRedesGuardadas(true); setTimeout(() => setRedesGuardadas(false), 3000)
                 }} style={{ all: 'unset', background: C.verde, color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 8 }}>
