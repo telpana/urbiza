@@ -851,7 +851,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                       )}
                       {Array.isArray(propiedad.usuarios?.idiomas) && propiedad.usuarios.idiomas.length > 0 && (
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 12 }}>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                           {propiedad.usuarios.idiomas.map((lang: string) => (
                             <span key={lang} style={{ background: '#f0fafb', border: '1px solid #c7eaee', color: '#006D77', fontSize: 11, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>{lang}</span>
                           ))}
