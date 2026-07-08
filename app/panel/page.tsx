@@ -413,7 +413,7 @@ export default function Panel() {
         setPerfilInmobiliaria(perfil.inmobiliaria || '')
         setPerfilWebUrl(perfil.web_url || '')
         setPerfilInstagram(perfil.instagram_url || '')
-        setPerfilAei(perfil.numero_aei || '')
+        setPerfilAei(perfil.numero_aei ? perfil.numero_aei.replace(/^(AEI-)+/i, 'AEI-') : '')
         setPerfilIdiomas(Array.isArray(perfil.idiomas) ? perfil.idiomas : [])
 
         // Navegar a la sección correcta al volver de Stripe
@@ -539,7 +539,7 @@ export default function Panel() {
       inmobiliaria: perfilInmobiliaria,
       web_url: perfilWebUrl || null,
       instagram_url: perfilInstagram || null,
-      numero_aei: perfilAei ? (perfilAei.startsWith('AEI-') ? perfilAei : `AEI-${perfilAei}`) : null,
+      numero_aei: perfilAei ? `AEI-${perfilAei.replace(/^(AEI-)+/i, '')}` : null,
       idiomas: perfilIdiomas,
     }
     if (perfilAei) updates.tipo = 'profesional'
