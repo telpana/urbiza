@@ -78,6 +78,8 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
   const [propiedades, setPropiedades] = useState<any[]>([])
   const { tr } = useIdioma()
 
+  useEffect(() => { getDopRate().then(setDopRate) }, [])
+
   useEffect(() => {
     supabase.from('propiedades')
       .select('id,titulo,precio,zona,habitaciones,m2,tipo,operacion,fotos')
@@ -266,12 +268,7 @@ function MapaMiniHome() {
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />
 }
 
-const USD_TO_DOP = 59.5
-
-function formatDOP(usd: number) {
-  const dop = usd * USD_TO_DOP
-  return 'RD$ ' + dop.toLocaleString('es-DO', { maximumFractionDigits: 0 })
-}
+import { getDopRate, formatDOP } from '../lib/dopRate'
 
 const propiedadesDestacadas = [
   { price: 620000, title: 'Villa en Bávaro', loc: 'La Altagracia', feats: '4 hab · 500 m²', tipo: 'pagado', bg: '#ddf0e8' },
@@ -349,7 +346,7 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href }: {
                 </div>
                 <div style={{ padding: '12px 14px' }}>
                   <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio || 0).toLocaleString('en-US')}</div>
-                  <div style={{ fontSize: 11, color: '#aaa', marginBottom: 6 }}>{formatDOP(p.precio || 0)}</div>
+                  <div style={{ fontSize: 11, color: '#aaa', marginBottom: 6 }}>{formatDOP(p.precio || 0, dopRate)}</div>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 2 }}>{p.titulo}</div>
                   <div style={{ fontSize: 12, color: '#888' }}>{[p.tipo, p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ')}</div>
                 </div>
@@ -364,7 +361,7 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href }: {
                 </div>
                 <div style={{ padding: '12px 14px' }}>
                   <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {p.price.toLocaleString('en-US')}</div>
-                  <div style={{ fontSize: 11, color: '#aaa', marginBottom: 6 }}>{formatDOP(p.price)}</div>
+                  <div style={{ fontSize: 11, color: '#aaa', marginBottom: 6 }}>{formatDOP(p.price, dopRate)}</div>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 2 }}>{p.title}</div>
                   <div style={{ fontSize: 12, color: '#888' }}>{p.feats}</div>
                 </div>
@@ -415,6 +412,7 @@ export default function Home() {
     'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1600&q=80'
   )
   const [featureImgUrl, setFeatureImgUrl] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('hb_feature_img') || '' : '')
+  const [dopRate, setDopRate] = useState(59.5)
   const [instagramUrl, setInstagramUrl] = useState('')
   const [facebookUrl, setFacebookUrl] = useState('')
   const [tiktokUrl, setTiktokUrl] = useState('')

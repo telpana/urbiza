@@ -5,10 +5,7 @@ import { supabase } from '../../../supabase'
 import { useIdioma } from '../../../IdiomaContext'
 import NavUserMenu from '../../../components/NavUserMenu'
 
-const USD_TO_DOP = 59.5
-function formatDOP(usd: number) {
-  return 'RD$ ' + (usd * USD_TO_DOP).toLocaleString('es-DO', { maximumFractionDigits: 0 })
-}
+import { getDopRate, formatDOP } from '../../../lib/dopRate'
 
 
 const ZONAS_COORDS: Record<string, [number, number]> = {
@@ -311,6 +308,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   const searchParams = useSearchParams()
   const [propiedad, setPropiedad] = useState<any>(null)
   const [cargando, setCargando] = useState(true)
+  const [dopRate, setDopRate] = useState(59.5)
   const [mensaje, setMensaje] = useState('')
   const [nombreContacto, setNombreContacto] = useState('')
   const [telefonoContacto, setTelefonoContacto] = useState('')
@@ -383,6 +381,8 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
       if (error) { console.error('favoritos insert:', error); setGuardado(false) }
     }
   }
+
+  useEffect(() => { getDopRate().then(setDopRate) }, [])
 
   useEffect(() => {
     const cargar = async () => {
@@ -611,7 +611,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                 </div>
                 <div className="propiedad-precio-wrap" style={{ textAlign: 'right' }}>
                   <div style={{ fontSize: 28, fontWeight: 700, color: '#006D77' }}>US$ {precio.toLocaleString('en-US')}</div>
-                  <div style={{ fontSize: 13, color: '#aaa' }}>{formatDOP(precio)}</div>
+                  <div style={{ fontSize: 13, color: '#aaa' }}>{formatDOP(precio, dopRate)}</div>
                   {m2 > 0 && <div style={{ fontSize: 12, color: '#aaa', marginTop: 2 }}>US$ {Math.round(precio / m2).toLocaleString('en-US')}/m²</div>}
                 </div>
               </div>

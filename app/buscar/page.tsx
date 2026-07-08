@@ -5,11 +5,7 @@ import { supabase } from '../../supabase'
 import { useIdioma } from '../../IdiomaContext'
 import NavUserMenu from '../../components/NavUserMenu'
 
-const USD_TO_DOP = 59.5
-
-function formatDOP(usd: number) {
-  return 'RD$ ' + (usd * USD_TO_DOP).toLocaleString('es-DO', { maximumFractionDigits: 0 })
-}
+import { getDopRate, formatDOP } from '../../lib/dopRate'
 
 const propiedadesEjemplo = [
   { id: 1, precio: 285000, titulo: 'Apartamento en Piantini', zona: 'Piantini, Distrito Nacional', hab: 3, banos: 2, m2: 150, parqueos: 2, tipo: 'Apartamento', operacion: 'venta', dest: true, visitas: false, bg: '#e0f5f7', lat: 18.4890, lng: -69.9370, desc: 'Amplio apartamento en el corazón de Piantini con acabados de alta calidad, pisos de mármol importado y vista panorámica.' },
@@ -352,6 +348,7 @@ function BuscarContent() {
   const zonaParam = searchParams.get('zona') || ''
   const tipoParam = searchParams.get('tipo') || ''
 
+  const [dopRate, setDopRate] = useState(59.5)
   const [tipo, setTipo] = useState(tipoParam || 'Todos')
   const [filtrosOpen, setFiltrosOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -433,6 +430,8 @@ function BuscarContent() {
     e.stopPropagation()
     slidePhoto(propId, fotos, diff > 0 ? 1 : -1)
   }
+
+  useEffect(() => { getDopRate().then(setDopRate) }, [])
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
