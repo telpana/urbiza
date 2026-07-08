@@ -828,12 +828,12 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                           <div style={{ fontSize: 17, fontWeight: 700, color: '#111' }}>{propiedad.usuarios?.nombre}</div>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                             {propiedad.usuarios?.web_url && (
-                              <a href={propiedad.usuarios.web_url} target="_blank" rel="noopener noreferrer" title="Web" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: '50%', background: '#f0fafb', border: '1.5px solid #c7eaee', color: '#006D77', textDecoration: 'none', flexShrink: 0 }}>
+                              <a href={/^https?:\/\//i.test(propiedad.usuarios.web_url) ? propiedad.usuarios.web_url : `https://${propiedad.usuarios.web_url}`} target="_blank" rel="noopener noreferrer" title="Web" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: '50%', background: '#f0fafb', border: '1.5px solid #c7eaee', color: '#006D77', textDecoration: 'none', flexShrink: 0 }}>
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
                               </a>
                             )}
                             {propiedad.usuarios?.instagram_url && (
-                              <a href={propiedad.usuarios.instagram_url} target="_blank" rel="noopener noreferrer" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: '50%', background: '#f0fafb', border: '1.5px solid #c7eaee', color: '#006D77', textDecoration: 'none', flexShrink: 0 }}>
+                              <a href={/^https?:\/\//i.test(propiedad.usuarios.instagram_url) ? propiedad.usuarios.instagram_url : `https://${propiedad.usuarios.instagram_url}`} target="_blank" rel="noopener noreferrer" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, borderRadius: '50%', background: '#f0fafb', border: '1.5px solid #c7eaee', color: '#006D77', textDecoration: 'none', flexShrink: 0 }}>
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
                               </a>
                             )}
