@@ -36,8 +36,10 @@ export async function POST(req: Request) {
     if (['15', '30', '60'].includes(tipo) && propiedadId) {
       // Pago de destacado — marcar la propiedad como destacada
       const dias = Number(tipo)
+      const ahora = new Date().toISOString()
       const { error } = await supabase.from('propiedades').update({
         destacado: true,
+        destacado_desde: ahora,
         destacado_hasta: new Date(Date.now() + dias * 24 * 60 * 60 * 1000).toISOString(),
         destacado_dias: dias,
       }).eq('id', propiedadId)
