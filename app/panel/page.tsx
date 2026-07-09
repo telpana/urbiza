@@ -413,7 +413,7 @@ export default function Panel() {
         setPerfilInmobiliaria(perfil.inmobiliaria || '')
         setPerfilWebUrl(perfil.web_url || '')
         setPerfilInstagram(perfil.instagram_url || '')
-        setPerfilAei(perfil.numero_aei ? perfil.numero_aei.replace(/^(AEI-)+/i, 'AEI-') : '')
+        setPerfilAei(perfil.numero_aei ? 'AEI-' + perfil.numero_aei.replace(/^(AEI[-\s]*)+/i, '').trim() : '')
         setPerfilIdiomas(Array.isArray(perfil.idiomas) ? perfil.idiomas : [])
 
         // Navegar a la sección correcta al volver de Stripe
@@ -539,7 +539,7 @@ export default function Panel() {
       inmobiliaria: perfilInmobiliaria,
       web_url: perfilWebUrl || null,
       instagram_url: perfilInstagram || null,
-      numero_aei: perfilAei ? `AEI-${perfilAei.replace(/^(AEI-)+/i, '')}` : null,
+      numero_aei: perfilAei ? `AEI-${perfilAei.replace(/^(AEI[-\s]*)+/i, '').trim()}` : null,
       idiomas: perfilIdiomas,
     }
     if (perfilAei) updates.tipo = 'profesional'
@@ -2324,7 +2324,8 @@ export default function Panel() {
                         readOnly={usuario?.aei_aprobado === true}
                         onChange={e => {
                           let v = e.target.value.toUpperCase()
-                          if (!v.startsWith('AEI-')) v = 'AEI-' + v.replace(/^AEI-?/i, '')
+                          const stripped = v.replace(/^(AEI[-\s]*)+/i, '').trim()
+                          v = 'AEI-' + stripped
                           setPerfilAei(v)
                         }}
                         placeholder='AEI-0000'
