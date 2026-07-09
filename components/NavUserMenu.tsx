@@ -74,18 +74,35 @@ export default function NavUserMenu({ dark = false }: Props) {
         }
       }
 
-      // Contar notificaciones de guardados no leídas
-      const { data: notifGuardados } = await supabase
-        .from('notificaciones_propiedades')
-        .select('id')
-        .eq('usuario_id', user.id)
-        .eq('leida', false)
-      setNoLeidosGuardados((notifGuardados || []).length)
+      // Contar notificaciones de guardados no leídas (via service_role para evitar RLS)
+      try {
+        const res = await fetch('/api/panel/notificaciones', {
+          headers: { 'Authorization': `Bearer ${session.access_token}` }
+        })
+        if (res.ok) {
+          const json = await res.json()
+          setNoLeidosGuardados(typeof json.count === 'number' ? json.count : 0)
+        }
+      } catch {}
     }
     init()
 
+    const interval = setInterval(async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.access_token) return
+      try {
+        const res = await fetch('/api/panel/notificaciones', {
+          headers: { 'Authorization': `Bearer ${session.access_token}` }
+        })
+        if (res.ok) {
+          const json = await res.json()
+          setNoLeidosGuardados(typeof json.count === 'number' ? json.count : 0)
+        }
+      } catch {}
+    }, 20000)
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(() => init())
-    return () => subscription.unsubscribe()
+    return () => { subscription.unsubscribe(); clearInterval(interval) }
   }, [])
 
   // Cerrar menú al click fuera
@@ -146,17 +163,22 @@ export default function NavUserMenu({ dark = false }: Props) {
         {menuOpen && (
           <div style={{ position: 'absolute', top: 'calc(100% + 8px)', right: 0, background: '#fff', border: '1px solid #e8e8e8', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', overflow: 'hidden', minWidth: 180, zIndex: 300 }}>
             {[
-              { label: tr.panel.menu.miPanel, href: '/panel', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> },
-              { label: tr.panel.menu.anuncios, href: '/panel?s=anuncios', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
-              { label: tr.panel.menu.mensajes, href: '/panel?s=mensajes', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
-              { label: tr.panel.menu.guardados, href: '/panel?s=guardados', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> },
+              { label: tr.panel.menu.miPanel, href: '/panel', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>, badge: 0 },
+              { label: tr.panel.menu.anuncios, href: '/panel?s=anuncios', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, badge: 0 },
+              { label: tr.panel.menu.mensajes, href: '/panel?s=mensajes', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, badge: noLeidos },
+              { label: tr.panel.menu.guardados, href: '/panel?s=guardados', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>, badge: noLeidosGuardados },
             ].map(item => (
               <a key={item.href} href={item.href}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', fontSize: 13, color: '#222', textDecoration: 'none', borderBottom: '1px solid #f5f5f5' }}
+                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', fontSize: 13, color: '#222', textDecoration: 'none', borderBottom: '1px solid #f5f5f5', position: 'relative' }}
                 onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = '#f0fafb'}
                 onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'}>
                 {item.icon}
                 {item.label}
+                {!!item.badge && (
+                  <span style={{ marginLeft: 'auto', background: '#e63946', color: '#fff', fontSize: 10, fontWeight: 700, minWidth: 18, height: 18, borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px' }}>
+                    {item.badge > 9 ? '9+' : item.badge}
+                  </span>
+                )}
               </a>
             ))}
             <button
