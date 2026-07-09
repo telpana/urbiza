@@ -527,7 +527,7 @@ export default function Home() {
 
       {/* MENÚ MÓVIL DROPDOWN */}
       {mobileMenuOpen && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, background: 'rgba(0,0,0,0.25)' }} onClick={() => setMobileMenuOpen(false)}>
+        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.25)' }} onClick={() => setMobileMenuOpen(false)}>
           <div style={{ position: 'absolute', top: 60, left: 0, right: 0, background: '#fff', boxShadow: '0 12px 32px rgba(0,0,0,0.15)', borderRadius: '0 0 16px 16px', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
 
             {authReady && sesionActiva ? (<>
