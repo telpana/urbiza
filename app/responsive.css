@@ -123,6 +123,9 @@ img { max-width: 100%; }
 .panel-hamburger { display: none; }
 .panel-sidebar-overlay { display: none; }
 .panel-nav-hamburger-right { display: none; }
+/* broker card: iconos desktop junto al nombre, toprow oculto */
+.broker-icons-toprow { display: none; }
+.broker-icons-namerow { display: flex; align-items: center; gap: 6px; }
 
 @media (max-width: 900px) {
   /* Sidebar oculto, hamburger derecho visible */
@@ -200,12 +203,21 @@ img { max-width: 100%; }
     gap: 6px !important;
   }
 
-  /* Tarjeta broker — visible en móvil */
+  /* Tarjeta broker — mobile layout */
   .broker-card-inner { flex-direction: column !important; text-align: center !important; padding: 20px 16px !important; }
   .broker-card-inner > div:last-child > div { justify-content: center !important; }
   .broker-card-inner > div:last-child > div > div { justify-content: center !important; }
-  .broker-icons-mobile { display: flex !important; }
-  .broker-icons-desktop { display: none !important; }
+  /* iconos arriba-derecha en móvil: se muestra como primer elemento (order:-1) */
+  .broker-icons-toprow {
+    display: flex !important;
+    justify-content: flex-end !important;
+    order: -1 !important;
+    gap: 8px !important;
+    width: 100% !important;
+    padding-bottom: 4px !important;
+  }
+  /* iconos junto al nombre: se ocultan en móvil */
+  .broker-icons-namerow { display: none !important; }
   .broker-name-row { justify-content: center !important; }
 
   /* Hero destacar — centrado en móvil */
