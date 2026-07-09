@@ -106,13 +106,13 @@ const provinciaCoords: Record<string, { center: [number, number], zoom: number }
 }
 
 function getZonaCoords(zona: string): { center: [number, number], zoom: number } {
-  if (!zona) return { center: [18.735, -70.165], zoom: 7 }
+  if (!zona) return { center: [18.735, -70.165], zoom: 6.5 }
   const n = zona.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
   for (const [key, val] of Object.entries(provinciaCoords)) {
     if (n === key || n.startsWith(key) || key.startsWith(n)) return val
   }
   const coords = matchZona(zona)
-  return coords ? { center: coords, zoom: 11 } : { center: [18.735, -70.165], zoom: 7 }
+  return coords ? { center: coords, zoom: 11 } : { center: [18.735, -70.165], zoom: 6.5 }
 }
 
 function MapaMini({ zona }: { zona: string }) {
