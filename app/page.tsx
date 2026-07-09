@@ -469,12 +469,17 @@ export default function Home() {
   useEffect(() => {
     const cargar = async () => {
       const { data: dest } = await supabase.from('propiedades')
-        .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos,destacado_desde,destacado_hasta,destacado_dias').eq('destacado', true).eq('estado', 'activo').gt('destacado_hasta', new Date().toISOString()).order('destacado_desde', { ascending: false, nullsFirst: false }).limit(12)
+        .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos,destacado_desde,destacado_hasta,destacado_dias').eq('destacado', true).eq('estado', 'activo').gt('destacado_hasta', new Date().toISOString()).limit(12)
       if (dest && dest.length > 0) {
         const sorted = [...dest].sort((a, b) => {
-          const getTs = (p: any) => p.destacado_desde ? new Date(p.destacado_desde).getTime()
-            : p.destacado_hasta ? new Date(p.destacado_hasta).getTime() - (p.destacado_dias || 7) * 86400000
-            : 0
+          // Use hasta - dias as primary key: always reflects when property was last featured
+          // (destacado_desde may be stale from a previous payment)
+          const getTs = (p: any) => {
+            if (p.destacado_hasta && p.destacado_dias != null)
+              return new Date(p.destacado_hasta).getTime() - p.destacado_dias * 86400000
+            if (p.destacado_desde) return new Date(p.destacado_desde).getTime()
+            return 0
+          }
           return getTs(b) - getTs(a)
         })
         setDestReales(sorted)
