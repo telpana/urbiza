@@ -516,7 +516,7 @@ function BuscarContent() {
 
       if (orden === 'Baratos') q = q.order('precio', { ascending: true })
       else if (orden === 'Caros') q = q.order('precio', { ascending: false })
-      else if (orden === 'Relevancia') q = q.order('destacado', { ascending: false }).order('created_at', { ascending: false })
+      else if (orden === 'Relevancia') q = q.order('destacado', { ascending: false }).order('destacado_desde', { ascending: false }).order('created_at', { ascending: false })
       else q = q.order('created_at', { ascending: false })
 
       const offset = (pag - 1) * POR_PAGINA
