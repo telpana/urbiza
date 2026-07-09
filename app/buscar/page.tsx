@@ -516,7 +516,7 @@ function BuscarContent() {
 
       if (orden === 'Baratos') q = q.order('precio', { ascending: true })
       else if (orden === 'Caros') q = q.order('precio', { ascending: false })
-      else if (orden === 'Relevancia') q = q.order('destacado', { ascending: false }).order('destacado_desde', { ascending: false }).order('created_at', { ascending: false })
+      else if (orden === 'Relevancia') q = q.order('destacado', { ascending: false }).order('created_at', { ascending: false })
       else q = q.order('created_at', { ascending: false })
 
       const offset = (pag - 1) * POR_PAGINA
@@ -524,7 +524,24 @@ function BuscarContent() {
 
       const { data, count, error } = await q
       if (!error && data) {
-        setPropiedadesReales(data)
+        let sorted = data
+        if (orden === 'Relevancia') {
+          const getTs = (p: any) => {
+            if (p.destacado_hasta && p.destacado_dias != null)
+              return new Date(p.destacado_hasta).getTime() - p.destacado_dias * 86400000
+            if (p.destacado_desde) return new Date(p.destacado_desde).getTime()
+            return 0
+          }
+          const destActivo = (p: any) => p.destacado && p.destacado_hasta && new Date(p.destacado_hasta) > new Date()
+          sorted = [...data].sort((a, b) => {
+            const ad = destActivo(a), bd = destActivo(b)
+            if (ad && !bd) return -1
+            if (!ad && bd) return 1
+            if (ad && bd) return getTs(b) - getTs(a)
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          })
+        }
+        setPropiedadesReales(sorted)
         setTotalEnBD(count ?? 0)
       }
       setCargando(false)
