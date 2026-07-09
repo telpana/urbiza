@@ -131,7 +131,7 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
     const load = () => {
       const L = (window as any).L
       if (!L || !mapRef.current) return
-      const map = L.map(mapRef.current, { center: [18.7357, -70.1627], zoom: 6.5, zoomControl: true, attributionControl: false })
+      const map = L.map(mapRef.current, { center: [18.7357, -70.1627], zoom: 6.8, zoomControl: true, attributionControl: false })
       L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map)
       mapInstanceRef.current = { map, L }
     }
@@ -200,13 +200,16 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
       {/* Menú móvil desplegable */}
       {menuAbierto && (
         <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <select
-            value={filtroTipo}
-            onChange={e => { setFiltroTipo(e.target.value); setMenuAbierto(false) }}
-            style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 12px', fontSize: 14, color: '#333', outline: 'none', width: '100%', background: '#fff' }}
-          >
-            {tipos.map(t => <option key={t} value={t}>{tipoLabel(t)}</option>)}
-          </select>
+          <div style={{ position: 'relative' }}>
+            <select
+              value={filtroTipo}
+              onChange={e => { setFiltroTipo(e.target.value); setMenuAbierto(false) }}
+              style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 36px 9px 12px', fontSize: 14, color: '#333', outline: 'none', width: '100%', background: '#fff', appearance: 'none', WebkitAppearance: 'none' }}
+            >
+              {tipos.map(t => <option key={t} value={t}>{tipoLabel(t)}</option>)}
+            </select>
+            <svg style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
           <button
             onClick={onCerrar}
             style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 0', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: 'pointer', textAlign: 'center', touchAction: 'manipulation' }}
