@@ -37,7 +37,7 @@ export default function Registro() {
       const res = await fetch('/api/registro', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, nombre, tipo, telefono, cedula, numero_aei: aei }),
+        body: JSON.stringify({ email, password, nombre, tipo, telefono, cedula, numero_aei: aei ? `AEI-${aei}` : '' }),
       })
       const d = await res.json()
       if (!res.ok) { setError(d.error || T.err_generico); setLoading(false); return }
@@ -191,7 +191,10 @@ export default function Registro() {
                       </div>
                       <div>
                         <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{T.aei} <span style={{ color: '#aaa', fontWeight: 400 }}>{T.aeiOpcional}</span></label>
-                        <input value={aei} onChange={e => setAei(e.target.value)} type="text" placeholder="AEI-0000" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 14px', fontSize: 14, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                        <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid #e0e0e0', borderRadius: 6, overflow: 'hidden' }} onFocus={e => (e.currentTarget.style.borderColor='#006D77')} onBlur={e => (e.currentTarget.style.borderColor='#e0e0e0')}>
+                          <span style={{ padding: '11px 10px 11px 14px', fontSize: 14, color: '#555', background: '#f5f5f5', borderRight: '1px solid #e0e0e0', userSelect: 'none', fontWeight: 600 }}>AEI-</span>
+                          <input value={aei} onChange={e => setAei(e.target.value.replace(/\D/g, ''))} type="text" inputMode="numeric" placeholder="0000" style={{ flex: 1, border: 'none', padding: '11px 14px', fontSize: 14, outline: 'none', boxSizing: 'border-box' }} />
+                        </div>
                         <div style={{ fontSize: 11, color: '#aaa', marginTop: 4 }}>{T.aeiDesc}</div>
                       </div>
                     </>
