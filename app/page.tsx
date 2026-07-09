@@ -406,6 +406,7 @@ export default function Home() {
   const [authReady, setAuthReady] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [noLeidosNav, setNoLeidosNav] = useState(0)
+  const [noLeidosGuardadosNav, setNoLeidosGuardadosNav] = useState(0)
   const [planUsuario, setPlanUsuario] = useState<string>('gratis')
   const [tipoUsuario, setTipoUsuario] = useState<string>('')
   const [fotoUrl, setFotoUrl] = useState<string>('')
@@ -439,6 +440,19 @@ export default function Home() {
         const leidos: Record<string, boolean> = JSON.parse(localStorage.getItem(`habitade_leidos_${user.id}`) || '{}')
         setNoLeidosNav(msgs.filter((m: any) => !leidos[m.id]).length)
       }
+      // Fetch guardados notifications via service_role API
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session?.access_token) {
+          const res = await fetch('/api/panel/notificaciones', {
+            headers: { 'Authorization': `Bearer ${session.access_token}` }
+          })
+          if (res.ok) {
+            const json = await res.json()
+            setNoLeidosGuardadosNav(typeof json.count === 'number' ? json.count : 0)
+          }
+        }
+      } catch {}
       setAuthReady(true)
     }
     supabase.auth.getUser().then(({ data }) => initAuth(data.user))
@@ -446,7 +460,21 @@ export default function Home() {
       if (session?.user) initAuth(session.user)
       else { setSesionActiva(false); setAuthReady(true) }
     })
-    return () => subscription.unsubscribe()
+    // Poll guardados notifications every 20s
+    const interval = setInterval(async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.access_token) return
+      try {
+        const res = await fetch('/api/panel/notificaciones', {
+          headers: { 'Authorization': `Bearer ${session.access_token}` }
+        })
+        if (res.ok) {
+          const json = await res.json()
+          setNoLeidosGuardadosNav(typeof json.count === 'number' ? json.count : 0)
+        }
+      } catch {}
+    }, 20000)
+    return () => { subscription.unsubscribe(); clearInterval(interval) }
   }, [])
 
   useEffect(() => {
@@ -555,7 +583,7 @@ export default function Home() {
                   { label: tr.panel.menu.miPanel, href: '/panel', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> },
                   { label: tr.panel.menu.anuncios, href: '/panel?s=anuncios',  icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> },
                   { label: tr.panel.menu.mensajes,     href: '/panel?s=mensajes',  icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, badge: noLeidosNav },
-                  { label: tr.panel.menu.guardados,    href: '/panel?s=guardados', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> },
+                  { label: tr.panel.menu.guardados,    href: '/panel?s=guardados', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>, badge: noLeidosGuardadosNav },
                   { label: tr.panel.menu.perfil,    href: '/panel?s=perfil',    icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> },
                 ].map(item => (
                   <a key={item.href} href={item.href} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 14, color: '#333', textDecoration: 'none' }}>
@@ -648,7 +676,10 @@ export default function Home() {
         {(() => {
           const ini = nombreUsuario.trim().split(/\s+/).filter(Boolean).slice(0, 2).map(p => p[0].toUpperCase()).join('')
           return (
-            <button className="nav-mobile-hamburger" onClick={() => setMobileMenuOpen(true)} style={{ display: 'none', background: 'none', cursor: 'pointer', padding: 0, border: 'none', touchAction: 'manipulation' }}>
+            <button className="nav-mobile-hamburger" onClick={() => setMobileMenuOpen(true)} style={{ display: 'none', background: 'none', cursor: 'pointer', padding: 0, border: 'none', touchAction: 'manipulation', position: 'relative' }}>
+              {(noLeidosNav > 0 || noLeidosGuardadosNav > 0) && (
+                <span style={{ position: 'absolute', top: 2, right: 2, width: 9, height: 9, borderRadius: '50%', background: '#e63946', border: '2px solid #fff', zIndex: 1, pointerEvents: 'none' }} />
+              )}
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, border: '1.5px solid #e0e0e0', borderRadius: 20, padding: '4px 10px 4px 4px', background: '#fafafa' }}>
                 {sesionActiva ? (
                   fotoUrl
