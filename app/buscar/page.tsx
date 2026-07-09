@@ -210,7 +210,7 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: any[], onCerrar:
       })
       if (marcadores.length > 0) {
         const grupo = L.featureGroup(marcadores)
-        map.fitBounds(grupo.getBounds().pad(0.3), { maxZoom: 14 })
+        map.fitBounds(grupo.getBounds().pad(0.5), { maxZoom: 13 })
       }
       mapInstanceRef.current = map
     }
