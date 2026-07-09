@@ -466,8 +466,17 @@ export default function Home() {
   useEffect(() => {
     const cargar = async () => {
       const { data: dest } = await supabase.from('propiedades')
-        .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos').eq('destacado', true).eq('estado', 'activo').gt('destacado_hasta', new Date().toISOString()).order('destacado_desde', { ascending: false }).limit(12)
-      if (dest && dest.length > 0) { setDestReales(dest); try { localStorage.setItem('hb_dest', JSON.stringify(dest)) } catch {} }
+        .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos,destacado_desde,destacado_hasta,destacado_dias').eq('destacado', true).eq('estado', 'activo').gt('destacado_hasta', new Date().toISOString()).limit(12)
+      if (dest && dest.length > 0) {
+        const sorted = [...dest].sort((a, b) => {
+          const getTs = (p: any) => p.destacado_desde ? new Date(p.destacado_desde).getTime()
+            : p.destacado_hasta ? new Date(p.destacado_hasta).getTime() - (p.destacado_dias || 7) * 86400000
+            : 0
+          return getTs(b) - getTs(a)
+        })
+        setDestReales(sorted)
+        try { localStorage.setItem('hb_dest', JSON.stringify(sorted)) } catch {}
+      }
       const { data: vistas } = await supabase.from('propiedades')
         .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos').eq('estado', 'activo').order('visitas', { ascending: false }).limit(100)
       if (vistas && vistas.length > 0) { setMasVistasReales(vistas); try { localStorage.setItem('hb_masvistos', JSON.stringify({ data: vistas, date: new Date().toDateString() })) } catch {} }
