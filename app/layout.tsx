@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     default: 'Habitade | Portal Inmobiliario República Dominicana',
     template: '%s | Habitade'
   },
-  description: 'El portal inmobiliario líder del Caribe. Compra, vende o alquila apartamentos, casas, villas y terrenos en República Dominicana. Miles de propiedades en Santo Domingo, Punta Cana, Santiago y Las Terrenas.',
+  description: 'Encuentra tu próxima propiedad en República Dominicana. Miles de propiedades. Una sola búsqueda. Compra, vende o alquila apartamentos, casas, villas y terrenos en Santo Domingo, Punta Cana, Santiago y más.',
   keywords: [
     'casas en venta republica dominicana',
     'apartamentos en venta santo domingo',
@@ -74,7 +74,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           "name": "Habitade",
           "alternateName": "Habitade - Portal Inmobiliario República Dominicana",
           "url": "https://www.habitade.com",
-          "description": "El portal inmobiliario líder del Caribe. Compra, vende o alquila apartamentos, casas, villas y terrenos en República Dominicana.",
+          "description": "Encuentra tu próxima propiedad en República Dominicana. Miles de propiedades. Una sola búsqueda.",
           "potentialAction": {
             "@type": "SearchAction",
             "target": { "@type": "EntryPoint", "urlTemplate": "https://www.habitade.com/buscar?q={search_term_string}" },
