@@ -4,7 +4,7 @@ import React from 'react'
 
 export const size = { width: 512, height: 512 }
 export const contentType = 'image/png'
-export const revalidate = 3600
+export const revalidate = 60
 
 const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
