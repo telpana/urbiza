@@ -397,7 +397,7 @@ export default function Home() {
   const [mostrarSugHome, setMostrarSugHome] = useState(false)
   const lsGet = (k: string) => { try { return typeof window !== 'undefined' ? JSON.parse(localStorage.getItem(k) || '[]') : [] } catch { return [] } }
   const lsGetDaily = (k: string) => { try { if (typeof window === 'undefined') return []; const raw = localStorage.getItem(k); if (!raw) return []; const { data, date } = JSON.parse(raw); return date === new Date().toDateString() ? (data || []) : [] } catch { return [] } }
-  const [destReales, setDestReales] = useState<any[]>(() => lsGet('hb_dest'))
+  const [destReales, setDestReales] = useState<any[]>([])
   const [masVistasReales, setMasVistasReales] = useState<any[]>(() => lsGetDaily('hb_masvistos'))
   const [novedadesSantoDomingo, setNovedadesSantoDomingo] = useState<any[]>(() => lsGet('hb_nov_sd'))
   const [novedadesPuntaCana, setNovedadesPuntaCana] = useState<any[]>(() => lsGet('hb_nov_pc'))
@@ -469,7 +469,7 @@ export default function Home() {
   useEffect(() => {
     const cargar = async () => {
       const { data: dest } = await supabase.from('propiedades')
-        .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos,destacado_desde,destacado_hasta,destacado_dias').eq('destacado', true).eq('estado', 'activo').gt('destacado_hasta', new Date().toISOString()).limit(12)
+        .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos,destacado_desde,destacado_hasta,destacado_dias').eq('destacado', true).eq('estado', 'activo').gt('destacado_hasta', new Date().toISOString()).order('destacado_desde', { ascending: false, nullsFirst: false }).limit(12)
       if (dest && dest.length > 0) {
         const sorted = [...dest].sort((a, b) => {
           const getTs = (p: any) => p.destacado_desde ? new Date(p.destacado_desde).getTime()
