@@ -178,7 +178,7 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: any[], onCerrar:
       if (!L || !mapRef.current) return
       const map = L.map(mapRef.current, {
         center: [18.735, -70.165],
-        zoom: 8,
+        zoom: 7.5,
         zoomControl: true,
         attributionControl: false,
       })
