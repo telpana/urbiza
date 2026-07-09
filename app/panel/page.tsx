@@ -135,26 +135,24 @@ function GuardadosSeccion({ onLeer }: { onLeer?: (n: number) => void }) {
     const cargar = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { setCargando(false); return }
-      const [{ data }, { data: notifs }] = await Promise.all([
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
+      const authHeader = token ? { 'Authorization': `Bearer ${token}` } : {}
+      const [{ data }, notifsRes] = await Promise.all([
         supabase
           .from('favoritos')
           .select('propiedad_id, propiedades(id, titulo, zona, precio, tipo, operacion, habitaciones, banos, m2, fotos)')
           .eq('usuario_id', user.id)
           .order('created_at', { ascending: false }),
-        supabase
-          .from('notificaciones_propiedades')
-          .select('*')
-          .eq('usuario_id', user.id)
-          .eq('leida', false)
+        fetch('/api/panel/notificaciones?full=1', { headers: authHeader })
       ])
+      const notifsJson = notifsRes.ok ? await notifsRes.json() : { notificaciones: [] }
+      const notifs = notifsJson.notificaciones || []
       setGuardados(data || [])
-      setNotificaciones(notifs || [])
+      setNotificaciones(notifs)
       setCargando(false)
-      if (notifs && notifs.length > 0) {
-        await supabase.from('notificaciones_propiedades')
-          .update({ leida: true })
-          .eq('usuario_id', user.id)
-          .eq('leida', false)
+      if (notifs.length > 0) {
+        fetch('/api/panel/notificaciones', { method: 'PATCH', headers: authHeader })
         onLeer?.(notifs.length)
       }
     }
@@ -778,11 +776,22 @@ export default function Panel() {
   const noLeidos = mensajesReales.filter((m: any) => !mensajesLeidos[m.id]).length
   const [noLeidosGuardados, setNoLeidosGuardados] = useState(0)
   useEffect(() => {
-    supabase.auth.getUser().then(async ({ data }) => {
-      if (!data.user) return
-      const { data: notifs } = await supabase.from('notificaciones_propiedades').select('id').eq('usuario_id', data.user.id).eq('leida', false)
-      setNoLeidosGuardados((notifs || []).length)
-    })
+    const fetchNotifs = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        const token = session?.access_token
+        if (!token) return
+        const res = await fetch('/api/panel/notificaciones', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        if (!res.ok) return
+        const json = await res.json()
+        setNoLeidosGuardados(typeof json.count === 'number' ? json.count : 0)
+      } catch {}
+    }
+    fetchNotifs()
+    const interval = setInterval(fetchNotifs, 20000)
+    return () => clearInterval(interval)
   }, [])
   const tipoUsuario: string = usuario?.plan === 'profesional'
     ? 'profesional'
@@ -826,9 +835,15 @@ export default function Panel() {
           <div style={{ position: 'absolute', top: 54, left: 0, right: 0, background: '#fff', boxShadow: '0 12px 32px rgba(0,0,0,0.15)', borderRadius: '0 0 16px 16px', overflow: 'hidden' }} onClick={e => e.stopPropagation()}>
             <div style={{ padding: '4px 0' }}>
               {menuItems.filter(item => (item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)) && (!('proOnly' in item) || tipoUsuario === 'profesional')).map(item => (
-                <button key={item.id} onClick={() => { const dest = item.id === 'publicar' && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis ? 'planes' : item.id; setSeccion(dest); setPanelNavOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '13px 20px', fontSize: 14, color: seccion === item.id ? '#006D77' : '#333', background: seccion === item.id ? '#f0fafa' : 'transparent', cursor: 'pointer', boxSizing: 'border-box' }}>
+                <button key={item.id} onClick={() => { const dest = item.id === 'publicar' && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis ? 'planes' : item.id; setSeccion(dest); setPanelNavOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '13px 20px', fontSize: 14, color: seccion === item.id ? '#006D77' : '#333', background: seccion === item.id ? '#f0fafa' : 'transparent', cursor: 'pointer', boxSizing: 'border-box', position: 'relative' }}>
                   <span style={{ color: seccion === item.id ? '#006D77' : '#888', display: 'flex' }}>{item.icon}</span>
                   {item.label}
+                  {item.id === 'mensajes' && noLeidos > 0 && (
+                    <span style={{ marginLeft: 'auto', background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 700, minWidth: 18, height: 18, borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px' }}>{noLeidos}</span>
+                  )}
+                  {item.id === 'guardados' && noLeidosGuardados > 0 && (
+                    <span style={{ marginLeft: 'auto', background: '#e63946', color: '#fff', fontSize: 10, fontWeight: 700, minWidth: 18, height: 18, borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px' }}>{noLeidosGuardados > 9 ? '9+' : noLeidosGuardados}</span>
+                  )}
                 </button>
               ))}
             </div>
@@ -916,7 +931,7 @@ export default function Panel() {
             )}
           </div>
         </div>
-        <button className="panel-nav-hamburger-right" onClick={() => setPanelNavOpen(v => !v)} style={{ display: 'none', background: 'none', border: 'none', padding: 0, cursor: 'pointer', touchAction: 'manipulation' }}>
+        <button className="panel-nav-hamburger-right" onClick={() => setPanelNavOpen(v => !v)} style={{ display: 'none', background: 'none', border: 'none', padding: 0, cursor: 'pointer', touchAction: 'manipulation', position: 'relative' }}>
           {(() => {
             const ini = (perfilNombre || usuario?.nombre || '').trim().split(/\s+/).filter(Boolean).slice(0,2).map((n: string) => n[0].toUpperCase()).join('')
             return (
@@ -929,6 +944,9 @@ export default function Panel() {
               </div>
             )
           })()}
+          {(noLeidos > 0 || noLeidosGuardados > 0) && (
+            <span style={{ position: 'absolute', top: 2, right: 2, width: 9, height: 9, borderRadius: '50%', background: '#e63946', border: '2px solid #006D77', pointerEvents: 'none' }} />
+          )}
         </button>
       </nav>
 
