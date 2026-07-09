@@ -394,7 +394,6 @@ export default function Home() {
   const lsGetDaily = (k: string) => { try { if (typeof window === 'undefined') return []; const raw = localStorage.getItem(k); if (!raw) return []; const { data, date } = JSON.parse(raw); return date === new Date().toDateString() ? (data || []) : [] } catch { return [] } }
   const [destReales, setDestReales] = useState<any[]>(() => lsGet('hb_dest'))
   const [masVistasReales, setMasVistasReales] = useState<any[]>(() => lsGetDaily('hb_masvistos'))
-  const [slideIdx, setSlideIdx] = useState(0)
   const [novedadesSantoDomingo, setNovedadesSantoDomingo] = useState<any[]>(() => lsGet('hb_nov_sd'))
   const [novedadesPuntaCana, setNovedadesPuntaCana] = useState<any[]>(() => lsGet('hb_nov_pc'))
   const [novedadesSamana, setNovedadesSamana] = useState<any[]>(() => lsGet('hb_nov_lt'))
@@ -767,12 +766,11 @@ export default function Home() {
       `}} />
       <div style={{ background: '#f4f5f6' }}>
         <div className="home-props-wrap" style={{ maxWidth: 1100, margin: '0 auto', padding: '36px 20px 0' }}>
-          {/* Destacadas rotando */}
+          {/* Destacadas */}
           {(() => {
             const bgs = ['#e0f5f7','#ddf0e8','#e8eaf0','#f0ebe0','#e8f0e0','#f0e8f0']
             const src = destReales.length > 0 ? destReales : propiedadesDestacadas.filter(p => p.tipo === 'pagado').map((p,i) => ({ id: i, titulo: p.title, precio: p.price, zona: p.loc, habitaciones: null, m2: null }))
-            const total = src.length
-            const visibles = total > 0 ? [src[slideIdx % total], src[(slideIdx+1) % total], src[(slideIdx+2) % total]].filter(Boolean) : []
+            const visibles = src.slice(0, 3)
             return (
               <div className="home-cards-section" style={{ marginBottom: 32 }}>
                 <div className="home-section-hdr" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
