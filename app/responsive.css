@@ -2,6 +2,7 @@
 * { box-sizing: border-box; }
 img { max-width: 100%; }
 
+
 /* ════════════════════════════════
    MAPA HOME (MapaCompletoPropiedades)
 ════════════════════════════════ */
@@ -203,6 +204,8 @@ img { max-width: 100%; }
   .broker-card-inner { flex-direction: column !important; text-align: center !important; padding: 20px 16px !important; }
   .broker-card-inner > div:last-child > div { justify-content: center !important; }
   .broker-card-inner > div:last-child > div > div { justify-content: center !important; }
+  .broker-social-icons { position: absolute !important; top: 14px !important; right: 14px !important; }
+  .broker-name-row { justify-content: center !important; }
 
   /* Hero destacar — centrado en móvil */
   .destacar-hero {
