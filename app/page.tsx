@@ -490,11 +490,6 @@ export default function Home() {
     cargar()
   }, [])
 
-  useEffect(() => {
-    if (destReales.length <= 3) return
-    const t = setInterval(() => setSlideIdx(i => (i + 1) % destReales.length), 4000)
-    return () => clearInterval(t)
-  }, [destReales.length])
 
   const getDailyMasVistos = (pool: any[]) => {
     if (pool.length === 0) return []
