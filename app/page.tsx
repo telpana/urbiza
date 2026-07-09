@@ -131,7 +131,7 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
     const load = () => {
       const L = (window as any).L
       if (!L || !mapRef.current) return
-      const map = L.map(mapRef.current, { center: [18.7357, -70.1627], zoom: 8, zoomControl: true, attributionControl: false })
+      const map = L.map(mapRef.current, { center: [18.7357, -70.1627], zoom: 6.5, zoomControl: true, attributionControl: false })
       L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map)
       mapInstanceRef.current = { map, L }
     }
@@ -162,18 +162,6 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
     <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', flexDirection: 'column' }}>
       {/* Header — una línea */}
       <div style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', height: 46, display: 'flex', alignItems: 'center', padding: '0 12px', gap: 8, flexShrink: 0 }}>
-        {/* Hamburger — solo móvil vía CSS */}
-        <button
-          onClick={() => setMenuAbierto(o => !o)}
-          className="mapa-home-burger"
-          style={{ all: 'unset', display: 'none', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, cursor: 'pointer', flexShrink: 0, touchAction: 'manipulation' }}
-        >
-          {menuAbierto
-            ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-          }
-        </button>
-
         {/* Contador */}
         <span style={{ fontSize: 12, fontWeight: 600, color: '#333', flex: 1, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {visibles} {tr.buscar.titulo}
@@ -194,6 +182,18 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
           style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '6px 14px', borderRadius: 4, fontSize: 12, fontWeight: 500, cursor: 'pointer', flexShrink: 0, touchAction: 'manipulation' }}
         >
           {tr.buscar.volver}
+        </button>
+
+        {/* Hamburger — solo móvil, a la derecha */}
+        <button
+          onClick={() => setMenuAbierto(o => !o)}
+          className="mapa-home-burger"
+          style={{ all: 'unset', display: 'none', alignItems: 'center', justifyContent: 'center', width: 32, height: 32, cursor: 'pointer', flexShrink: 0, touchAction: 'manipulation' }}
+        >
+          {menuAbierto
+            ? <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2.5"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          }
         </button>
       </div>
 
