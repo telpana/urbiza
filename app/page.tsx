@@ -76,6 +76,7 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
   const [filtroTipo, setFiltroTipo] = useState('Todos')
   const [menuAbierto, setMenuAbierto] = useState(false)
   const [propiedades, setPropiedades] = useState<any[]>([])
+  const [dopRate, setDopRate] = useState<number | undefined>(undefined)
   const { tr } = useIdioma()
 
   useEffect(() => { getDopRate().then(setDopRate) }, [])
@@ -317,10 +318,11 @@ const zonas = [
 
 const bgsNovedad = ['#e0f5f7','#ddf0e8','#e8eaf0','#f0ebe0']
 
-function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href }: {
+function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href, dopRate }: {
   titulo: string, subtitulo: string, zona: string, href?: string,
   reales: any[],
-  ejemplos: { price: number, title: string, feats: string, bg: string }[]
+  ejemplos: { price: number, title: string, feats: string, bg: string }[],
+  dopRate?: number
 }) {
   const items = reales.length > 0 ? reales : null
   if (items === null && ejemplos.length === 0) return null
@@ -847,9 +849,9 @@ export default function Home() {
         </div>
 
         {/* NOVEDADES POR ZONA */}
-        <SeccionNovedad titulo={tr.novedades.santoDomingo} subtitulo={tr.novedades.verTodas} zona="Santo Domingo" reales={novedadesSantoDomingo} ejemplos={propiedadesSantoDomingo} />
-        <SeccionNovedad titulo={tr.novedades.puntaCana} subtitulo={tr.novedades.verTodas} zona="Punta Cana" reales={novedadesPuntaCana} ejemplos={propiedadesPuntaCana} />
-        <SeccionNovedad titulo={tr.novedades.samana} subtitulo={tr.novedades.verTodas} zona="Samaná" reales={novedadesSamana} ejemplos={propiedadesSamana} />
+        <SeccionNovedad titulo={tr.novedades.santoDomingo} subtitulo={tr.novedades.verTodas} zona="Santo Domingo" reales={novedadesSantoDomingo} ejemplos={propiedadesSantoDomingo} dopRate={dopRate} />
+        <SeccionNovedad titulo={tr.novedades.puntaCana} subtitulo={tr.novedades.verTodas} zona="Punta Cana" reales={novedadesPuntaCana} ejemplos={propiedadesPuntaCana} dopRate={dopRate} />
+        <SeccionNovedad titulo={tr.novedades.samana} subtitulo={tr.novedades.verTodas} zona="Samaná" reales={novedadesSamana} ejemplos={propiedadesSamana} dopRate={dopRate} />
       </div>
 
       {/* ZONAS MÁS BUSCADAS */}
