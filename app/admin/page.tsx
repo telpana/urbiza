@@ -167,7 +167,7 @@ export default function Admin() {
     if (!confirm(`¿Eliminar la cuenta de "${nombre}"?\n\nSe borrarán también todos sus anuncios. Esta acción no se puede deshacer.`)) return
     const r = await fetch('/api/admin/usuarios', { method: 'DELETE', headers: authHeader(), body: JSON.stringify({ id }) })
     const d = await r.json()
-    if (!r.ok) { alert(`Error: ${d.error}`); return }
+    if (!r.ok) { alert(`Error al eliminar: ${d.error || JSON.stringify(d) || 'Error desconocido'}`); return }
     cargarUsuarios(usersQ)
     fetch('/api/admin/stats', { headers: authHeader() }).then(r => r.json()).then(setStats)
   }

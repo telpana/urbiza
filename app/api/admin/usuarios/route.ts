@@ -32,15 +32,17 @@ export async function DELETE(req: Request) {
   const { id } = await req.json()
   if (!id) return NextResponse.json({ error: 'Falta id' }, { status: 400 })
 
-  // Borrar anuncios del usuario primero
+  // Borrar datos relacionados antes de eliminar el usuario
+  await sb.from('notificaciones_propiedades').delete().eq('usuario_id', id)
+  await sb.from('favoritos').delete().eq('usuario_id', id)
+  await sb.from('mensajes').delete().eq('remitente_id', id)
+  await sb.from('mensajes').delete().eq('vendedor_id', id)
   await sb.from('propiedades').delete().eq('usuario_id', id)
-
-  // Borrar fila en tabla usuarios
   await sb.from('usuarios').delete().eq('id', id)
 
   // Borrar cuenta de auth (necesita service_role)
   const { error } = await sb.auth.admin.deleteUser(id)
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (error) return NextResponse.json({ error: error.message || error.toString() || 'Error al eliminar cuenta de auth' }, { status: 500 })
 
   return NextResponse.json({ ok: true })
 }
