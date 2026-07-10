@@ -123,9 +123,8 @@ img { max-width: 100%; }
 .panel-hamburger { display: none; }
 .panel-sidebar-overlay { display: none; }
 .panel-nav-hamburger-right { display: none; }
-/* broker card: iconos desktop arriba-derecha, namerow oculto */
-.broker-icons-toprow { display: flex; align-items: center; gap: 6px; position: absolute; top: 16px; right: 20px; }
-.broker-icons-namerow { display: none; }
+/* broker card: columna derecha con iconos + badges, desktop absolute top-right */
+.broker-right-col { position: absolute; top: 16px; right: 20px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
 
 @media (max-width: 900px) {
   /* Sidebar oculto, hamburger derecho visible */
@@ -207,16 +206,7 @@ img { max-width: 100%; }
   .broker-card-inner { flex-direction: column !important; text-align: center !important; padding: 12px 16px 20px !important; gap: 10px !important; }
   .broker-card-inner > div:last-child > div { justify-content: center !important; }
   .broker-card-inner > div:last-child > div > div { justify-content: center !important; }
-  /* iconos arriba-derecha en móvil: se muestra como primer elemento (order:-1) */
-  .broker-icons-toprow {
-    display: flex !important;
-    justify-content: flex-end !important;
-    order: -1 !important;
-    gap: 8px !important;
-    width: 100% !important;
-  }
-  /* iconos junto al nombre: se ocultan en móvil */
-  .broker-icons-namerow { display: none !important; }
+  .broker-right-col { position: static !important; order: -1 !important; width: 100% !important; flex-direction: row !important; justify-content: flex-end !important; flex-wrap: wrap !important; }
   .broker-name-row { justify-content: center !important; }
 
   /* Hero destacar — centrado en móvil */
