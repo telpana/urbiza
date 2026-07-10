@@ -1749,12 +1749,12 @@ export default function Panel() {
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                       <tr style={{ background: '#fafbfc', borderBottom: '1px solid #f0f0f0' }}>
-                        <th style={{ textAlign: 'left', padding: '14px 16px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.4 }}>Anuncio</th>
+                        <th style={{ textAlign: 'left', padding: '14px 16px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.4 }}>{Tpanel.estadisticas.anuncio}</th>
                         <th style={{ textAlign: 'center', padding: '14px 10px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.4 }}>{Tpanel.estadisticas.visitasCol}</th>
-                        <th style={{ textAlign: 'center', padding: '14px 10px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.4 }}>Teléfono</th>
+                        <th style={{ textAlign: 'center', padding: '14px 10px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.4 }}>{Tpanel.estadisticas.telVistosCol}</th>
                         <th style={{ textAlign: 'center', padding: '14px 10px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.4 }}>{Tpanel.estadisticas.mensajesCol}</th>
                         <th style={{ textAlign: 'center', padding: '14px 10px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.4 }}>{Tpanel.estadisticas.guardadosCol}</th>
-                        <th style={{ textAlign: 'center', padding: '14px 10px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.4 }}>Compartido</th>
+                        <th style={{ textAlign: 'center', padding: '14px 10px', fontSize: 11, fontWeight: 700, color: '#999', textTransform: 'uppercase', letterSpacing: 0.4 }}>{Tpanel.estadisticas.compartidoCol}</th>
                       </tr>
                     </thead>
                     <tbody>

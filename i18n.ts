@@ -143,7 +143,7 @@ export const t = {
       },
       estadisticas: {
         titulo: 'Estadísticas', visitas: 'Visitas totales', telVistos: 'Tel. vistos', mensajes: 'Mensajes recibidos',
-        anuncio: 'Anuncio', visitasCol: 'Visitas', telVistosCol: 'Tel. vistos', mensajesCol: 'Mensajes', guardadosCol: 'Guardados',
+        anuncio: 'Anuncio', visitasCol: 'Visitas', telVistosCol: 'Tel. vistos', mensajesCol: 'Mensajes', guardadosCol: 'Guardados', compartidoCol: 'Compartido',
         sinDatos: 'Sin datos', periodo: 'Últimos 30 días',
       },
       destacar: {
@@ -360,7 +360,7 @@ export const t = {
       },
       estadisticas: {
         titulo: 'Statistics', visitas: 'Total views', telVistos: 'Phone views', mensajes: 'Messages received',
-        anuncio: 'Listing', visitasCol: 'Views', telVistosCol: 'Phone views', mensajesCol: 'Messages', guardadosCol: 'Saved',
+        anuncio: 'Listing', visitasCol: 'Views', telVistosCol: 'Phone', mensajesCol: 'Messages', guardadosCol: 'Saved', compartidoCol: 'Shared',
         sinDatos: 'No data', periodo: 'Last 30 days',
       },
       destacar: {
@@ -577,7 +577,7 @@ export const t = {
       },
       estadisticas: {
         titulo: 'Statistiques', visitas: 'Vues totales', telVistos: 'Tél. vus', mensajes: 'Messages reçus',
-        anuncio: 'Annonce', visitasCol: 'Vues', telVistosCol: 'Tél. vus', mensajesCol: 'Messages', guardadosCol: 'Sauvegardés',
+        anuncio: 'Annonce', visitasCol: 'Vues', telVistosCol: 'Téléphone', mensajesCol: 'Messages', guardadosCol: 'Sauvegardés', compartidoCol: 'Partagé',
         sinDatos: 'Aucune donnée', periodo: '30 derniers jours',
       },
       destacar: {
