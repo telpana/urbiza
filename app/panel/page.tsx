@@ -2298,7 +2298,7 @@ export default function Panel() {
                         <button onClick={() => setSeccion('publicar')} style={{ all: 'unset', fontSize: 11, color: '#006D77', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline' }}>activar</button>
                       </div>
                     )}
-                    <div style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>Pulsa el icono para cambiar tu foto</div>
+                    <div style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>{Tpanel.perfil.fotoHint}</div>
                   </div>
                 </div>
                 <div className="perfil-fields-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
@@ -2324,7 +2324,7 @@ export default function Panel() {
                   )}
                   {tipoUsuario === 'profesional' && usuario?.plan === 'profesional' && (
                     <div>
-                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Web / Inmobiliaria</label>
+                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.web}</label>
                       <input value={perfilWebUrl} onChange={e => setPerfilWebUrl(e.target.value)} placeholder='https://tuinmobiliaria.com (opcional)' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                     </div>
                   )}

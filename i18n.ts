@@ -183,7 +183,8 @@ export const t = {
       },
       perfil: {
         titulo: 'Mi perfil', nombre: 'Nombre completo', email: 'Email', telefono: 'Teléfono *',
-        inmobiliaria: 'Nombre de inmobiliaria', aei: 'Número AEI',
+        inmobiliaria: 'Nombre de inmobiliaria', aei: 'Número AEI', web: 'Web',
+        fotoHint: 'Pulsa el icono para cambiar tu foto',
         idiomasLabel: 'Idiomas que hablas',
         guardar: 'Guardar cambios', guardando: 'Guardando...',
         ok: 'Cambios guardados correctamente', err: 'Error al guardar',
@@ -400,7 +401,8 @@ export const t = {
       },
       perfil: {
         titulo: 'My profile', nombre: 'Full name', email: 'Email', telefono: 'Phone *',
-        inmobiliaria: 'Agency name', aei: 'AEI number',
+        inmobiliaria: 'Agency name', aei: 'AEI number', web: 'Web',
+        fotoHint: 'Click the icon to change your photo',
         idiomasLabel: 'Languages you speak',
         guardar: 'Save changes', guardando: 'Saving...',
         ok: 'Changes saved successfully', err: 'Error saving',
@@ -617,7 +619,8 @@ export const t = {
       },
       perfil: {
         titulo: 'Mon profil', nombre: 'Nom complet', email: 'Email', telefono: 'Téléphone *',
-        inmobiliaria: "Nom de l'agence", aei: 'Numéro AEI',
+        inmobiliaria: "Nom de l'agence", aei: 'Numéro AEI', web: 'Web',
+        fotoHint: 'Cliquez sur l\'icône pour changer votre photo',
         idiomasLabel: 'Langues parlées',
         guardar: 'Enregistrer les modifications', guardando: 'Enregistrement...',
         ok: 'Modifications enregistrées avec succès', err: "Erreur lors de l'enregistrement",
