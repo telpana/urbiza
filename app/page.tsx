@@ -305,18 +305,18 @@ const propiedadesSamana = [
 ]
 
 const zonas = [
-  { nombre: 'Santo Domingo', tipo: 'Apartamentos en venta', slug: 'santo-domingo' },
-  { nombre: 'Punta Cana', tipo: 'Villas en venta', slug: 'punta-cana' },
-  { nombre: 'Santiago', tipo: 'Casas en venta', slug: 'santiago' },
-  { nombre: 'La Romana', tipo: 'Propiedades en venta', slug: 'la-romana' },
-  { nombre: 'Naco', tipo: 'Apartamentos en venta', slug: 'naco' },
-  { nombre: 'Samaná', tipo: 'Villas y casas en venta', slug: 'samana' },
-  { nombre: 'Bávaro', tipo: 'Apartamentos frente al mar', slug: 'bavaro' },
-  { nombre: 'Cap Cana', tipo: 'Villas de lujo en venta', slug: 'cap-cana' },
-  { nombre: 'Piantini', tipo: 'Apartamentos de lujo', slug: 'piantini' },
-  { nombre: 'Bella Vista', tipo: 'Casas y apartamentos', slug: 'bella-vista' },
-  { nombre: 'Sosúa', tipo: 'Propiedades frente al mar', slug: 'sosua' },
-  { nombre: 'Cabarete', tipo: 'Casas y villas en venta', slug: 'cabarete' },
+  { nombre: 'Santo Domingo', tipo: 'Apartamentos en venta', tipo_en: 'Apartments for sale', tipo_fr: 'Appartements à vendre', slug: 'santo-domingo' },
+  { nombre: 'Punta Cana', tipo: 'Villas en venta', tipo_en: 'Villas for sale', tipo_fr: 'Villas à vendre', slug: 'punta-cana' },
+  { nombre: 'Santiago', tipo: 'Casas en venta', tipo_en: 'Houses for sale', tipo_fr: 'Maisons à vendre', slug: 'santiago' },
+  { nombre: 'La Romana', tipo: 'Propiedades en venta', tipo_en: 'Properties for sale', tipo_fr: 'Propriétés à vendre', slug: 'la-romana' },
+  { nombre: 'Naco', tipo: 'Apartamentos en venta', tipo_en: 'Apartments for sale', tipo_fr: 'Appartements à vendre', slug: 'naco' },
+  { nombre: 'Samaná', tipo: 'Villas y casas en venta', tipo_en: 'Villas and houses for sale', tipo_fr: 'Villas et maisons à vendre', slug: 'samana' },
+  { nombre: 'Bávaro', tipo: 'Apartamentos frente al mar', tipo_en: 'Beachfront apartments', tipo_fr: 'Appartements en bord de mer', slug: 'bavaro' },
+  { nombre: 'Cap Cana', tipo: 'Villas de lujo en venta', tipo_en: 'Luxury villas for sale', tipo_fr: 'Villas de luxe à vendre', slug: 'cap-cana' },
+  { nombre: 'Piantini', tipo: 'Apartamentos de lujo', tipo_en: 'Luxury apartments', tipo_fr: 'Appartements de luxe', slug: 'piantini' },
+  { nombre: 'Bella Vista', tipo: 'Casas y apartamentos', tipo_en: 'Houses and apartments', tipo_fr: 'Maisons et appartements', slug: 'bella-vista' },
+  { nombre: 'Sosúa', tipo: 'Propiedades frente al mar', tipo_en: 'Beachfront properties', tipo_fr: 'Propriétés en bord de mer', slug: 'sosua' },
+  { nombre: 'Cabarete', tipo: 'Casas y villas en venta', tipo_en: 'Houses and villas for sale', tipo_fr: 'Maisons et villas à vendre', slug: 'cabarete' },
 ]
 
 const bgsNovedad = ['#e0f5f7','#ddf0e8','#e8eaf0','#f0ebe0']
@@ -911,7 +911,7 @@ export default function Home() {
             {zonas.map((z) => (
               <div key={z.nombre + z.tipo} style={{ padding: '10px 0', borderBottom: '1px solid #f5f5f5' }}>
                 <a href={`/buscar?zona=${encodeURIComponent(z.nombre)}&operacion=venta`} style={{ display: 'block', fontSize: 14, color: '#006D77', fontWeight: 500, textDecoration: 'none', marginBottom: 3 }}>{z.nombre}</a>
-                <div style={{ fontSize: 12, color: '#888' }}>{z.tipo}</div>
+                <div style={{ fontSize: 12, color: '#888' }}>{idioma === 'en' ? z.tipo_en : idioma === 'fr' ? z.tipo_fr : z.tipo}</div>
               </div>
             ))}
           </div>
