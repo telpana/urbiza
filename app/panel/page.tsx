@@ -1541,7 +1541,7 @@ export default function Panel() {
                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                   <div>
                     <div style={{ fontSize: 18, fontWeight: 700 }}>{Tpanel.mensajes.titulo}</div>
-                    <div style={{ fontSize: 12, opacity: 0.8, marginTop: 2 }}>{conversaciones.length} conversación{conversaciones.length !== 1 ? 'es' : ''}</div>
+                    <div style={{ fontSize: 12, opacity: 0.8, marginTop: 2 }}>{conversaciones.length} {conversaciones.length !== 1 ? Tpanel.mensajes.conversacionesPlural : Tpanel.mensajes.conversaciones}</div>
                   </div>
                 </div>
                 {noLeidos > 0 && <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '5px 14px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.3)' }}>{noLeidos} sin leer</span>}
@@ -1551,7 +1551,7 @@ export default function Panel() {
                 <div className={`chat-list${convActiva ? ' chat-list-hidden' : ''}`} style={{ background: '#fff', borderRight: '1px solid #f0f0f0', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
                   <div style={{ padding: '16px 16px 10px', borderBottom: '1px solid #f0f0f0', flexShrink: 0 }}>
                     <div style={{ fontSize: 13, fontWeight: 700, color: '#111', letterSpacing: -0.2 }}>{Tpanel.mensajes.titulo}</div>
-                    <div style={{ fontSize: 11, color: '#aaa', marginTop: 2 }}>{conversaciones.length} conversación{conversaciones.length !== 1 ? 'es' : ''}{noLeidos > 0 ? ` · ${noLeidos} sin leer` : ''}</div>
+                    <div style={{ fontSize: 11, color: '#aaa', marginTop: 2 }}>{conversaciones.length} {conversaciones.length !== 1 ? Tpanel.mensajes.conversacionesPlural : Tpanel.mensajes.conversaciones}{noLeidos > 0 ? ` · ${noLeidos} sin leer` : ''}</div>
                   </div>
                   {!cargando && conversaciones.length === 0 && (
                     <div style={{ padding: '48px 20px', textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
@@ -1647,12 +1647,12 @@ export default function Panel() {
                           <div style={{ flex: 1, minWidth: 0 }}>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
                               <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>{contactoNombre}</span>
-                              <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 8, background: esPro ? '#006D77' : '#f0f0f0', color: esPro ? '#fff' : '#888' }}>{esPro ? 'PRO' : 'PARTICULAR'}</span>
+                              <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 8, background: esPro ? '#006D77' : '#f0f0f0', color: esPro ? '#fff' : '#888' }}>{esPro ? 'PRO' : Tpanel.mensajes.particular}</span>
                               {m._numero_aei && <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 8, background: m._aei_aprobado ? '#065f46' : '#f59e0b', color: '#fff' }}>{m._aei_aprobado ? 'AEI ✓' : 'AEI'}</span>}
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                               <span style={{ fontSize: 11, color: '#006D77', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.propiedades?.titulo}</span>
-                              <a href={`/propiedad/${m.propiedad_id}`} style={{ fontSize: 10, color: '#006D77', textDecoration: 'none', fontWeight: 600, flexShrink: 0, background: '#e8f5f6', padding: '2px 8px', borderRadius: 10, border: '1px solid #c0e4e7', whiteSpace: 'nowrap' }}>Ver</a>
+                              <a href={`/propiedad/${m.propiedad_id}`} style={{ fontSize: 10, color: '#006D77', textDecoration: 'none', fontWeight: 600, flexShrink: 0, background: '#e8f5f6', padding: '2px 8px', borderRadius: 10, border: '1px solid #c0e4e7', whiteSpace: 'nowrap' }}>{Tpanel.mensajes.ver}</a>
                             </div>
                           </div>
                           <div className="chat-header-actions" style={{ display: 'flex', gap: 6, flexShrink: 0, alignItems: 'center' }}>
