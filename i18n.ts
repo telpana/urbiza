@@ -15,6 +15,7 @@ export const t = {
     novedades: { santoDomingo: 'Novedades en Santo Domingo', puntaCana: 'Novedades en Punta Cana', samana: 'Novedades en Samaná', verTodas: 'Ver todas las propiedades', nuevo: 'NUEVO' },
     zonas: { titulo: 'Zonas más buscadas' },
     footer: { avisoLegal: 'Aviso legal', privacidad: 'Privacidad', cookies: 'Cookies', ayuda: 'Ayuda', publicar: 'Publicar anuncio', planes: 'Planes', derechos: '© 2026 habitade.com · República Dominicana' },
+    cookieBanner: { texto: 'Usamos cookies esenciales para el funcionamiento y seguridad del sitio.', aceptar: 'Aceptar todo', rechazar: 'Solo necesarias', ver: 'Política de cookies' },
     buscar: {
       titulo: 'propiedades en República Dominicana', propiedadesEn: 'propiedades en', ordenar: 'Ordenar por:', relevancia: 'Relevancia', recientes: 'Recientes', baratos: 'Más baratos', caros: 'Más caros', filtrar: 'Filtrar',
       tipoInmueble: 'Tipo de inmueble', todos: 'Todos', precio: 'Precio (US$)', superficie: 'Superficie (m²)', habitaciones: 'Habitaciones', banos: 'Baños',
@@ -56,9 +57,12 @@ export const t = {
       aeiVerificacion: 'Tu número AEI será verificado en las próximas 24-48h',
       irPanel: 'Ir a mi panel →', explorar: 'Explorar propiedades',
       yaTienes: '¿Ya tienes cuenta?', iniciarSesion: 'Iniciar sesión',
+      opcional: '(opcional)',
       err_campos: 'Nombre, email, contraseña y teléfono son obligatorios',
       err_cedula: 'La cédula o RNC es obligatoria para profesionales',
       err_generico: 'Ha ocurrido un error. Inténtalo de nuevo.',
+      terminos: 'He leído y acepto la', politicaPrivacidad: 'Política de Privacidad',
+      err_terminos: 'Debes aceptar la política de privacidad para continuar',
     },
     propiedad: {
       cargando: 'Cargando...', noEncontrada: 'Propiedad no encontrada', volver: 'Volver al buscador',
@@ -234,6 +238,7 @@ export const t = {
     novedades: { santoDomingo: 'New listings in Santo Domingo', puntaCana: 'New listings in Punta Cana', samana: 'New listings in Samaná', verTodas: 'View all properties', nuevo: 'NEW' },
     zonas: { titulo: 'Most searched areas' },
     footer: { avisoLegal: 'Legal notice', privacidad: 'Privacy', cookies: 'Cookies', ayuda: 'Help', publicar: 'Post a listing', planes: 'Plans', derechos: '© 2026 habitade.com · Dominican Republic' },
+    cookieBanner: { texto: 'We use essential cookies for site functionality and security.', aceptar: 'Accept all', rechazar: 'Essential only', ver: 'Cookie policy' },
     buscar: {
       titulo: 'properties in the Dominican Republic', propiedadesEn: 'properties in', ordenar: 'Sort by:', relevancia: 'Relevance', recientes: 'Recent', baratos: 'Cheapest', caros: 'Most expensive', filtrar: 'Filter',
       tipoInmueble: 'Property type', todos: 'All', precio: 'Price (US$)', superficie: 'Area (m²)', habitaciones: 'Bedrooms', banos: 'Bathrooms',
@@ -275,9 +280,12 @@ export const t = {
       aeiVerificacion: 'Your AEI number will be verified within the next 24-48h',
       irPanel: 'Go to my dashboard →', explorar: 'Explore properties',
       yaTienes: 'Already have an account?', iniciarSesion: 'Sign in',
+      opcional: '(optional)',
       err_campos: 'Name, email, password and phone are required',
       err_cedula: 'The ID or Tax number is required for professionals',
       err_generico: 'An error occurred. Please try again.',
+      terminos: 'I have read and accept the', politicaPrivacidad: 'Privacy Policy',
+      err_terminos: 'You must accept the privacy policy to continue',
     },
     propiedad: {
       cargando: 'Loading...', noEncontrada: 'Property not found', volver: 'Back to search',
@@ -453,6 +461,7 @@ export const t = {
     novedades: { santoDomingo: 'Nouveautés à Saint-Domingue', puntaCana: 'Nouveautés à Punta Cana', samana: 'Nouveautés à Samaná', verTodas: 'Voir toutes les propriétés', nuevo: 'NOUVEAU' },
     zonas: { titulo: 'Zones les plus recherchées' },
     footer: { avisoLegal: 'Mentions légales', privacidad: 'Confidentialité', cookies: 'Cookies', ayuda: 'Aide', publicar: 'Publier une annonce', planes: 'Abonnements', derechos: '© 2026 habitade.com · République Dominicaine' },
+    cookieBanner: { texto: 'Nous utilisons des cookies essentiels pour le fonctionnement et la sécurité du site.', aceptar: 'Tout accepter', rechazar: 'Essentiels uniquement', ver: 'Politique de cookies' },
     buscar: {
       titulo: 'propriétés en République Dominicaine', propiedadesEn: 'propriétés à', ordenar: 'Trier par :', relevancia: 'Pertinence', recientes: 'Récents', baratos: 'Moins chers', caros: 'Plus chers', filtrar: 'Filtrer',
       tipoInmueble: 'Type de bien', todos: 'Tous', precio: 'Prix (US$)', superficie: 'Surface (m²)', habitaciones: 'Chambres', banos: 'Salles de bain',
@@ -494,9 +503,12 @@ export const t = {
       aeiVerificacion: 'Votre numéro AEI sera vérifié dans les 24-48h',
       irPanel: 'Aller à mon tableau de bord →', explorar: 'Explorer les propriétés',
       yaTienes: 'Vous avez déjà un compte ?', iniciarSesion: 'Se connecter',
+      opcional: '(optionnel)',
       err_campos: 'Le nom, l\'email, le mot de passe et le téléphone sont obligatoires',
       err_cedula: 'La pièce d\'identité ou le numéro fiscal est obligatoire pour les professionnels',
       err_generico: 'Une erreur est survenue. Veuillez réessayer.',
+      terminos: 'J\'ai lu et j\'accepte la', politicaPrivacidad: 'Politique de Confidentialité',
+      err_terminos: 'Vous devez accepter la politique de confidentialité pour continuer',
     },
     propiedad: {
       cargando: 'Chargement...', noEncontrada: 'Propriété introuvable', volver: 'Retour à la recherche',

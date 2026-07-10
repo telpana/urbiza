@@ -3,6 +3,7 @@ import { headers } from 'next/headers';
 import "./globals.css";
 import "./responsive.css";
 import { IdiomaProvider } from "../IdiomaContext";
+import CookieBanner from "./components/CookieBanner";
 
 const DESCRIPTIONS: Record<string, string> = {
   es: 'Encuentra tu próxima propiedad en República Dominicana. Miles de propiedades. Una sola búsqueda. Compra, vende o alquila apartamentos, casas, villas y terrenos en Santo Domingo, Punta Cana, Santiago y más.',
@@ -119,6 +120,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <IdiomaProvider>
           {children}
+          <CookieBanner />
         </IdiomaProvider>
       </body>
     </html>

@@ -20,6 +20,7 @@ export default function Registro() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [mostrarPassword, setMostrarPassword] = useState(false)
+  const [aceptaTerminos, setAceptaTerminos] = useState(false)
 
   const tipos = [
     { id: 'particular', titulo: T.particular, desc: T.particularDesc, icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> },
@@ -28,6 +29,7 @@ export default function Registro() {
 
   const registrarConEmail = async () => {
     if (!nombre || !email || !password || !telefono) { setError(T.err_campos); return }
+    if (!aceptaTerminos) { setError(T.err_terminos); return }
     setLoading(true)
     setError('')
     try {
@@ -200,7 +202,14 @@ export default function Registro() {
                     </>
                   )}
                 </div>
-                <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
+                <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginTop: 20, cursor: 'pointer' }}>
+                  <input type="checkbox" checked={aceptaTerminos} onChange={e => setAceptaTerminos(e.target.checked)} style={{ marginTop: 2, flexShrink: 0, accentColor: '#006D77', width: 15, height: 15 }} />
+                  <span style={{ fontSize: 13, color: '#555', lineHeight: 1.5 }}>
+                    {T.terminos}{' '}
+                    <a href="/legal/privacidad" target="_blank" rel="noopener noreferrer" style={{ color: '#006D77', fontWeight: 600, textDecoration: 'underline' }}>{T.politicaPrivacidad}</a>
+                  </span>
+                </label>
+                <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
                   <button onClick={() => setPaso(2)} style={{ all: 'unset', flex: 1, border: '1.5px solid #e0e0e0', color: '#555', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box' }}>{T.back}</button>
                   <button onClick={registrarConEmail} disabled={loading} style={{ all: 'unset', flex: 2, background: loading ? '#aaa' : '#006D77', color: '#fff', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: loading ? 'default' : 'pointer', textAlign: 'center', boxSizing: 'border-box' }}>
                     {loading ? T.creando : T.crearCuenta}
