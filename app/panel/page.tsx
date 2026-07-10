@@ -125,7 +125,7 @@ function formatHoraChat(iso: string) {
 }
 
 function GuardadosSeccion({ onLeer }: { onLeer?: (n: number) => void }) {
-  const { tr } = useIdioma()
+  const { tr, idioma } = useIdioma()
   const Tg = tr.panel.guardados
   const [guardados, setGuardados] = useState<any[]>([])
   const [notificaciones, setNotificaciones] = useState<any[]>([])
@@ -141,7 +141,7 @@ function GuardadosSeccion({ onLeer }: { onLeer?: (n: number) => void }) {
       const [{ data }, notifsRes] = await Promise.all([
         supabase
           .from('favoritos')
-          .select('propiedad_id, propiedades(id, titulo, zona, precio, tipo, operacion, habitaciones, banos, m2, fotos)')
+          .select('propiedad_id, propiedades(id, titulo, titulo_en, titulo_fr, zona, precio, tipo, operacion, habitaciones, banos, m2, fotos)')
           .eq('usuario_id', user.id)
           .order('created_at', { ascending: false }),
         fetch('/api/panel/notificaciones?full=1', { headers: authHeader })
@@ -204,7 +204,7 @@ function GuardadosSeccion({ onLeer }: { onLeer?: (n: number) => void }) {
                   {foto ? <img src={foto} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.3"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>}
                 </div>
                 <div style={{ flex: 1, padding: tieneNotif ? '12px 14px 12px' : '12px 14px', paddingTop: tieneNotif ? 32 : 12, minWidth: 0 }}>
-                  <div className="guardado-titulo" style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.titulo}</div>
+                  <div className="guardado-titulo" style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{idioma === 'en' && p.titulo_en ? p.titulo_en : idioma === 'fr' && p.titulo_fr ? p.titulo_fr : p.titulo}</div>
                   <div style={{ fontSize: 11, color: '#888', marginBottom: 6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.zona}</div>
                   <div style={{ fontSize: 15, fontWeight: 700, color: '#006D77', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
                     {hasPrecio && notifPrecio?.precio_anterior ? (
