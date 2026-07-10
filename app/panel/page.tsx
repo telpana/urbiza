@@ -2457,7 +2457,7 @@ export default function Panel() {
                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
                     </div>
                     <div style={{ fontSize: 16, fontWeight: 700, color: '#166534', marginBottom: 6 }}>{Tpanel.ayuda.ok}</div>
-                    <button onClick={() => setAyudaOk(false)} style={{ all: 'unset', fontSize: 13, color: '#006D77', cursor: 'pointer', textDecoration: 'underline', marginTop: 8 }}>Enviar otro mensaje</button>
+                    <button onClick={() => setAyudaOk(false)} style={{ all: 'unset', fontSize: 13, color: '#006D77', cursor: 'pointer', textDecoration: 'underline', marginTop: 8 }}>{Tpanel.ayuda.enviarOtro}</button>
                   </div>
                 ) : (
                   <>
