@@ -14,7 +14,7 @@ export const t = {
     destacadas: { titulo: 'Propiedades destacadas', subtitulo: 'Las mejores oportunidades del mercado dominicano', verTodas: 'Ver todas las propiedades', destacado: 'DESTACADO', masVisto: 'Más visto', masVistos: 'Más vistos', ver: 'Ver propiedad', gratis: 'GRATIS' },
     novedades: { santoDomingo: 'Novedades en Santo Domingo', puntaCana: 'Novedades en Punta Cana', samana: 'Novedades en Samaná', verTodas: 'Ver todas las propiedades', nuevo: 'NUEVO' },
     zonas: { titulo: 'Zonas más buscadas' },
-    footer: { avisoLegal: 'Aviso legal', privacidad: 'Privacidad', cookies: 'Cookies', ayuda: 'Ayuda', publicar: 'Publicar anuncio', planes: 'Planes', derechos: '© 2025 habitade.com · República Dominicana' },
+    footer: { avisoLegal: 'Aviso legal', privacidad: 'Privacidad', cookies: 'Cookies', ayuda: 'Ayuda', publicar: 'Publicar anuncio', planes: 'Planes', derechos: '© 2026 habitade.com · República Dominicana' },
     buscar: {
       titulo: 'propiedades en República Dominicana', propiedadesEn: 'propiedades en', ordenar: 'Ordenar por:', relevancia: 'Relevancia', recientes: 'Recientes', baratos: 'Más baratos', caros: 'Más caros', filtrar: 'Filtrar',
       tipoInmueble: 'Tipo de inmueble', todos: 'Todos', precio: 'Precio (US$)', superficie: 'Superficie (m²)', habitaciones: 'Habitaciones', banos: 'Baños',
@@ -231,7 +231,7 @@ export const t = {
     destacadas: { titulo: 'Featured properties', subtitulo: 'The best opportunities in the Dominican market', verTodas: 'View all properties', destacado: 'FEATURED', masVisto: 'Most viewed', masVistos: 'Most viewed', ver: 'View property', gratis: 'FREE' },
     novedades: { santoDomingo: 'New listings in Santo Domingo', puntaCana: 'New listings in Punta Cana', samana: 'New listings in Samaná', verTodas: 'View all properties', nuevo: 'NEW' },
     zonas: { titulo: 'Most searched areas' },
-    footer: { avisoLegal: 'Legal notice', privacidad: 'Privacy', cookies: 'Cookies', ayuda: 'Help', publicar: 'Post a listing', planes: 'Plans', derechos: '© 2025 habitade.com · Dominican Republic' },
+    footer: { avisoLegal: 'Legal notice', privacidad: 'Privacy', cookies: 'Cookies', ayuda: 'Help', publicar: 'Post a listing', planes: 'Plans', derechos: '© 2026 habitade.com · Dominican Republic' },
     buscar: {
       titulo: 'properties in the Dominican Republic', propiedadesEn: 'properties in', ordenar: 'Sort by:', relevancia: 'Relevance', recientes: 'Recent', baratos: 'Cheapest', caros: 'Most expensive', filtrar: 'Filter',
       tipoInmueble: 'Property type', todos: 'All', precio: 'Price (US$)', superficie: 'Area (m²)', habitaciones: 'Bedrooms', banos: 'Bathrooms',
@@ -448,7 +448,7 @@ export const t = {
     destacadas: { titulo: 'Propriétés en vedette', subtitulo: 'Les meilleures opportunités du marché dominicain', verTodas: 'Voir toutes les propriétés', destacado: 'EN VEDETTE', masVisto: 'Plus consulté', masVistos: 'Les plus consultés', ver: 'Voir la propriété', gratis: 'GRATUIT' },
     novedades: { santoDomingo: 'Nouveautés à Saint-Domingue', puntaCana: 'Nouveautés à Punta Cana', samana: 'Nouveautés à Samaná', verTodas: 'Voir toutes les propriétés', nuevo: 'NOUVEAU' },
     zonas: { titulo: 'Zones les plus recherchées' },
-    footer: { avisoLegal: 'Mentions légales', privacidad: 'Confidentialité', cookies: 'Cookies', ayuda: 'Aide', publicar: 'Publier une annonce', planes: 'Abonnements', derechos: '© 2025 habitade.com · République Dominicaine' },
+    footer: { avisoLegal: 'Mentions légales', privacidad: 'Confidentialité', cookies: 'Cookies', ayuda: 'Aide', publicar: 'Publier une annonce', planes: 'Abonnements', derechos: '© 2026 habitade.com · République Dominicaine' },
     buscar: {
       titulo: 'propriétés en République Dominicaine', propiedadesEn: 'propriétés à', ordenar: 'Trier par :', relevancia: 'Pertinence', recientes: 'Récents', baratos: 'Moins chers', caros: 'Plus chers', filtrar: 'Filtrer',
       tipoInmueble: 'Type de bien', todos: 'Tous', precio: 'Prix (US$)', superficie: 'Surface (m²)', habitaciones: 'Chambres', banos: 'Salles de bain',
