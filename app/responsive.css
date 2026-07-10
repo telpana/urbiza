@@ -126,6 +126,7 @@ img { max-width: 100%; }
 /* broker card: iconos desktop arriba-derecha, namerow oculto */
 .broker-icons-toprow { display: flex; align-items: center; gap: 6px; position: absolute; top: 16px; right: 20px; }
 .broker-icons-namerow { display: none; }
+.broker-foto { width: 92px !important; height: 92px !important; }
 
 @media (max-width: 900px) {
   /* Sidebar oculto, hamburger derecho visible */
@@ -204,6 +205,7 @@ img { max-width: 100%; }
   }
 
   /* Tarjeta broker — mobile layout */
+  .broker-foto { width: 80px !important; height: 80px !important; }
   .broker-card-inner { flex-direction: column !important; text-align: center !important; padding: 12px 16px 20px !important; gap: 10px !important; }
   .broker-card-inner > div:last-child > div { justify-content: center !important; }
   .broker-card-inner > div:last-child > div > div { justify-content: center !important; }

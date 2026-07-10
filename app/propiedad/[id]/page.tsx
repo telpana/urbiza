@@ -831,7 +831,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                     )}
                     {/* Foto */}
                     <div style={{ flexShrink: 0 }}>
-                      <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#e0f5f7', overflow: 'hidden', border: '3px solid #006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, fontWeight: 700, color: '#006D77' }}>
+                      <div className="broker-foto" style={{ width: 80, height: 80, borderRadius: '50%', background: '#e0f5f7', overflow: 'hidden', border: '3px solid #006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, fontWeight: 700, color: '#006D77' }}>
                         {propiedad.usuarios?.foto_url
                           ? <img src={propiedad.usuarios.foto_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                           : (propiedad.usuarios?.nombre || 'P').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
