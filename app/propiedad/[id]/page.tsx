@@ -814,29 +814,21 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                 <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 2px 12px rgba(0,0,0,0.07)', border: '1px solid #e8f4f5', overflow: 'hidden' }}>
                   <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 100%)', height: 6 }} />
                   <div className="broker-card-inner" style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '24px 28px', position: 'relative' }}>
-                    {/* COLUMNA DERECHA: iconos + badges — desktop: absolute top-right, móvil: top row */}
-                    <div className="broker-right-col">
-                      {(propiedad.usuarios?.web_url || propiedad.usuarios?.instagram_url) && (
-                        <div style={{ display: 'flex', gap: 6 }}>
-                          {propiedad.usuarios?.web_url && (
-                            <a href={/^https?:\/\//i.test(propiedad.usuarios.web_url) ? propiedad.usuarios.web_url : `https://${propiedad.usuarios.web_url}`} target="_blank" rel="noopener noreferrer" title="Web" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: '50%', background: '#f0fafb', border: '1.5px solid #c7eaee', color: '#006D77', textDecoration: 'none' }}>
-                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                            </a>
-                          )}
-                          {propiedad.usuarios?.instagram_url && (
-                            <a href={/^https?:\/\//i.test(propiedad.usuarios.instagram_url) ? propiedad.usuarios.instagram_url : `https://${propiedad.usuarios.instagram_url}`} target="_blank" rel="noopener noreferrer" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: '50%', background: '#f0fafb', border: '1.5px solid #c7eaee', color: '#006D77', textDecoration: 'none' }}>
-                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
-                            </a>
-                          )}
-                        </div>
-                      )}
-                      <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-                        <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10, letterSpacing: 0.5, whiteSpace: 'nowrap' }}>{Tp.profesional}</span>
-                        {propiedad.usuarios?.aei_aprobado && (
-                          <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10, whiteSpace: 'nowrap' }}>✓ AEI</span>
+                    {/* MOBILE ONLY: iconos arriba-derecha (order:-1 los pone antes de la foto en column) */}
+                    {(propiedad.usuarios?.web_url || propiedad.usuarios?.instagram_url) && (
+                      <div className="broker-icons-toprow">
+                        {propiedad.usuarios?.web_url && (
+                          <a href={/^https?:\/\//i.test(propiedad.usuarios.web_url) ? propiedad.usuarios.web_url : `https://${propiedad.usuarios.web_url}`} target="_blank" rel="noopener noreferrer" title="Web" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: '50%', background: '#f0fafb', border: '1.5px solid #c7eaee', color: '#006D77', textDecoration: 'none' }}>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                          </a>
+                        )}
+                        {propiedad.usuarios?.instagram_url && (
+                          <a href={/^https?:\/\//i.test(propiedad.usuarios.instagram_url) ? propiedad.usuarios.instagram_url : `https://${propiedad.usuarios.instagram_url}`} target="_blank" rel="noopener noreferrer" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: '50%', background: '#f0fafb', border: '1.5px solid #c7eaee', color: '#006D77', textDecoration: 'none' }}>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+                          </a>
                         )}
                       </div>
-                    </div>
+                    )}
                     {/* Foto */}
                     <div style={{ flexShrink: 0 }}>
                       <div style={{ width: 80, height: 80, borderRadius: '50%', background: '#e0f5f7', overflow: 'hidden', border: '3px solid #006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, fontWeight: 700, color: '#006D77' }}>
@@ -849,8 +841,30 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                     {/* Texto */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ marginBottom: 6 }}>
+                        {/* Nombre + iconos desktop en la misma fila */}
                         <div className="broker-name-row" style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 5 }}>
                           <span style={{ fontSize: 17, fontWeight: 700, color: '#111' }}>{propiedad.usuarios?.nombre}</span>
+                          {/* DESKTOP ONLY: iconos junto al nombre */}
+                          {(propiedad.usuarios?.web_url || propiedad.usuarios?.instagram_url) && (
+                            <div className="broker-icons-namerow">
+                              {propiedad.usuarios?.web_url && (
+                                <a href={/^https?:\/\//i.test(propiedad.usuarios.web_url) ? propiedad.usuarios.web_url : `https://${propiedad.usuarios.web_url}`} target="_blank" rel="noopener noreferrer" title="Web" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: '50%', background: '#f0fafb', border: '1.5px solid #c7eaee', color: '#006D77', textDecoration: 'none' }}>
+                                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                                </a>
+                              )}
+                              {propiedad.usuarios?.instagram_url && (
+                                <a href={/^https?:\/\//i.test(propiedad.usuarios.instagram_url) ? propiedad.usuarios.instagram_url : `https://${propiedad.usuarios.instagram_url}`} target="_blank" rel="noopener noreferrer" title="Instagram" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: '50%', background: '#f0fafb', border: '1.5px solid #c7eaee', color: '#006D77', textDecoration: 'none' }}>
+                                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+                                </a>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                          <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10, letterSpacing: 0.5, whiteSpace: 'nowrap' }}>{Tp.profesional}</span>
+                          {propiedad.usuarios?.aei_aprobado && (
+                            <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10, whiteSpace: 'nowrap' }}>✓ AEI</span>
+                          )}
                         </div>
                       </div>
                       {propiedad.usuarios?.inmobiliaria && (
