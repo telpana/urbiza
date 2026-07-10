@@ -813,7 +813,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
               <div style={{ marginTop: 20 }}>
                 <div style={{ background: '#fff', borderRadius: 12, boxShadow: '0 2px 12px rgba(0,0,0,0.07)', border: '1px solid #e8f4f5', overflow: 'hidden' }}>
                   <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 100%)', height: 6 }} />
-                  <div className="broker-card-inner" style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '24px 28px' }}>
+                  <div className="broker-card-inner" style={{ display: 'flex', alignItems: 'center', gap: 24, padding: '24px 28px', position: 'relative' }}>
                     {/* MOBILE ONLY: iconos arriba-derecha (order:-1 los pone antes de la foto en column) */}
                     {(propiedad.usuarios?.web_url || propiedad.usuarios?.instagram_url) && (
                       <div className="broker-icons-toprow">
