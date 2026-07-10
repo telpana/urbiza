@@ -352,7 +352,7 @@ export const t = {
         err_sesion: 'You must be signed in to post a listing', ok: 'Listing posted successfully!', okEdit: 'Listing updated successfully!',
       },
       mensajes: {
-        titulo: 'Messages', sinMensajes: 'You have no messages yet', seleccionar: 'Select a conversation', seleccionarDesc: 'Choose a contact from the list to view the chat', escribir: 'Write a message...', ver: 'View', particular: 'PRIVATE', conversaciones: 'conversation', conversacionesPlural: 'conversations',
+        titulo: 'Messages', sinMensajes: 'You have no messages yet', seleccionar: 'Select a conversation', seleccionarDesc: 'Choose a contact from the list to view the chat', escribir: 'Write a message...', ver: 'View', particular: 'INDIVIDUAL', conversaciones: 'conversation', conversacionesPlural: 'conversations',
         eliminar: 'Delete', confirmarEliminar: 'Delete this message? This cannot be undone.',
         bloquear: 'Block contact', desbloquear: 'Unblock contact',
         propiedad: 'Property', hace: 'ago', hoy: 'Today',
