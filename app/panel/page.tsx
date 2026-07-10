@@ -217,7 +217,7 @@ function GuardadosSeccion({ onLeer }: { onLeer?: (n: number) => void }) {
                     )}
                   </div>
                   <div style={{ fontSize: 11, color: '#aaa' }}>
-                    {p.habitaciones > 0 && `${p.habitaciones} hab · `}{p.banos > 0 && `${p.banos} baños`}{p.m2 > 0 && ` · ${p.m2} m²`}
+                    {p.habitaciones > 0 && `${p.habitaciones} ${tr.buscar.hab} · `}{p.banos > 0 && `${p.banos} ${tr.buscar.banos2}`}{p.m2 > 0 && ` · ${p.m2} m²`}
                   </div>
                 </div>
                 <div style={{ padding: '12px', display: 'flex', alignItems: tieneNotif ? 'flex-end' : 'center', paddingBottom: 12, flexShrink: 0 }}>
