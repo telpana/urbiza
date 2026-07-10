@@ -1188,7 +1188,7 @@ export default function Panel() {
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 2, flexWrap: 'wrap' }}>
                             <a href={`/propiedad/${a.id}`} target="_blank" rel="noreferrer" style={{ fontSize: 14, fontWeight: 700, color: '#111', textDecoration: 'none', lineHeight: 1.3 }} onMouseEnter={e => (e.currentTarget.style.color='#006D77')} onMouseLeave={e => (e.currentTarget.style.color='#111')}>{tit(a)}</a>
-                            {a.destacado && <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 6, letterSpacing: 0.4, whiteSpace: 'nowrap', flexShrink: 0 }}>DEST.</span>}
+                            {a.destacado && <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 6, letterSpacing: 0.4, whiteSpace: 'nowrap', flexShrink: 0 }}>{Tpanel.anuncios.dest}</span>}
                           </div>
                           <div style={{ fontSize: 12, color: '#aaa', marginBottom: 3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{a.zona} · {a.tipo}</div>
                           <div style={{ fontSize: 16, fontWeight: 700, color: '#006D77', marginBottom: 5 }}>US$ {a.precio.toLocaleString('en-US')}</div>
