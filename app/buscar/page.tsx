@@ -881,7 +881,7 @@ function BuscarContent() {
               <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
                 {[0, 1, 2, 3, 4].map(h => (
                   <button key={h} onClick={() => setHabMin(h)} style={{ all: 'unset', border: `1px solid ${habMin === h ? '#006D77' : '#ddd'}`, borderRadius: 4, padding: '6px 10px', fontSize: 12, cursor: 'pointer', color: habMin === h ? '#006D77' : '#666', background: habMin === h ? '#f0fafb' : '#fff' }}>
-                    {h === 0 ? '0 (estudio)' : h === 4 ? '4+' : h}
+                    {h === 0 ? `0 (${Tb.estudio})` : h === 4 ? '4+' : h}
                   </button>
                 ))}
               </div>
@@ -938,7 +938,7 @@ function BuscarContent() {
           <div style={{ paddingBottom: 10 }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#444', cursor: 'pointer' }}>
               <input type="checkbox" checked={soloProfesional} onChange={e => setSoloProfesional(e.target.checked)} style={{ accentColor: '#006D77', width: 14, height: 14 }} />
-              Profesional <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>PRO</span>
+              {Tb.profesional} <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>PRO</span>
             </label>
           </div>
 
@@ -946,7 +946,7 @@ function BuscarContent() {
           <div style={{ paddingBottom: 14 }}>
             <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13, color: '#444', cursor: 'pointer' }}>
               <input type="checkbox" checked={soloAei} onChange={e => setSoloAei(e.target.checked)} style={{ accentColor: '#006D77', width: 14, height: 14 }} />
-              Agente <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>AEI</span>
+              {Tb.agente} <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 3 }}>AEI</span>
             </label>
           </div>
 

@@ -23,7 +23,7 @@ export const t = {
       hab: 'hab', bano: 'baño', banos2: 'baños', m2: 'm²', operacion: { venta: 'en venta', alquiler: 'en alquiler' },
       destacado: 'DESTACADO', masVisto: 'MÁS VISTO', cargando: 'Cargando propiedades...',
       anterior: 'Anterior', siguiente: 'Siguiente', cualquiera: 'Cualquiera', pisosMin: 'Número de pisos mínimo', volver: 'Volver',
-      parqueos: 'parqueo', parqueos2: 'parqueos',
+      parqueos: 'parqueo', parqueos2: 'parqueos', estudio: 'estudio', profesional: 'Profesional', agente: 'Agente',
     },
     amenidades: {
       piscina: 'Piscina', parqueo: 'Parqueo', vista_mar: 'Vista al mar', amueblado: 'Amueblado',
@@ -242,7 +242,7 @@ export const t = {
       hab: 'bed', bano: 'bath', banos2: 'baths', m2: 'm²', operacion: { venta: 'for sale', alquiler: 'for rent' },
       destacado: 'FEATURED', masVisto: 'MOST VIEWED', cargando: 'Loading properties...',
       anterior: 'Previous', siguiente: 'Next', cualquiera: 'Any', pisosMin: 'Minimum number of floors', volver: 'Back',
-      parqueos: 'parking', parqueos2: 'parkings',
+      parqueos: 'parking', parqueos2: 'parkings', estudio: 'studio', profesional: 'Professional', agente: 'Agent',
     },
     amenidades: {
       piscina: 'Swimming pool', parqueo: 'Parking', vista_mar: 'Sea view', amueblado: 'Furnished',
@@ -461,7 +461,7 @@ export const t = {
       hab: 'ch.', bano: 'sdb', banos2: 'sdb', m2: 'm²', operacion: { venta: 'à vendre', alquiler: 'à louer' },
       destacado: 'EN VEDETTE', masVisto: 'PLUS VU', cargando: 'Chargement des propriétés...',
       anterior: 'Précédent', siguiente: 'Suivant', cualquiera: 'Quelconque', pisosMin: 'Nombre minimum d\'étages', volver: 'Retour',
-      parqueos: 'parking', parqueos2: 'parkings',
+      parqueos: 'parking', parqueos2: 'parkings', estudio: 'studio', profesional: 'Professionnel', agente: 'Agent',
     },
     amenidades: {
       piscina: 'Piscine', parqueo: 'Parking', vista_mar: 'Vue mer', amueblado: 'Meublé',
