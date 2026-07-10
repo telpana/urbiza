@@ -77,13 +77,13 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
   const [menuAbierto, setMenuAbierto] = useState(false)
   const [propiedades, setPropiedades] = useState<any[]>([])
   const [dopRate, setDopRate] = useState<number | undefined>(undefined)
-  const { tr } = useIdioma()
+  const { tr, idioma } = useIdioma()
 
   useEffect(() => { getDopRate().then(setDopRate) }, [])
 
   useEffect(() => {
     supabase.from('propiedades')
-      .select('id,titulo,precio,zona,habitaciones,m2,tipo,operacion,fotos')
+      .select('id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,tipo,operacion,fotos')
       .eq('estado', 'activo')
       .limit(300)
       .then(({ data }) => { if (data) setPropiedades(data) })
@@ -327,6 +327,7 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href, dopRa
   ejemplos: { price: number, title: string, feats: string, bg: string }[],
   dopRate?: number
 }) {
+  const { idioma } = useIdioma()
   const items = reales.length > 0 ? reales : null
   if (items === null && ejemplos.length === 0) return null
   return (
@@ -352,7 +353,7 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href, dopRa
                 <div style={{ padding: '12px 14px' }}>
                   <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio || 0).toLocaleString('en-US')}</div>
                   <div style={{ fontSize: 11, color: '#aaa', marginBottom: 6 }}>{formatDOP(p.precio || 0, dopRate)}</div>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 2 }}>{p.titulo}</div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 2 }}>{idioma === 'en' && p.titulo_en ? p.titulo_en : idioma === 'fr' && p.titulo_fr ? p.titulo_fr : p.titulo}</div>
                   <div style={{ fontSize: 12, color: '#888' }}>{[p.tipo, p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ')}</div>
                 </div>
               </a>
@@ -497,7 +498,7 @@ export default function Home() {
   useEffect(() => {
     const cargar = async () => {
       const { data: dest } = await supabase.from('propiedades')
-        .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos,destacado_desde,destacado_hasta,destacado_dias').eq('destacado', true).eq('estado', 'activo').gt('destacado_hasta', new Date().toISOString()).limit(12)
+        .select('id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,operacion,fotos,destacado_desde,destacado_hasta,destacado_dias').eq('destacado', true).eq('estado', 'activo').gt('destacado_hasta', new Date().toISOString()).limit(12)
       if (dest && dest.length > 0) {
         const sorted = [...dest].sort((a, b) => {
           // Use hasta - dias as primary key: always reflects when property was last featured
@@ -514,10 +515,10 @@ export default function Home() {
         try { localStorage.setItem('hb_dest', JSON.stringify(sorted)) } catch {}
       }
       const { data: vistas } = await supabase.from('propiedades')
-        .select('id,titulo,precio,zona,habitaciones,m2,operacion,fotos').eq('estado', 'activo').order('visitas', { ascending: false }).limit(100)
+        .select('id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,operacion,fotos').eq('estado', 'activo').order('visitas', { ascending: false }).limit(100)
       if (vistas && vistas.length > 0) { setMasVistasReales(vistas); try { localStorage.setItem('hb_masvistos', JSON.stringify({ data: vistas, date: new Date().toDateString() })) } catch {} }
 
-      const campos = 'id,titulo,precio,zona,habitaciones,m2,tipo,operacion,fotos'
+      const campos = 'id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,tipo,operacion,fotos'
       const [{ data: sd }, { data: pc }, { data: stg }] = await Promise.all([
         supabase.from('propiedades').select(campos).eq('estado', 'activo')
           .or('zona.ilike.%Santo Domingo%,zona.ilike.%Distrito Nacional%')
@@ -843,7 +844,7 @@ export default function Home() {
                       </div>
                       <div className="home-prop-card-body" style={{ padding: '14px 16px' }}>
                         <div style={{ fontSize: 19, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio ?? p.price ?? 0).toLocaleString('en-US')}</div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 3 }}>{p.titulo ?? p.title}</div>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 3 }}>{(idioma === 'en' && p.titulo_en ? p.titulo_en : idioma === 'fr' && p.titulo_fr ? p.titulo_fr : p.titulo) ?? p.title}</div>
                         <div style={{ fontSize: 12, color: '#888' }}>{[p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ') || p.feats || ''}</div>
                         <div className="home-prop-card-zona" style={{ display: 'none' }}>{(p.zona || p.loc || '').split(',')[0]}</div>
                       </div>
@@ -883,7 +884,7 @@ export default function Home() {
                       </div>
                       <div className="home-prop-card-body" style={{ padding: '14px 16px' }}>
                         <div style={{ fontSize: 19, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio ?? p.price ?? 0).toLocaleString('en-US')}</div>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 3 }}>{p.titulo ?? p.title}</div>
+                        <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 3 }}>{(idioma === 'en' && p.titulo_en ? p.titulo_en : idioma === 'fr' && p.titulo_fr ? p.titulo_fr : p.titulo) ?? p.title}</div>
                         <div style={{ fontSize: 12, color: '#888' }}>{[p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ') || p.feats || ''}</div>
                         <div className="home-prop-card-zona" style={{ display: 'none' }}>{(p.zona || p.loc || '').split(',')[0]}</div>
                       </div>
