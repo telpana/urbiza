@@ -172,6 +172,12 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: any[], onCerrar:
   const mapInstanceRef = useRef<any>(null)
 
   useEffect(() => {
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [])
+
+  useEffect(() => {
     if (mapInstanceRef.current || !mapRef.current) return
     const load = () => {
       const L = (window as any).L
