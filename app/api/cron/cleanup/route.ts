@@ -48,5 +48,21 @@ export async function GET(req: Request) {
     console.log('[cron/cleanup] 15 días vencidos, anuncios pausados borrados:', u.id)
   }
 
+  // Anuncios con más de 2 años → borrar
+  const dosAniosAtras = new Date()
+  dosAniosAtras.setFullYear(dosAniosAtras.getFullYear() - 2)
+
+  const { data: caducados } = await supabase
+    .from('propiedades')
+    .select('id')
+    .lt('created_at', dosAniosAtras.toISOString())
+
+  if (caducados && caducados.length > 0) {
+    const ids = caducados.map((p: any) => p.id)
+    await supabase.from('propiedades').delete().in('id', ids)
+    console.log('[cron/cleanup] anuncios de +2 años borrados:', ids.length)
+    procesados += ids.length
+  }
+
   return NextResponse.json({ ok: true, procesados })
 }
