@@ -416,12 +416,14 @@ export default function Admin() {
           {/* DASHBOARD */}
           {seccion === 'dashboard' && (
             <Seccion titulo="Dashboard">
-              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)', gap: 16, marginBottom: 28 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)', gap: 16, marginBottom: 28 }}>
                 {[
                   { label: 'Anuncios activos', val: stats?.totalProp ?? '—', color: C.verde, icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={C.verde} strokeWidth="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> },
                   { label: 'Usuarios registrados', val: stats?.totalUsers ?? '—', color: C.azul, icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={C.azul} strokeWidth="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg> },
                   { label: 'Suscripciones activas', val: stats?.totalSubs ?? '—', color: '#10b981', icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> },
                   { label: 'AEI pendientes', val: stats?.aeiPend ?? '—', color: '#f59e0b', icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> },
+                  { label: 'Destacados activos', val: stats?.totalDestacados ?? '—', color: '#8b5cf6', icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> },
+                  { label: 'Visitas a anuncios', val: stats?.totalVisitas != null ? stats.totalVisitas.toLocaleString('es-DO') : '—', color: '#ef4444', icon: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> },
                 ].map(s => (
                   <Card key={s.label} style={{ padding: 20, borderTop: `3px solid ${s.color}` }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>

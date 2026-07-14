@@ -11,7 +11,7 @@ export async function GET(req: Request) {
   if (!verifyToken(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
 
   const ahora = new Date().toISOString()
-  const [{ count: totalProp }, { count: totalUsers }, { data: recientes, count: totalSubs }] = await Promise.all([
+  const [{ count: totalProp }, { count: totalUsers }, { data: recientes, count: totalSubs }, { count: totalDestacados }, { data: visitasData }] = await Promise.all([
     sb.from('propiedades').select('*', { count: 'exact', head: true }).eq('estado', 'activo'),
     sb.from('usuarios').select('*', { count: 'exact', head: true }),
     sb.from('usuarios').select('nombre,email,plan,created_at,stripe_subscription_id', { count: 'exact' })
@@ -19,7 +19,10 @@ export async function GET(req: Request) {
       .not('stripe_subscription_id', 'is', null)
       .gt('plan_activo_hasta', ahora)
       .order('created_at', { ascending: false }).limit(8),
+    sb.from('propiedades').select('*', { count: 'exact', head: true }).eq('destacado', true),
+    sb.from('propiedades').select('visitas').eq('estado', 'activo'),
   ])
+  const totalVisitas = (visitasData ?? []).reduce((s: number, p: any) => s + (p.visitas || 0), 0)
 
   // aei_aprobado puede no existir si aún no se ejecutó la migración SQL
   let aeiPend = 0
@@ -37,5 +40,5 @@ export async function GET(req: Request) {
     aeiPend = count ?? 0
   }
 
-  return NextResponse.json({ totalProp, totalUsers, totalSubs: totalSubs ?? 0, aeiPend, recientes: recientes ?? [] })
+  return NextResponse.json({ totalProp, totalUsers, totalSubs: totalSubs ?? 0, aeiPend, totalDestacados: totalDestacados ?? 0, totalVisitas, recientes: recientes ?? [] })
 }
