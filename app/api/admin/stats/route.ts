@@ -20,9 +20,9 @@ export async function GET(req: Request) {
       .gt('plan_activo_hasta', ahora)
       .order('created_at', { ascending: false }).limit(8),
     sb.from('propiedades').select('*', { count: 'exact', head: true }).eq('destacado', true),
-    sb.from('propiedades').select('visitas').eq('estado', 'activo'),
+    sb.from('configuracion').select('valor').eq('clave', 'visitas_web').single(),
   ])
-  const totalVisitas = (visitasData ?? []).reduce((s: number, p: any) => s + (p.visitas || 0), 0)
+  const totalVisitas = parseInt((visitasData as any)?.valor || '0')
 
   // aei_aprobado puede no existir si aún no se ejecutó la migración SQL
   let aeiPend = 0
