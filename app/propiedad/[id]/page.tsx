@@ -697,8 +697,10 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                   }
                 </div>
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ color: '#fff', fontSize: 14, fontWeight: 600, marginBottom: 4, display: 'flex', alignItems: 'center', gap: 7, flexWrap: 'wrap' }}>
+                  <div style={{ color: '#fff', fontSize: 14, fontWeight: 600, marginBottom: 4 }}>
                     {v.nombre || 'Propietario'}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginBottom: 4 }}>
                     {esProfesional
                       ? <span style={{ background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>{Tp.profesional}</span>
                       : <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 9, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>{Tp.particular}</span>
@@ -841,12 +843,12 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                     {/* Texto */}
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ marginBottom: 6 }}>
-                        {/* Nombre + iconos desktop en la misma fila */}
-                        <div className="broker-name-row" style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 5 }}>
-                          <span style={{ fontSize: 17, fontWeight: 700, color: '#111' }}>{propiedad.usuarios?.nombre}</span>
-                          {/* DESKTOP ONLY: iconos junto al nombre */}
+                        {/* Nombre: bloque puro, nada puede fluir a su lado */}
+                        <div style={{ fontSize: 17, fontWeight: 700, color: '#111', marginBottom: 6, lineHeight: 1.3 }} className="broker-name-row">
+                          {propiedad.usuarios?.nombre}
+                          {/* iconos junto al nombre (solo móvil via CSS) */}
                           {(propiedad.usuarios?.web_url || propiedad.usuarios?.instagram_url) && (
-                            <div className="broker-icons-namerow">
+                            <span className="broker-icons-namerow" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginLeft: 8, verticalAlign: 'middle' }}>
                               {propiedad.usuarios?.web_url && (
                                 <a href={/^https?:\/\//i.test(propiedad.usuarios.web_url) ? propiedad.usuarios.web_url : `https://${propiedad.usuarios.web_url}`} target="_blank" rel="noopener noreferrer" title="Web" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: 34, height: 34, borderRadius: '50%', background: '#f0fafb', border: '1.5px solid #c7eaee', color: '#006D77', textDecoration: 'none' }}>
                                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
@@ -857,9 +859,10 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
                                 </a>
                               )}
-                            </div>
+                            </span>
                           )}
                         </div>
+                        {/* Badges: siempre en su propia línea debajo del nombre */}
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                           <span style={{ background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 800, padding: '2px 8px', borderRadius: 10, letterSpacing: 0.5, whiteSpace: 'nowrap' }}>{Tp.profesional}</span>
                           {propiedad.usuarios?.aei_aprobado && (

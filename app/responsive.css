@@ -219,7 +219,7 @@ img { max-width: 100%; }
   }
   /* iconos junto al nombre: se ocultan en móvil */
   .broker-icons-namerow { display: none !important; }
-  .broker-name-row { justify-content: center !important; }
+  .broker-name-row { text-align: center !important; }
 
   /* Hero destacar — centrado en móvil */
   .destacar-hero {
