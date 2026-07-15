@@ -196,7 +196,7 @@ export async function emailNovedadFavorito(opts: {
   numFotos?: number
 }) {
   const cambio = opts.tipo === 'cambioPrecio'
-    ? `El precio ha bajado de <span style="text-decoration:line-through;color:#999">US$ ${Number(opts.precioAnterior).toLocaleString('en-US')}</span> a <strong style="color:#006D77">US$ ${Number(opts.precioNuevo).toLocaleString('en-US')}</strong>`
+    ? `El precio ha cambiado: <span style="text-decoration:line-through;color:#999">US$ ${Number(opts.precioAnterior).toLocaleString('en-US')}</span> → <strong style="color:#006D77">US$ ${Number(opts.precioNuevo).toLocaleString('en-US')}</strong>`
     : `Se han añadido <strong>${opts.numFotos || 'nuevas'} fotos nuevas</strong>`
 
   const html = layout(`
