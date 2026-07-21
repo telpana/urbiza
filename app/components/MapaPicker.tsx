@@ -57,8 +57,6 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'villa olga':              [19.4536, -70.6747],
   'pontezuela':              [19.4575, -70.6572],
   'las colinas':             [19.4786, -70.7136],
-  'el dorado':               [19.4630, -70.7100],
-  'urbanizacion tropical':   [19.4510, -70.7030],
 
   // ── Samaná ────────────────────────────────────────────────────────────────
   'samana':          [19.2056, -69.3369],
