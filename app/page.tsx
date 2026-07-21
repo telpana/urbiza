@@ -117,7 +117,6 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
           <div style="font-size:10px;color:#17A6B4;font-weight:700;letter-spacing:0.5px;margin-bottom:4px">${(p.tipo||'').toUpperCase()}</div>
           <div style="font-size:13px;font-weight:600;color:#111;margin-bottom:6px;line-height:1.35">${p.titulo||''}</div>
           <div style="font-size:18px;font-weight:700;color:#006D77;margin-bottom:2px">US$ ${(p.precio||0).toLocaleString('en-US')}</div>
-          <div style="font-size:11px;color:#bbb;margin-bottom:8px">${formatDOP(p.precio||0)}</div>
           ${[p.habitaciones > 0 && `<span>${p.habitaciones} hab</span>`, p.m2 && `<span>${p.m2} m²</span>`].filter(Boolean).join('<span style="color:#ddd;margin:0 4px">·</span>')}
           <a href="/propiedad/${p.id}" style="display:block;background:#006D77;color:#fff;padding:8px;border-radius:6px;text-align:center;text-decoration:none;font-size:13px;font-weight:600;margin-top:10px">Ver propiedad</a>
         </div>
@@ -352,8 +351,7 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href, dopRa
                 </div>
                 <div style={{ padding: '12px 14px' }}>
                   <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio || 0).toLocaleString('en-US')}</div>
-                  <div style={{ fontSize: 11, color: '#aaa', marginBottom: 6 }}>{formatDOP(p.precio || 0, dopRate)}</div>
-                  <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 2 }}>{idioma === 'en' && p.titulo_en ? p.titulo_en : idioma === 'fr' && p.titulo_fr ? p.titulo_fr : p.titulo}</div>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 2 }}>{p.zona || ''}</div>
                   <div style={{ fontSize: 12, color: '#888' }}>{[p.tipo, p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ')}</div>
                 </div>
               </a>
@@ -367,7 +365,6 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href, dopRa
                 </div>
                 <div style={{ padding: '12px 14px' }}>
                   <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {p.price.toLocaleString('en-US')}</div>
-                  <div style={{ fontSize: 11, color: '#aaa', marginBottom: 6 }}>{formatDOP(p.price, dopRate)}</div>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 2 }}>{p.title}</div>
                   <div style={{ fontSize: 12, color: '#888' }}>{p.feats}</div>
                 </div>
