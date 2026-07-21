@@ -66,7 +66,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'las terrenas':    [19.3110, -69.5428],
   'el portillo':     [19.3236, -69.5042],
   'coson':           [19.2960, -69.5900],
-  'las galeras':     [19.2330, -69.2210],
+  'las galeras':     [19.2980, -69.1980],
   'sanchez':         [19.2329, -69.6157],
   'el limon':        [19.2923, -69.4308],
   'rancho espanol':  [19.2200, -69.3500],
