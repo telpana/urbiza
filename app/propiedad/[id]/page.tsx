@@ -486,7 +486,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
     !tipoSinHab && propiedad.habitaciones > 0 && { label: Tp.habitaciones, val: propiedad.habitaciones, icon: 'bed' },
     !tipoSinHab && propiedad.banos > 0 && { label: Tp.banos, val: propiedad.banos, icon: 'bath' },
     !tipoSinHab && propiedad.parqueos > 0 && { label: Tp.parqueos, val: propiedad.parqueos, icon: 'park' },
-    !tipoSinHab && propiedad.planta && { label: Tp.planta, val: propiedad.planta, icon: 'floor' },
+    !tipoSinHab && propiedad.planta && { label: Tp.piso, val: propiedad.planta, icon: 'floor' },
   ].filter(Boolean) as { label: string, val: any, icon: string }[]
 
   const iconosCar: Record<string, JSX.Element> = {

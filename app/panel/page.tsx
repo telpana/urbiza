@@ -1393,8 +1393,8 @@ export default function Panel() {
                       <input type="number" min="0" value={pubParqueos} onChange={e => setPubParqueos(e.target.value)} placeholder="Ej: 2" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                     </div>
                     <div className="pub-planta-col">
-                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.planta} <span style={{ color: '#aaa', fontWeight: 400 }}>{Tpanel.publicar.sectorOpcional}</span></label>
-                      <input type="text" value={pubPlanta} onChange={e => setPubPlanta(e.target.value)} placeholder={Tpanel.publicar.plantaPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.piso} <span style={{ color: '#aaa', fontWeight: 400 }}>{Tpanel.publicar.sectorOpcional}</span></label>
+                      <input type="text" value={pubPlanta} onChange={e => setPubPlanta(e.target.value)} placeholder={Tpanel.publicar.pisoPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                     </div>
                   </div>
                 )}

@@ -322,10 +322,10 @@ img { max-width: 100%; }
     letter-spacing: 0.2px !important;
   }
 
-  /* Publicar — baños fila entera, parqueos+planta juntos abajo */
+  /* Publicar — baños fila entera, parqueos abajo */
   .pub-form-grid-3 { grid-template-columns: 1fr 1fr !important; }
   .pub-form-grid-3 > div:first-child { grid-column: 1 / -1 !important; }
-  .pub-parqueos-col, .pub-planta-col { grid-column: auto !important; }
+  .pub-parqueos-col { grid-column: auto !important; }
 
   /* Mi perfil */
   .perfil-fields-grid { grid-template-columns: 1fr !important; }
