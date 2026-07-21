@@ -200,7 +200,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   // ── María Trinidad Sánchez ───────────────────────────────────────────────
   'maria trinidad sanchez': [19.3730, -69.8470],
   'nagua':                  [19.3730, -69.8470],
-  'rio san juan':           [19.6360, -70.1410],
+  'rio san juan':           [19.6452, -70.0790],
 
   // ── Pedernales ───────────────────────────────────────────────────────────
   'pedernales': [17.8494, -71.7433],
