@@ -45,7 +45,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'macao':                [18.7720, -68.5450],
   'cortecito':            [18.6877, -68.4280],
   'higuey':               [18.6142, -68.7073],
-  'san rafael del yuma':  [18.2888, -68.9757],
+  'san rafael del yuma':  [18.4313, -68.6748],
   'bayahibe':             [18.3583, -68.8393],
   'dominicus':            [18.3610, -68.8420],
 
