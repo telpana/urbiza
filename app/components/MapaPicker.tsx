@@ -75,7 +75,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'costambar':     [19.8096, -70.7117],
   'cofresi':       [19.8195, -70.7307],
   'playa dorada':  [19.7781, -70.6558],
-  'luperon':       [19.8996, -70.9548],
+  'luperon':       [19.8921, -70.9616],
   'villa isabela': [19.8290, -71.0740],
   'la isabela':    [19.8570, -71.0570],
 
