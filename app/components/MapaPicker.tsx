@@ -51,13 +51,13 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
 
   // ── Santiago ──────────────────────────────────────────────────────────────
   'santiago':                [19.4517, -70.6970],
-  'los jardines':            [19.4560, -70.7120],
-  'cerros de gurabo':        [19.4680, -70.6650],
+  'los jardines':            [19.4628, -70.6928],
+  'cerros de gurabo':        [19.4647, -70.6811],
   'reparto conuco':          [19.4480, -70.7060],
-  'bella vista, santiago':   [19.4430, -70.7170],
-  'villa olga':              [19.4370, -70.7260],
-  'pontezuela':              [19.4670, -70.6780],
-  'las colinas':             [19.4600, -70.6930],
+  'bella vista, santiago':   [19.4427, -70.7095],
+  'villa olga':              [19.4536, -70.6747],
+  'pontezuela':              [19.4575, -70.6572],
+  'las colinas':             [19.4786, -70.7136],
   'el dorado':               [19.4630, -70.7100],
   'urbanizacion tropical':   [19.4510, -70.7030],
 
