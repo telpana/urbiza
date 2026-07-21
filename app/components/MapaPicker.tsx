@@ -276,10 +276,11 @@ export default function MapaPicker({ zona, lat, lng, onChange }: Props) {
       const map = L.map(mapRef.current, {
         center: [initLat, initLng],
         zoom: lat != null ? 15 : zona.includes(',') ? getSectorZoom(zona) : 9,
-        zoomControl: true,
+        zoomControl: false,
         attributionControl: false,
         scrollWheelZoom: false,
       })
+      L.control.zoom({ position: 'bottomright' }).addTo(map)
       L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map)
 
       const icono = L.divIcon({
