@@ -41,7 +41,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'cap cana':             [18.5100, -68.4100],
   'los corales':          [18.6850, -68.4210],
   'cabeza de toro':       [18.6525, -68.3634],
-  'uvero alto':           [18.7940, -68.3800],
+  'uvero alto':           [18.8069, -68.5808],
   'macao':                [18.7440, -68.5580],
   'cortecito':            [18.7080, -68.4220],
   'higuey':               [18.6142, -68.7073],
