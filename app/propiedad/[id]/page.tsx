@@ -207,10 +207,8 @@ function DescripcionMultiIdioma({ propiedad, idioma, setIdioma, Tp }: { propieda
   const texto = lang === 'en' ? propiedad.descripcion_en : lang === 'fr' ? propiedad.descripcion_fr : propiedad.descripcion
 
   const [expandida, setExpandida] = useState(false)
-  const LIMITE = 300
-  const textoCorto = (texto || '').length > LIMITE
   const parrafos = (texto || '').split('\n\n')
-  const textoMostrar = expandida ? parrafos : (textoCorto ? (texto || '').slice(0, LIMITE).split('\n\n') : parrafos)
+  const necesitaColapsar = (texto || '').length > 400
 
   return (
     <div style={{ background: '#fff', borderRadius: 8, padding: '20px 24px', marginBottom: 16 }}>
@@ -228,17 +226,17 @@ function DescripcionMultiIdioma({ propiedad, idioma, setIdioma, Tp }: { propieda
         )}
       </div>
       <div style={{ position: 'relative' }}>
-        <div style={{ overflow: 'hidden', maxHeight: expandida ? 'none' : 260 }}>
-          {textoMostrar.map((p: string, i: number) => (
+        <div style={{ overflow: 'hidden', maxHeight: expandida || !necesitaColapsar ? 'none' : 200 }}>
+          {parrafos.map((p: string, i: number) => (
             <p key={i} style={{ fontSize: 14, color: '#555', lineHeight: 1.8, marginBottom: 12, overflowWrap: 'break-word', wordBreak: 'break-word' }}>{p}</p>
           ))}
         </div>
-        {!expandida && textoCorto && (
-          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 80, background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)' }} />
+        {!expandida && necesitaColapsar && (
+          <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 90, background: 'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)', pointerEvents: 'none' }} />
         )}
       </div>
-      {textoCorto && (
-        <button onClick={() => setExpandida(e => !e)} style={{ all: 'unset', marginTop: expandida ? 4 : 12, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5, fontSize: 13, fontWeight: 700, color: '#006D77' }}>
+      {necesitaColapsar && (
+        <button onClick={() => setExpandida(e => !e)} style={{ all: 'unset', marginTop: 10, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5, fontSize: 13, fontWeight: 700, color: '#006D77' }}>
           {expandida ? Tp.verMenos : Tp.verDescCompleta}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5" style={{ transform: expandida ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
             <polyline points="6 9 12 15 18 9"/>
