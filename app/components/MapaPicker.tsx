@@ -136,9 +136,8 @@ export default function MapaPicker({ zona, lat, lng, onChange }: Props) {
     }
   }, [])
 
-  // Re-center when zona changes (only if pin hasn't been manually placed)
   useEffect(() => {
-    if (!mapInstanceRef.current || lat !== null) return
+    if (!mapInstanceRef.current) return
     const [cLat, cLng] = getCenter(zona)
     mapInstanceRef.current.setView([cLat, cLng], 13)
     markerRef.current?.setLatLng([cLat, cLng])

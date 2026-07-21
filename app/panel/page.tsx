@@ -1353,7 +1353,7 @@ export default function Panel() {
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.provincia}</label>
                     <div style={{ position: 'relative' }}>
-                      <select value={pubProvincia} onChange={e => { setPubProvincia(e.target.value); setPubSector('') }} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 36px 10px 12px', fontSize: 13, outline: 'none', background: '#fff', appearance: 'none', cursor: 'pointer' }}>
+                      <select value={pubProvincia} onChange={e => { setPubProvincia(e.target.value); setPubSector(''); setPubLat(null); setPubLng(null) }} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 36px 10px 12px', fontSize: 13, outline: 'none', background: '#fff', appearance: 'none', cursor: 'pointer' }}>
                         <option value="">{Tpanel.publicar.seleccionaProvincia}</option>
                         {Object.keys(provinciasZonas).map(p => <option key={p} value={p}>{p}</option>)}
                       </select>
@@ -1363,7 +1363,7 @@ export default function Panel() {
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.sector} <span style={{ fontWeight: 400, color: '#aaa' }}>{Tpanel.publicar.sectorOpcional}</span></label>
                     <div style={{ position: 'relative' }}>
-                      <select value={pubSector} onChange={e => setPubSector(e.target.value)} disabled={!pubProvincia} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 36px 10px 12px', fontSize: 13, outline: 'none', background: pubProvincia ? '#fff' : '#f9f9f9', color: pubProvincia ? '#333' : '#aaa', appearance: 'none', cursor: pubProvincia ? 'pointer' : 'default' }}>
+                      <select value={pubSector} onChange={e => { setPubSector(e.target.value); setPubLat(null); setPubLng(null) }} disabled={!pubProvincia} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 36px 10px 12px', fontSize: 13, outline: 'none', background: pubProvincia ? '#fff' : '#f9f9f9', color: pubProvincia ? '#333' : '#aaa', appearance: 'none', cursor: pubProvincia ? 'pointer' : 'default' }}>
                         <option value="">{Tpanel.publicar.seleccionaSector}</option>
                         {pubProvincia && provinciasZonas[pubProvincia].map(z => <option key={z} value={z}>{z}</option>)}
                       </select>
