@@ -69,7 +69,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'las galeras':     [19.2980, -69.1980],
   'sanchez':         [19.2329, -69.6157],
   'el limon':        [19.2923, -69.4308],
-  'rancho espanol':  [19.2200, -69.3500],
+  'rancho espanol':  [19.2600, -69.4600],
 
   // ── Puerto Plata ──────────────────────────────────────────────────────────
   'puerto plata':  [19.7950, -70.6910],
