@@ -147,7 +147,7 @@ export default function MapaPicker({ zona, lat, lng, onChange }: Props) {
   return (
     <div>
       <div style={{ background: '#f0fafb', border: '1px solid #c7eaee', borderRadius: '8px 8px 0 0', padding: '10px 14px', display: 'flex', alignItems: 'center', gap: 10 }}>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <svg width="14" height="18" viewBox="0 0 24 32" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.37 0 0 5.37 0 12c0 8.5 12 20 12 20s12-11.5 12-20C24 5.37 18.63 0 12 0z" fill="#006D77"/><circle cx="12" cy="12" r="4.5" fill="#fff"/></svg>
         <span style={{ fontSize: 12, color: '#004E57', fontWeight: 500 }}>
           Esta es la zona aproximada. Mueve el pin o haz clic en el mapa para indicar la ubicación exacta de tu propiedad.
         </span>
