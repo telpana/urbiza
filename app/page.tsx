@@ -313,7 +313,7 @@ const zonas = [
   { nombre: 'Bávaro', tipo: 'Apartamentos frente al mar', tipo_en: 'Beachfront apartments', tipo_fr: 'Appartements en bord de mer', slug: 'bavaro' },
   { nombre: 'Cap Cana', tipo: 'Villas de lujo en venta', tipo_en: 'Luxury villas for sale', tipo_fr: 'Villas de luxe à vendre', slug: 'cap-cana' },
   { nombre: 'Piantini', tipo: 'Apartamentos de lujo', tipo_en: 'Luxury apartments', tipo_fr: 'Appartements de luxe', slug: 'piantini' },
-  { nombre: 'Bella Vista', tipo: 'Casas y apartamentos', tipo_en: 'Houses and apartments', tipo_fr: 'Maisons et appartements', slug: 'bella-vista' },
+  { nombre: 'Distrito Nacional', tipo: 'Apartamentos y casas', tipo_en: 'Apartments and houses', tipo_fr: 'Appartements et maisons', slug: 'distrito-nacional' },
   { nombre: 'Sosúa', tipo: 'Propiedades frente al mar', tipo_en: 'Beachfront properties', tipo_fr: 'Propriétés en bord de mer', slug: 'sosua' },
   { nombre: 'Cabarete', tipo: 'Casas y villas en venta', tipo_en: 'Houses and villas for sale', tipo_fr: 'Maisons et villas à vendre', slug: 'cabarete' },
 ]
