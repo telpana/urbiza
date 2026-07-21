@@ -521,7 +521,7 @@ export default function Home() {
           .or('zona.ilike.%Santo Domingo%,zona.ilike.%Distrito Nacional%')
           .order('created_at', { ascending: false }).limit(4),
         supabase.from('propiedades').select(campos).eq('estado', 'activo')
-          .or('zona.ilike.%Punta Cana%,zona.ilike.%Bávaro%,zona.ilike.%La Altagracia%,zona.ilike.%Cap Cana%')
+          .or('zona.ilike.%Punta Cana%,zona.ilike.%Bávaro%,zona.ilike.%Cap Cana%,zona.ilike.%Cabeza de Toro%,zona.ilike.%Los Corales%,zona.ilike.%Uvero Alto%,zona.ilike.%Macao%,zona.ilike.%Cortecito%')
           .order('created_at', { ascending: false }).limit(4),
         supabase.from('propiedades').select(campos).eq('estado', 'activo')
           .or('zona.ilike.%Samaná%,zona.ilike.%Las Terrenas%,zona.ilike.%Las Galeras%,zona.ilike.%Sánchez%,zona.ilike.%El Portillo%,zona.ilike.%Cosón%,zona.ilike.%El Limón%,zona.ilike.%Santa Bárbara%')
