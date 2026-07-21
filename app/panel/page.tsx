@@ -2,6 +2,8 @@
 import { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import { supabase } from '../../supabase'
 import { useIdioma } from '../../IdiomaContext'
+import dynamic from 'next/dynamic'
+const MapaPicker = dynamic(() => import('../components/MapaPicker'), { ssr: false })
 
 const Ip = (paths: React.ReactNode) => <svg width="18" height="18" viewBox="2 2 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" style={{ overflow: 'visible', flexShrink: 0 }}>{paths}</svg>
 
@@ -291,6 +293,8 @@ export default function Panel() {
   const [pubAnio, setPubAnio] = useState('')
   const [pubProvincia, setPubProvincia] = useState('')
   const [pubSector, setPubSector] = useState('')
+  const [pubLat, setPubLat] = useState<number | null>(null)
+  const [pubLng, setPubLng] = useState<number | null>(null)
   const [pubLoading, setPubLoading] = useState(false)
   const [pubError, setPubError] = useState('')
   const [pubExito, setPubExito] = useState(false)
@@ -631,6 +635,8 @@ export default function Panel() {
     setPubBanos(raw.banos ? String(raw.banos) : '1')
     setPubParqueos(raw.parqueos ? String(raw.parqueos) : '')
     setPubPlanta(raw.planta || '')
+    setPubLat(raw.lat ?? null)
+    setPubLng(raw.lng ?? null)
     setPubProvincia(provincia)
     setPubSector(sector)
     setAmenidadesSeleccionadas(Array.isArray(raw.amenidades) ? raw.amenidades : [])
@@ -681,6 +687,8 @@ export default function Panel() {
       tipo: pubTipo,
       operacion: pubOperacion.toLowerCase(),
       zona: pubSector ? `${pubSector}, ${pubProvincia}` : pubProvincia,
+      lat: pubLat,
+      lng: pubLng,
       m2: pubM2 ? Number(pubM2.replace(/\D/g, '')) : null,
       habitaciones: ['Edificio', 'Terreno'].includes(pubTipo) ? null : Number(pubHab),
       banos: ['Edificio', 'Terreno'].includes(pubTipo) ? null : Number(pubBanos),
@@ -723,7 +731,7 @@ export default function Panel() {
     setPubLoading(false)
     setPubTitulo(''); setPubTituloEn(''); setPubTituloFr(''); setPubPrecio(''); setPubM2(''); setPubDesc(''); setPubDescEn(''); setPubDescFr(''); setDescLang('es')
     setPubProvincia(''); setPubSector(''); setPubHab('1'); setPubBanos('1')
-    setPubParqueos(''); setPubPlanta(''); setPubAnio('')
+    setPubParqueos(''); setPubPlanta(''); setPubAnio(''); setPubLat(null); setPubLng(null)
     setFotosLista([]); setAnuncioEditando(null)
     setAmenidadesSeleccionadas([])
     setTimeout(() => { setSeccion('anuncios'); setPubExito(false) }, 1200)
@@ -1362,6 +1370,17 @@ export default function Panel() {
                       <svg style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={pubProvincia ? '#888' : '#ccc'} strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
                     </div>
                   </div>
+                  {pubProvincia && (
+                    <div style={{ gridColumn: '1 / -1' }}>
+                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 8 }}>Ubicación en el mapa <span style={{ fontWeight: 400, color: '#aaa' }}>{Tpanel.publicar.sectorOpcional}</span></label>
+                      <MapaPicker
+                        zona={pubSector ? `${pubSector}, ${pubProvincia}` : pubProvincia}
+                        lat={pubLat}
+                        lng={pubLng}
+                        onChange={(lat, lng) => { setPubLat(lat); setPubLng(lng) }}
+                      />
+                    </div>
+                  )}
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.superficie} *</label>
                     <input type="text" value={pubM2} onChange={e => { const raw = e.target.value.replace(/\D/g, '').slice(0, 8); setPubM2(raw ? raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '') }} placeholder="Ej: 150" inputMode="numeric" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />

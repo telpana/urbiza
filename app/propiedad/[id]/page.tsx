@@ -126,10 +126,11 @@ function getLatLng(zona: string): [number, number] {
   return [18.4861, -69.9312]
 }
 
-function MapaUbicacion({ zona }: { zona: string }) {
+function MapaUbicacion({ zona, propLat, propLng }: { zona: string, propLat?: number | null, propLng?: number | null }) {
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<any>(null)
-  const [lat, lng] = getLatLng(zona)
+  const hasExact = propLat != null && propLng != null
+  const [lat, lng] = hasExact ? [propLat!, propLng!] : getLatLng(zona)
 
   useEffect(() => {
     if (mapInstanceRef.current || !mapRef.current) return
@@ -142,7 +143,7 @@ function MapaUbicacion({ zona }: { zona: string }) {
     const load = () => {
       const L = (window as any).L
       if (!L || !mapRef.current) return
-      const map = L.map(mapRef.current, { center: [lat, lng], zoom: 9, zoomControl: true, attributionControl: false, scrollWheelZoom: false })
+      const map = L.map(mapRef.current, { center: [lat, lng], zoom: hasExact ? 15 : 13, zoomControl: true, attributionControl: false, scrollWheelZoom: false })
       L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png').addTo(map)
       const icono = L.divIcon({
         className: '',
@@ -822,7 +823,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
           <div className="propiedad-mapa-col" style={{ background: '#fff', borderRadius: 8, padding: '20px 24px' }}>
             <h2 style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 14 }}>{Tp.ubicacion}</h2>
             <div style={{ height: 300, borderRadius: 6, overflow: 'hidden', border: '1px solid #e8e8e8' }}>
-              <MapaUbicacion zona={propiedad.zona || ''} />
+              <MapaUbicacion zona={propiedad.zona || ''} propLat={propiedad.lat} propLng={propiedad.lng} />
             </div>
             <div style={{ fontSize: 13, color: '#888', marginTop: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
               <svg width="12" height="12" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
