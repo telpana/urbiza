@@ -53,7 +53,6 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'santiago':                [19.4517, -70.6970],
   'los jardines':            [19.4628, -70.6928],
   'cerros de gurabo':        [19.4647, -70.6811],
-  'reparto conuco':          [19.4480, -70.7060],
   'bella vista, santiago':   [19.4427, -70.7095],
   'villa olga':              [19.4536, -70.6747],
   'pontezuela':              [19.4575, -70.6572],
