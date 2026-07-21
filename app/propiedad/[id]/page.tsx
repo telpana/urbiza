@@ -228,7 +228,7 @@ function DescripcionMultiIdioma({ propiedad, idioma, setIdioma, Tp }: { propieda
         )}
       </div>
       <div style={{ position: 'relative' }}>
-        <div style={{ overflow: 'hidden', maxHeight: expandida ? 'none' : 180 }}>
+        <div style={{ overflow: 'hidden', maxHeight: expandida ? 'none' : 260 }}>
           {textoMostrar.map((p: string, i: number) => (
             <p key={i} style={{ fontSize: 14, color: '#555', lineHeight: 1.8, marginBottom: 12, overflowWrap: 'break-word', wordBreak: 'break-word' }}>{p}</p>
           ))}
