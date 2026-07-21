@@ -518,7 +518,7 @@ export default function Home() {
       const campos = 'id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,tipo,operacion,fotos'
       const [{ data: sd }, { data: pc }, { data: stg }] = await Promise.all([
         supabase.from('propiedades').select(campos).eq('estado', 'activo')
-          .or('zona.ilike.%Santo Domingo%,zona.ilike.%Distrito Nacional%')
+          .or('zona.ilike.%Santo Domingo%,zona.ilike.%Distrito Nacional%,zona.ilike.%Piantini%,zona.ilike.%Naco%,zona.ilike.%Bella Vista%,zona.ilike.%Gazcue%,zona.ilike.%Piantini%,zona.ilike.%Serralles%,zona.ilike.%Arroyo Hondo%,zona.ilike.%Miramar%,zona.ilike.%La Esperilla%,zona.ilike.%Evaristo Morales%,zona.ilike.%Los Cacicazgos%,zona.ilike.%Ciudad Colonial%')
           .order('created_at', { ascending: false }).limit(4),
         supabase.from('propiedades').select(campos).eq('estado', 'activo')
           .or('zona.ilike.%Punta Cana%,zona.ilike.%Bávaro%,zona.ilike.%Cap Cana%,zona.ilike.%Cabeza de Toro%,zona.ilike.%Los Corales%,zona.ilike.%Uvero Alto%,zona.ilike.%Macao%,zona.ilike.%Cortecito%')
