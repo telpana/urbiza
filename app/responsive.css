@@ -85,9 +85,9 @@ img { max-width: 100%; }
   }
   .novedades-grid::-webkit-scrollbar { display: none; }
   .novedades-grid > * {
-    width: 255px !important;
-    min-width: 255px !important;
-    max-width: 255px !important;
+    width: 260px !important;
+    min-width: 260px !important;
+    max-width: 260px !important;
     flex-shrink: 0 !important;
     scroll-snap-align: start;
   }
