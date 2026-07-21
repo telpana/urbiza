@@ -198,6 +198,18 @@ function norm(s: string) {
   return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 }
 
+const ZONAS_AMPLIAS = new Set([
+  'santo domingo norte', 'santo domingo este', 'santo domingo oeste',
+  'la altagracia', 'distrito nacional', 'santo domingo',
+])
+
+function getSectorZoom(zona: string): number {
+  const nFull = norm(zona.trim())
+  const partes = zona.split(',').map(p => norm(p.trim()))
+  if (ZONAS_AMPLIAS.has(nFull) || partes.some(p => ZONAS_AMPLIAS.has(p))) return 10
+  return 12
+}
+
 function getCenter(zona: string): [number, number] {
   if (!zona) return [18.4861, -69.9312]
   // Try full string first (handles compound keys like 'bella vista, santiago')
@@ -243,7 +255,7 @@ export default function MapaPicker({ zona, lat, lng, onChange }: Props) {
 
       const map = L.map(mapRef.current, {
         center: [initLat, initLng],
-        zoom: lat != null ? 15 : zona.includes(',') ? 12 : 9,
+        zoom: lat != null ? 15 : zona.includes(',') ? getSectorZoom(zona) : 9,
         zoomControl: true,
         attributionControl: false,
         scrollWheelZoom: false,
@@ -302,7 +314,7 @@ export default function MapaPicker({ zona, lat, lng, onChange }: Props) {
   useEffect(() => {
     if (!mapInstanceRef.current) return
     const [cLat, cLng] = getCenter(zona)
-    const zoom = zona.includes(',') ? 12 : 9
+    const zoom = zona.includes(',') ? getSectorZoom(zona) : 9
     mapInstanceRef.current.setView([cLat, cLng], zoom)
     markerRef.current?.setLatLng([cLat, cLng])
   }, [zona])
