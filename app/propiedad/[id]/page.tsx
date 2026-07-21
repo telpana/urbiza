@@ -239,7 +239,7 @@ function DescripcionMultiIdioma({ propiedad, idioma, setIdioma, Tp }: { propieda
       </div>
       {textoCorto && (
         <button onClick={() => setExpandida(e => !e)} style={{ all: 'unset', marginTop: expandida ? 4 : 12, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 5, fontSize: 13, fontWeight: 700, color: '#006D77' }}>
-          {expandida ? 'Ver menos' : 'Ver descripción completa'}
+          {expandida ? Tp.verMenos : Tp.verDescCompleta}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5" style={{ transform: expandida ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
             <polyline points="6 9 12 15 18 9"/>
           </svg>
