@@ -93,7 +93,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
 
   // ── San Pedro de Macorís ──────────────────────────────────────────────────
   'san pedro de macoris': [18.4530, -69.3090],
-  'juan dolio':           [18.4410, -69.5270],
+  'juan dolio':           [18.4269, -69.4162],
   'guayacanes':           [18.4370, -69.5490],
 
   // ── El Seibo ──────────────────────────────────────────────────────────────
