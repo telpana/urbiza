@@ -70,7 +70,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
 
   // ── Puerto Plata ──────────────────────────────────────────────────────────
   'puerto plata':  [19.7950, -70.6910],
-  'sosua':         [19.7580, -70.5210],
+  'sosua':         [19.7580, -70.5150],
   'cabarete':      [19.7730, -70.4130],
   'costambar':     [19.7890, -70.7130],
   'cofresi':       [19.8090, -70.7540],
