@@ -220,6 +220,7 @@ function norm(s: string) {
 
 const ZONAS_AMPLIAS = new Set([
   'santo domingo norte', 'santo domingo este', 'santo domingo oeste',
+  'punta cana',
 ])
 
 function getSectorZoom(zona: string): number {
