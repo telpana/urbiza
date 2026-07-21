@@ -77,7 +77,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'playa dorada':  [19.7781, -70.6558],
   'luperon':       [19.8921, -70.9616],
   'villa isabela': [19.8221, -71.0553],
-  'la isabela':    [19.8570, -71.0570],
+  'la isabela':    [19.8844, -71.0735],
 
   // ── La Romana ────────────────────────────────────────────────────────────
   'la romana':     [18.4273, -68.9728],
