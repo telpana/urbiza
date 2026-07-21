@@ -37,7 +37,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'la altagracia':        [18.5890, -68.6200],
   'punta cana':           [18.5703, -68.3637],
   'downtown punta cana':  [18.6384, -68.3917],
-  'bavaro':               [18.6940, -68.4200],
+  'bavaro':               [18.6940, -68.4320],
   'cap cana':             [18.5100, -68.4100],
   'los corales':          [18.6850, -68.4210],
   'cabeza de toro':       [18.6525, -68.3634],
@@ -220,7 +220,7 @@ function norm(s: string) {
 
 const ZONAS_AMPLIAS = new Set([
   'santo domingo norte', 'santo domingo este', 'santo domingo oeste',
-  'punta cana',
+  'punta cana', 'bavaro',
 ])
 
 function getSectorZoom(zona: string): number {
