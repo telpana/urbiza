@@ -31,45 +31,43 @@ export default async function OgImage() {
 
   return new ImageResponse(
     (
-      <div style={{ width: 1200, height: 630, display: 'flex', position: 'relative', fontFamily: 'sans-serif' }}>
-        {/* Foto de fondo */}
-        {bannerSrc && (
-          <img
-            src={bannerSrc}
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
-          />
-        )}
-
-        {/* Overlay teal como en el hero */}
+      <div style={{
+        width: 1200,
+        height: 630,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: 'sans-serif',
+        backgroundImage: bannerSrc ? `url(${bannerSrc})` : undefined,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: '#006D77',
+        position: 'relative',
+      }}>
+        {/* Overlay teal */}
         <div style={{
-          position: 'absolute', inset: 0,
-          background: bannerSrc
-            ? 'linear-gradient(to bottom, rgba(0,109,119,0.72) 0%, rgba(0,109,119,0.80) 100%)'
-            : '#006D77',
+          position: 'absolute',
+          top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,109,119,0.70)',
           display: 'flex',
         }} />
 
-        {/* Contenido centrado */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center',
-        }}>
-          <div style={{ fontSize: 100, fontWeight: 800, color: '#ffffff', letterSpacing: '-3px', display: 'flex' }}>
-            habitade.
-          </div>
-          <div style={{ width: 80, height: 4, background: 'rgba(255,255,255,0.4)', borderRadius: 2, marginTop: 20, marginBottom: 28, display: 'flex' }} />
-          <div style={{ fontSize: 32, color: 'rgba(255,255,255,0.88)', fontWeight: 400, display: 'flex' }}>
-            El portal inmobiliario de República Dominicana
-          </div>
+        {/* Logo */}
+        <div style={{ fontSize: 104, fontWeight: 800, color: '#fff', letterSpacing: '-3px', display: 'flex', zIndex: 1 }}>
+          habitade.
         </div>
 
-        {/* URL abajo */}
-        <div style={{
-          position: 'absolute', bottom: 40, width: '100%',
-          display: 'flex', justifyContent: 'center',
-          fontSize: 20, color: 'rgba(255,255,255,0.45)',
-        }}>
+        {/* Línea */}
+        <div style={{ width: 80, height: 5, background: 'rgba(255,255,255,0.45)', borderRadius: 3, marginTop: 18, marginBottom: 26, display: 'flex', zIndex: 1 }} />
+
+        {/* Subtítulo */}
+        <div style={{ fontSize: 33, color: 'rgba(255,255,255,0.88)', fontWeight: 400, display: 'flex', zIndex: 1 }}>
+          El portal inmobiliario de República Dominicana
+        </div>
+
+        {/* URL */}
+        <div style={{ position: 'absolute', bottom: 40, left: 0, right: 0, display: 'flex', justifyContent: 'center', fontSize: 20, color: 'rgba(255,255,255,0.42)' }}>
           www.habitade.com
         </div>
       </div>
