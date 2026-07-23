@@ -61,6 +61,11 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
+  // Propiedades individuales: siempre accesibles (para WhatsApp/SEO)
+  if (pathname.startsWith('/propiedad/')) {
+    return NextResponse.next()
+  }
+
   // API: solo permitir auth, webhooks y admin
   if (pathname.startsWith('/api/auth') || pathname.startsWith('/api/webhook') || pathname.startsWith('/api/admin')) {
     return NextResponse.next()
