@@ -23,6 +23,12 @@ export function middleware(request: NextRequest) {
 
   // --- MODO CERRADO ---
 
+  // Dejar pasar bots de redes sociales para que lean las OG tags
+  const ua = request.headers.get('user-agent') || ''
+  if (/facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|TelegramBot/i.test(ua)) {
+    return NextResponse.next()
+  }
+
   // Bypass con cookie de preview (para que tú puedas ver el sitio)
   const preview = request.cookies.get('habitade_preview')?.value
   if (preview === PREVIEW_SECRET) return NextResponse.next()
