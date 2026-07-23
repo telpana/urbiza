@@ -7,12 +7,12 @@ export const contentType = 'image/png'
 export const revalidate = 3600
 
 export default async function OgImage() {
-  // Intentar cargar el favicon personalizado desde Supabase
-  let faviconSrc: string | null = null
+  // Cargar foto del banner desde Supabase
+  let bannerSrc: string | null = null
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/configuracion?clave=eq.favicon_url&select=valor`,
-      { headers: { apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY! }, next: { revalidate: 3600 } }
+      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/configuracion?clave=eq.banner_url&select=valor`,
+      { headers: { apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY! } }
     )
     if (res.ok) {
       const data = await res.json()
@@ -22,8 +22,8 @@ export default async function OgImage() {
         if (imgRes.ok) {
           const buf = await imgRes.arrayBuffer()
           const b64 = Buffer.from(buf).toString('base64')
-          const mime = imgRes.headers.get('content-type') || 'image/png'
-          faviconSrc = `data:${mime};base64,${b64}`
+          const mime = imgRes.headers.get('content-type') || 'image/jpeg'
+          bannerSrc = `data:${mime};base64,${b64}`
         }
       }
     }
@@ -31,48 +31,45 @@ export default async function OgImage() {
 
   return new ImageResponse(
     (
-      <div
-        style={{
-          background: '#006D77',
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          fontFamily: 'sans-serif',
-          position: 'relative',
-        }}
-      >
-        {/* Logo (favicon o H generada) */}
-        {faviconSrc ? (
-          <img src={faviconSrc} width={130} height={130} style={{ borderRadius: 24, marginBottom: 28 }} />
-        ) : (
-          <div style={{
-            background: 'rgba(255,255,255,0.15)',
-            width: 130, height: 130, borderRadius: 24,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: 88, fontWeight: 900, color: '#fff', marginBottom: 28,
-          }}>
-            H
-          </div>
+      <div style={{ width: 1200, height: 630, display: 'flex', position: 'relative', fontFamily: 'sans-serif' }}>
+        {/* Foto de fondo */}
+        {bannerSrc && (
+          <img
+            src={bannerSrc}
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+          />
         )}
 
-        {/* Nombre */}
-        <div style={{ fontSize: 80, fontWeight: 800, color: '#ffffff', letterSpacing: '-2px', marginBottom: 20, display: 'flex' }}>
-          habitade.
+        {/* Overlay teal como en el hero */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: bannerSrc
+            ? 'linear-gradient(to bottom, rgba(0,109,119,0.72) 0%, rgba(0,109,119,0.80) 100%)'
+            : '#006D77',
+          display: 'flex',
+        }} />
+
+        {/* Contenido centrado */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+        }}>
+          <div style={{ fontSize: 100, fontWeight: 800, color: '#ffffff', letterSpacing: '-3px', display: 'flex' }}>
+            habitade.
+          </div>
+          <div style={{ width: 80, height: 4, background: 'rgba(255,255,255,0.4)', borderRadius: 2, marginTop: 20, marginBottom: 28, display: 'flex' }} />
+          <div style={{ fontSize: 32, color: 'rgba(255,255,255,0.88)', fontWeight: 400, display: 'flex' }}>
+            El portal inmobiliario de República Dominicana
+          </div>
         </div>
 
-        {/* Separador */}
-        <div style={{ width: 72, height: 4, background: 'rgba(255,255,255,0.35)', borderRadius: 2, marginBottom: 28, display: 'flex' }} />
-
-        {/* Subtítulo */}
-        <div style={{ fontSize: 30, color: 'rgba(255,255,255,0.82)', fontWeight: 400, display: 'flex' }}>
-          El portal inmobiliario de República Dominicana
-        </div>
-
-        {/* URL */}
-        <div style={{ position: 'absolute', bottom: 40, fontSize: 20, color: 'rgba(255,255,255,0.38)', display: 'flex' }}>
+        {/* URL abajo */}
+        <div style={{
+          position: 'absolute', bottom: 40, width: '100%',
+          display: 'flex', justifyContent: 'center',
+          fontSize: 20, color: 'rgba(255,255,255,0.45)',
+        }}>
           www.habitade.com
         </div>
       </div>
