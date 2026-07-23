@@ -60,11 +60,13 @@ export async function generateMetadata(): Promise<Metadata> {
     siteName: 'Habitade',
     title: 'Habitade | Portal Inmobiliario República Dominicana',
     description: 'Compra, vende o alquila propiedades en República Dominicana. Apartamentos, casas, villas y terrenos en Santo Domingo, Punta Cana, Santiago y más.',
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Habitade | Portal Inmobiliario República Dominicana' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Habitade | Portal Inmobiliario República Dominicana',
     description: 'Compra, vende o alquila propiedades en República Dominicana.',
+    images: ['/opengraph-image'],
   },
   alternates: {
     canonical: 'https://www.habitade.com',
