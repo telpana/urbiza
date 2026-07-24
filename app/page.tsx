@@ -326,7 +326,12 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href, dopRa
   ejemplos: { price: number, title: string, feats: string, bg: string }[],
   dopRate?: number
 }) {
-  const { idioma } = useIdioma()
+  const { idioma, tr } = useIdioma()
+  const tipoLabel = (t: string) => {
+    if (!t) return t
+    const map: Record<string, string> = { 'Apartamento': tr.tipos.apartamento, 'Villa': tr.tipos.villa, 'Casa': tr.tipos.casa, 'Terreno': tr.tipos.terreno, 'Oficina': tr.tipos.oficina, 'Local comercial': tr.tipos.local, 'Edificio': tr.tipos.edificio }
+    return map[t] || t
+  }
   const items = reales.length > 0 ? reales : null
   if (items === null && ejemplos.length === 0) return null
   return (
