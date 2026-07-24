@@ -65,7 +65,14 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
   }
   return (
     <div className="propiedad-galeria-wrap" style={{ background: '#fff', borderRadius: 8, overflow: 'hidden', marginBottom: 16 }}>
-      <div className="propiedad-galeria-main" style={{ height: 420, position: 'relative', background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div className="propiedad-galeria-main" style={{ height: 420, position: 'relative', background: '#111', display: 'flex', alignItems: 'center', justifyContent: 'center', touchAction: 'pan-y' }}
+        onTouchStart={e => { (e.currentTarget as any)._tx = e.touches[0].clientX }}
+        onTouchEnd={e => {
+          const dx = e.changedTouches[0].clientX - ((e.currentTarget as any)._tx || 0)
+          if (dx < -50) setActiva(a => Math.min(a + 1, fotos.length - 1))
+          else if (dx > 50) setActiva(a => Math.max(a - 1, 0))
+        }}
+      >
         {destacado && <div style={{ position: 'absolute', top: 8, right: 8, zIndex: 2, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>DESTACADO</div>}
         <img src={fotos[activa]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         <div style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 11, padding: '4px 10px', borderRadius: 20, zIndex: 4 }}>{activa + 1} / {fotos.length}</div>
