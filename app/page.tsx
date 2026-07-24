@@ -345,14 +345,14 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href, dopRa
                 onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                 <div style={{ height: 160, background: bgsNovedad[i % 4], position: 'relative', overflow: 'hidden' }}>
                   {Array.isArray(p.fotos) && p.fotos.length > 0
-                    ? <img src={p.fotos[0]} alt={p.titulo} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ? <img src={p.fotos[0]} alt={p.titulo} loading="lazy" decoding="async" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                     : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
                   }
                 </div>
                 <div style={{ padding: '12px 14px' }}>
                   <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio || 0).toLocaleString('en-US')}</div>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.zona || ''}</div>
-                  <div style={{ fontSize: 12, color: '#888' }}>{[p.tipo, p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ')}</div>
+                  <div style={{ fontSize: 12, color: '#888' }}>{[p.tipo ? tipoLabel(p.tipo) : null, p.habitaciones && `${p.habitaciones} ${tr.hab}`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ')}</div>
                 </div>
               </a>
             ))
@@ -396,7 +396,7 @@ export default function Home() {
   const lsGet = (k: string) => { try { return typeof window !== 'undefined' ? JSON.parse(localStorage.getItem(k) || '[]') : [] } catch { return [] } }
   const lsGetDaily = (k: string) => { try { if (typeof window === 'undefined') return []; const raw = localStorage.getItem(k); if (!raw) return []; const { data, date } = JSON.parse(raw); return date === new Date().toDateString() ? (data || []) : [] } catch { return [] } }
   const [destReales, setDestReales] = useState<any[]>([])
-  const [masVistasReales, setMasVistasReales] = useState<any[]>(() => lsGetDaily('hb_masvistos'))
+  const [masVistasReales, setMasVistasReales] = useState<any[]>([])
   const [novedadesSantoDomingo, setNovedadesSantoDomingo] = useState<any[]>(() => lsGet('hb_nov_sd'))
   const [novedadesPuntaCana, setNovedadesPuntaCana] = useState<any[]>(() => lsGet('hb_nov_pc'))
   const [novedadesSamana, setNovedadesSamana] = useState<any[]>(() => lsGet('hb_nov_lt'))
@@ -512,8 +512,14 @@ export default function Home() {
         try { localStorage.setItem('hb_dest', JSON.stringify(sorted)) } catch {}
       }
       const { data: vistas } = await supabase.from('propiedades')
-        .select('id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,operacion,fotos').eq('estado', 'activo').order('visitas', { ascending: false }).limit(100)
-      if (vistas && vistas.length > 0) { setMasVistasReales(vistas); try { localStorage.setItem('hb_masvistos', JSON.stringify({ data: vistas, date: new Date().toDateString() })) } catch {} }
+        .select('id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,operacion,fotos,visitas,impresiones').eq('estado', 'activo').order('visitas', { ascending: false }).order('impresiones', { ascending: false }).limit(6)
+      if (vistas && vistas.length > 0) {
+        const sorted = [...vistas].sort((a, b) => {
+          const va = (b.visitas || 0) - (a.visitas || 0)
+          return va !== 0 ? va : (b.impresiones || 0) - (a.impresiones || 0)
+        })
+        setMasVistasReales(sorted)
+      }
 
       const campos = 'id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,tipo,operacion,fotos'
       const [{ data: sd }, { data: pc }, { data: stg }] = await Promise.all([
@@ -834,7 +840,7 @@ export default function Home() {
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                       <div className="home-prop-card-img" style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                         {Array.isArray(p.fotos) && p.fotos.length > 0
-                          ? <img src={p.fotos[0]} alt={p.titulo ?? p.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                          ? <img src={p.fotos[0]} alt={p.titulo ?? p.title} loading="lazy" decoding="async" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                           : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         }
                         <div style={{ position: 'absolute', top: 8, right: 8, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>{tr.destacadas.destacado}</div>
@@ -858,7 +864,7 @@ export default function Home() {
             const bgs = ['#f0ebe0','#e8f0e0','#f0e8f0']
             const pool = masVistasReales.length > 0 ? masVistasReales : propiedadesDestacadas.filter(p => p.tipo === 'visitas').map((p,i) => ({ id: i, titulo: p.title, precio: p.price, zona: p.loc, habitaciones: null, m2: null }))
             if (pool.length === 0) return null
-            const masVisibles = masVistasReales.length > 0 ? getDailyMasVistos(pool) : pool.slice(0, 3)
+            const masVisibles = pool.slice(0, 3)
             return (
               <div className="home-cards-section" style={{ marginBottom: 32 }}>
                 <div className="home-section-hdr" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
@@ -874,7 +880,7 @@ export default function Home() {
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                       <div className="home-prop-card-img" style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                         {Array.isArray(p.fotos) && p.fotos.length > 0
-                          ? <img src={p.fotos[0]} alt={p.titulo ?? p.title} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                          ? <img src={p.fotos[0]} alt={p.titulo ?? p.title} loading="lazy" decoding="async" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                           : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         }
                         <div style={{ position: 'absolute', top: 8, right: 8, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>{tr.destacadas.masVisto}</div>
