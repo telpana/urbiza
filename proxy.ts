@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server'
 const OPEN = true
 const PREVIEW_SECRET = process.env.PREVIEW_SECRET || 'habitade2025preview'
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   if (pathname === '/favicon.ico') {
@@ -12,7 +12,6 @@ export function middleware(request: NextRequest) {
   }
 
   if (OPEN) {
-    // Cuando abierto: bloquear indexación de panel/admin
     if (pathname.startsWith('/panel') || pathname.startsWith('/admin')) {
       const res = NextResponse.next()
       res.headers.set('X-Robots-Tag', 'noindex, nofollow')
@@ -23,17 +22,14 @@ export function middleware(request: NextRequest) {
 
   // --- MODO CERRADO ---
 
-  // Dejar pasar bots de redes sociales para que lean las OG tags
   const ua = request.headers.get('user-agent') || ''
   if (/facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|TelegramBot/i.test(ua)) {
     return NextResponse.next()
   }
 
-  // Bypass con cookie de preview (para que tú puedas ver el sitio)
   const preview = request.cookies.get('habitade_preview')?.value
   if (preview === PREVIEW_SECRET) return NextResponse.next()
 
-  // Activar preview visitando /preview?key=SECRET → redirige a / con cookie
   if (pathname === '/preview') {
     const key = request.nextUrl.searchParams.get('key')
     if (key === PREVIEW_SECRET) {
@@ -47,7 +43,6 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  // Siempre permitir: assets y página de protección
   if (
     pathname.startsWith('/proximamente') ||
     pathname.startsWith('/_next') ||
@@ -56,22 +51,18 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Panel y admin: requieren login de Supabase, no necesitan más protección
   if (pathname.startsWith('/panel') || pathname.startsWith('/admin')) {
     return NextResponse.next()
   }
 
-  // Propiedades individuales: siempre accesibles (para WhatsApp/SEO)
   if (pathname.startsWith('/propiedad/')) {
     return NextResponse.next()
   }
 
-  // API: solo permitir auth, webhooks y admin
   if (pathname.startsWith('/api/auth') || pathname.startsWith('/api/webhook') || pathname.startsWith('/api/admin')) {
     return NextResponse.next()
   }
 
-  // Todo lo demás (web pública, API de datos, sitemap) → protección
   const res = NextResponse.redirect(new URL('/proximamente', request.url))
   res.headers.set('X-Robots-Tag', 'noindex')
   return res
