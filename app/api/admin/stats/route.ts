@@ -19,7 +19,7 @@ export async function GET(req: Request) {
       .not('stripe_subscription_id', 'is', null)
       .gt('plan_activo_hasta', ahora)
       .order('created_at', { ascending: false }).limit(8),
-    sb.from('propiedades').select('*', { count: 'exact', head: true }).eq('destacado', true),
+    sb.from('propiedades').select('*', { count: 'exact', head: true }).eq('destacado', true).gt('destacado_hasta', ahora),
     sb.from('configuracion').select('valor').eq('clave', 'visitas_web').single(),
   ])
   const totalVisitas = parseInt((visitasData as any)?.valor || '0')
