@@ -9,10 +9,14 @@ export default function PagoProfesional() {
     const init = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { window.location.href = '/login'; return }
+      const { data: { session } } = await supabase.auth.getSession()
       try {
         const res = await fetch('/api/checkout', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.access_token ?? ''}`
+          },
           body: JSON.stringify({ userId: user.id, email: user.email, tipo: 'profesional' })
         })
         const data = await res.json()
