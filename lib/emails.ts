@@ -135,7 +135,9 @@ export async function emailNuevoMensaje(opts: {
 export async function emailPagoConfirmado(email: string, nombre: string, proximaFactura?: string) {
   const html = layout(`
     <div style="text-align:center;margin-bottom:24px">
-      <div style="display:inline-flex;align-items:center;justify-content:center;background:#e0f5f7;border-radius:50%;width:60px;height:60px;font-size:26px">✓</div>
+      <div style="display:inline-block;background:#e0f5f7;border-radius:50%;width:64px;height:64px;line-height:64px;text-align:center">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#006D77" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;margin-top:16px"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
     </div>
     <h1 style="margin:0 0 8px;font-size:22px;font-weight:700;color:#111;text-align:center">¡Tu plan Profesional está activo!</h1>
     <p style="margin:0 0 24px;font-size:15px;color:#666;text-align:center">Gracias${nombre ? `, ${nombre}` : ''}. Tu suscripción está confirmada.</p>
