@@ -67,7 +67,7 @@ export const t = {
     propiedad: {
       cargando: 'Cargando...', noEncontrada: 'Propiedad no encontrada', volver: 'Volver al buscador',
       caracteristicas: 'Características', descripcion: 'Descripción', amenidades: 'Amenidades', ubicacion: 'Ubicación',
-      habitaciones: 'Habitaciones', banos: 'Baños', superficie: 'Superficie', parqueos: 'Parqueos', piso: 'Piso',
+      habitaciones: 'Habitaciones', banos: 'Baños', superficie: 'Superficie', parqueos: 'Parqueos', piso: 'Nivel',
       tareas: 'Tareas', piesC: 'Pies cuadrados', verDescCompleta: 'Ver descripción completa', verMenos: 'Ver menos',
       verTelefono: 'Ver teléfono', telContacto: 'Teléfono de contacto', sinTelefono: 'El propietario no ha publicado su teléfono',
       enviarMensaje: 'Enviar mensaje', enviando: 'Enviando...', mensajeEnviado: '✓ Mensaje enviado correctamente',
@@ -123,7 +123,7 @@ export const t = {
         estudio: 'Estudio', pagado: 'Pagado',
         tipoInmueble: 'Tipo de inmueble', operacion: 'Operación', titulo_anuncio: 'Título del anuncio *',
         precio: 'Precio (US$) *', provincia: 'Provincia *', sector: 'Sector / Zona', sectorOpcional: '(opcional)',
-        habitaciones: 'Habitaciones', banos: 'Baños', superficie: 'Superficie (m²)', piso: 'Piso', pisoPlaceholder: 'Ej: 4',
+        habitaciones: 'Habitaciones', banos: 'Baños', superficie: 'Superficie (m²)', piso: 'Nivel', pisoPlaceholder: 'Ej: 4',
         descripcion: 'Descripción *', amenidades: 'Amenidades', fotos: 'Fotos', fotosDesc: 'Sube hasta 20 fotos',
         publicar: 'Publicar anuncio', guardar: 'Guardar cambios', publicando: 'Publicando...', guardando: 'Guardando...', cancelar: 'Cancelar edición',
         venta: 'Venta', alquiler: 'Alquiler',
@@ -137,6 +137,7 @@ export const t = {
         verificandoPago: 'Verificando tu pago...', verificandoSecs: 'Esto solo toma unos segundos',
         err_campos: 'El título, precio y provincia son obligatorios', err_fotos: 'Debes subir al menos una foto del inmueble', err_desc: 'La descripción es obligatoria',
         err_sesion: 'Debes iniciar sesión para publicar', ok: '¡Anuncio publicado correctamente!', okEdit: '¡Anuncio actualizado correctamente!',
+        mapaHint: 'Esta es la zona aproximada. Mueve el pin o haz clic en el mapa para indicar la ubicación exacta de tu propiedad.',
       },
       mensajes: {
         titulo: 'Mensajes', sinMensajes: 'No tienes mensajes aún', seleccionar: 'Selecciona una conversación', seleccionarDesc: 'Elige un contacto de la lista para ver el chat', escribir: 'Escribe un mensaje...', ver: 'Ver', particular: 'PARTICULAR', conversaciones: 'conversación', conversacionesPlural: 'conversaciones',
@@ -360,6 +361,7 @@ export const t = {
         verificandoPago: 'Verifying your payment...', verificandoSecs: 'This only takes a few seconds',
         err_campos: 'Title, price and province are required', err_fotos: 'You must upload at least one photo', err_desc: 'Description is required',
         err_sesion: 'You must be signed in to post a listing', ok: 'Listing posted successfully!', okEdit: 'Listing updated successfully!',
+        mapaHint: 'This is the approximate area. Move the pin or click on the map to indicate the exact location of your property.',
       },
       mensajes: {
         titulo: 'Messages', sinMensajes: 'You have no messages yet', seleccionar: 'Select a conversation', seleccionarDesc: 'Choose a contact from the list to view the chat', escribir: 'Write a message...', ver: 'View', particular: 'INDIVIDUAL', conversaciones: 'conversation', conversacionesPlural: 'conversations',
@@ -583,6 +585,7 @@ export const t = {
         verificandoPago: 'Vérification du paiement...', verificandoSecs: 'Cela ne prend que quelques secondes',
         err_campos: 'Le titre, le prix et la province sont obligatoires', err_fotos: 'Vous devez télécharger au moins une photo', err_desc: 'La description est obligatoire',
         err_sesion: 'Vous devez être connecté pour publier une annonce', ok: 'Annonce publiée avec succès !', okEdit: 'Annonce mise à jour avec succès !',
+        mapaHint: "Voici la zone approximative. Déplacez le marqueur ou cliquez sur la carte pour indiquer l'emplacement exact de votre propriété.",
       },
       mensajes: {
         titulo: 'Messages', sinMensajes: "Vous n'avez pas encore de messages", seleccionar: 'Sélectionnez une conversation', seleccionarDesc: 'Choisissez un contact dans la liste pour voir le chat', escribir: 'Écrire un message...', ver: 'Voir', particular: 'PARTICULIER', conversaciones: 'conversation', conversacionesPlural: 'conversations',
