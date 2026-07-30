@@ -53,6 +53,10 @@ export default function Admin() {
   const [ingresosLoading, setIngresosLoading] = useState(false)
   const [destacadosActivos, setDestacadosActivos] = useState<any[]>([])
   const [destacadosLoading, setDestacadosLoading] = useState(false)
+  const [destManualId, setDestManualId] = useState('')
+  const [destManualDias, setDestManualDias] = useState('30')
+  const [destManualLoading, setDestManualLoading] = useState(false)
+  const [destManualMsg, setDestManualMsg] = useState('')
   const [bannerUrl, setBannerUrl] = useState('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1600&q=80')
   const [bannerInput, setBannerInput] = useState('')
   const [bannerGuardado, setBannerGuardado] = useState(false)
@@ -789,6 +793,37 @@ export default function Admin() {
                   )
                 })}
               </div>
+
+              {/* Destacar manualmente */}
+              <Card style={{ padding: '20px 24px', marginBottom: 20 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#111', marginBottom: 14 }}>Destacar anuncio gratis</div>
+                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'flex-end' }}>
+                  <div style={{ flex: 1, minWidth: 200 }}>
+                    <div style={{ fontSize: 11, color: '#888', fontWeight: 600, marginBottom: 6 }}>ID del anuncio</div>
+                    <input value={destManualId} onChange={e => setDestManualId(e.target.value)} placeholder="Pega el ID de la propiedad" style={{ width: '100%', padding: '9px 12px', border: '1px solid #ddd', borderRadius: 6, fontSize: 13, outline: 'none', boxSizing: 'border-box' }} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 11, color: '#888', fontWeight: 600, marginBottom: 6 }}>Duración</div>
+                    <select value={destManualDias} onChange={e => setDestManualDias(e.target.value)} style={{ padding: '9px 12px', border: '1px solid #ddd', borderRadius: 6, fontSize: 13, outline: 'none', background: '#fff' }}>
+                      <option value="15">15 días</option>
+                      <option value="30">30 días</option>
+                      <option value="60">60 días</option>
+                      <option value="365">1 año</option>
+                    </select>
+                  </div>
+                  <button disabled={!destManualId.trim() || destManualLoading} onClick={async () => {
+                    setDestManualLoading(true); setDestManualMsg('')
+                    const r = await fetch('/api/admin/destacados', { method: 'POST', headers: { ...authHeader(), 'Content-Type': 'application/json' }, body: JSON.stringify({ propiedadId: destManualId.trim(), dias: Number(destManualDias) }) })
+                    const d = await r.json()
+                    setDestManualMsg(d.ok ? '✓ Destacado activado' : d.error || 'Error')
+                    if (d.ok) { setDestManualId(''); cargarDestacados() }
+                    setDestManualLoading(false)
+                  }} style={{ padding: '9px 20px', background: '#006D77', color: '#fff', border: 'none', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: destManualId.trim() ? 'pointer' : 'not-allowed', opacity: destManualId.trim() ? 1 : 0.5, whiteSpace: 'nowrap' }}>
+                    {destManualLoading ? 'Guardando…' : 'Activar destacado'}
+                  </button>
+                </div>
+                {destManualMsg && <div style={{ marginTop: 10, fontSize: 13, color: destManualMsg.startsWith('✓') ? '#006D77' : '#e55', fontWeight: 500 }}>{destManualMsg}</div>}
+              </Card>
 
               {/* Tabla */}
               <Card style={{ overflow: 'auto' }}>

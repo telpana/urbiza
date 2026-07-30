@@ -1,7 +1,7 @@
-const FALLBACK = 59.5
-const CACHE_KEY = 'hb_dop_rate'
-const CACHE_TS_KEY = 'hb_dop_rate_ts'
-const TTL = 7 * 24 * 60 * 60 * 1000
+const FALLBACK = 62.5
+const CACHE_KEY = 'hb_dop_rate_v2'
+const CACHE_TS_KEY = 'hb_dop_rate_ts_v2'
+const TTL = 24 * 60 * 60 * 1000
 
 let _rate = FALLBACK
 
@@ -17,9 +17,9 @@ export async function getDopRate(): Promise<number> {
   }
 
   try {
-    const r = await fetch('https://open.er-api.com/v6/latest/USD')
+    const r = await fetch('/api/dop-rate')
     const d = await r.json()
-    const rate = d?.rates?.DOP
+    const rate = d?.rate
     if (rate && typeof rate === 'number') {
       _rate = rate
       localStorage.setItem(CACHE_KEY, String(rate))

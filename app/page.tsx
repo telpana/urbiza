@@ -853,7 +853,7 @@ export default function Home() {
                       <div className="home-prop-card-body" style={{ padding: '14px 16px' }}>
                         <div style={{ fontSize: 19, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio ?? p.price ?? 0).toLocaleString('en-US')}</div>
                         <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 3 }}>{(idioma === 'en' && p.titulo_en ? p.titulo_en : idioma === 'fr' && p.titulo_fr ? p.titulo_fr : p.titulo) ?? p.title}</div>
-                        <div style={{ fontSize: 12, color: '#888' }}>{[p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ') || p.feats || ''}</div>
+                        <div style={{ fontSize: 12, color: '#888' }}>{[p.habitaciones && `${p.habitaciones} ${tr.buscar.hab}`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ') || p.feats || ''}</div>
                         <div className="home-prop-card-zona" style={{ display: 'none' }}>{(p.zona || p.loc || '').split(',')[0]}</div>
                       </div>
                     </a>
@@ -893,7 +893,7 @@ export default function Home() {
                       <div className="home-prop-card-body" style={{ padding: '14px 16px' }}>
                         <div style={{ fontSize: 19, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio ?? p.price ?? 0).toLocaleString('en-US')}</div>
                         <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 3 }}>{(idioma === 'en' && p.titulo_en ? p.titulo_en : idioma === 'fr' && p.titulo_fr ? p.titulo_fr : p.titulo) ?? p.title}</div>
-                        <div style={{ fontSize: 12, color: '#888' }}>{[p.habitaciones && `${p.habitaciones} hab`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ') || p.feats || ''}</div>
+                        <div style={{ fontSize: 12, color: '#888' }}>{[p.habitaciones && `${p.habitaciones} ${tr.buscar.hab}`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ') || p.feats || ''}</div>
                         <div className="home-prop-card-zona" style={{ display: 'none' }}>{(p.zona || p.loc || '').split(',')[0]}</div>
                       </div>
                     </a>

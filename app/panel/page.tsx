@@ -882,7 +882,7 @@ export default function Panel() {
       )}
 
       {/* NAV */}
-      <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', position: 'sticky', top: 0, zIndex: 1000 }}>
+      <nav style={{ background: '#006D77', height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', position: 'sticky', top: 0, zIndex: 2000 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
           <button className="panel-hamburger" onClick={() => setSidebarOpen(v => !v)} style={{ all: 'unset', cursor: 'pointer', display: 'none', alignItems: 'center', justifyContent: 'center', width: 36, height: 36, borderRadius: 6, background: 'rgba(255,255,255,0.15)' }}>
             <svg width="18" height="14" viewBox="0 0 18 14" fill="none"><rect y="0" width="18" height="2" rx="1" fill="white"/><rect y="6" width="18" height="2" rx="1" fill="white"/><rect y="12" width="18" height="2" rx="1" fill="white"/></svg>
@@ -1378,6 +1378,7 @@ export default function Panel() {
                         lat={pubLat}
                         lng={pubLng}
                         onChange={(lat, lng) => { setPubLat(lat); setPubLng(lng) }}
+                        hint={Tpanel.publicar.mapaHint}
                       />
                     </div>
                   )}
