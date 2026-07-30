@@ -3,8 +3,6 @@ import Stripe from 'stripe'
 import { verifyToken } from '../verify/route'
 
 export async function GET(req: Request) {
-  if (!verifyToken(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-
   const key = process.env.STRIPE_SECRET_KEY
   const keyInfo = key ? `${key.substring(0, 12)}... (${key.length} chars)` : 'MISSING'
 
