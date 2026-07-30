@@ -357,7 +357,7 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href, dopRa
                 <div style={{ padding: '12px 14px' }}>
                   <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 1 }}>US$ {(p.precio || 0).toLocaleString('en-US')}</div>
                   <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.zona || ''}</div>
-                  <div style={{ fontSize: 12, color: '#888' }}>{[p.tipo ? tipoLabel(p.tipo) : null, p.habitaciones && `${p.habitaciones} ${tr.hab}`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ')}</div>
+                  <div style={{ fontSize: 12, color: '#888' }}>{[p.tipo ? tipoLabel(p.tipo) : null, p.habitaciones && `${p.habitaciones} ${tr.buscar.hab}`, p.m2 && `${p.m2} m²`].filter(Boolean).join(' · ')}</div>
                 </div>
               </a>
             ))
