@@ -17,7 +17,7 @@ function getMenuItems(Tpanel: any) {
     { id: 'plan', label: Tpanel?.menu?.plan ?? 'Mi plan', icon: Ip(<><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></>) },
     { id: 'perfil', label: Tpanel?.menu?.perfil ?? 'Mi perfil', icon: Ip(<><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>) },
     { id: 'guardados', label: Tpanel?.menu?.guardados ?? 'Guardados', icon: Ip(<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>) },
-    { id: 'cursos', label: Tpanel?.menu?.cursos ?? 'Cursos AEI', icon: Ip(<><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></>) },
+
     { id: 'ayuda', label: Tpanel?.menu?.ayuda ?? 'Ayuda', proOnly: true, icon: Ip(<><circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></>) },
   ]
 }
@@ -2434,39 +2434,6 @@ export default function Panel() {
             <GuardadosSeccion onLeer={(n = 1) => setNoLeidosGuardados(v => Math.max(0, v - n))} />
           )}
 
-          {/* CURSOS AEI */}
-          {!cargando && seccion === 'cursos' && (
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 8 }}>
-                <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111' }}>{Tpanel.cursos.titulo}</h1>
-              </div>
-              <p className="cursos-desc" style={{ fontSize: 14, color: '#888', marginBottom: 28 }}>{Tpanel.cursos.desc}</p>
-
-              {/* Banner AEI */}
-              <div className="cursos-banner" style={{ background: 'linear-gradient(135deg, #1a3a5c 0%, #004E57 100%)', borderRadius: 10, padding: '28px 32px', marginBottom: 28, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 20 }}>
-                <div>
-                  <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', fontWeight: 600, letterSpacing: 1, marginBottom: 8 }}>{Tpanel.cursos.bannerSub}</div>
-                  <div style={{ fontSize: 22, fontWeight: 700, color: '#fff', marginBottom: 8 }}>{Tpanel.cursos.bannerTitulo}</div>
-                  <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.75)', lineHeight: 1.6 }}>{Tpanel.cursos.bannerDesc}</div>
-                </div>
-                <a href="https://aei.com.do" target="_blank" rel="noopener noreferrer" className="cursos-banner-btn" style={{ all: 'unset', background: '#fff', color: '#1a3a5c', padding: '12px 24px', borderRadius: 6, fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                  {Tpanel.cursos.visitar}
-                </a>
-              </div>
-
-              <div className="cursos-info-card" style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center' }}>
-                <div className="cursos-info-text" style={{ fontSize: 15, color: '#555', lineHeight: 1.8, marginBottom: 20 }}>
-                  {Tpanel.cursos.infoTexto.split('\n').map((line: string, i: number) => <span key={i}>{line}{i === 0 && <br/>}</span>)}
-                </div>
-                <a href="https://aei.com.do" target="_blank" rel="noopener noreferrer" className="cursos-cta-btn" style={{ all: 'unset', background: '#1a3a5c', color: '#fff', padding: '13px 32px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: 'pointer', display: 'inline-block' }}>
-                  {Tpanel.cursos.verCursos}
-                </a>
-                <div className="cursos-cta-note" style={{ fontSize: 12, color: '#aaa', marginTop: 14 }}>
-                  {Tpanel.cursos.nota}
-                </div>
-              </div>
-            </div>
-          )}
 
           {!cargando && seccion === 'ayuda' && tipoUsuario === 'profesional' && (
             <div style={{ maxWidth: 640 }}>
