@@ -56,9 +56,6 @@ export async function POST(req: Request) {
     // Borrar mensajes que el usuario haya enviado como comprador
     await supabase.from('mensajes').delete().eq('remitente_id', userId)
 
-    // Borrar favoritos del usuario
-    await supabase.from('favoritos').delete().eq('usuario_id', userId)
-
     // Degradar cuenta a particular, sin AEI ni suscripción
     await supabase.from('usuarios').update({
       plan: 'gratis',
