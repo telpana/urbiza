@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
+import { getUserIdFromRequest } from '@/lib/authUser'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2026-05-27.dahlia' })
 
@@ -11,8 +12,12 @@ const supabase = createClient(
 
 export async function POST(req: Request) {
   try {
+    const callerUid = await getUserIdFromRequest(req)
+    if (!callerUid) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+
     const { userId } = await req.json()
     if (!userId) return NextResponse.json({ error: 'Sin userId' }, { status: 400 })
+    if (callerUid !== userId) return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
 
     const { data: usuario } = await supabase
       .from('usuarios')

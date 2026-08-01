@@ -50,6 +50,14 @@ export async function POST(req: Request) {
 
     // Destacado (pago único)
     if (['15', '30', '60'].includes(tipo || '') && propiedadId) {
+      // Verify the property belongs to the user who paid
+      if (userId) {
+        const { data: propCheck } = await supabase.from('propiedades').select('usuario_id').eq('id', propiedadId).single()
+        if (!propCheck || propCheck.usuario_id !== userId) {
+          console.warn('[webhook] destacado: propiedad no pertenece al usuario', { propiedadId, userId })
+          return NextResponse.json({ ok: true })
+        }
+      }
       const dias = Number(tipo)
       const ahora = new Date().toISOString()
       const { error } = await supabase.from('propiedades').update({

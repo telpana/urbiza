@@ -349,8 +349,11 @@ export default function Panel() {
         .then(({ data }) => { if (data) setAnunciosReales(data) })
     }
     if (seccion === 'plan' && usuario?.id && !planInfo) {
-      fetch('/api/plan-info', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: usuario.id }) })
-        .then(r => r.json()).then(d => setPlanInfo(d ?? { error: true })).catch(() => setPlanInfo({ error: true }))
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        const tok = session?.access_token
+        fetch('/api/plan-info', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(tok ? { Authorization: `Bearer ${tok}` } : {}) }, body: JSON.stringify({ userId: usuario.id }) })
+          .then(r => r.json()).then(d => setPlanInfo(d ?? { error: true })).catch(() => setPlanInfo({ error: true }))
+      })
     }
   }, [seccion, usuario])
 
@@ -404,6 +407,8 @@ export default function Panel() {
     const cargarDatos = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { window.location.href = '/login'; return }
+      const { data: { session: initSession } } = await supabase.auth.getSession()
+      const initToken = initSession?.access_token
 
       // Cargar perfil usuario
       const { data: perfil } = await supabase.from('usuarios').select('*').eq('id', user.id).single()
@@ -454,7 +459,7 @@ export default function Panel() {
 
       // Cargar mensajes del usuario
       const { data: msgs } = await supabase.from('mensajes').select('*, propiedades(titulo)').eq('vendedor_id', user.id).order('created_at', { ascending: false })
-      const resEnv = await fetch('/api/mensajes-enviados', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id }) })
+      const resEnv = await fetch('/api/mensajes-enviados', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(initToken ? { Authorization: `Bearer ${initToken}` } : {}) }, body: JSON.stringify({ userId: user.id }) })
       const { data: enviados } = await resEnv.json()
 
       // Enriquecer con fotos de perfil via service role
@@ -561,8 +566,10 @@ export default function Panel() {
   }
 
   const cargarHilo = async (propiedadId: string, userId1: string, userId2: string) => {
+    const { data: { session: hiloSess } } = await supabase.auth.getSession()
+    const hiloTok = hiloSess?.access_token
     setHiloLoading(true)
-    const res = await fetch('/api/mensajes-hilo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ propiedadId, userId1, userId2 }) })
+    const res = await fetch('/api/mensajes-hilo', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(hiloTok ? { Authorization: `Bearer ${hiloTok}` } : {}) }, body: JSON.stringify({ propiedadId, userId1, userId2 }) })
     const { data } = await res.json()
     setHilo(data || [])
     setHiloLoading(false)
@@ -576,9 +583,11 @@ export default function Panel() {
     const otroUserId = m.remitente_id && m.remitente_id !== user.id ? m.remitente_id : m.vendedor_id
     if (!otroUserId) { alert('No se puede responder: no hay destinatario'); return }
     if (!m.propiedad_id) { alert('No se puede responder: falta propiedad'); return }
+    const { data: { session: enviaSess } } = await supabase.auth.getSession()
+    const enviaTok = enviaSess?.access_token
     const res = await fetch('/api/mensajes-enviar', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...(enviaTok ? { Authorization: `Bearer ${enviaTok}` } : {}) },
       body: JSON.stringify({
         propiedadId: m.propiedad_id,
         vendedorId: otroUserId,
@@ -2256,8 +2265,10 @@ export default function Panel() {
                           <button disabled={bajando} onClick={async () => {
                             const { data: { user } } = await supabase.auth.getUser()
                             if (!user) return
+                            const { data: { session: cancelSess } } = await supabase.auth.getSession()
+                            const cancelTok = cancelSess?.access_token
                             setBajando(true)
-                            const res = await fetch('/api/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: user.id }) })
+                            const res = await fetch('/api/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(cancelTok ? { Authorization: `Bearer ${cancelTok}` } : {}) }, body: JSON.stringify({ userId: user.id }) })
                             const data = await res.json()
                             setBajando(false)
                             if (data.ok) { setModalBaja(false); alert(Tpanel.plan.cancelarOk); window.location.href = '/panel' }

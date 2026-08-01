@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { getUserIdFromRequest } from '@/lib/authUser'
 
 const sb = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -7,10 +8,14 @@ const sb = createClient(
 )
 
 export async function POST(req: Request) {
+  const callerUid = await getUserIdFromRequest(req)
+  if (!callerUid) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+
   const { propiedadId, vendedorId, remitenteId, nombreCliente, telefonoCliente, mensaje } = await req.json()
   if (!propiedadId || !vendedorId || !remitenteId || !mensaje) {
     return NextResponse.json({ error: 'Faltan datos' }, { status: 400 })
   }
+  if (callerUid !== remitenteId) return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
 
   const { data, error } = await sb.from('mensajes').insert({
     propiedad_id: propiedadId,

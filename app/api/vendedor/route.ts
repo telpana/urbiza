@@ -13,7 +13,7 @@ export async function GET(req: Request) {
 
   const { data } = await sb
     .from('usuarios')
-    .select('nombre, foto_url, inmobiliaria, plan, tipo, telefono, numero_aei, aei_aprobado, idiomas, web_url, instagram_url')
+    .select('nombre, foto_url, inmobiliaria, plan, tipo, numero_aei, aei_aprobado, idiomas, web_url, instagram_url')
     .eq('id', id)
     .single()
 

@@ -14,7 +14,7 @@ export async function POST(req: Request) {
       return Response.json({ ok: false, error: 'Email requerido' }, { status: 400 })
     }
 
-    const origin = new URL(req.url).origin
+    const origin = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.habitade.com'
     const redirectTo = `${origin}/reset-password`
 
     const { data, error } = await supabaseAdmin.auth.admin.generateLink({
