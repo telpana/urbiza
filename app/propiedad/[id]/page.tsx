@@ -378,6 +378,33 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   const precio = propiedad.precio || 0
   const m2 = propiedad.m2 || 0
 
+  const schemaListing = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    "name": tituloMostrar || propiedad.titulo,
+    "description": propiedad.descripcion || tituloMostrar,
+    "url": `https://www.habitade.com/propiedad/${id}`,
+    "datePosted": propiedad.created_at,
+    "image": fotos.length > 0 ? fotos[0] : undefined,
+    "offers": {
+      "@type": "Offer",
+      "price": precio,
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock"
+    },
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": propiedad.zona || propiedad.sector,
+      "addressCountry": "DO"
+    },
+    ...(m2 > 0 && { "floorSize": { "@type": "QuantitativeValue", "value": m2, "unitCode": "MTK" } }),
+    ...(propiedad.habitaciones > 0 && { "numberOfRooms": propiedad.habitaciones }),
+    "seller": {
+      "@type": esProfesional ? "RealEstateAgent" : "Person",
+      "name": tituloVendedor
+    }
+  }
+
   const tipoSinHab = ['Edificio', 'Terreno'].includes(propiedad.tipo)
   const esTerreno = propiedad.tipo === 'Terreno'
   const sqft = m2 > 0 ? Math.round(m2 * 10.7639) : 0
@@ -402,6 +429,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
 
   return (
     <main style={{ fontFamily: 'sans-serif', margin: 0, padding: 0, background: '#f4f5f6' }}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaListing) }} />
 
       {/* MENÚ MÓVIL DROPDOWN */}
       {mobileMenuOpen && (
