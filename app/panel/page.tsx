@@ -409,6 +409,14 @@ export default function Panel() {
       if (!user) { window.location.href = '/login'; return }
       const { data: { session: initSession } } = await supabase.auth.getSession()
       const initToken = initSession?.access_token
+      // Limpiar foto cacheada si pertenece a otro usuario
+      try {
+        if (localStorage.getItem('hb_perfil_uid') !== user.id) {
+          localStorage.removeItem('hb_perfil_foto')
+          localStorage.removeItem('hb_perfil_uid')
+          setFotoPerfilUrl(null)
+        }
+      } catch {}
 
       // Cargar perfil usuario
       const { data: perfil } = await supabase.from('usuarios').select('*').eq('id', user.id).single()
