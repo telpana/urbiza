@@ -182,7 +182,7 @@ export const t = {
         cancelarModalItem1: 'Todos tus anuncios se eliminarán en el momento',
         cancelarModalItem2: 'Perderás todos tus mensajes e historial de contactos',
         cancelarModalItem3: 'Perderás tu badge PRO y número AEI verificado',
-        cancelarModalItem4: 'Tu cuenta pasará a ser Particular — no podrás publicar nuevos anuncios',
+        cancelarModalItem4: 'Tu cuenta pasará a ser Particular, no podrás publicar nuevos anuncios',
         cancelarModalBoton: 'Sí, dar de baja',
         procesando: 'Procesando...',
       },
