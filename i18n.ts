@@ -92,7 +92,7 @@ export const t = {
       nombre: 'Nombre completo', nombrePlaceholder: 'Tu nombre',
       telefono: 'Teléfono', cedula: 'Cédula', aei: 'Número AEI', opcional: '(opcional)',
       entrar: 'Entrar a mi panel', guardando: 'Guardando...', cargando: 'Cargando...',
-      err_tipo: 'Elige el tipo de cuenta', err_nombre: 'Introduce tu nombre', err_telefono: 'Introduce tu teléfono',
+      err_tipo: 'Elige el tipo de cuenta', err_nombre: 'Introduce tu nombre', err_telefono: 'Introduce tu teléfono', err_telefono_corto: 'Introduce un número de teléfono válido (mínimo 5 dígitos)',
     },
     panel: {
       menu: { miPanel: 'Mi panel', anuncios: 'Mis anuncios', publicar: 'Publicar anuncio', mensajes: 'Mensajes', estadisticas: 'Estadísticas', destacar: 'Destacar anuncio', plan: 'Mi plan', perfil: 'Mi perfil', guardados: 'Guardados', cursos: 'Cursos AEI', equipo: 'Equipo', ayuda: 'Ayuda' },
@@ -316,7 +316,7 @@ export const t = {
       nombre: 'Full name', nombrePlaceholder: 'Your name',
       telefono: 'Phone', cedula: 'ID card', aei: 'AEI Number', opcional: '(optional)',
       entrar: 'Go to my dashboard', guardando: 'Saving...', cargando: 'Loading...',
-      err_tipo: 'Choose an account type', err_nombre: 'Enter your name', err_telefono: 'Enter your phone number',
+      err_tipo: 'Choose an account type', err_nombre: 'Enter your name', err_telefono: 'Enter your phone number', err_telefono_corto: 'Enter a valid phone number (at least 5 digits)',
     },
     panel: {
       menu: { miPanel: 'My dashboard', anuncios: 'My listings', publicar: 'Post listing', mensajes: 'Messages', estadisticas: 'Statistics', destacar: 'Feature listing', plan: 'My plan', perfil: 'My profile', guardados: 'Saved', cursos: 'AEI Courses', equipo: 'Team', ayuda: 'Help' },
@@ -540,7 +540,7 @@ export const t = {
       nombre: 'Nom complet', nombrePlaceholder: 'Votre nom',
       telefono: 'Téléphone', cedula: "Carte d'identité", aei: 'Numéro AEI', opcional: '(optionnel)',
       entrar: 'Accéder à mon tableau de bord', guardando: 'Enregistrement...', cargando: 'Chargement...',
-      err_tipo: 'Choisissez un type de compte', err_nombre: 'Entrez votre nom', err_telefono: 'Entrez votre numéro de téléphone',
+      err_tipo: 'Choisissez un type de compte', err_nombre: 'Entrez votre nom', err_telefono: 'Entrez votre numéro de téléphone', err_telefono_corto: 'Entrez un numéro de téléphone valide (au moins 5 chiffres)',
     },
     panel: {
       menu: { miPanel: 'Mon tableau de bord', anuncios: 'Mes annonces', publicar: 'Publier une annonce', mensajes: 'Messages', estadisticas: 'Statistiques', destacar: 'Mettre en avant', plan: 'Mon abonnement', perfil: 'Mon profil', guardados: 'Sauvegardés', cursos: 'Cours AEI', equipo: 'Équipe', ayuda: 'Aide' },

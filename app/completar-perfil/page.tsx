@@ -57,6 +57,7 @@ export default function CompletarPerfil() {
     if (!tipo) { setError(T.err_tipo); return }
     if (!nombre.trim()) { setError(T.err_nombre); return }
     if (!telefono.trim()) { setError(T.err_telefono); return }
+    if (telefono.replace(/\D/g, '').length < 5) { setError(T.err_telefono_corto); return }
     setGuardando(true)
     setError('')
 
