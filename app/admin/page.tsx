@@ -667,13 +667,13 @@ export default function Admin() {
                   <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 700 }}>
                     <thead>
                       <tr style={{ borderBottom: '1.5px solid #f0f0f0', background: '#fafafa' }}>
-                        {['Nombre','Email','Tipo','Plan','AEI','Registro',''].map((h, i) => (
+                        {['Nombre','Email','Tipo','Plan','AEI','Código promo','Registro',''].map((h, i) => (
                           <th key={i} style={{ textAlign: 'left', fontSize: 11, color: '#999', fontWeight: 600, padding: `12px 16px`, textTransform: 'uppercase', letterSpacing: 0.4 }}>{h}</th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
-                      {usuarios.length === 0 && <tr><td colSpan={7} style={{ padding: 24, fontSize: 13, color: '#aaa', textAlign: 'center' }}>Sin resultados</td></tr>}
+                      {usuarios.length === 0 && <tr><td colSpan={8} style={{ padding: 24, fontSize: 13, color: '#aaa', textAlign: 'center' }}>Sin resultados</td></tr>}
                       {usuarios.map((u: any) => {
                         const inicial = (u.nombre || u.email || '?')[0].toUpperCase()
                         return (
@@ -699,6 +699,11 @@ export default function Admin() {
                                 : <Badge txt={`⏳ ${u.numero_aei}`} color="#92400e" bg="#fef3c7" />
                               : <span style={{ color: '#ccc', fontSize: 12 }}>—</span>
                             }
+                          </td>
+                          <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
+                            {u.codigo_promo_usado
+                              ? <Badge txt={u.codigo_promo_usado} color="#92400e" bg="#fef3c7" />
+                              : <span style={{ color: '#ccc', fontSize: 12 }}>—</span>}
                           </td>
                           <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 12, color: '#aaa', whiteSpace: 'nowrap' }}>{fmtFecha(u.created_at)}</span></td>
                           <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
