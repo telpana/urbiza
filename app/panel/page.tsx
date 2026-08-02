@@ -535,15 +535,20 @@ export default function Panel() {
 
     let nuevaFotoUrl: string | null = null
     if (fotoPerfilFile) {
-      const ext = fotoPerfilFile.name.split('.').pop()
-      const path = `avatares/${user.id}.${ext}`
+      const ext = fotoPerfilFile.name.split('.').pop() || 'jpg'
+      const path = `${user.id}/avatar-${Date.now()}.${ext}`
       const { data: uploadData, error: uploadErr } = await supabase.storage
         .from('propiedades')
         .upload(path, fotoPerfilFile, { upsert: true })
-      if (!uploadErr && uploadData) {
+      if (uploadErr) {
+        alert('Error al subir foto: ' + uploadErr.message)
+        return
+      }
+      if (uploadData) {
         const { data: urlData } = supabase.storage.from('propiedades').getPublicUrl(uploadData.path)
         nuevaFotoUrl = urlData.publicUrl
         setFotoPerfilUrl(nuevaFotoUrl)
+        try { localStorage.setItem('hb_perfil_foto', nuevaFotoUrl); localStorage.setItem('hb_perfil_uid', user.id) } catch {}
         setFotoPerfilFile(null)
       }
     }
