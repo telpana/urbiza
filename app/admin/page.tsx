@@ -727,13 +727,13 @@ export default function Admin() {
                   <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 600 }}>
                     <thead>
                       <tr style={{ borderBottom: '1.5px solid #f0f0f0', background: '#fafafa' }}>
-                        {['Nombre','Email','Tipo','ID Stripe','Vence'].map((h, i) => (
+                        {['Nombre','Email','Tipo','Código promo','ID Stripe','Vence'].map((h, i) => (
                           <th key={i} style={{ textAlign: 'left', fontSize: 11, color: '#999', fontWeight: 600, padding: '12px 16px', textTransform: 'uppercase', letterSpacing: 0.4 }}>{h}</th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
-                      {cobros.length === 0 && <tr><td colSpan={5} style={{ padding: 24, fontSize: 13, color: '#aaa', textAlign: 'center' }}>Sin suscripciones activas</td></tr>}
+                      {cobros.length === 0 && <tr><td colSpan={6} style={{ padding: 24, fontSize: 13, color: '#aaa', textAlign: 'center' }}>Sin suscripciones activas</td></tr>}
                       {cobros.map((u: any) => {
                         const inicial = (u.nombre || u.email || '?')[0].toUpperCase()
                         return (
@@ -755,6 +755,11 @@ export default function Admin() {
                             <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
                               <Badge txt={u.plan || 'profesional'} color="#065f46" bg="#d1fae5" />
                               {u.tipo && u.tipo !== 'particular' && <Badge txt={u.tipo} color="#555" bg="#f0f0f0" />}
+                            </td>
+                            <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
+                              {u.codigo_promo_usado
+                                ? <Badge txt={u.codigo_promo_usado} color="#92400e" bg="#fef3c7" />
+                                : <span style={{ color: '#aaa', fontSize: 12 }}>—</span>}
                             </td>
                             <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 11, color: '#aaa', fontFamily: 'monospace' }}>{u.stripe_subscription_id || '—'}</span></td>
                             <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>

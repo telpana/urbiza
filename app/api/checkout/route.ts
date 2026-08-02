@@ -74,7 +74,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: validacion.error }, { status: 400 })
       }
       // Marcar aquí mismo para que no pueda reutilizarlo aunque cancele antes de que llegue el webhook
-      await supabase.from('usuarios').update({ ya_suscrito: true }).eq('id', userId)
+      await supabase.from('usuarios').update({ ya_suscrito: true, codigo_promo_usado: codigoPromo }).eq('id', userId)
     }
 
     const stripeLocale = locale === 'fr' ? 'fr' : locale === 'en' ? 'en' : 'es'
