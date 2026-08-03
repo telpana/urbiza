@@ -530,6 +530,7 @@ export default function Panel() {
   const guardarPerfil = async () => {
     if (!perfilNombre) { alert(Tpanel.perfil.err_nombre); return }
     if (!perfilTelefono) { alert(Tpanel.perfil.err_telefono); return }
+    if (perfilTelefono.replace(/\D/g, '').length < 5) { alert(Tpanel.perfil.err_telefono_corto); return }
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 

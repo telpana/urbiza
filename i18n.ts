@@ -193,7 +193,7 @@ export const t = {
         idiomasLabel: 'Idiomas que hablas',
         guardar: 'Guardar cambios', guardando: 'Guardando...',
         ok: 'Cambios guardados correctamente', err: 'Error al guardar',
-        err_nombre: 'El nombre es obligatorio', err_telefono: 'El teléfono es obligatorio',
+        err_nombre: 'El nombre es obligatorio', err_telefono: 'El teléfono es obligatorio', err_telefono_corto: 'Introduce un número de teléfono válido',
       },
       guardados: { titulo: 'Propiedades guardadas', sinGuardados: 'No tienes propiedades guardadas', explorar: 'Explorar propiedades', cambioPrecio: 'Cambio de precio', nuevasFotos: 'Nuevas fotos' },
       planes: {
@@ -417,7 +417,7 @@ export const t = {
         idiomasLabel: 'Languages you speak',
         guardar: 'Save changes', guardando: 'Saving...',
         ok: 'Changes saved successfully', err: 'Error saving',
-        err_nombre: 'Name is required', err_telefono: 'Phone is required',
+        err_nombre: 'Name is required', err_telefono: 'Phone is required', err_telefono_corto: 'Enter a valid phone number',
       },
       guardados: { titulo: 'Saved properties', sinGuardados: 'You have no saved properties', explorar: 'Explore properties', cambioPrecio: 'Price change', nuevasFotos: 'New photos' },
       planes: {
@@ -641,7 +641,7 @@ export const t = {
         idiomasLabel: 'Langues parlées',
         guardar: 'Enregistrer les modifications', guardando: 'Enregistrement...',
         ok: 'Modifications enregistrées avec succès', err: "Erreur lors de l'enregistrement",
-        err_nombre: 'Le nom est obligatoire', err_telefono: 'Le téléphone est obligatoire',
+        err_nombre: 'Le nom est obligatoire', err_telefono: 'Le téléphone est obligatoire', err_telefono_corto: 'Entrez un numéro de téléphone valide',
       },
       guardados: { titulo: 'Propriétés sauvegardées', sinGuardados: "Vous n'avez pas de propriétés sauvegardées", explorar: 'Explorer les propriétés', cambioPrecio: 'Changement de prix', nuevasFotos: 'Nouvelles photos' },
       planes: {
