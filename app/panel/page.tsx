@@ -1311,11 +1311,21 @@ export default function Panel() {
                     Con el plan Profesional publicas anuncios ilimitados por solo US$9.99/mes.
                   </p>
                   <div style={{ maxWidth: 400, margin: '0 auto 16px' }}>
-                    <a href="/pago/profesional" style={{ background: '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
-                      Activar — US$9.99/mes
-                    </a>
+                    <button onClick={handleSuscribirse} disabled={promoLoading} style={{ background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: promoLoading ? 'default' : 'pointer', whiteSpace: 'nowrap', border: 'none', display: 'inline-flex', alignItems: 'center' }}>
+                      {promoLoading ? 'Procesando...' : 'Activar — US$9.99/mes'}
+                    </button>
                   </div>
-                  <div style={{ fontSize: 12, color: '#aaa' }}>{Tpanel.publicar.sinPermanencia}</div>
+                  <div style={{ fontSize: 12, color: '#aaa', marginBottom: 12 }}>{Tpanel.publicar.sinPermanencia}</div>
+                  <div style={{ marginTop: 8 }}>
+                    {!promoExpanded ? (
+                      <button onClick={() => setPromoExpanded(true)} style={{ all: 'unset', fontSize: 12, color: '#006D77', cursor: 'pointer', textDecoration: 'underline' }}>{Tpanel.planes.tienesCodigo}</button>
+                    ) : (
+                      <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center' }}>
+                        <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }} placeholder={Tpanel.planes.codigoPlaceholder.toUpperCase()} maxLength={32} style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '8px 12px', fontSize: 13, width: 160, outline: 'none', textAlign: 'center', letterSpacing: 1 }} />
+                      </div>
+                    )}
+                    {promoError && <div style={{ fontSize: 12, color: '#dc2626', marginTop: 6 }}>{promoError}</div>}
+                  </div>
                   </>
                   )}
                 </div>
