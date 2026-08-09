@@ -130,7 +130,7 @@ function DescripcionMultiIdioma({ propiedad, idioma, setIdioma, Tp }: { propieda
       <div style={{ position: 'relative' }}>
         <div style={{ overflow: 'hidden', maxHeight: expandida || !necesitaColapsar ? 'none' : 200 }}>
           {parrafos.map((p: string, i: number) => (
-            <p key={i} style={{ fontSize: 14, color: '#555', lineHeight: 1.8, marginBottom: 12, overflowWrap: 'break-word', wordBreak: 'break-word' }}>{p}</p>
+            <p key={i} style={{ fontSize: 14, color: '#555', lineHeight: 1.8, marginBottom: 12, overflowWrap: 'break-word', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}>{p}</p>
           ))}
         </div>
         {!expandida && necesitaColapsar && (
