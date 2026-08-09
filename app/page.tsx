@@ -535,7 +535,7 @@ export default function Home() {
           .or('zona.ilike.%Punta Cana%,zona.ilike.%Bávaro%,zona.ilike.%Cap Cana%,zona.ilike.%Cabeza de Toro%,zona.ilike.%Los Corales%,zona.ilike.%Uvero Alto%,zona.ilike.%Macao%,zona.ilike.%Cortecito%')
           .order('created_at', { ascending: false }).limit(4),
         supabase.from('propiedades').select(campos).eq('estado', 'activo')
-          .or('zona.ilike.%Samaná%,zona.ilike.%Las Terrenas%,zona.ilike.%Las Galeras%,zona.ilike.%Sánchez%,zona.ilike.%El Portillo%,zona.ilike.%Cosón%,zona.ilike.%El Limón%,zona.ilike.%Santa Bárbara%')
+          .or('zona.ilike.%Samaná%,zona.ilike.%Las Terrenas%,zona.ilike.%Las Galeras%,zona.ilike.%Sánchez, Samaná%,zona.ilike.%El Portillo%,zona.ilike.%Cosón%,zona.ilike.%El Limón%,zona.ilike.%Santa Bárbara%')
           .order('created_at', { ascending: false }).limit(4),
       ])
       if (sd && sd.length > 0) { setNovedadesSantoDomingo(sd); try { localStorage.setItem('hb_nov_sd', JSON.stringify(sd)) } catch {} }
