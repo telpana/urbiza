@@ -55,7 +55,7 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   // San Pedro de Macorís
   'san pedro de macoris': [18.4530, -69.3090], 'juan dolio': [18.4400, -69.5300], 'guayacanes': [18.4350, -69.5700],
   // María Trinidad Sánchez
-  'nagua': [19.3730, -69.8470], 'rio san juan': [19.6310, -70.0760],
+  'nagua': [19.3730, -69.8470], 'rio san juan': [19.6310, -70.0760], 'cabrera': [19.6367, -69.9183],
   // Otros
   'bani': [18.2790, -70.3310], 'azua': [18.4530, -70.7350], 'moca': [19.3960, -70.5150],
   'san cristobal': [18.4153, -70.1062], 'san francisco de macoris': [19.3011, -70.2527],
@@ -266,12 +266,12 @@ const gruposZona: Record<string, string[]> = {
   'la romana':             ['La Romana', 'Casa de Campo'],
   'san pedro de macoris':  ['San Pedro de Macorís', 'Juan Dolio', 'Guayacanes'],
   'la vega':               ['La Vega', 'Jarabacoa', 'Constanza'],
-  'maria trinidad sanchez':['Nagua', 'Río San Juan', 'María Trinidad Sánchez'],
+  'maria trinidad sanchez':['Nagua', 'Río San Juan', 'Cabrera', 'María Trinidad Sánchez'],
   'el seibo':              ['El Seibo', 'Miches'],
   'hato mayor':            ['Hato Mayor', 'Sabana de la Mar'],
   'san cristobal':         ['San Cristóbal'],
   'peravia':               ['Baní', 'Peravia'],
-  'espaillat':             ['Moca', 'Espaillat'],
+  'espaillat':             ['Moca', 'Gaspar Hernández', 'Espaillat'],
   'duarte':                ['San Francisco de Macorís', 'Duarte'],
   'monsenor nouel':        ['Bonao', 'Monseñor Nouel'],
   'valverde':              ['Mao', 'Valverde'],
@@ -329,10 +329,10 @@ const zonasSugerencias = [
   // --- Sectores: San Pedro de Macorís ---
   'San Pedro de Macorís, San Pedro de Macorís', 'Juan Dolio, San Pedro de Macorís', 'Guayacanes, San Pedro de Macorís',
   // --- Sectores: otras provincias ---
-  'Nagua, María Trinidad Sánchez', 'Río San Juan, María Trinidad Sánchez',
+  'Nagua, María Trinidad Sánchez', 'Río San Juan, María Trinidad Sánchez', 'Cabrera, María Trinidad Sánchez',
   'Miches, El Seibo', 'Sabana de la Mar, Hato Mayor',
   'San Cristóbal, San Cristóbal', 'Baní, Peravia',
-  'Moca, Espaillat', 'San Francisco de Macorís, Duarte', 'Bonao, Monseñor Nouel',
+  'Moca, Espaillat', 'Gaspar Hernández, Espaillat', 'San Francisco de Macorís, Duarte', 'Bonao, Monseñor Nouel',
   'Mao, Valverde', 'Monte Cristi, Monte Cristi', 'Dajabón, Dajabón',
   'Azua, Azua', 'Barahona, Barahona', 'Pedernales, Pedernales',
 ]
