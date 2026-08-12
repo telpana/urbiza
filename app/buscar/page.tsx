@@ -490,14 +490,11 @@ function BuscarContent() {
       const joinStr = '*, usuarios(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado, plan)'
 
       let filterIds: string[] | null = null
-      if (soloAei) {
-        const { data: aeiUsers } = await supabase.from('usuarios').select('id').eq('aei_aprobado', true).not('numero_aei', 'is', null)
-        filterIds = (aeiUsers || []).map((u: any) => u.id)
-        if (filterIds.length === 0) { setResultados([]); setTotalEnBD(0); setCargando(false); return }
-      } else if (soloProfesional) {
-        const { data: proUsers } = await supabase.from('usuarios').select('id').eq('plan', 'profesional')
-        filterIds = (proUsers || []).map((u: any) => u.id)
-        if (filterIds.length === 0) { setResultados([]); setTotalEnBD(0); setCargando(false); return }
+      if (soloAei || soloProfesional) {
+        const tipo = soloAei ? 'aei' : 'profesional'
+        const res = await fetch(`/api/vendedores-ids?tipo=${tipo}`)
+        filterIds = res.ok ? await res.json() : []
+        if (filterIds!.length === 0) { setResultados([]); setTotalEnBD(0); setCargando(false); return }
       }
 
       let q = supabase
