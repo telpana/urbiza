@@ -487,16 +487,23 @@ function BuscarContent() {
   useEffect(() => {
     const doCargar = async (pag: number) => {
       setCargando(true)
-      const needsInner = soloAei || soloProfesional
-      const joinStr = needsInner
+      const joinStr = soloProfesional
         ? '*, usuarios!inner(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado, plan)'
         : '*, usuarios(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado, plan)'
+
+      let aeiIds: string[] = []
+      if (soloAei) {
+        const { data: aeiUsers } = await supabase.from('usuarios').select('id').eq('aei_aprobado', true).not('numero_aei', 'is', null)
+        aeiIds = (aeiUsers || []).map((u: any) => u.id)
+        if (aeiIds.length === 0) { setResultados([]); setTotalEnBD(0); setCargando(false); return }
+      }
+
       let q = supabase
         .from('propiedades')
         .select(joinStr, { count: 'exact' })
         .eq('estado', 'activo')
       if (soloProfesional) q = (q as any).eq('usuarios.plan', 'profesional')
-      if (soloAei) q = (q as any).eq('usuarios.aei_aprobado', true).not('usuarios.numero_aei', 'is', null)
+      if (soloAei) q = q.in('usuario_id', aeiIds)
 
       if (zonaParam) {
         const sectores = expandirGrupo(zonaParam)
