@@ -487,23 +487,24 @@ function BuscarContent() {
   useEffect(() => {
     const doCargar = async (pag: number) => {
       setCargando(true)
-      const joinStr = soloProfesional
-        ? '*, usuarios!inner(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado, plan)'
-        : '*, usuarios(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado, plan)'
+      const joinStr = '*, usuarios(nombre, inmobiliaria, tipo, foto_url, numero_aei, aei_aprobado, plan)'
 
-      let aeiIds: string[] = []
+      let filterIds: string[] | null = null
       if (soloAei) {
         const { data: aeiUsers } = await supabase.from('usuarios').select('id').eq('aei_aprobado', true).not('numero_aei', 'is', null)
-        aeiIds = (aeiUsers || []).map((u: any) => u.id)
-        if (aeiIds.length === 0) { setResultados([]); setTotalEnBD(0); setCargando(false); return }
+        filterIds = (aeiUsers || []).map((u: any) => u.id)
+        if (filterIds.length === 0) { setResultados([]); setTotalEnBD(0); setCargando(false); return }
+      } else if (soloProfesional) {
+        const { data: proUsers } = await supabase.from('usuarios').select('id').eq('plan', 'profesional')
+        filterIds = (proUsers || []).map((u: any) => u.id)
+        if (filterIds.length === 0) { setResultados([]); setTotalEnBD(0); setCargando(false); return }
       }
 
       let q = supabase
         .from('propiedades')
         .select(joinStr, { count: 'exact' })
         .eq('estado', 'activo')
-      if (soloProfesional) q = (q as any).eq('usuarios.plan', 'profesional')
-      if (soloAei) q = q.in('usuario_id', aeiIds)
+      if (filterIds) q = q.in('usuario_id', filterIds)
 
       if (zonaParam) {
         const sectores = expandirGrupo(zonaParam)
