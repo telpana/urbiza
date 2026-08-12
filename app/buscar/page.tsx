@@ -603,10 +603,7 @@ function BuscarContent() {
     { val: 'Caros', label: Tb.caros },
   ]
 
-  const filtradas = propiedadesActivas.filter((p: any) => {
-    if (soloAei && !p.aei) return false
-    return true
-  })
+  const filtradas = propiedadesActivas
 
   const handlePaginaChange = (n: number) => {
     setPagina(n)
