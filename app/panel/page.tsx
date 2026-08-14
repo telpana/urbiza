@@ -329,6 +329,8 @@ export default function Panel() {
   const [promoExpanded, setPromoExpanded] = useState(false)
   const [promoLoading, setPromoLoading] = useState(false)
   const [promoError, setPromoError] = useState('')
+  const [promoValidado, setPromoValidado] = useState(false)
+  const [promoDias, setPromoDias] = useState(0)
 
 
 
@@ -831,6 +833,19 @@ export default function Panel() {
   const anunciosUsados = anunciosReales.length
   const suscripcionVencida = usuario?.plan === 'gratis' && usuario?.plan_activo_hasta && new Date(usuario.plan_activo_hasta) < new Date()
 
+  const aplicarCodigo = async () => {
+    if (!codigoPromo.trim()) return
+    setPromoError('')
+    setPromoLoading(true)
+    try {
+      const res = await fetch('/api/validar-promo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codigo: codigoPromo.trim() }) })
+      const data = await res.json()
+      if (data.ok) { setPromoValidado(true); setPromoDias(data.dias) }
+      else setPromoError(data.error || 'Código no válido')
+    } catch { setPromoError('Error de conexión') }
+    finally { setPromoLoading(false) }
+  }
+
   const handleSuscribirse = async () => {
     setPromoError('')
     setPromoLoading(true)
@@ -1311,17 +1326,28 @@ export default function Panel() {
                     Con el plan Profesional publicas anuncios ilimitados por solo US$9.99/mes.
                   </p>
                   <div style={{ maxWidth: 400, margin: '0 auto 16px' }}>
-                    <button onClick={handleSuscribirse} disabled={promoLoading} style={{ background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: promoLoading ? 'default' : 'pointer', whiteSpace: 'nowrap', border: 'none', display: 'inline-flex', alignItems: 'center' }}>
-                      {promoLoading ? 'Procesando...' : 'Activar — US$9.99/mes'}
+                    <button onClick={handleSuscribirse} disabled={promoLoading} style={{ background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: promoLoading ? 'default' : 'pointer', whiteSpace: 'nowrap', border: 'none', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
+                      {promoLoading ? 'Procesando...' : promoValidado ? `Activar — ${promoDias} días gratis` : 'Activar — US$9.99/mes'}
                     </button>
                   </div>
                   <div style={{ fontSize: 12, color: '#aaa', marginBottom: 12 }}>{Tpanel.publicar.sinPermanencia}</div>
                   <div style={{ marginTop: 8 }}>
                     {!promoExpanded ? (
                       <button onClick={() => setPromoExpanded(true)} style={{ all: 'unset', fontSize: 12, color: '#006D77', cursor: 'pointer', textDecoration: 'underline' }}>{Tpanel.planes.tienesCodigo}</button>
+                    ) : promoValidado ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }}>
+                        <span style={{ background: '#d1fae5', color: '#065f46', fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 20 }}>✓ {promoDias} días gratis aplicados</span>
+                        <button onClick={() => { setPromoValidado(false); setCodigoPromo(''); setPromoError('') }} style={{ all: 'unset', fontSize: 11, color: '#aaa', cursor: 'pointer', textDecoration: 'underline' }}>Quitar</button>
+                      </div>
                     ) : (
                       <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center' }}>
-                        <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }} placeholder={Tpanel.planes.codigoPlaceholder.toUpperCase()} maxLength={32} style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '8px 12px', fontSize: 13, width: 160, outline: 'none', textAlign: 'center', letterSpacing: 1 }} />
+                        <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }}
+                          onKeyDown={async e => { if (e.key === 'Enter') { e.preventDefault(); await aplicarCodigo() } }}
+                          placeholder={Tpanel.planes.codigoPlaceholder.toUpperCase()} maxLength={32}
+                          style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '8px 12px', fontSize: 13, width: 140, outline: 'none', textAlign: 'center', letterSpacing: 1 }} />
+                        <button onClick={aplicarCodigo} disabled={promoLoading || !codigoPromo.trim()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '8px 14px', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: (!codigoPromo.trim() || promoLoading) ? 'default' : 'pointer', opacity: (!codigoPromo.trim() || promoLoading) ? 0.5 : 1 }}>
+                          Aplicar
+                        </button>
                       </div>
                     )}
                     {promoError && <div style={{ fontSize: 12, color: '#dc2626', marginTop: 6 }}>{promoError}</div>}
