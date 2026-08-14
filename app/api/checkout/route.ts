@@ -66,8 +66,9 @@ export async function POST(req: Request) {
     // Validar código promo antes de crear sesión
     let diasTrial = 30
     if (codigoPromo && !esDestacado) {
-      const { data: usuarioActual } = await supabase.from('usuarios').select('ya_suscrito').eq('id', userId).single()
-      if (usuarioActual?.ya_suscrito) {
+      const { data: usuarioActual } = await supabase.from('usuarios').select('plan, plan_activo_hasta').eq('id', userId).single()
+      const tieneProActivo = usuarioActual?.plan === 'profesional' && (!usuarioActual?.plan_activo_hasta || new Date(usuarioActual.plan_activo_hasta) > new Date())
+      if (tieneProActivo) {
         return NextResponse.json({ error: 'Este código es solo para nuevos usuarios' }, { status: 400 })
       }
       const validacion = await validarCodigoPromo(codigoPromo)
