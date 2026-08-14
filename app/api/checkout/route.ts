@@ -100,6 +100,9 @@ export async function POST(req: Request) {
 
     if (codigoPromo && !esDestacado) {
       sessionParams.subscription_data = { trial_period_days: diasTrial }
+      sessionParams.custom_text = {
+        submit: { message: `No se realizará ningún cargo durante los ${diasTrial} días de prueba. Cancela cuando quieras, sin compromiso.` }
+      }
     }
 
     console.log('[checkout] success_url:', sessionParams.success_url)
