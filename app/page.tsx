@@ -828,8 +828,9 @@ export default function Home() {
           {/* Destacadas */}
           {(() => {
             const bgs = ['#e0f5f7','#ddf0e8','#e8eaf0','#f0ebe0','#e8f0e0','#f0e8f0']
-            const src = destReales.length > 0 ? destReales : propiedadesDestacadas.filter(p => p.tipo === 'pagado').map((p,i) => ({ id: i, titulo: p.title, precio: p.price, zona: p.loc, habitaciones: null, m2: null }))
+            const src = destReales
             const visibles = src.slice(0, 3)
+            if (visibles.length === 0) return null
             return (
               <div className="home-cards-section" style={{ marginBottom: 32 }}>
                 <div className="home-section-hdr" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 16 }}>
@@ -867,7 +868,7 @@ export default function Home() {
           {/* Más vistos */}
           {(() => {
             const bgs = ['#f0ebe0','#e8f0e0','#f0e8f0']
-            const pool = masVistasReales.length > 0 ? masVistasReales : propiedadesDestacadas.filter(p => p.tipo === 'visitas').map((p,i) => ({ id: i, titulo: p.title, precio: p.price, zona: p.loc, habitaciones: null, m2: null }))
+            const pool = masVistasReales
             if (pool.length === 0) return null
             const masVisibles = pool.slice(0, 3)
             return (
