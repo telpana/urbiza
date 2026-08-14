@@ -15,7 +15,6 @@ export default function AvisoLegal() {
               ['Razón social', 'Habitade LLC'],
               ['Tipo de sociedad', 'Limited Liability Company (LLC)'],
               ['Jurisdicción de constitución', 'Wyoming, Estados Unidos'],
-              ['EIN (Employer Identification Number)', '32-0863095'],
               ['Domicilio social registrado', '30 N Gould St Ste N, Sheridan, WY 82801, USA'],
               ['Dominio web', 'habitade.com'],
               ['Email de contacto', 'hola@habitade.com'],
