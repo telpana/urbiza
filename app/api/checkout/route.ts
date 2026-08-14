@@ -29,7 +29,7 @@ async function validarCodigoPromo(codigo: string): Promise<{ ok: boolean; diasTr
   if (!data.activo) return { ok: false, error: 'Este código ya no está activo' }
   if (data.usos_maximos && data.usos_actuales >= data.usos_maximos) return { ok: false, error: 'Este código ha alcanzado el límite de usos' }
 
-  await supabase.from('codigos_promo').update({ usos_actuales: data.usos_actuales + 1 }).eq('id', data.id)
+  // No incrementamos aquí — se hace en el webhook cuando Stripe confirma
   return { ok: true, diasTrial: data.dias_trial ?? 30 }
 }
 
@@ -84,8 +84,6 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: validacion.error }, { status: 400 })
       }
       diasTrial = validacion.diasTrial ?? 30
-      // Marcar aquí mismo para que no pueda reutilizarlo aunque cancele antes de que llegue el webhook
-      await supabase.from('usuarios').update({ ya_suscrito: true, codigo_promo_usado: codigoPromo }).eq('id', userId)
     }
 
     const stripeLocale = locale === 'fr' ? 'fr' : locale === 'en' ? 'en' : 'es'
@@ -97,7 +95,7 @@ export async function POST(req: Request) {
       locale: stripeLocale as Stripe.Checkout.SessionCreateParams['locale'],
       success_url: `${baseUrl}/panel?pago=ok&session_id={CHECKOUT_SESSION_ID}&tipo=${tipo || 'profesional'}`,
       cancel_url: `${baseUrl}/panel?pago=cancelado`,
-      metadata: { userId, tipo, ...(propiedadId ? { propiedadId } : {}) },
+      metadata: { userId, tipo, ...(propiedadId ? { propiedadId } : {}), ...(codigoPromo ? { codigoPromo: codigoPromo.toUpperCase() } : {}) },
     }
 
     if (codigoPromo && !esDestacado) {

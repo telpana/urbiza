@@ -70,6 +70,7 @@ export async function POST(req: Request) {
     }
 
     // Plan profesional (suscripción)
+    const codigoPromo = session.metadata?.codigoPromo
     if (userId && subscriptionId) {
       const proximaFactura = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
       const { error } = await supabase.from('usuarios').update({
@@ -78,8 +79,14 @@ export async function POST(req: Request) {
         stripe_subscription_id: subscriptionId,
         plan_activo_hasta: proximaFactura.toISOString(),
         ya_suscrito: true,
+        ...(codigoPromo ? { codigo_promo_usado: codigoPromo } : {}),
       }).eq('id', userId)
       if (error) console.error('[webhook] error actualizando plan:', error)
+      // Contabilizar uso del código solo cuando Stripe confirma
+      if (codigoPromo) {
+        const { data: cp } = await supabase.from('codigos_promo').select('id, usos_actuales').eq('codigo', codigoPromo).single()
+        if (cp) await supabase.from('codigos_promo').update({ usos_actuales: cp.usos_actuales + 1 }).eq('id', cp.id)
+      }
       const { data: u } = await supabase.from('usuarios').select('email, nombre').eq('id', userId).single()
       if (u?.email) {
         const fechaStr = proximaFactura.toLocaleDateString('es-DO', { day: 'numeric', month: 'long', year: 'numeric' })
