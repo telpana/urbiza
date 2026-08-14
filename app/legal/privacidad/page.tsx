@@ -7,7 +7,7 @@ export default function Privacidad() {
       <p style={{ fontSize: 13, color: '#888', marginBottom: 40 }}>Última actualización: julio 2026</p>
 
       <h2 style={{ fontSize: 16, fontWeight: 700, marginTop: 32, marginBottom: 8 }}>1. Responsable del tratamiento</h2>
-      <p>Habitade, operado por una LLC registrada fuera de la República Dominicana, es el responsable del tratamiento de los datos personales recogidos a través de <strong>habitade.com</strong>. Nos comprometemos a proteger tu privacidad y tratar tus datos conforme a la normativa aplicable, incluyendo la Ley 172-13 de la República Dominicana sobre protección de datos de carácter personal.</p>
+      <p>Habitade LLC, sociedad constituida en Wyoming (Estados Unidos), es el responsable del tratamiento de los datos personales recogidos a través de <strong>habitade.com</strong>. Nos comprometemos a proteger tu privacidad y tratar tus datos conforme a la normativa aplicable, incluyendo la Ley 172-13 de la República Dominicana sobre protección de datos de carácter personal.</p>
 
       <h2 style={{ fontSize: 16, fontWeight: 700, marginTop: 32, marginBottom: 8 }}>2. Datos que recogemos</h2>
       <ul style={{ paddingLeft: 20 }}>
