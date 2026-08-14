@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect, useRef, use } from 'react'
+import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../../supabase'
 import { useIdioma } from '../../../IdiomaContext'
@@ -84,7 +85,7 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
         }}
       >
         {destacado && <div style={{ position: 'absolute', top: 8, right: 8, zIndex: 2, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>DESTACADO</div>}
-        <img src={sbImg(fotos[activa], 1200)} fetchPriority="high" decoding="async" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        <Image src={sbImg(fotos[activa], 1200)} alt="" fill priority sizes="(max-width: 768px) 100vw, 800px" style={{ objectFit: 'cover' }} />
         <div style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 11, padding: '4px 10px', borderRadius: 20, zIndex: 4 }}>{activa + 1} / {fotos.length}</div>
         {activa > 0 && <button onClick={() => setActiva(a => a - 1)} style={{ all: 'unset', position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.9)', width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 20, color: '#333', zIndex: 4 }}>‹</button>}
         {activa < fotos.length - 1 && <button onClick={() => setActiva(a => a + 1)} style={{ all: 'unset', position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.9)', width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 20, color: '#333', zIndex: 4 }}>›</button>}
@@ -616,7 +617,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
               <div style={{ background: '#006D77', padding: '16px 18px', display: 'flex', alignItems: 'center', gap: 12 }}>
                 <div style={{ width: 46, height: 46, borderRadius: '50%', background: '#004E57', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16, fontWeight: 700, color: '#83D4DB', flexShrink: 0, overflow: 'hidden' }}>
                   {v.foto_url
-                    ? <img src={v.foto_url} alt={v.nombre} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ? <Image src={v.foto_url} alt={v.nombre} fill sizes="46px" style={{ objectFit: 'cover' }} />
                     : (v.nombre || 'U').split(' ').map((n: string) => n[0] || '').join('').slice(0, 2).toUpperCase()
                   }
                 </div>
@@ -759,7 +760,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                     <div style={{ flexShrink: 0 }}>
                       <div className="broker-foto" style={{ width: 80, height: 80, borderRadius: '50%', background: '#e0f5f7', overflow: 'hidden', border: '3px solid #006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, fontWeight: 700, color: '#006D77' }}>
                         {propiedad.usuarios?.foto_url
-                          ? <img src={propiedad.usuarios.foto_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                          ? <Image src={propiedad.usuarios.foto_url} alt="" fill sizes="80px" style={{ objectFit: 'cover' }} />
                           : (propiedad.usuarios?.nombre || 'P').split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
                         }
                       </div>

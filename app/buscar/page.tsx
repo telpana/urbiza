@@ -1,5 +1,6 @@
 ﻿'use client'
 import { useState, useEffect, useRef, Suspense } from 'react'
+import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../supabase'
 import { useIdioma } from '../../IdiomaContext'
@@ -995,7 +996,7 @@ function BuscarContent() {
                   onTouchStart={e => onTouchStart(e, String(p.id))}
                   onTouchEnd={e => onTouchEnd(e, String(p.id), p.fotos || [])}>
                   {p.fotos && p.fotos.length > 0
-                    ? <img src={p.fotos[fotoIdx[String(p.id)] ?? 0]} alt={p.titulo} loading="lazy" decoding="async" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity 0.2s' }} />
+                    ? <Image src={p.fotos[fotoIdx[String(p.id)] ?? 0]} alt={p.titulo || ''} fill sizes="300px" style={{ objectFit: 'cover', transition: 'opacity 0.2s' }} />
                     : <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                   }
                   {p.dest && <div className="pc-badge pc-badge-dest">{Tb.destacado}</div>}
