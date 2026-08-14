@@ -80,6 +80,7 @@ export default function Admin() {
   const refCodigo = useRef<HTMLInputElement>(null)
   const refMaxUsos = useRef<HTMLInputElement>(null)
   const refDescripcion = useRef<HTMLInputElement>(null)
+  const refDiasTrial = useRef<HTMLInputElement>(null)
 
   const authHeader = useCallback((t?: string) => ({
     'Authorization': `Bearer ${t || token}`,
@@ -1061,7 +1062,7 @@ export default function Admin() {
           )}
 
           {seccion === 'codigos' && (
-            <Seccion titulo="Códigos promocionales" desc="Crea códigos que dan 30 días gratis de plan Pro antes del primer cobro">
+            <Seccion titulo="Códigos promocionales" desc="Crea códigos promocionales con días de prueba configurables para el plan Pro">
               {/* KPIs */}
               {(() => {
                 const activos = codigos.filter(c => c.activo)
@@ -1098,6 +1099,11 @@ export default function Admin() {
                       style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 14px', fontSize: 13, outline: 'none', width: 220 }} />
                   </div>
                   <div>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 6 }}>DÍAS GRATIS</label>
+                    <input ref={refDiasTrial} placeholder="30" type="number" min="1" defaultValue="30"
+                      style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 14px', fontSize: 14, outline: 'none', width: 100 }} />
+                  </div>
+                  <div>
                     <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 6 }}>MÁX. USOS <span style={{ fontWeight: 400, color: '#aaa' }}>(vacío = ilimitado)</span></label>
                     <input ref={refMaxUsos} placeholder="ej: 50" type="number" min="1"
                       style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 14px', fontSize: 14, outline: 'none', width: 120 }} />
@@ -1106,17 +1112,19 @@ export default function Admin() {
                     const codigo = refCodigo.current?.value?.trim().toUpperCase()
                     const maxUsos = refMaxUsos.current?.value
                     const descripcion = refDescripcion.current?.value?.trim()
+                    const diasTrial = refDiasTrial.current?.value
                     if (!codigo) { refCodigo.current?.focus(); return }
                     setCodigoCreando(true)
                     const res = await fetch('/api/admin/codigos-promo', {
                       method: 'POST',
                       headers: { ...authHeader(), 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ codigo, usos_maximos: maxUsos ? Number(maxUsos) : null, descripcion: descripcion || null })
+                      body: JSON.stringify({ codigo, usos_maximos: maxUsos ? Number(maxUsos) : null, descripcion: descripcion || null, dias_trial: diasTrial ? Number(diasTrial) : 30 })
                     })
                     if (res.ok) {
                       if (refCodigo.current) refCodigo.current.value = ''
                       if (refMaxUsos.current) refMaxUsos.current.value = ''
                       if (refDescripcion.current) refDescripcion.current.value = ''
+                      if (refDiasTrial.current) refDiasTrial.current.value = '30'
                       cargarCodigos()
                     } else { const d = await res.json(); alert(d.error || 'Error') }
                     setCodigoCreando(false)
@@ -1136,7 +1144,7 @@ export default function Admin() {
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                       <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        {['CÓDIGO', 'DESCRIPCIÓN', 'USOS', 'MÁX.', 'ESTADO', 'CREADO', ''].map(h => (
+                        {['CÓDIGO', 'DESCRIPCIÓN', 'DÍAS', 'USOS', 'MÁX.', 'ESTADO', 'CREADO', ''].map(h => (
                           <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: 11, color: '#999', fontWeight: 600, letterSpacing: 0.5 }}>{h}</th>
                         ))}
                       </tr>
@@ -1148,6 +1156,7 @@ export default function Admin() {
                             <span style={{ fontFamily: 'monospace', fontWeight: 700, fontSize: 14, color: '#111', background: '#f4f5f6', padding: '3px 10px', borderRadius: 6, letterSpacing: 1 }}>{c.codigo}</span>
                           </td>
                           <td style={{ padding: '12px 16px', fontSize: 13, color: '#555', maxWidth: 220 }}>{c.descripcion || <span style={{ color: '#ccc' }}>—</span>}</td>
+                          <td style={{ padding: '12px 16px', fontSize: 13, fontWeight: 700, color: '#006D77' }}>{c.dias_trial ?? 30}d</td>
                           <td style={{ padding: '12px 16px', fontSize: 14, color: '#333', fontWeight: 600 }}>{c.usos_actuales ?? 0}</td>
                           <td style={{ padding: '12px 16px', fontSize: 13, color: '#888' }}>{c.usos_maximos ?? '∞'}</td>
                           <td style={{ padding: '12px 16px' }}>

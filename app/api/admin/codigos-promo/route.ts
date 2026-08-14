@@ -21,7 +21,7 @@ export async function GET(req: Request) {
 // POST — crear código
 export async function POST(req: Request) {
   if (!verifyToken(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-  const { codigo, usos_maximos, descripcion } = await req.json()
+  const { codigo, usos_maximos, descripcion, dias_trial } = await req.json()
   if (!codigo) return NextResponse.json({ error: 'Código requerido' }, { status: 400 })
 
   const { error } = await supabase.from('codigos_promo').insert({
@@ -30,6 +30,7 @@ export async function POST(req: Request) {
     usos_actuales: 0,
     usos_maximos: usos_maximos || null,
     descripcion: descripcion || null,
+    dias_trial: dias_trial ? Number(dias_trial) : 30,
   })
   if (error) return NextResponse.json({ error: error.code === '23505' ? 'Ese código ya existe' : error.message }, { status: 400 })
   return NextResponse.json({ ok: true })
