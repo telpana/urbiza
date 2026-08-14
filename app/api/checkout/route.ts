@@ -18,10 +18,10 @@ const PRECIOS: Record<string, string> = {
   '60': 'price_1TyDBZFCPtfA6ME6xL1TWFSR',
 }
 
-async function validarCodigoPromo(codigo: string): Promise<{ ok: boolean; error?: string }> {
+async function validarCodigoPromo(codigo: string): Promise<{ ok: boolean; diasTrial?: number; error?: string }> {
   const { data, error } = await supabase
     .from('codigos_promo')
-    .select('id, activo, usos_actuales, usos_maximos')
+    .select('id, activo, usos_actuales, usos_maximos, dias_trial')
     .eq('codigo', codigo)
     .single()
 
@@ -30,7 +30,7 @@ async function validarCodigoPromo(codigo: string): Promise<{ ok: boolean; error?
   if (data.usos_maximos && data.usos_actuales >= data.usos_maximos) return { ok: false, error: 'Este código ha alcanzado el límite de usos' }
 
   await supabase.from('codigos_promo').update({ usos_actuales: data.usos_actuales + 1 }).eq('id', data.id)
-  return { ok: true }
+  return { ok: true, diasTrial: data.dias_trial ?? 30 }
 }
 
 export async function POST(req: Request) {
@@ -64,6 +64,7 @@ export async function POST(req: Request) {
     console.log('[checkout] NEXT_PUBLIC_SITE_URL:', process.env.NEXT_PUBLIC_SITE_URL, '| baseUrl:', baseUrl, '| tipo:', tipo, '| propiedadId:', propiedadId)
 
     // Validar código promo antes de crear sesión
+    let diasTrial = 30
     if (codigoPromo && !esDestacado) {
       const { data: usuarioActual } = await supabase.from('usuarios').select('ya_suscrito').eq('id', userId).single()
       if (usuarioActual?.ya_suscrito) {
@@ -73,6 +74,7 @@ export async function POST(req: Request) {
       if (!validacion.ok) {
         return NextResponse.json({ error: validacion.error }, { status: 400 })
       }
+      diasTrial = validacion.diasTrial ?? 30
       // Marcar aquí mismo para que no pueda reutilizarlo aunque cancele antes de que llegue el webhook
       await supabase.from('usuarios').update({ ya_suscrito: true, codigo_promo_usado: codigoPromo }).eq('id', userId)
     }
@@ -90,7 +92,7 @@ export async function POST(req: Request) {
     }
 
     if (codigoPromo && !esDestacado) {
-      sessionParams.subscription_data = { trial_period_days: 30 }
+      sessionParams.subscription_data = { trial_period_days: diasTrial }
     }
 
     console.log('[checkout] success_url:', sessionParams.success_url)
