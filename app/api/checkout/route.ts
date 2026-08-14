@@ -66,10 +66,18 @@ export async function POST(req: Request) {
     // Validar código promo antes de crear sesión
     let diasTrial = 30
     if (codigoPromo && !esDestacado) {
-      const { data: usuarioActual } = await supabase.from('usuarios').select('plan, plan_activo_hasta').eq('id', userId).single()
+      const { data: usuarioActual } = await supabase.from('usuarios').select('plan, plan_activo_hasta, telefono').eq('id', userId).single()
       const tieneProActivo = usuarioActual?.plan === 'profesional' && (!usuarioActual?.plan_activo_hasta || new Date(usuarioActual.plan_activo_hasta) > new Date())
       if (tieneProActivo) {
         return NextResponse.json({ error: 'Este código es solo para nuevos usuarios' }, { status: 400 })
+      }
+      // Comprobar si el mismo teléfono ya usó un código en otra cuenta
+      if (usuarioActual?.telefono) {
+        const tel = usuarioActual.telefono.replace(/\s/g, '')
+        const { data: telefonoUsado } = await supabase.from('usuarios').select('id').neq('id', userId).not('codigo_promo_usado', 'is', null).ilike('telefono', `%${tel.slice(-8)}%`).limit(1)
+        if (telefonoUsado && telefonoUsado.length > 0) {
+          return NextResponse.json({ error: 'Este código ya fue usado con este número de teléfono' }, { status: 400 })
+        }
       }
       const validacion = await validarCodigoPromo(codigoPromo)
       if (!validacion.ok) {
