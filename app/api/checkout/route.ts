@@ -76,7 +76,7 @@ export async function POST(req: Request) {
         const tel = usuarioActual.telefono.replace(/\s/g, '')
         const { data: telefonoUsado } = await supabase.from('usuarios').select('id').neq('id', userId).not('codigo_promo_usado', 'is', null).ilike('telefono', `%${tel.slice(-8)}%`).limit(1)
         if (telefonoUsado && telefonoUsado.length > 0) {
-          return NextResponse.json({ error: 'Este código ya fue usado con este número de teléfono' }, { status: 400 })
+          return NextResponse.json({ error: 'Este código ya fue usado' }, { status: 400 })
         }
       }
       const validacion = await validarCodigoPromo(codigoPromo)
