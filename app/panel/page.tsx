@@ -2069,15 +2069,26 @@ export default function Panel() {
                   ))}
                 </div>
                 <button onClick={handleSuscribirse} disabled={promoLoading} style={{ display: 'block', width: '100%', background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '14px', borderRadius: 6, fontSize: 15, fontWeight: 700, cursor: promoLoading ? 'default' : 'pointer', border: 'none' }}>
-                  {promoLoading ? 'Procesando...' : Tpanel.planes.suscribirse}
+                  {promoLoading ? 'Procesando...' : promoValidado ? `Activar — ${promoDias} días gratis` : Tpanel.planes.suscribirse}
                 </button>
                 {!planInfo?.ya_suscrito && (
                   <div style={{ marginTop: 14, textAlign: 'center' }}>
                     {!promoExpanded ? (
                       <button onClick={() => setPromoExpanded(true)} style={{ all: 'unset', fontSize: 12, color: '#006D77', cursor: 'pointer', textDecoration: 'underline' }}>{Tpanel.planes.tienesCodigo}</button>
+                    ) : promoValidado ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }}>
+                        <span style={{ background: '#d1fae5', color: '#065f46', fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 20 }}>✓ {promoDias} días gratis aplicados</span>
+                        <button onClick={() => { setPromoValidado(false); setCodigoPromo(''); setPromoError('') }} style={{ all: 'unset', fontSize: 11, color: '#aaa', cursor: 'pointer', textDecoration: 'underline' }}>Quitar</button>
+                      </div>
                     ) : (
                       <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center' }}>
-                        <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }} placeholder={Tpanel.planes.codigoPlaceholder.toUpperCase()} maxLength={32} style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '8px 12px', fontSize: 13, width: 160, outline: 'none', textAlign: 'center', letterSpacing: 1 }} />
+                        <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }}
+                          onKeyDown={async e => { if (e.key === 'Enter') { e.preventDefault(); await aplicarCodigo() } }}
+                          placeholder={Tpanel.planes.codigoPlaceholder.toUpperCase()} maxLength={32}
+                          style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '8px 12px', fontSize: 13, width: 140, outline: 'none', textAlign: 'center', letterSpacing: 1 }} />
+                        <button onClick={aplicarCodigo} disabled={promoLoading || !codigoPromo.trim()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '8px 14px', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: (!codigoPromo.trim() || promoLoading) ? 'default' : 'pointer', opacity: (!codigoPromo.trim() || promoLoading) ? 0.5 : 1 }}>
+                          Aplicar
+                        </button>
                       </div>
                     )}
                     {promoError && <div style={{ fontSize: 12, color: '#dc2626', marginTop: 6 }}>{promoError}</div>}
@@ -2188,14 +2199,25 @@ export default function Panel() {
                     ))}
                   </div>
                   <button className="plan-upgrade-cta" onClick={handleSuscribirse} disabled={promoLoading} style={{ background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '12px 32px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: promoLoading ? 'default' : 'pointer', border: 'none', display: 'inline-block' }}>
-                    {promoLoading ? 'Procesando...' : Tpanel.planes.suscribirse}
+                    {promoLoading ? 'Procesando...' : promoValidado ? `Activar — ${promoDias} días gratis` : Tpanel.planes.suscribirse}
                   </button>
                   <div style={{ marginTop: 14 }}>
                     {!promoExpanded ? (
                       <button onClick={() => setPromoExpanded(true)} style={{ all: 'unset', fontSize: 12, color: '#006D77', cursor: 'pointer', textDecoration: 'underline' }}>{Tpanel.planes.tienesCodigo}</button>
+                    ) : promoValidado ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }}>
+                        <span style={{ background: '#d1fae5', color: '#065f46', fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 20 }}>✓ {promoDias} días gratis aplicados</span>
+                        <button onClick={() => { setPromoValidado(false); setCodigoPromo(''); setPromoError('') }} style={{ all: 'unset', fontSize: 11, color: '#aaa', cursor: 'pointer', textDecoration: 'underline' }}>Quitar</button>
+                      </div>
                     ) : (
                       <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center' }}>
-                        <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }} placeholder={Tpanel.planes.codigoPlaceholder.toUpperCase()} maxLength={32} style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '8px 12px', fontSize: 13, width: 160, outline: 'none', textAlign: 'center', letterSpacing: 1 }} />
+                        <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }}
+                          onKeyDown={async e => { if (e.key === 'Enter') { e.preventDefault(); await aplicarCodigo() } }}
+                          placeholder={Tpanel.planes.codigoPlaceholder.toUpperCase()} maxLength={32}
+                          style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '8px 12px', fontSize: 13, width: 140, outline: 'none', textAlign: 'center', letterSpacing: 1 }} />
+                        <button onClick={aplicarCodigo} disabled={promoLoading || !codigoPromo.trim()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '8px 14px', borderRadius: 6, fontSize: 12, fontWeight: 600, cursor: (!codigoPromo.trim() || promoLoading) ? 'default' : 'pointer', opacity: (!codigoPromo.trim() || promoLoading) ? 0.5 : 1 }}>
+                          Aplicar
+                        </button>
                       </div>
                     )}
                     {promoError && <div style={{ fontSize: 12, color: '#dc2626', marginTop: 6 }}>{promoError}</div>}
