@@ -1339,7 +1339,6 @@ export default function Panel() {
                           <span style={{ background: '#d1fae5', color: '#065f46', fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 20 }}>✓ {promoDias} días gratis</span>
                           <button onClick={() => { setPromoValidado(false); setCodigoPromo(''); setPromoError('') }} style={{ all: 'unset', fontSize: 11, color: '#aaa', cursor: 'pointer', textDecoration: 'underline' }}>{Tpanel.planes.quitar}</button>
                         </div>
-                        <div style={{ fontSize: 11, color: '#006D77', marginTop: 6, fontWeight: 600, textAlign: 'center' }}>{Tpanel.planes.activarAhora}</div>
                       </>
                     ) : (
                       <>
@@ -2087,7 +2086,6 @@ export default function Panel() {
                           <span style={{ background: '#d1fae5', color: '#065f46', fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 20 }}>✓ {promoDias} días gratis</span>
                           <button onClick={() => { setPromoValidado(false); setCodigoPromo(''); setPromoError('') }} style={{ all: 'unset', fontSize: 11, color: '#aaa', cursor: 'pointer', textDecoration: 'underline' }}>{Tpanel.planes.quitar}</button>
                         </div>
-                        <div style={{ fontSize: 11, color: '#006D77', marginTop: 6, fontWeight: 600, textAlign: 'center' }}>{Tpanel.planes.activarAhora}</div>
                       </>
                     ) : (
                       <>
@@ -2223,7 +2221,6 @@ export default function Panel() {
                           <span style={{ background: '#d1fae5', color: '#065f46', fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 20 }}>✓ {promoDias} días gratis</span>
                           <button onClick={() => { setPromoValidado(false); setCodigoPromo(''); setPromoError('') }} style={{ all: 'unset', fontSize: 11, color: '#aaa', cursor: 'pointer', textDecoration: 'underline' }}>{Tpanel.planes.quitar}</button>
                         </div>
-                        <div style={{ fontSize: 11, color: '#006D77', marginTop: 6, fontWeight: 600, textAlign: 'center' }}>{Tpanel.planes.activarAhora}</div>
                       </>
                     ) : (
                       <>
