@@ -2241,6 +2241,7 @@ export default function Panel() {
                       </>
                     )}
                   </div>
+                  </div>
                 </div>
               ) : (() => {
                 const fmt = (iso: string) => new Date(iso).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' })
