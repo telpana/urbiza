@@ -1329,7 +1329,7 @@ export default function Panel() {
                     <button onClick={handleSuscribirse} disabled={promoLoading} style={{ background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: promoLoading ? 'default' : 'pointer', whiteSpace: 'nowrap', border: 'none', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
                       {promoLoading ? 'Procesando...' : promoValidado
                         ? <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}><span>Activar</span><span style={{ fontSize: 11, opacity: 0.85, fontWeight: 500 }}>{promoDias} días gratis</span></div>
-                        : <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}><span>Activar</span><span style={{ fontSize: 11, opacity: 0.85, fontWeight: 500 }}>US$9.99/mes</span></div>}
+                        : Tpanel.planes.suscribirse}
                     </button>
                   </div>
                   <div style={{ fontSize: 12, color: '#aaa', marginBottom: 16 }}>{Tpanel.publicar.sinPermanencia}</div>
