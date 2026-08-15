@@ -1342,7 +1342,7 @@ export default function Panel() {
                     ) : (
                       <>
                         <style>{`@keyframes promo-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,109,119,0.25)} 50%{box-shadow:0 0 0 6px rgba(0,109,119,0)} }`}</style>
-                        <div style={{ display: 'inline-flex', gap: 8, alignItems: 'center', justifyContent: 'center', background: '#f0fafb', border: '1.5px solid #83D4DB', borderRadius: 10, padding: '10px 14px', animation: 'promo-pulse 2s ease-in-out infinite' }}>
+                        <div style={{ display: 'inline-flex', gap: 8, alignItems: 'center', justifyContent: 'center', background: '#f0fafb', border: '1.5px solid #83D4DB', borderRadius: 10, padding: '10px 14px', animation: 'promo-pulse 2s ease-in-out infinite', width: 280, boxSizing: 'border-box' }}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
                           <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }}
                             onKeyDown={async e => { if (e.key === 'Enter') { e.preventDefault(); await aplicarCodigo() } }}
@@ -2086,7 +2086,7 @@ export default function Panel() {
                       </div>
                     ) : (
                       <>
-                        <div style={{ display: 'inline-flex', gap: 8, alignItems: 'center', justifyContent: 'center', background: '#f0fafb', border: '1.5px solid #83D4DB', borderRadius: 10, padding: '10px 14px', animation: 'promo-pulse 2s ease-in-out infinite' }}>
+                        <div style={{ display: 'inline-flex', gap: 8, alignItems: 'center', justifyContent: 'center', background: '#f0fafb', border: '1.5px solid #83D4DB', borderRadius: 10, padding: '10px 14px', animation: 'promo-pulse 2s ease-in-out infinite', width: 280, boxSizing: 'border-box' }}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
                           <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }}
                             onKeyDown={async e => { if (e.key === 'Enter') { e.preventDefault(); await aplicarCodigo() } }}
@@ -2218,7 +2218,7 @@ export default function Panel() {
                       </div>
                     ) : (
                       <>
-                        <div style={{ display: 'inline-flex', gap: 8, alignItems: 'center', justifyContent: 'center', background: '#f0fafb', border: '1.5px solid #83D4DB', borderRadius: 10, padding: '10px 14px', animation: 'promo-pulse 2s ease-in-out infinite' }}>
+                        <div style={{ display: 'inline-flex', gap: 8, alignItems: 'center', justifyContent: 'center', background: '#f0fafb', border: '1.5px solid #83D4DB', borderRadius: 10, padding: '10px 14px', animation: 'promo-pulse 2s ease-in-out infinite', width: 280, boxSizing: 'border-box' }}>
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
                           <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }}
                             onKeyDown={async e => { if (e.key === 'Enter') { e.preventDefault(); await aplicarCodigo() } }}

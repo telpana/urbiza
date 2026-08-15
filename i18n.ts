@@ -200,7 +200,7 @@ export const t = {
         titulo: 'Pásate a PRO y publica sin límites', desc: 'Has usado tus {n} anuncios gratuitos.',
         ventajas: ['Anuncios ilimitados', 'Estadísticas avanzadas', 'Apareces antes en búsquedas', 'Badge Profesional en tus anuncios', 'Soporte prioritario'],
         suscribirse: 'Suscribirse por US$9.99/mes',
-        tienesCodigo: '¿Tienes un código promocional?', aplicar: 'Aplicar', codigoPlaceholder: 'Código promocional', quitar: 'Quitar',
+        tienesCodigo: '¿Tienes un código promocional?', aplicar: 'Aplicar', codigoPlaceholder: 'Código promo', quitar: 'Quitar',
       },
       cursos: {
         titulo: 'Cursos AEI', desc: 'Formación oficial de la Asociación de Agentes y Empresas Inmobiliarias de República Dominicana',
