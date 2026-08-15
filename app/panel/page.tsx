@@ -1326,7 +1326,7 @@ export default function Panel() {
                     Con el plan Profesional publicas anuncios ilimitados por solo US$9.99/mes.
                   </p>
                   <div style={{ maxWidth: 320, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                    <button onClick={handleSuscribirse} disabled={promoLoading} style={{ background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: promoLoading ? 'default' : 'pointer', border: 'none', width: '100%', animation: promoValidado ? 'btn-pulse 1.2s ease-in-out infinite' : undefined }}>
+                    <button onClick={handleSuscribirse} disabled={promoLoading} style={{ background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: promoLoading ? 'default' : 'pointer', border: 'none', width: '100%', animation: promoValidado ? 'btn-pulse 2.5s ease-in-out infinite' : undefined }}>
                       {promoLoading ? 'Procesando...' : promoValidado
                         ? <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}><span>Activar</span><span style={{ fontSize: 11, opacity: 0.85, fontWeight: 500 }}>{promoDias} días gratis</span></div>
                         : Tpanel.planes.suscribirse}
@@ -2074,7 +2074,7 @@ export default function Panel() {
                     </div>
                   ))}
                 </div>
-                <button onClick={handleSuscribirse} disabled={promoLoading} style={{ display: 'block', width: '100%', background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '14px', borderRadius: 6, fontSize: 15, fontWeight: 700, cursor: promoLoading ? 'default' : 'pointer', border: 'none', animation: promoValidado ? 'btn-pulse 1.2s ease-in-out infinite' : undefined }}>
+                <button onClick={handleSuscribirse} disabled={promoLoading} style={{ display: 'block', width: '100%', background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '14px', borderRadius: 6, fontSize: 15, fontWeight: 700, cursor: promoLoading ? 'default' : 'pointer', border: 'none', animation: promoValidado ? 'btn-pulse 2.5s ease-in-out infinite' : undefined }}>
                   {promoLoading ? 'Procesando...' : promoValidado
                     ? <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}><span>Activar</span><span style={{ fontSize: 11, opacity: 0.85, fontWeight: 500 }}>{promoDias} días gratis</span></div>
                     : Tpanel.planes.suscribirse}
@@ -2211,7 +2211,7 @@ export default function Panel() {
                     ))}
                   </div>
                   <div style={{ maxWidth: 360, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  <button className="plan-upgrade-cta" onClick={handleSuscribirse} disabled={promoLoading} style={{ background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '12px 32px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: promoLoading ? 'default' : 'pointer', border: 'none', width: '100%', animation: promoValidado ? 'btn-pulse 1.2s ease-in-out infinite' : undefined }}>
+                  <button className="plan-upgrade-cta" onClick={handleSuscribirse} disabled={promoLoading} style={{ background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '12px 32px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: promoLoading ? 'default' : 'pointer', border: 'none', width: '100%', animation: promoValidado ? 'btn-pulse 2.5s ease-in-out infinite' : undefined }}>
                     {promoLoading ? 'Procesando...' : promoValidado
                       ? <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}><span>Activar</span><span style={{ fontSize: 11, opacity: 0.85, fontWeight: 500 }}>{promoDias} días gratis</span></div>
                       : Tpanel.planes.suscribirse}
