@@ -1347,7 +1347,7 @@ export default function Panel() {
                           <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }}
                             onKeyDown={async e => { if (e.key === 'Enter') { e.preventDefault(); await aplicarCodigo() } }}
                             placeholder={Tpanel.planes.codigoPlaceholder.toUpperCase()} maxLength={32}
-                            style={{ border: 'none', background: 'transparent', fontSize: 12, width: 150, outline: 'none', textAlign: 'center', letterSpacing: 1, fontWeight: 600, color: '#006D77' }} />
+                            style={{ border: 'none', background: 'transparent', fontSize: 12, flex: 1, minWidth: 0, outline: 'none', textAlign: 'center', letterSpacing: 1, fontWeight: 600, color: '#006D77' }} />
                           <button onClick={aplicarCodigo} disabled={promoLoading || !codigoPromo.trim()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '5px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: (!codigoPromo.trim() || promoLoading) ? 'default' : 'pointer', opacity: (!codigoPromo.trim() || promoLoading) ? 0.4 : 1, whiteSpace: 'nowrap' }}>
                             {Tpanel.planes.aplicar}
                           </button>
@@ -2091,7 +2091,7 @@ export default function Panel() {
                           <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }}
                             onKeyDown={async e => { if (e.key === 'Enter') { e.preventDefault(); await aplicarCodigo() } }}
                             placeholder={Tpanel.planes.codigoPlaceholder.toUpperCase()} maxLength={32}
-                            style={{ border: 'none', background: 'transparent', fontSize: 12, width: 150, outline: 'none', textAlign: 'center', letterSpacing: 1, fontWeight: 600, color: '#006D77' }} />
+                            style={{ border: 'none', background: 'transparent', fontSize: 12, flex: 1, minWidth: 0, outline: 'none', textAlign: 'center', letterSpacing: 1, fontWeight: 600, color: '#006D77' }} />
                           <button onClick={aplicarCodigo} disabled={promoLoading || !codigoPromo.trim()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '5px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: (!codigoPromo.trim() || promoLoading) ? 'default' : 'pointer', opacity: (!codigoPromo.trim() || promoLoading) ? 0.4 : 1, whiteSpace: 'nowrap' }}>
                             {Tpanel.planes.aplicar}
                           </button>
@@ -2223,7 +2223,7 @@ export default function Panel() {
                           <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }}
                             onKeyDown={async e => { if (e.key === 'Enter') { e.preventDefault(); await aplicarCodigo() } }}
                             placeholder={Tpanel.planes.codigoPlaceholder.toUpperCase()} maxLength={32}
-                            style={{ border: 'none', background: 'transparent', fontSize: 12, width: 150, outline: 'none', textAlign: 'center', letterSpacing: 1, fontWeight: 600, color: '#006D77' }} />
+                            style={{ border: 'none', background: 'transparent', fontSize: 12, flex: 1, minWidth: 0, outline: 'none', textAlign: 'center', letterSpacing: 1, fontWeight: 600, color: '#006D77' }} />
                           <button onClick={aplicarCodigo} disabled={promoLoading || !codigoPromo.trim()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '5px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: (!codigoPromo.trim() || promoLoading) ? 'default' : 'pointer', opacity: (!codigoPromo.trim() || promoLoading) ? 0.4 : 1, whiteSpace: 'nowrap' }}>
                             {Tpanel.planes.aplicar}
                           </button>
