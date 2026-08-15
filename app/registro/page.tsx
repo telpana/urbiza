@@ -1,5 +1,5 @@
 ﻿'use client'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { supabase } from '../../supabase'
 import { useIdioma } from '../../IdiomaContext'
 
@@ -21,13 +21,6 @@ export default function Registro() {
   const [error, setError] = useState('')
   const [mostrarPassword, setMostrarPassword] = useState(false)
   const [aceptaTerminos, setAceptaTerminos] = useState(false)
-  const [codigoUrl, setCodigoUrl] = useState('')
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const c = params.get('codigo')
-    if (c) setCodigoUrl(c.toUpperCase())
-  }, [])
 
   const tipos = [
     { id: 'particular', titulo: T.particular, desc: T.particularDesc, icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> },
@@ -55,7 +48,7 @@ export default function Registro() {
       const { error: loginErr } = await supabase.auth.signInWithPassword({ email, password })
       if (loginErr) { setError(loginErr.message); setLoading(false); return }
 
-      window.location.href = codigoUrl ? `/panel?codigo=${codigoUrl}` : '/panel'
+      window.location.href = '/panel'
     } catch (e) {
       setError(T.err_generico)
     }

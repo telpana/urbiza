@@ -340,19 +340,6 @@ export default function Panel() {
   }, [])
 
   useEffect(() => {
-    const codigo = new URLSearchParams(window.location.search).get('codigo')
-    if (!codigo) return
-    const c = codigo.toUpperCase()
-    setCodigoPromo(c)
-    setPromoExpanded(true)
-    // Auto-validar
-    fetch('/api/validar-promo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codigo: c }) })
-      .then(r => r.json())
-      .then(d => { if (d.ok) { setPromoValidado(true); setPromoDias(d.dias) } else { setPromoError(d.error || 'Código no válido') } })
-      .catch(() => {})
-  }, [])
-
-  useEffect(() => {
     const p = new URLSearchParams(window.location.search)
     if (p.get('pago') === 'ok') return // preservar params de pago hasta que verificar-pago los procese
     history.replaceState(null, '', `?s=${seccion}`)
