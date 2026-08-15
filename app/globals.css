@@ -410,3 +410,5 @@ a, button, [role="button"], input, select, textarea, label {
   animation: shimmer 1.4s infinite linear;
   border-radius: 4px;
 }
+
+@keyframes promo-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,109,119,0.25)} 50%{box-shadow:0 0 0 6px rgba(0,109,119,0)} }
