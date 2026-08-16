@@ -45,7 +45,7 @@ const ZONAS_COORDS_HOME: Record<string, [number, number]> = {
   'bayahibe': [18.3650, -68.8280], 'dominicus': [18.3600, -68.8600],
   'jarabacoa': [19.1130, -70.6380], 'constanza': [18.9090, -70.7490], 'la vega': [19.2211, -70.5286],
   'san pedro de macoris': [18.4530, -69.3090], 'juan dolio': [18.4400, -69.5300],
-  'nagua': [19.3730, -69.8470], 'bani': [18.2790, -70.3310],
+  'nagua': [19.3730, -69.8470], 'rio san juan': [19.6452, -70.0790], 'cabrera': [19.6367, -69.9183], 'bani': [18.2790, -70.3310],
   'azua': [18.4530, -70.7350], 'moca': [19.3960, -70.5150],
   'san cristobal': [18.4153, -70.1062], 'barahona': [18.2090, -71.0990],
   'pedernales': [18.0380, -71.7430], 'hato mayor': [18.7600, -69.2545],
@@ -84,7 +84,7 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
 
   useEffect(() => {
     supabase.from('propiedades')
-      .select('id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,tipo,operacion,fotos')
+      .select('id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,tipo,operacion,fotos,lat,lng')
       .eq('estado', 'activo')
       .limit(300)
       .then(({ data }) => { if (data) setPropiedades(data) })
@@ -102,7 +102,7 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
     markersRef.current = []
     const filtradas = filtro === 'Todos' ? data : data.filter(p => p.tipo === filtro)
     filtradas.forEach(p => {
-      const [lat, lng] = coordsDeZona(p.zona || '')
+      const [lat, lng] = (p.lat != null && p.lng != null) ? [p.lat, p.lng] : coordsDeZona(p.zona || '')
       const icono = L.divIcon({
         className: '',
         html: `<svg width="22" height="30" viewBox="0 0 22 30" xmlns="http://www.w3.org/2000/svg"><path d="M11 0C4.925 0 0 4.925 0 11c0 7.667 11 19 11 19s11-11.333 11-19C22 4.925 17.075 0 11 0z" fill="#006D77" stroke="#fff" stroke-width="1.5"/><circle cx="11" cy="11" r="4.5" fill="#fff"/></svg>`,
