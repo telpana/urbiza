@@ -996,10 +996,14 @@ function BuscarContent() {
                   onTouchStart={e => onTouchStart(e, String(p.id))}
                   onTouchEnd={e => onTouchEnd(e, String(p.id), p.fotos || [])}>
                   {p.fotos && p.fotos.length > 0
-                    ? p.fotos.map((src: string, i: number) => (
-                        <img key={i} src={src} alt={i === 0 ? (p.titulo || '') : ''} loading={i === 0 ? 'eager' : 'lazy'} decoding="async"
-                          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: i === (fotoIdx[String(p.id)] ?? 0) ? 1 : 0, transition: 'opacity 0.15s', zIndex: 1 }} />
-                      ))
+                    ? p.fotos.map((src: string, i: number) => {
+                        const actIdx = fotoIdx[String(p.id)] ?? 0
+                        if (Math.abs(i - actIdx) > 1) return null
+                        return (
+                          <img key={i} src={src} alt={i === 0 ? (p.titulo || '') : ''} loading={i === 0 ? 'eager' : 'lazy'} decoding="async"
+                            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: i === actIdx ? 1 : 0, transition: 'opacity 0.15s', zIndex: 1 }} />
+                        )
+                      })
                     : <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                   }
                   {p.dest && <div className="pc-badge pc-badge-dest">{Tb.destacado}</div>}
