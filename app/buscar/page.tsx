@@ -998,7 +998,7 @@ function BuscarContent() {
                   {p.fotos && p.fotos.length > 0
                     ? p.fotos.map((src: string, i: number) => {
                         const actIdx = fotoIdx[String(p.id)] ?? 0
-                        if (Math.abs(i - actIdx) > 1) return null
+                        if (Math.abs(i - actIdx) > 2) return null
                         return (
                           <img key={i} src={src} alt={i === 0 ? (p.titulo || '') : ''} loading={i === 0 ? 'eager' : 'lazy'} decoding="async"
                             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: i === actIdx ? 1 : 0, transition: 'opacity 0.15s', zIndex: 1 }} />
