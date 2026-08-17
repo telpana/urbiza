@@ -932,7 +932,7 @@ export default function Home() {
       </div>
 
       {/* ZONAS MÁS BUSCADAS */}
-      <div className="home-zonas-section" style={{ background: '#fff', borderTop: '1px solid #e8e8e8', padding: '36px 20px 40px' }}>
+      <div className="home-zonas-section" style={{ background: '#fff', padding: '36px 20px 40px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 20 }}>{tr.zonas.titulo}</h2>
           <div className="zonas-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 }}>
