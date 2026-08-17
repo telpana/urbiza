@@ -928,6 +928,27 @@ export default function Home() {
         </div>
       </div>
 
+      {/* BANNER PROFESIONAL */}
+      <div style={{ background: '#f0fafb', borderTop: '1px solid #e8e8e8' }}>
+        <div className="pro-banner-wrap" style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 48, padding: '56px 20px' }}>
+          <div className="pro-banner-img" style={{ flex: '0 0 440px', height: 300, borderRadius: 16, overflow: 'hidden', position: 'relative', boxShadow: '0 8px 40px rgba(0,0,0,0.13)' }}>
+            {featureImgUrl
+              ? <Image src={featureImgUrl} alt="Profesional inmobiliario" fill sizes="(max-width: 768px) 100vw, 440px" style={{ objectFit: 'cover' }} />
+              : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, #006D77 0%, #17A6B4 100%)' }} />
+            }
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: '#17A6B4', letterSpacing: 1.5, textTransform: 'uppercase', marginBottom: 14 }}>Para profesionales</div>
+            <h2 style={{ fontSize: 30, fontWeight: 800, color: '#111', lineHeight: 1.25, marginBottom: 14, margin: '0 0 14px' }}>¿Eres agente o promotor inmobiliario?</h2>
+            <p style={{ fontSize: 15, color: '#666', lineHeight: 1.65, marginBottom: 28, maxWidth: 440, margin: '0 0 28px' }}>Llega a miles de compradores en toda la República Dominicana. Publica tus propiedades fácilmente, sin permanencia y cancela cuando quieras.</p>
+            <a href="/registro" style={{ display: 'inline-block', background: '#006D77', color: '#fff', padding: '14px 32px', borderRadius: 8, fontWeight: 700, fontSize: 15, textDecoration: 'none', boxShadow: '0 4px 20px rgba(0,109,119,0.3)', letterSpacing: 0.2 }}>
+              Publicar por US$9.99/mes →
+            </a>
+            <div style={{ fontSize: 12, color: '#aaa', marginTop: 10 }}>Sin permanencia · Cancela cuando quieras</div>
+          </div>
+        </div>
+      </div>
+
       {/* FOOTER */}
       <footer style={{ background: '#004E57', color: 'rgba(255,255,255,0.5)', padding: '28px 20px 20px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
