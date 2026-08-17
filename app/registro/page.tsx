@@ -200,7 +200,7 @@ export default function Registro() {
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{T.telefono} *</label>
                     <div style={{ display: 'flex', border: '1.5px solid #e0e0e0', borderRadius: 6, overflow: 'hidden', boxSizing: 'border-box' }}>
-                      <select value={telPrefijo} onChange={e => setTelPrefijo(e.target.value)} style={{ border: 'none', borderRight: '1.5px solid #e0e0e0', padding: '11px 8px', fontSize: 13, background: '#f9f9f9', outline: 'none', cursor: 'pointer', color: '#333', flexShrink: 0 }}>
+                      <select value={telPrefijo} onChange={e => setTelPrefijo(e.target.value)} style={{ border: 'none', borderRight: '1.5px solid #e0e0e0', padding: '11px 8px', fontSize: 13, background: '#f9f9f9', outline: 'none', cursor: 'pointer', color: '#333', flexShrink: 0, textAlign: 'center' }}>
                         {PREFIJOS.map(p => <option key={p} value={p}>{p}</option>)}
                       </select>
                       <input value={telNumero} onChange={e => setTelNumero(e.target.value.replace(/[^\d\s\-()]/g, ''))} type="tel" inputMode="tel" placeholder="809 000 0000" style={{ flex: 1, border: 'none', padding: '11px 14px', fontSize: 14, outline: 'none', minWidth: 0 }} onFocus={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = '#006D77' }} onBlur={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = '#e0e0e0' }} />

@@ -2456,7 +2456,7 @@ export default function Panel() {
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.telefono}</label>
                     <div style={{ display: 'flex', border: `1.5px solid ${!perfilTelefono ? '#e53e3e' : '#e0e0e0'}`, borderRadius: 6, overflow: 'hidden', boxSizing: 'border-box' }}>
-                      <select value={perfilTelPrefijo} onChange={e => setPerfilTelPrefijo(e.target.value)} style={{ border: 'none', borderRight: '1.5px solid #e0e0e0', padding: '10px 6px', fontSize: 12, background: '#f9f9f9', outline: 'none', cursor: 'pointer', color: '#333', flexShrink: 0 }}>
+                      <select value={perfilTelPrefijo} onChange={e => setPerfilTelPrefijo(e.target.value)} style={{ border: 'none', borderRight: '1.5px solid #e0e0e0', padding: '10px 6px', fontSize: 12, background: '#f9f9f9', outline: 'none', cursor: 'pointer', color: '#333', flexShrink: 0, textAlign: 'center' }}>
                         {PREFIJOS.map(p => <option key={p} value={p}>{p}</option>)}
                       </select>
                       <input value={perfilTelNumero} onChange={e => setPerfilTelNumero(e.target.value.replace(/[^\d\s\-()]/g, ''))} type="tel" inputMode="tel" placeholder="809 000 0000" style={{ flex: 1, border: 'none', padding: '10px 12px', fontSize: 13, outline: 'none', minWidth: 0 }} onFocus={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = '#006D77' }} onBlur={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = perfilTelefono ? '#e0e0e0' : '#e53e3e' }} />
