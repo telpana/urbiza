@@ -913,21 +913,6 @@ export default function Home() {
         <SeccionNovedad titulo={tr.novedades.samana} subtitulo={tr.novedades.verTodas} zona="Samaná" reales={novedadesSamana} ejemplos={propiedadesSamana} dopRate={dopRate} />
       </div>
 
-      {/* ZONAS MÁS BUSCADAS */}
-      <div className="home-zonas-section" style={{ background: '#fff', borderTop: '1px solid #e8e8e8', padding: '36px 20px 40px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 20 }}>{tr.zonas.titulo}</h2>
-          <div className="zonas-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 }}>
-            {zonas.map((z) => (
-              <div key={z.nombre + z.tipo} style={{ padding: '10px 0', borderBottom: '1px solid #f5f5f5' }}>
-                <a href={`/buscar?zona=${encodeURIComponent(z.nombre)}&operacion=venta`} style={{ display: 'block', fontSize: 14, color: '#006D77', fontWeight: 500, textDecoration: 'none', marginBottom: 3 }}>{z.nombre}</a>
-                <div style={{ fontSize: 12, color: '#888' }}>{idioma === 'en' ? z.tipo_en : idioma === 'fr' ? z.tipo_fr : z.tipo}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* BANNER PROFESIONAL */}
       <div style={{ background: '#f0fafb', borderTop: '1px solid #e8e8e8' }}>
         <div className="pro-banner-wrap" style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 48, padding: '56px 20px' }}>
@@ -945,6 +930,21 @@ export default function Home() {
               Publicar por US$9.99/mes →
             </a>
             <div style={{ fontSize: 12, color: '#aaa', marginTop: 10 }}>Sin permanencia · Cancela cuando quieras</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ZONAS MÁS BUSCADAS */}
+      <div className="home-zonas-section" style={{ background: '#fff', borderTop: '1px solid #e8e8e8', padding: '36px 20px 40px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 20 }}>{tr.zonas.titulo}</h2>
+          <div className="zonas-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 0 }}>
+            {zonas.map((z) => (
+              <div key={z.nombre + z.tipo} style={{ padding: '10px 0', borderBottom: '1px solid #f5f5f5' }}>
+                <a href={`/buscar?zona=${encodeURIComponent(z.nombre)}&operacion=venta`} style={{ display: 'block', fontSize: 14, color: '#006D77', fontWeight: 500, textDecoration: 'none', marginBottom: 3 }}>{z.nombre}</a>
+                <div style={{ fontSize: 12, color: '#888' }}>{idioma === 'en' ? z.tipo_en : idioma === 'fr' ? z.tipo_fr : z.tipo}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
