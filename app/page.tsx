@@ -916,7 +916,7 @@ export default function Home() {
       </div>
 
       {/* BANNER PROFESIONAL */}
-      <div style={{ borderTop: '1px solid #e8e8e8', borderBottom: '1px solid #e8e8e8', background: '#fff', padding: '32px 20px' }}>
+      <div style={{ borderTop: '1px solid #e8e8e8', background: '#fff', padding: '32px 20px' }}>
         <div className="pro-banner-outer" style={{ maxWidth: 1100, margin: '0 auto', position: 'relative' }}>
           {/* Imagen izquierda */}
           <div className="pro-banner-img" style={{ position: 'relative', width: '68%', height: 260, overflow: 'hidden' }}>
