@@ -226,6 +226,8 @@ html { touch-action: manipulation; }
   /* ── SECCIONES PROPS Y ZONAS ── */
   .home-props-wrap    { padding: 12px 0 0 !important; }
   .home-zonas-section { padding: 24px 16px 24px !important; }
+  .pro-banner-wrap { flex-wrap: wrap !important; gap: 14px !important; }
+  .pro-banner-img { width: 100% !important; height: 160px !important; }
 
 
   .home-cards-section { margin-bottom: 8px !important; }

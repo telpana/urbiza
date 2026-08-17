@@ -421,6 +421,7 @@ export default function Home() {
     'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1600&q=80'
   )
   const [featureImgUrl, setFeatureImgUrl] = useState(() => typeof window !== 'undefined' ? localStorage.getItem('hb_feature_img') || '' : '')
+  const [proImgUrl, setProImgUrl] = useState('')
   const [dopRate, setDopRate] = useState(59.5)
   const [instagramUrl, setInstagramUrl] = useState('')
   const [facebookUrl, setFacebookUrl] = useState('')
@@ -486,6 +487,7 @@ export default function Home() {
     fetch('/api/admin/config').then(r => r.json()).then(cfg => {
       if (cfg.banner_url) { setBannerUrl(cfg.banner_url); localStorage.setItem('hb_banner', cfg.banner_url) }
       if (cfg.feature_img_url) { setFeatureImgUrl(cfg.feature_img_url); localStorage.setItem('hb_feature_img', cfg.feature_img_url) }
+      if (cfg.pro_img_url) setProImgUrl(cfg.pro_img_url)
       if (cfg.instagram_url) setInstagramUrl(cfg.instagram_url)
       if (cfg.facebook_url) setFacebookUrl(cfg.facebook_url)
       if (cfg.tiktok_url) setTiktokUrl(cfg.tiktok_url)
@@ -911,6 +913,24 @@ export default function Home() {
         <SeccionNovedad titulo={tr.novedades.santoDomingo} subtitulo={tr.novedades.verTodas} zona="Santo Domingo" reales={novedadesSantoDomingo} ejemplos={propiedadesSantoDomingo} dopRate={dopRate} />
         <SeccionNovedad titulo={tr.novedades.puntaCana} subtitulo={tr.novedades.verTodas} zona="Punta Cana" reales={novedadesPuntaCana} ejemplos={propiedadesPuntaCana} dopRate={dopRate} />
         <SeccionNovedad titulo={tr.novedades.samana} subtitulo={tr.novedades.verTodas} zona="Samaná" reales={novedadesSamana} ejemplos={propiedadesSamana} dopRate={dopRate} />
+      </div>
+
+      {/* BANNER PROFESIONAL */}
+      <div style={{ borderTop: '1px solid #e8e8e8', borderBottom: '1px solid #e8e8e8', background: '#fff' }}>
+        <div className="pro-banner-wrap" style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 24, padding: '20px' }}>
+          {proImgUrl && (
+            <div className="pro-banner-img" style={{ flexShrink: 0, width: 160, height: 110, borderRadius: 8, overflow: 'hidden', position: 'relative' }}>
+              <Image src={proImgUrl} alt="" fill sizes="160px" style={{ objectFit: 'cover' }} />
+            </div>
+          )}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 4 }}>¿Eres agente o promotor inmobiliario?</div>
+            <div style={{ fontSize: 13, color: '#777' }}>Llega a miles de compradores en República Dominicana. Sin permanencia.</div>
+          </div>
+          <a href="/registro" style={{ flexShrink: 0, background: '#006D77', color: '#fff', padding: '10px 22px', borderRadius: 6, fontWeight: 600, fontSize: 13, textDecoration: 'none', whiteSpace: 'nowrap' }}>
+            Publicar · US$9.99/mes
+          </a>
+        </div>
       </div>
 
       {/* ZONAS MÁS BUSCADAS */}

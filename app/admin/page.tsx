@@ -62,6 +62,7 @@ export default function Admin() {
   const [bannerGuardado, setBannerGuardado] = useState(false)
   const [faviconUrl, setFaviconUrl] = useState('')
   const [featureImgUrl, setFeatureImgUrl] = useState('')
+  const [proImgUrl, setProImgUrl] = useState('')
   const [configUploading, setConfigUploading] = useState<string | null>(null)
   const [instagramUrl, setInstagramUrl] = useState('')
   const [facebookUrl, setFacebookUrl] = useState('')
@@ -201,6 +202,7 @@ export default function Admin() {
     if (cfg.banner_url) setBannerUrl(cfg.banner_url)
     if (cfg.favicon_url) setFaviconUrl(cfg.favicon_url)
     if (cfg.feature_img_url) setFeatureImgUrl(cfg.feature_img_url)
+    if (cfg.pro_img_url) setProImgUrl(cfg.pro_img_url)
     if (cfg.instagram_url) setInstagramUrl(cfg.instagram_url)
     if (cfg.facebook_url) setFacebookUrl(cfg.facebook_url)
     if (cfg.tiktok_url) setTiktokUrl(cfg.tiktok_url)
@@ -1027,6 +1029,34 @@ export default function Admin() {
                     <button onClick={async () => {
                       await fetch('/api/admin/config', { method: 'POST', headers: { ...authHeader(), 'Content-Type': 'application/json' }, body: JSON.stringify({ clave: 'feature_img_url', valor: '' }) })
                       setFeatureImgUrl('')
+                    }} style={{ all: 'unset', fontSize: 13, color: '#e53e3e', cursor: 'pointer', padding: '9px 14px', border: '1.5px solid #fca5a5', borderRadius: 6 }}>
+                      Quitar imagen
+                    </button>
+                  )}
+                </div>
+              </Card>
+
+              <Card style={{ padding: '24px', marginTop: 20 }}>
+                <div style={{ fontSize: 15, fontWeight: 700, color: '#111', marginBottom: 4 }}>Imagen banner profesional</div>
+                <div style={{ fontSize: 12, color: '#aaa', marginBottom: 16 }}>Imagen del banner "¿Eres profesional?" en la página de inicio.</div>
+                <div style={{ fontSize: 11, color: '#f59e0b', background: '#fffbeb', border: '1px solid #fde68a', borderRadius: 6, padding: '8px 12px', marginBottom: 14 }}>
+                  Recomendado: <strong>400 × 280 px</strong> · formato PNG o JPG
+                </div>
+                {proImgUrl && (
+                  <div style={{ marginBottom: 16, borderRadius: 8, overflow: 'hidden', width: 140, height: 100, background: '#f0fafb' }}>
+                    <img src={proImgUrl} alt="pro banner" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                )}
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <label style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#f0fafb', border: `1.5px solid ${C.verde}`, borderRadius: 6, padding: '9px 18px', fontSize: 13, fontWeight: 600, color: C.verde, cursor: 'pointer' }}>
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    {configUploading === 'pro_img_url' ? 'Subiendo…' : 'Subir imagen'}
+                    <input type="file" accept="image/*" style={{ display: 'none' }} onChange={e => { const f = e.target.files?.[0]; if (f) subirConfig('pro_img_url', f) }} />
+                  </label>
+                  {proImgUrl && (
+                    <button onClick={async () => {
+                      await fetch('/api/admin/config', { method: 'POST', headers: { ...authHeader(), 'Content-Type': 'application/json' }, body: JSON.stringify({ clave: 'pro_img_url', valor: '' }) })
+                      setProImgUrl('')
                     }} style={{ all: 'unset', fontSize: 13, color: '#e53e3e', cursor: 'pointer', padding: '9px 14px', border: '1.5px solid #fca5a5', borderRadius: 6 }}>
                       Quitar imagen
                     </button>
