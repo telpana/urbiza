@@ -226,8 +226,8 @@ html { touch-action: manipulation; }
   /* ── SECCIONES PROPS Y ZONAS ── */
   .home-props-wrap    { padding: 12px 0 0 !important; }
   .home-zonas-section { padding: 24px 16px 24px !important; }
-  .pro-banner-img { width: 100% !important; height: 200px !important; }
-  .pro-banner-card { position: static !important; transform: none !important; width: 100% !important; right: auto !important; box-shadow: none !important; border-top: 1px solid #e8e8e8 !important; padding: 20px 16px !important; }
+  .pro-banner-img { width: 100% !important; height: 180px !important; }
+  .pro-banner-card { position: relative !important; transform: none !important; top: auto !important; right: auto !important; width: 100% !important; margin-top: -16px !important; z-index: 1 !important; padding: 20px 16px !important; border-top: none !important; }
 
 
   .home-cards-section { margin-bottom: 8px !important; }
