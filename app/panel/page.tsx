@@ -290,7 +290,6 @@ export default function Panel() {
   const [fotosLista, setFotosLista] = useState<FotoItem[]>([])
   const [fotoDragOver, setFotoDragOver] = useState<number | null>(null)
   const touchDragIdx = useRef<number | null>(null)
-  const [pubTituloEditado, setPubTituloEditado] = useState(false)
   const [pubTitulo, setPubTitulo] = useState('')
   const [pubPrecio, setPubPrecio] = useState('')
   const [pubM2, setPubM2] = useState('')
@@ -382,28 +381,6 @@ export default function Panel() {
       setSeccion('perfil')
     }
   }, [cargando, perfilTelefono])
-
-  // Auto-relleno de títulos en los 3 idiomas según tipo + zona
-  const TIPOS_TRAD: Record<string, { en: string; fr: string }> = {
-    'Apartamento':    { en: 'Apartment',        fr: 'Appartement' },
-    'Villa':          { en: 'Villa',             fr: 'Villa' },
-    'Casa':           { en: 'House',             fr: 'Maison' },
-    'Terreno':        { en: 'Land',              fr: 'Terrain' },
-    'Oficina':        { en: 'Office',            fr: 'Bureau' },
-    'Local comercial':{ en: 'Commercial space',  fr: 'Local commercial' },
-    'Edificio':       { en: 'Building',          fr: 'Immeuble' },
-    'Penthouse':      { en: 'Penthouse',         fr: 'Penthouse' },
-    'Studio':         { en: 'Studio',            fr: 'Studio' },
-  }
-  useEffect(() => {
-    if (pubTituloEditado) return
-    if (!pubTipo || !pubProvincia) return
-    const zona = pubSector || pubProvincia
-    const trad = TIPOS_TRAD[pubTipo] || { en: pubTipo, fr: pubTipo }
-    setPubTitulo(`${pubTipo} en ${zona}`)
-    setPubTituloEn(`${trad.en} in ${zona}`)
-    setPubTituloFr(`${trad.fr} à ${zona}`)
-  }, [pubTipo, pubProvincia, pubSector, pubTituloEditado])
 
   // Verificar pago al volver de Stripe — useEffect propio, independiente de la carga de perfil
   useEffect(() => {
@@ -690,7 +667,6 @@ export default function Panel() {
     const provincia = partes.slice(1).join(', ') || ''
     setAnuncioEditando(raw)
     setFotosLista((Array.isArray(raw.fotos) ? raw.fotos : []).map((src: string, i: number) => ({ id: `ex-${i}`, src })))
-    setPubTituloEditado(true)
     setPubTitulo(raw.titulo || '')
     setPubPrecio(String(raw.precio || ''))
     setPubM2(raw.m2 ? String(raw.m2) : '')
@@ -800,7 +776,7 @@ export default function Panel() {
     if (anunciosActualizados) setAnunciosReales(anunciosActualizados)
     setPubExito(true)
     setPubLoading(false)
-    setPubTituloEditado(false); setPubTitulo(''); setPubTituloEn(''); setPubTituloFr(''); setPubPrecio(''); setPubM2(''); setPubDesc(''); setPubDescEn(''); setPubDescFr(''); setDescLang('es')
+    setPubTitulo(''); setPubTituloEn(''); setPubTituloFr(''); setPubPrecio(''); setPubM2(''); setPubDesc(''); setPubDescEn(''); setPubDescFr(''); setDescLang('es')
     setPubProvincia(''); setPubSector(''); setPubHab('1'); setPubBanos('1')
     setPubParqueos(''); setPubPlanta(''); setPubAnio(''); setPubLat(null); setPubLng(null)
     setFotosLista([]); setAnuncioEditando(null)
@@ -1447,13 +1423,13 @@ export default function Panel() {
                       </div>
                     </div>
                     {descLang === 'es' && (
-                      <input type="text" value={pubTitulo} onChange={e => { setPubTituloEditado(true); setPubTitulo(e.target.value.slice(0, 50)) }} maxLength={50} placeholder={Tpanel.publicar.tituloPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                      <input type="text" value={pubTitulo} onChange={e => setPubTitulo(e.target.value.slice(0, 50))} maxLength={50} placeholder={Tpanel.publicar.tituloPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                     )}
                     {descLang === 'en' && (
-                      <input type="text" value={pubTituloEn} onChange={e => { setPubTituloEditado(true); setPubTituloEn(e.target.value.slice(0, 50)) }} maxLength={50} placeholder="E.g: Apartment in Piantini with ocean view" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                      <input type="text" value={pubTituloEn} onChange={e => setPubTituloEn(e.target.value.slice(0, 50))} maxLength={50} placeholder="E.g: Apartment in Piantini with ocean view" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                     )}
                     {descLang === 'fr' && (
-                      <input type="text" value={pubTituloFr} onChange={e => { setPubTituloEditado(true); setPubTituloFr(e.target.value.slice(0, 50)) }} maxLength={50} placeholder="Ex : Appartement à Piantini avec vue mer" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                      <input type="text" value={pubTituloFr} onChange={e => setPubTituloFr(e.target.value.slice(0, 50))} maxLength={50} placeholder="Ex : Appartement à Piantini avec vue mer" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                     )}
                   </div>
                   <div>
