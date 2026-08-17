@@ -913,27 +913,6 @@ export default function Home() {
         <SeccionNovedad titulo={tr.novedades.samana} subtitulo={tr.novedades.verTodas} zona="Samaná" reales={novedadesSamana} ejemplos={propiedadesSamana} dopRate={dopRate} />
       </div>
 
-      {/* BANNER PROFESIONAL */}
-      <div style={{ background: '#fff', borderTop: '1px solid #e8e8e8', borderBottom: '1px solid #e8e8e8', overflow: 'hidden' }}>
-        <div className="pro-banner-wrap" style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'stretch', minHeight: 360 }}>
-          <div className="pro-banner-img" style={{ flex: '0 0 52%', position: 'relative', overflow: 'hidden', minHeight: 280 }}>
-            {featureImgUrl
-              ? <Image src={featureImgUrl} alt="Profesional inmobiliario" fill sizes="(max-width: 768px) 100vw, 572px" style={{ objectFit: 'cover' }} />
-              : <div style={{ width: '100%', height: '100%', background: '#e0f5f7' }} />
-            }
-          </div>
-          <div className="pro-banner-text" style={{ flex: 1, padding: '52px 52px 52px 56px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <h2 style={{ fontSize: 26, fontWeight: 700, color: '#111', lineHeight: 1.3, margin: '0 0 14px' }}>¿Eres agente o promotor inmobiliario?</h2>
-            <p style={{ fontSize: 15, color: '#555', lineHeight: 1.7, margin: '0 0 30px' }}>Llega a miles de compradores en República Dominicana. Publica tus propiedades sin permanencia y cancela cuando quieras.</p>
-            <div>
-              <a href="/registro" style={{ display: 'inline-block', background: '#006D77', color: '#fff', padding: '12px 26px', borderRadius: 6, fontWeight: 600, fontSize: 14, textDecoration: 'none' }}>
-                Publicar por US$9.99/mes
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* ZONAS MÁS BUSCADAS */}
       <div className="home-zonas-section" style={{ background: '#fff', borderTop: '1px solid #e8e8e8', padding: '36px 20px 40px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
