@@ -916,13 +916,15 @@ export default function Home() {
       </div>
 
       {/* BANNER PROFESIONAL */}
-      <div className="pro-banner-outer" style={{ position: 'relative', height: 130, borderTop: '1px solid #e8e8e8', borderBottom: '1px solid #e8e8e8', overflow: 'hidden', background: '#e8f0f0' }}>
+      <div style={{ borderTop: '1px solid #e8e8e8', borderBottom: '1px solid #e8e8e8', background: '#e8f0f0', padding: '0 20px' }}>
+      <div className="pro-banner-outer" style={{ position: 'relative', height: 130, overflow: 'hidden', maxWidth: 1100, margin: '0 auto' }}>
         {proImgUrl && <Image src={proImgUrl} alt="" fill sizes="100vw" style={{ objectFit: 'cover', objectPosition: 'left center' }} />}
         <div className="pro-banner-card" style={{ position: 'absolute', right: 80, top: '50%', transform: 'translateY(-50%)', background: '#fff', padding: '16px 22px', width: 270, boxShadow: '0 4px 24px rgba(0,0,0,0.1)' }}>
           <div style={{ fontSize: 14, fontWeight: 700, color: '#111', lineHeight: 1.3, marginBottom: 6 }}>¿Eres agente o promotor inmobiliario?</div>
           <div style={{ fontSize: 12, color: '#555', lineHeight: 1.5, marginBottom: 10 }}>Llega a miles de compradores. Sin permanencia.</div>
           <a href="/registro" style={{ color: '#006D77', fontWeight: 600, fontSize: 12, textDecoration: 'none' }}>Publicar por US$9.99/mes →</a>
         </div>
+      </div>
       </div>
 
       {/* ZONAS MÁS BUSCADAS */}
