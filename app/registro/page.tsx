@@ -3,6 +3,21 @@ import { useState } from 'react'
 import { supabase } from '../../supabase'
 import { useIdioma } from '../../IdiomaContext'
 
+const PREFIJOS = [
+  { c: '+1',   n: 'RD / USA' },
+  { c: '+34',  n: 'España' },
+  { c: '+52',  n: 'México' },
+  { c: '+57',  n: 'Colombia' },
+  { c: '+58',  n: 'Venezuela' },
+  { c: '+507', n: 'Panamá' },
+  { c: '+506', n: 'Costa Rica' },
+  { c: '+44',  n: 'UK' },
+  { c: '+33',  n: 'Francia' },
+  { c: '+49',  n: 'Alemania' },
+  { c: '+39',  n: 'Italia' },
+  { c: '+31',  n: 'Países Bajos' },
+]
+
 export default function Registro() {
   const { tr } = useIdioma()
   const T = tr.registro
@@ -14,7 +29,8 @@ export default function Registro() {
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [telefono, setTelefono] = useState('+')
+  const [telPrefijo, setTelPrefijo] = useState('+1')
+  const [telNumero, setTelNumero] = useState('')
   const [cedula, setCedula] = useState('')
   const [aei, setAei] = useState('')
   const [loading, setLoading] = useState(false)
@@ -28,7 +44,7 @@ export default function Registro() {
   ]
 
   const registrarConEmail = async () => {
-    if (!nombre || !email || !password || !telefono) { setError(T.err_campos); return }
+    if (!nombre || !email || !password || !telNumero.trim()) { setError(T.err_campos); return }
     if (!aceptaTerminos) { setError(T.err_terminos); return }
     setLoading(true)
     setError('')
@@ -39,7 +55,7 @@ export default function Registro() {
       const res = await fetch('/api/registro', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, nombre, tipo, telefono, cedula, numero_aei: aei ? `AEI-${aei}` : '' }),
+        body: JSON.stringify({ email, password, nombre, tipo, telefono: telPrefijo + ' ' + telNumero.trim(), cedula, numero_aei: aei ? `AEI-${aei}` : '' }),
       })
       const d = await res.json()
       if (!res.ok) { setError(d.error || T.err_generico); setLoading(false); return }
@@ -183,7 +199,12 @@ export default function Registro() {
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{T.telefono} *</label>
-                    <input value={telefono} onChange={e => { let v = e.target.value.replace(/[^\d\s\-+()]/g, '').replace(/(?!^)\+/g, ''); if (!v.startsWith('+')) v = '+' + v.replace(/^\+*/, ''); setTelefono(v.slice(0, 17)) }} type="tel" inputMode="tel" placeholder="+1 809 000 0000" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 14px', fontSize: 14, outline: 'none', boxSizing: 'border-box' }} onFocus={e => { if (!e.target.value) setTelefono('+'); e.target.style.borderColor='#006D77' }} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    <div style={{ display: 'flex', border: '1.5px solid #e0e0e0', borderRadius: 6, overflow: 'hidden', boxSizing: 'border-box' }}>
+                      <select value={telPrefijo} onChange={e => setTelPrefijo(e.target.value)} style={{ border: 'none', borderRight: '1.5px solid #e0e0e0', padding: '11px 8px', fontSize: 13, background: '#f9f9f9', outline: 'none', cursor: 'pointer', color: '#333', flexShrink: 0 }}>
+                        {PREFIJOS.map(p => <option key={p.c} value={p.c}>{p.c} {p.n}</option>)}
+                      </select>
+                      <input value={telNumero} onChange={e => setTelNumero(e.target.value.replace(/[^\d\s\-()]/g, ''))} type="tel" inputMode="tel" placeholder="809 000 0000" style={{ flex: 1, border: 'none', padding: '11px 14px', fontSize: 14, outline: 'none', minWidth: 0 }} onFocus={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = '#006D77' }} onBlur={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = '#e0e0e0' }} />
+                    </div>
                   </div>
                   {tipoCuenta === 'profesional' && (
                     <>

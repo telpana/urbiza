@@ -3,6 +3,21 @@ import { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import { supabase } from '../../supabase'
 import { useIdioma } from '../../IdiomaContext'
 import dynamic from 'next/dynamic'
+
+const PREFIJOS = [
+  { c: '+1',   n: 'RD / USA' },
+  { c: '+34',  n: 'España' },
+  { c: '+52',  n: 'México' },
+  { c: '+57',  n: 'Colombia' },
+  { c: '+58',  n: 'Venezuela' },
+  { c: '+507', n: 'Panamá' },
+  { c: '+506', n: 'Costa Rica' },
+  { c: '+44',  n: 'UK' },
+  { c: '+33',  n: 'Francia' },
+  { c: '+49',  n: 'Alemania' },
+  { c: '+39',  n: 'Italia' },
+  { c: '+31',  n: 'Países Bajos' },
+]
 const MapaPicker = dynamic(() => import('../components/MapaPicker'), { ssr: false })
 
 const Ip = (paths: React.ReactNode) => <svg width="18" height="18" viewBox="2 2 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" style={{ overflow: 'visible', flexShrink: 0 }}>{paths}</svg>
@@ -311,6 +326,8 @@ export default function Panel() {
     try { return localStorage.getItem('hb_perfil_inicial') || '' } catch { return '' }
   })
   const [perfilTelefono, setPerfilTelefono] = useState('')
+  const [perfilTelPrefijo, setPerfilTelPrefijo] = useState('+1')
+  const [perfilTelNumero, setPerfilTelNumero] = useState('')
   const [perfilInmobiliaria, setPerfilInmobiliaria] = useState('')
   const [perfilWebUrl, setPerfilWebUrl] = useState('')
   const [perfilInstagram, setPerfilInstagram] = useState('')
@@ -426,7 +443,12 @@ export default function Panel() {
         setUsuario(perfil)
         if (perfil.foto_url) setFotoPerfilUrl(perfil.foto_url)
         setPerfilNombre(perfil.nombre || '')
-        setPerfilTelefono(perfil.telefono || '')
+        const tel = perfil.telefono || ''
+        setPerfilTelefono(tel)
+        const PREF = ['+507','+506','+34','+52','+57','+58','+44','+33','+49','+39','+31','+1']
+        const pref = PREF.find(p => tel.startsWith(p)) || '+1'
+        setPerfilTelPrefijo(pref)
+        setPerfilTelNumero(tel.slice(pref.length).trim())
         setPerfilInmobiliaria(perfil.inmobiliaria || '')
         setPerfilWebUrl(perfil.web_url || '')
         setPerfilInstagram(perfil.instagram_url || '')
@@ -530,9 +552,10 @@ export default function Panel() {
   }
 
   const guardarPerfil = async () => {
+    const fullTel = (perfilTelPrefijo + ' ' + perfilTelNumero.trim()).trim()
     if (!perfilNombre) { alert(Tpanel.perfil.err_nombre); return }
-    if (!perfilTelefono) { alert(Tpanel.perfil.err_telefono); return }
-    if (perfilTelefono.replace(/\D/g, '').length < 5) { alert(Tpanel.perfil.err_telefono_corto); return }
+    if (!perfilTelNumero.trim()) { alert(Tpanel.perfil.err_telefono); return }
+    if (fullTel.replace(/\D/g, '').length < 5) { alert(Tpanel.perfil.err_telefono_corto); return }
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return
 
@@ -558,7 +581,7 @@ export default function Panel() {
 
     const updates: any = {
       nombre: perfilNombre,
-      telefono: perfilTelefono,
+      telefono: fullTel,
       inmobiliaria: perfilInmobiliaria,
       web_url: perfilWebUrl || null,
       instagram_url: perfilInstagram || null,
@@ -570,7 +593,7 @@ export default function Panel() {
 
     const { error } = await supabase.from('usuarios').update(updates).eq('id', user.id)
     if (error?.code === '23505') { alert('Este número de teléfono ya está asociado a otra cuenta.'); return }
-    if (!error) { setUsuario((prev: any) => ({ ...prev, nombre: perfilNombre, telefono: perfilTelefono, inmobiliaria: perfilInmobiliaria, numero_aei: perfilAei, ...(nuevaFotoUrl ? { foto_url: nuevaFotoUrl } : {}) })); alert(Tpanel.perfil.ok) }
+    if (!error) { setPerfilTelefono(fullTel); setUsuario((prev: any) => ({ ...prev, nombre: perfilNombre, telefono: fullTel, inmobiliaria: perfilInmobiliaria, numero_aei: perfilAei, ...(nuevaFotoUrl ? { foto_url: nuevaFotoUrl } : {}) })); alert(Tpanel.perfil.ok) }
     else alert(Tpanel.perfil.err)
   }
 
@@ -2433,7 +2456,12 @@ export default function Panel() {
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.telefono}</label>
-                    <input value={perfilTelefono} onChange={e => { let v = e.target.value.replace(/[^\d\s\-+()\+]/g, '').replace(/(?!^)\+/g, ''); if (!v.startsWith('+')) v = '+' + v.replace(/^\+*/, ''); setPerfilTelefono(v.slice(0, 17)) }} placeholder="+1 809 000 0000" maxLength={17} style={{ width: '100%', border: `1.5px solid ${!perfilTelefono ? '#e53e3e' : '#e0e0e0'}`, borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => { if (!e.target.value) setPerfilTelefono('+'); e.target.style.borderColor='#006D77' }} onBlur={e => { if (e.target.value === '+') setPerfilTelefono(''); e.target.style.borderColor= perfilTelefono ? '#e0e0e0' : '#e53e3e' }} />
+                    <div style={{ display: 'flex', border: `1.5px solid ${!perfilTelefono ? '#e53e3e' : '#e0e0e0'}`, borderRadius: 6, overflow: 'hidden', boxSizing: 'border-box' }}>
+                      <select value={perfilTelPrefijo} onChange={e => setPerfilTelPrefijo(e.target.value)} style={{ border: 'none', borderRight: '1.5px solid #e0e0e0', padding: '10px 6px', fontSize: 12, background: '#f9f9f9', outline: 'none', cursor: 'pointer', color: '#333', flexShrink: 0 }}>
+                        {PREFIJOS.map(p => <option key={p.c} value={p.c}>{p.c} {p.n}</option>)}
+                      </select>
+                      <input value={perfilTelNumero} onChange={e => setPerfilTelNumero(e.target.value.replace(/[^\d\s\-()]/g, ''))} type="tel" inputMode="tel" placeholder="809 000 0000" style={{ flex: 1, border: 'none', padding: '10px 12px', fontSize: 13, outline: 'none', minWidth: 0 }} onFocus={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = '#006D77' }} onBlur={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = perfilTelefono ? '#e0e0e0' : '#e53e3e' }} />
+                    </div>
                     {!perfilTelefono && <div style={{ fontSize: 11, color: '#e53e3e', marginTop: 4 }}>{Tpanel.perfil.err_telefono}</div>}
                   </div>
                   {tipoUsuario === 'profesional' && usuario?.plan === 'profesional' && (
