@@ -917,13 +917,13 @@ export default function Home() {
 
       {/* BANNER PROFESIONAL */}
       <div style={{ borderTop: '1px solid #e8e8e8', background: '#fff', padding: '32px 0' }}>
-        <div className="pro-banner-outer" style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', padding: '0 20px' }}>
+        <div className="pro-banner-outer" style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'stretch', gap: 0 }}>
           {/* Imagen izquierda */}
-          <div className="pro-banner-img" style={{ position: 'relative', width: '58%', height: 210, overflow: 'hidden' }}>
-            {proImgUrl && <Image src={proImgUrl} alt="" fill sizes="640px" style={{ objectFit: 'cover', objectPosition: 'center top' }} />}
+          <div className="pro-banner-img" style={{ position: 'relative', flex: 1, height: 210, overflow: 'hidden' }}>
+            {proImgUrl && <Image src={proImgUrl} alt="" fill sizes="530px" style={{ objectFit: 'cover', objectPosition: 'center top' }} />}
           </div>
-          {/* Tarjeta flotante superpuesta sobre el borde derecho de la imagen */}
-          <div className="pro-banner-card" style={{ position: 'absolute', right: 0, top: '50%', transform: 'translateY(-50%)', width: 400, background: '#fff', boxShadow: '0 4px 24px rgba(0,0,0,0.12)', padding: '32px 36px', zIndex: 1 }}>
+          {/* Tarjeta derecha */}
+          <div className="pro-banner-card" style={{ flex: 1, background: '#fff', boxShadow: '0 4px 24px rgba(0,0,0,0.12)', padding: '32px 36px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <div style={{ fontSize: 20, fontWeight: 700, color: '#111', lineHeight: 1.3, marginBottom: 12 }}>¿Eres agente o promotor inmobiliario?</div>
             <div style={{ fontSize: 13, color: '#555', lineHeight: 1.6, marginBottom: 18 }}>Llega a miles de compradores en República Dominicana. Sin permanencia.</div>
             <a href="/registro" style={{ color: '#006D77', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>Publicar por US$9.99/mes →</a>
