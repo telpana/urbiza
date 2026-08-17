@@ -227,8 +227,9 @@ html { touch-action: manipulation; }
   .home-props-wrap    { padding: 12px 0 0 !important; }
   .home-zonas-section { padding: 24px 16px 24px !important; }
 
-  .pro-banner-wrap { flex-direction: column !important; padding: 32px 16px !important; gap: 24px !important; }
-  .pro-banner-img { flex: none !important; width: 100% !important; height: 220px !important; }
+  .pro-banner-wrap { flex-direction: column !important; }
+  .pro-banner-img { flex: none !important; width: 100% !important; min-height: 240px !important; }
+  .pro-banner-text { padding: 28px 20px !important; }
 
   .home-cards-section { margin-bottom: 8px !important; }
   .home-section-hdr   { padding: 0 16px !important; }
