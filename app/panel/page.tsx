@@ -1528,7 +1528,7 @@ export default function Panel() {
                   </div>
                 </div>
 
-                <div className="pub-form-grid-5" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 16, marginBottom: 16 }}>
+                <div className="pub-form-grid-5" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.5fr 1.2fr 0.8fr 0.8fr', gap: 24, marginBottom: 16 }}>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.superficie} *</label>
                     <input type="text" value={pubM2} onChange={e => { const raw = e.target.value.replace(/\D/g, '').slice(0, 8); setPubM2(raw ? raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '') }} placeholder="Ej: 150" inputMode="numeric" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
@@ -1537,7 +1537,7 @@ export default function Panel() {
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.habitaciones}</label>
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                        {[['0', Tpanel.publicar.estudio], ['1','1'], ['2','2'], ['3','3'], ['4','4+']].map(([val, lbl]) => (
+                        {[['0', Tpanel.publicar.estudio], ['1','1'], ['2','2'], ['3','3+']].map(([val, lbl]) => (
                           <button key={val} type="button" onClick={() => setPubHab(val)} style={{ padding: '7px 10px', borderRadius: 20, border: `1.5px solid ${pubHab === val ? '#006D77' : '#e0e0e0'}`, background: pubHab === val ? '#006D77' : '#fff', color: pubHab === val ? '#fff' : '#555', fontSize: 12, fontWeight: pubHab === val ? 600 : 400, cursor: 'pointer', transition: 'all 0.15s' }}>{lbl}</button>
                         ))}
                       </div>
