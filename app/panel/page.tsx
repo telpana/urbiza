@@ -4,6 +4,18 @@ import { supabase } from '../../supabase'
 import { useIdioma } from '../../IdiomaContext'
 import dynamic from 'next/dynamic'
 
+const TIPOS_TRAD: Record<string, { en: string; fr: string }> = {
+  'Apartamento':    { en: 'Apartment',       fr: 'Appartement' },
+  'Villa':          { en: 'Villa',            fr: 'Villa' },
+  'Casa':           { en: 'House',            fr: 'Maison' },
+  'Terreno':        { en: 'Land',             fr: 'Terrain' },
+  'Oficina':        { en: 'Office',           fr: 'Bureau' },
+  'Local comercial':{ en: 'Commercial space', fr: 'Local commercial' },
+  'Edificio':       { en: 'Building',         fr: 'Immeuble' },
+  'Penthouse':      { en: 'Penthouse',        fr: 'Penthouse' },
+  'Studio':         { en: 'Studio',           fr: 'Studio' },
+}
+
 const PREFIJOS = [
   '+1','+7','+20','+27','+30','+31','+32','+33','+34','+36','+39',
   '+40','+41','+43','+44','+45','+46','+47','+48','+49',
@@ -290,6 +302,7 @@ export default function Panel() {
   const [fotosLista, setFotosLista] = useState<FotoItem[]>([])
   const [fotoDragOver, setFotoDragOver] = useState<number | null>(null)
   const touchDragIdx = useRef<number | null>(null)
+  const [pubTituloEditado, setPubTituloEditado] = useState(false)
   const [pubTitulo, setPubTitulo] = useState('')
   const [pubPrecio, setPubPrecio] = useState('')
   const [pubM2, setPubM2] = useState('')
@@ -381,6 +394,16 @@ export default function Panel() {
       setSeccion('perfil')
     }
   }, [cargando, perfilTelefono])
+
+  useEffect(() => {
+    if (pubTituloEditado) return
+    if (!pubTipo || !pubProvincia) return
+    const zona = pubSector || pubProvincia
+    const trad = TIPOS_TRAD[pubTipo] || { en: pubTipo, fr: pubTipo }
+    setPubTitulo(`${pubTipo} en ${zona}`)
+    setPubTituloEn(`${trad.en} in ${zona}`)
+    setPubTituloFr(`${trad.fr} à ${zona}`)
+  }, [pubTipo, pubProvincia, pubSector, pubTituloEditado])
 
   // Verificar pago al volver de Stripe — useEffect propio, independiente de la carga de perfil
   useEffect(() => {
@@ -667,6 +690,7 @@ export default function Panel() {
     const provincia = partes.slice(1).join(', ') || ''
     setAnuncioEditando(raw)
     setFotosLista((Array.isArray(raw.fotos) ? raw.fotos : []).map((src: string, i: number) => ({ id: `ex-${i}`, src })))
+    setPubTituloEditado(true)
     setPubTitulo(raw.titulo || '')
     setPubPrecio(String(raw.precio || ''))
     setPubM2(raw.m2 ? String(raw.m2) : '')
@@ -776,7 +800,7 @@ export default function Panel() {
     if (anunciosActualizados) setAnunciosReales(anunciosActualizados)
     setPubExito(true)
     setPubLoading(false)
-    setPubTitulo(''); setPubTituloEn(''); setPubTituloFr(''); setPubPrecio(''); setPubM2(''); setPubDesc(''); setPubDescEn(''); setPubDescFr(''); setDescLang('es')
+    setPubTituloEditado(false); setPubTitulo(''); setPubTituloEn(''); setPubTituloFr(''); setPubPrecio(''); setPubM2(''); setPubDesc(''); setPubDescEn(''); setPubDescFr(''); setDescLang('es')
     setPubProvincia(''); setPubSector(''); setPubHab('1'); setPubBanos('1')
     setPubParqueos(''); setPubPlanta(''); setPubAnio(''); setPubLat(null); setPubLng(null)
     setFotosLista([]); setAnuncioEditando(null)
@@ -1405,38 +1429,6 @@ export default function Panel() {
                     </div>
                   </div>
                   <div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
-                      <label style={{ fontSize: 13, fontWeight: 600, color: '#333' }}>
-                        {descLang === 'es' ? Tpanel.publicar.titulo_anuncio : descLang === 'en' ? 'Listing title (EN)' : 'Titre de l\'annonce (FR)'}
-                        {descLang !== 'es' && <span style={{ fontWeight: 400, color: '#aaa', fontSize: 12, marginLeft: 6 }}>(optional)</span>}
-                      </label>
-                      <div style={{ display: 'flex', gap: 4, background: '#f0f0f0', borderRadius: 6, padding: 3 }}>
-                        {([['es','ES'], ['en','EN'], ['fr','FR']] as const).map(([l, label]) => (
-                          <button key={l} type="button" onClick={() => setDescLang(l)}
-                            style={{ border: 'none', outline: 'none', padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: descLang === l ? '#006D77' : 'transparent', color: descLang === l ? '#fff' : '#888', transition: 'background 0.15s, color 0.15s', position: 'relative', touchAction: 'manipulation', userSelect: 'none' }}>
-                            {label}
-                            {l !== 'es' && ((l === 'en' ? pubTituloEn : pubTituloFr).trim()) && (
-                              <span style={{ position: 'absolute', top: 1, right: 1, width: 5, height: 5, background: '#10b981', borderRadius: '50%' }} />
-                            )}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    {descLang === 'es' && (
-                      <input type="text" value={pubTitulo} onChange={e => setPubTitulo(e.target.value.slice(0, 50))} maxLength={50} placeholder={Tpanel.publicar.tituloPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                    )}
-                    {descLang === 'en' && (
-                      <input type="text" value={pubTituloEn} onChange={e => setPubTituloEn(e.target.value.slice(0, 50))} maxLength={50} placeholder="E.g: Apartment in Piantini with ocean view" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                    )}
-                    {descLang === 'fr' && (
-                      <input type="text" value={pubTituloFr} onChange={e => setPubTituloFr(e.target.value.slice(0, 50))} maxLength={50} placeholder="Ex : Appartement à Piantini avec vue mer" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                    )}
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.precio}</label>
-                    <input type="text" value={pubPrecio} onChange={e => { const raw = e.target.value.replace(/\D/g, '').slice(0, 9); setPubPrecio(raw ? raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '') }} placeholder="Ej: 250.000" inputMode="numeric" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                  </div>
-                  <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.provincia}</label>
                     <div style={{ position: 'relative' }}>
                       <select value={pubProvincia} onChange={e => { setPubProvincia(e.target.value); setPubSector(''); setPubLat(null); setPubLng(null) }} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 36px 10px 12px', fontSize: 13, outline: 'none', background: '#fff', appearance: 'none', cursor: 'pointer' }}>
@@ -1455,6 +1447,38 @@ export default function Panel() {
                       </select>
                       <svg style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={pubProvincia ? '#888' : '#ccc'} strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
                     </div>
+                  </div>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                      <label style={{ fontSize: 13, fontWeight: 600, color: '#333' }}>
+                        {descLang === 'es' ? Tpanel.publicar.titulo_anuncio : descLang === 'en' ? 'Listing title (EN)' : 'Titre de l\'annonce (FR)'}
+                        {descLang !== 'es' && <span style={{ fontWeight: 400, color: '#aaa', fontSize: 12, marginLeft: 6 }}>(optional)</span>}
+                      </label>
+                      <div style={{ display: 'flex', gap: 4, background: '#f0f0f0', borderRadius: 6, padding: 3 }}>
+                        {([['es','ES'], ['en','EN'], ['fr','FR']] as const).map(([l, label]) => (
+                          <button key={l} type="button" onClick={() => setDescLang(l)}
+                            style={{ border: 'none', outline: 'none', padding: '3px 10px', borderRadius: 4, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: descLang === l ? '#006D77' : 'transparent', color: descLang === l ? '#fff' : '#888', transition: 'background 0.15s, color 0.15s', position: 'relative', touchAction: 'manipulation', userSelect: 'none' }}>
+                            {label}
+                            {l !== 'es' && ((l === 'en' ? pubTituloEn : pubTituloFr).trim()) && (
+                              <span style={{ position: 'absolute', top: 1, right: 1, width: 5, height: 5, background: '#10b981', borderRadius: '50%' }} />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    {descLang === 'es' && (
+                      <input type="text" value={pubTitulo} onChange={e => { setPubTituloEditado(true); setPubTitulo(e.target.value.slice(0, 50)) }} maxLength={50} placeholder={Tpanel.publicar.tituloPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    )}
+                    {descLang === 'en' && (
+                      <input type="text" value={pubTituloEn} onChange={e => { setPubTituloEditado(true); setPubTituloEn(e.target.value.slice(0, 50)) }} maxLength={50} placeholder="E.g: Apartment in Piantini with ocean view" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    )}
+                    {descLang === 'fr' && (
+                      <input type="text" value={pubTituloFr} onChange={e => { setPubTituloEditado(true); setPubTituloFr(e.target.value.slice(0, 50)) }} maxLength={50} placeholder="Ex : Appartement à Piantini avec vue mer" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
+                    )}
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.precio}</label>
+                    <input type="text" value={pubPrecio} onChange={e => { const raw = e.target.value.replace(/\D/g, '').slice(0, 9); setPubPrecio(raw ? raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '') }} placeholder="Ej: 250.000" inputMode="numeric" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
                   {pubProvincia && (
                     <div style={{ gridColumn: '1 / -1' }}>
