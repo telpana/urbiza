@@ -916,20 +916,12 @@ export default function Home() {
       </div>
 
       {/* BANNER PROFESIONAL */}
-      <div style={{ borderTop: '1px solid #e8e8e8', borderBottom: '1px solid #e8e8e8', background: '#fff' }}>
-        <div className="pro-banner-wrap" style={{ maxWidth: 1100, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 24, padding: '20px' }}>
-          {proImgUrl && (
-            <div className="pro-banner-img" style={{ flexShrink: 0, width: 160, height: 110, borderRadius: 8, overflow: 'hidden', position: 'relative' }}>
-              <Image src={proImgUrl} alt="" fill sizes="160px" style={{ objectFit: 'cover' }} />
-            </div>
-          )}
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: 16, fontWeight: 700, color: '#111', marginBottom: 4 }}>¿Eres agente o promotor inmobiliario?</div>
-            <div style={{ fontSize: 13, color: '#777' }}>Llega a miles de compradores en República Dominicana. Sin permanencia.</div>
-          </div>
-          <a href="/registro" style={{ flexShrink: 0, background: '#006D77', color: '#fff', padding: '10px 22px', borderRadius: 6, fontWeight: 600, fontSize: 13, textDecoration: 'none', whiteSpace: 'nowrap' }}>
-            Publicar · US$9.99/mes
-          </a>
+      <div className="pro-banner-outer" style={{ position: 'relative', height: 200, borderTop: '1px solid #e8e8e8', borderBottom: '1px solid #e8e8e8', overflow: 'hidden', background: '#e8f0f0' }}>
+        {proImgUrl && <Image src={proImgUrl} alt="" fill sizes="100vw" style={{ objectFit: 'cover', objectPosition: 'left center' }} />}
+        <div className="pro-banner-card" style={{ position: 'absolute', right: 80, top: '50%', transform: 'translateY(-50%)', background: '#fff', padding: '24px 28px', width: 300, boxShadow: '0 4px 24px rgba(0,0,0,0.1)' }}>
+          <div style={{ fontSize: 16, fontWeight: 700, color: '#111', lineHeight: 1.3, marginBottom: 8 }}>¿Eres agente o promotor inmobiliario?</div>
+          <div style={{ fontSize: 13, color: '#555', lineHeight: 1.5, marginBottom: 14 }}>Llega a miles de compradores. Sin permanencia.</div>
+          <a href="/registro" style={{ color: '#006D77', fontWeight: 600, fontSize: 13, textDecoration: 'none' }}>Publicar por US$9.99/mes →</a>
         </div>
       </div>
 
