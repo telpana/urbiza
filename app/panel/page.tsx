@@ -5,18 +5,18 @@ import { useIdioma } from '../../IdiomaContext'
 import dynamic from 'next/dynamic'
 
 const PREFIJOS = [
-  { c: '+1',   n: 'RD / USA' },
-  { c: '+34',  n: 'España' },
-  { c: '+52',  n: 'México' },
-  { c: '+57',  n: 'Colombia' },
-  { c: '+58',  n: 'Venezuela' },
-  { c: '+507', n: 'Panamá' },
-  { c: '+506', n: 'Costa Rica' },
-  { c: '+44',  n: 'UK' },
-  { c: '+33',  n: 'Francia' },
-  { c: '+49',  n: 'Alemania' },
-  { c: '+39',  n: 'Italia' },
-  { c: '+31',  n: 'Países Bajos' },
+  '+1','+7','+20','+27','+30','+31','+32','+33','+34','+36','+39',
+  '+40','+41','+43','+44','+45','+46','+47','+48','+49',
+  '+51','+52','+53','+54','+55','+56','+57','+58',
+  '+60','+61','+62','+63','+64','+65','+66',
+  '+81','+82','+84','+86','+90','+91','+92','+94','+98',
+  '+212','+213','+216','+234','+254',
+  '+351','+352','+353','+358','+370','+371','+372','+380','+385','+420',
+  '+501','+502','+503','+504','+505','+506','+507','+509',
+  '+591','+593','+595','+598',
+  '+852','+880','+886',
+  '+960','+961','+962','+964','+965','+966','+967','+968','+971','+972','+973','+974','+977',
+  '+992','+993','+994','+995','+996','+998',
 ]
 const MapaPicker = dynamic(() => import('../components/MapaPicker'), { ssr: false })
 
@@ -445,8 +445,7 @@ export default function Panel() {
         setPerfilNombre(perfil.nombre || '')
         const tel = perfil.telefono || ''
         setPerfilTelefono(tel)
-        const PREF = ['+507','+506','+34','+52','+57','+58','+44','+33','+49','+39','+31','+1']
-        const pref = PREF.find(p => tel.startsWith(p)) || '+1'
+        const pref = [...PREFIJOS].sort((a,b) => b.length - a.length).find(p => tel.startsWith(p)) || '+1'
         setPerfilTelPrefijo(pref)
         setPerfilTelNumero(tel.slice(pref.length).trim())
         setPerfilInmobiliaria(perfil.inmobiliaria || '')
@@ -2458,7 +2457,7 @@ export default function Panel() {
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.telefono}</label>
                     <div style={{ display: 'flex', border: `1.5px solid ${!perfilTelefono ? '#e53e3e' : '#e0e0e0'}`, borderRadius: 6, overflow: 'hidden', boxSizing: 'border-box' }}>
                       <select value={perfilTelPrefijo} onChange={e => setPerfilTelPrefijo(e.target.value)} style={{ border: 'none', borderRight: '1.5px solid #e0e0e0', padding: '10px 6px', fontSize: 12, background: '#f9f9f9', outline: 'none', cursor: 'pointer', color: '#333', flexShrink: 0 }}>
-                        {PREFIJOS.map(p => <option key={p.c} value={p.c}>{p.c} {p.n}</option>)}
+                        {PREFIJOS.map(p => <option key={p} value={p}>{p}</option>)}
                       </select>
                       <input value={perfilTelNumero} onChange={e => setPerfilTelNumero(e.target.value.replace(/[^\d\s\-()]/g, ''))} type="tel" inputMode="tel" placeholder="809 000 0000" style={{ flex: 1, border: 'none', padding: '10px 12px', fontSize: 13, outline: 'none', minWidth: 0 }} onFocus={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = '#006D77' }} onBlur={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = perfilTelefono ? '#e0e0e0' : '#e53e3e' }} />
                     </div>
