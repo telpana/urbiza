@@ -321,6 +321,8 @@ export default function Panel() {
   const [pubAnio, setPubAnio] = useState('')
   const [pubProvincia, setPubProvincia] = useState('')
   const [pubSector, setPubSector] = useState('')
+  const [pubOperacionOpen, setPubOperacionOpen] = useState(false)
+  const [pubTipoOpen, setPubTipoOpen] = useState(false)
   const [pubProvinciaOpen, setPubProvinciaOpen] = useState(false)
   const [pubSectorOpen, setPubSectorOpen] = useState(false)
   const [pubLat, setPubLat] = useState<number | null>(null)
@@ -1411,23 +1413,37 @@ export default function Panel() {
               ) : (
               <div className="pub-form-card" style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
 
-                <div className="pub-form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16 }}>
+                <div className="pub-form-grid-2" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 16, alignItems: 'start' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.operacion}</label>
-                    <div style={{ position: 'relative' }}>
-                      <select value={pubOperacion} onChange={e => setPubOperacion(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 36px 10px 12px', fontSize: 13, outline: 'none', background: '#fff', appearance: 'none', cursor: 'pointer' }}>
-                        <option value="Venta">{Tpanel.publicar.venta}</option><option value="Alquiler">{Tpanel.publicar.alquiler}</option>
-                      </select>
-                      <svg style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    <div tabIndex={0} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setPubOperacionOpen(false) }} style={{ border: `1.5px solid ${pubOperacionOpen ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, background: '#fff', outline: 'none' }}>
+                      <div onClick={() => setPubOperacionOpen(o => !o)} style={{ padding: '10px 36px 10px 12px', fontSize: 13, cursor: 'pointer', userSelect: 'none', color: '#333', position: 'relative' }}>
+                        {pubOperacion === 'Venta' ? Tpanel.publicar.venta : Tpanel.publicar.alquiler}
+                        <svg style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${pubOperacionOpen ? 180 : 0}deg)`, transition: 'transform 0.15s', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                      </div>
+                      {pubOperacionOpen && (
+                        <div style={{ borderTop: '1px solid #f0f0f0' }}>
+                          {(['Venta', 'Alquiler'] as const).map(op => (
+                            <div key={op} onClick={() => { setPubOperacion(op); setPubOperacionOpen(false) }} style={{ padding: '9px 14px', fontSize: 13, cursor: 'pointer', background: pubOperacion === op ? '#f0fafa' : 'transparent', color: pubOperacion === op ? '#006D77' : '#333', fontWeight: pubOperacion === op ? 600 : 400 }}>{op === 'Venta' ? Tpanel.publicar.venta : Tpanel.publicar.alquiler}</div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.tipoInmueble}</label>
-                    <div style={{ position: 'relative' }}>
-                      <select value={pubTipo} onChange={e => setPubTipo(e.target.value)} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 36px 10px 12px', fontSize: 13, outline: 'none', background: '#fff', appearance: 'none', cursor: 'pointer' }}>
-                        <option value="Apartamento">{trLang.tipos.apartamento}</option><option value="Casa">{trLang.tipos.casa}</option><option value="Villa">{trLang.tipos.villa}</option><option value="Edificio">{trLang.tipos.edificio}</option><option value="Oficina">{trLang.tipos.oficina}</option><option value="Terreno">{trLang.tipos.terreno}</option><option value="Local comercial">{trLang.tipos.local}</option>
-                      </select>
-                      <svg style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    <div tabIndex={0} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setPubTipoOpen(false) }} style={{ border: `1.5px solid ${pubTipoOpen ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, background: '#fff', outline: 'none' }}>
+                      <div onClick={() => setPubTipoOpen(o => !o)} style={{ padding: '10px 36px 10px 12px', fontSize: 13, cursor: 'pointer', userSelect: 'none', color: '#333', position: 'relative' }}>
+                        {pubTipo}
+                        <svg style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${pubTipoOpen ? 180 : 0}deg)`, transition: 'transform 0.15s', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                      </div>
+                      {pubTipoOpen && (
+                        <div style={{ borderTop: '1px solid #f0f0f0' }}>
+                          {([['Apartamento', trLang.tipos.apartamento], ['Casa', trLang.tipos.casa], ['Villa', trLang.tipos.villa], ['Edificio', trLang.tipos.edificio], ['Oficina', trLang.tipos.oficina], ['Terreno', trLang.tipos.terreno], ['Local comercial', trLang.tipos.local], ['Penthouse', 'Penthouse'], ['Studio', 'Studio']] as [string,string][]).map(([val, label]) => (
+                            <div key={val} onClick={() => { setPubTipo(val); setPubTipoOpen(false) }} style={{ padding: '9px 14px', fontSize: 13, cursor: 'pointer', background: pubTipo === val ? '#f0fafa' : 'transparent', color: pubTipo === val ? '#006D77' : '#333', fontWeight: pubTipo === val ? 600 : 400 }}>{label}</div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div>
