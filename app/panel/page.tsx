@@ -1422,7 +1422,7 @@ export default function Panel() {
                         <svg style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${pubOperacionOpen ? 180 : 0}deg)`, transition: 'transform 0.15s', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
                       </div>
                       {pubOperacionOpen && (
-                        <div style={{ position: 'absolute', top: 'calc(100% + 2px)', left: -2, right: -2, background: '#fff', border: '1.5px solid #006D77', borderRadius: 6, zIndex: 200, boxShadow: '0 4px 16px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
+                        <div style={{ position: 'absolute', top: 'calc(100% + 2px)', left: -2, right: -2, background: '#fff', border: '1.5px solid #006D77', borderRadius: 6, zIndex: 2001, boxShadow: '0 4px 16px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
                           {(['Venta', 'Alquiler'] as const).map(op => (
                             <div key={op} onClick={() => { setPubOperacion(op); setPubOperacionOpen(false) }} style={{ padding: '9px 14px', fontSize: 13, cursor: 'pointer', background: pubOperacion === op ? '#f0fafa' : 'transparent', color: pubOperacion === op ? '#006D77' : '#333', fontWeight: pubOperacion === op ? 600 : 400 }}>{op === 'Venta' ? Tpanel.publicar.venta : Tpanel.publicar.alquiler}</div>
                           ))}
@@ -1438,7 +1438,7 @@ export default function Panel() {
                         <svg style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${pubTipoOpen ? 180 : 0}deg)`, transition: 'transform 0.15s', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
                       </div>
                       {pubTipoOpen && (
-                        <div style={{ position: 'absolute', top: 'calc(100% + 2px)', left: -2, right: -2, background: '#fff', border: '1.5px solid #006D77', borderRadius: 6, zIndex: 200, boxShadow: '0 4px 16px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
+                        <div style={{ position: 'absolute', top: 'calc(100% + 2px)', left: -2, right: -2, background: '#fff', border: '1.5px solid #006D77', borderRadius: 6, zIndex: 2001, boxShadow: '0 4px 16px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
                           {([['Apartamento', trLang.tipos.apartamento], ['Casa', trLang.tipos.casa], ['Villa', trLang.tipos.villa], ['Edificio', trLang.tipos.edificio], ['Oficina', trLang.tipos.oficina], ['Terreno', trLang.tipos.terreno], ['Local comercial', trLang.tipos.local], ['Penthouse', 'Penthouse'], ['Studio', 'Studio']] as [string,string][]).map(([val, label]) => (
                             <div key={val} onClick={() => { setPubTipo(val); setPubTipoOpen(false) }} style={{ padding: '9px 14px', fontSize: 13, cursor: 'pointer', background: pubTipo === val ? '#f0fafa' : 'transparent', color: pubTipo === val ? '#006D77' : '#333', fontWeight: pubTipo === val ? 600 : 400 }}>{label}</div>
                           ))}
@@ -1454,7 +1454,7 @@ export default function Panel() {
                         <svg style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${pubProvinciaOpen ? 180 : 0}deg)`, transition: 'transform 0.15s', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
                       </div>
                       {pubProvinciaOpen && (
-                        <div style={{ position: 'absolute', top: 'calc(100% + 2px)', left: -2, right: -2, background: '#fff', border: '1.5px solid #006D77', borderRadius: 6, maxHeight: 220, overflowY: 'auto', zIndex: 200, boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}>
+                        <div style={{ position: 'absolute', top: 'calc(100% + 2px)', left: -2, right: -2, background: '#fff', border: '1.5px solid #006D77', borderRadius: 6, maxHeight: 220, overflowY: 'auto', zIndex: 2001, boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}>
                           <div onClick={() => { setPubProvincia(''); setPubSector(''); setPubLat(null); setPubLng(null); setPubProvinciaOpen(false) }} style={{ padding: '9px 14px', fontSize: 13, cursor: 'pointer', color: '#aaa' }}>{Tpanel.publicar.seleccionaProvincia}</div>
                           {Object.keys(provinciasZonas).map(p => (
                             <div key={p} onClick={() => { setPubProvincia(p); setPubSector(''); setPubLat(null); setPubLng(null); setPubProvinciaOpen(false) }} style={{ padding: '9px 14px', fontSize: 13, cursor: 'pointer', background: pubProvincia === p ? '#f0fafa' : 'transparent', color: pubProvincia === p ? '#006D77' : '#333', fontWeight: pubProvincia === p ? 600 : 400 }}>{p}</div>
@@ -1471,7 +1471,7 @@ export default function Panel() {
                         <svg style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${pubSectorOpen ? 180 : 0}deg)`, transition: 'transform 0.15s', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={pubProvincia ? '#888' : '#ccc'} strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
                       </div>
                       {pubSectorOpen && pubProvincia && (
-                        <div style={{ position: 'absolute', top: 'calc(100% + 2px)', left: -2, right: -2, background: '#fff', border: '1.5px solid #006D77', borderRadius: 6, maxHeight: 220, overflowY: 'auto', zIndex: 200, boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}>
+                        <div style={{ position: 'absolute', top: 'calc(100% + 2px)', left: -2, right: -2, background: '#fff', border: '1.5px solid #006D77', borderRadius: 6, maxHeight: 220, overflowY: 'auto', zIndex: 2001, boxShadow: '0 4px 16px rgba(0,0,0,0.1)' }}>
                           <div onClick={() => { setPubSector(''); setPubLat(null); setPubLng(null); setPubSectorOpen(false) }} style={{ padding: '9px 14px', fontSize: 13, cursor: 'pointer', color: '#aaa' }}>{Tpanel.publicar.seleccionaSector}</div>
                           {provinciasZonas[pubProvincia].map(z => (
                             <div key={z} onClick={() => { setPubSector(z); setPubLat(null); setPubLng(null); setPubSectorOpen(false) }} style={{ padding: '9px 14px', fontSize: 13, cursor: 'pointer', background: pubSector === z ? '#f0fafa' : 'transparent', color: pubSector === z ? '#006D77' : '#333', fontWeight: pubSector === z ? 600 : 400 }}>{z}</div>
