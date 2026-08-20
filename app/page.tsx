@@ -393,6 +393,7 @@ export default function Home() {
 
   const [tipo, setTipo] = useState('Comprar')
   const [tipoInmueble, setTipoInmueble] = useState('Apartamento')
+  const [tipoInmuebleOpen, setTipoInmuebleOpen] = useState(false)
   const [verMapa, setVerMapa] = useState(false)
   const { idioma, setIdioma, tr } = useIdioma()
   const [queryHome, setQueryHome] = useState('')
@@ -761,15 +762,21 @@ export default function Home() {
                   </div>
                 )}
               </div>{/* fin input wrapper */}
-              <select value={tipoInmueble} onChange={e => setTipoInmueble(e.target.value)} style={{ padding: '0 30px 0 12px', fontSize: 13, border: 'none', borderLeft: '1px solid #e0e0e0', outline: 'none', color: '#555', background: `#f9f9f9 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23888' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") no-repeat right 10px center`, appearance: 'none', WebkitAppearance: 'none', cursor: 'pointer' }}>
-                <option value="Apartamento">{tr.tipos.apartamento}</option>
-                <option value="Casa">{tr.tipos.casa}</option>
-                <option value="Villa">{tr.tipos.villa}</option>
-                <option value="Oficina">{tr.tipos.oficina}</option>
-                <option value="Terreno">{tr.tipos.terreno}</option>
-                <option value="Local comercial">{tr.tipos.local}</option>
-                <option value="Edificio">{tr.tipos.edificio}</option>
-              </select>
+              <div tabIndex={0} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setTipoInmuebleOpen(false) }} style={{ position: 'relative', borderLeft: '1px solid #e0e0e0', background: '#f9f9f9', outline: 'none', minWidth: 148 }}>
+                <div onClick={() => setTipoInmuebleOpen(o => !o)} style={{ padding: '0 32px 0 12px', fontSize: 13, cursor: 'pointer', userSelect: 'none', color: '#555', height: '100%', display: 'flex', alignItems: 'center', position: 'relative' }}>
+                  {(() => { const map: Record<string,string> = { 'Apartamento': tr.tipos.apartamento, 'Casa': tr.tipos.casa, 'Villa': tr.tipos.villa, 'Oficina': tr.tipos.oficina, 'Terreno': tr.tipos.terreno, 'Local comercial': tr.tipos.local, 'Edificio': tr.tipos.edificio }; return map[tipoInmueble] || tipoInmueble })()}
+                  <svg style={{ position: 'absolute', right: 10, top: '50%', transform: `translateY(-50%) rotate(${tipoInmuebleOpen ? 180 : 0}deg)`, transition: 'transform 0.15s', pointerEvents: 'none' }} width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                {tipoInmuebleOpen && (
+                  <div style={{ position: 'absolute', top: 'calc(100% + 2px)', left: 0, right: 0, background: '#fff', border: '1.5px solid #006D77', borderRadius: 6, zIndex: 2001, boxShadow: '0 4px 16px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
+                    <div style={{ maxHeight: 240, overflowY: 'auto' }}>
+                      {[['Apartamento', tr.tipos.apartamento], ['Casa', tr.tipos.casa], ['Villa', tr.tipos.villa], ['Oficina', tr.tipos.oficina], ['Terreno', tr.tipos.terreno], ['Local comercial', tr.tipos.local], ['Edificio', tr.tipos.edificio]].map(([val, label]) => (
+                        <div key={val} onClick={() => { setTipoInmueble(val); setTipoInmuebleOpen(false) }} style={{ padding: '9px 14px', fontSize: 13, cursor: 'pointer', background: tipoInmueble === val ? '#f0fafa' : 'transparent', color: tipoInmueble === val ? '#006D77' : '#333', fontWeight: tipoInmueble === val ? 600 : 400 }}>{label}</div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
               <button onClick={() => { const p = new URLSearchParams(); p.set('operacion', tipo === 'Alquilar' ? 'alquiler' : 'venta'); if (queryHome) p.set('zona', queryHome); if (tipoInmueble) p.set('tipo', tipoInmueble); window.location.href = `/buscar?${p.toString()}` }} style={{ background: '#006D77', color: '#fff', border: 'none', padding: '0 26px', fontSize: 14, fontWeight: 600, cursor: 'pointer', borderRadius: '0 4px 4px 0' }}>{tr.hero.buscar}</button>
             </div>{/* fin hero-search */}
           </div>{/* fin hero-search-box */}

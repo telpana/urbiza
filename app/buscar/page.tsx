@@ -357,6 +357,7 @@ function BuscarContent() {
 
   const [dopRate, setDopRate] = useState(59.5)
   const [tipo, setTipo] = useState(tipoParam || 'Todos')
+  const [tipoOpen, setTipoOpen] = useState(false)
   const [filtrosOpen, setFiltrosOpen] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [operacion, setOperacion] = useState(operacionParam)
@@ -860,9 +861,21 @@ function BuscarContent() {
           {/* FILTRO TIPO */}
           <div style={{ borderBottom: '1px solid #f0f0f0', paddingBottom: 14, marginBottom: 14 }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: '#222', marginBottom: 8 }}>{Tb.tipoInmueble}</div>
-            <select value={tipo} onChange={e => setTipo(e.target.value)} style={{ width: '100%', border: '1px solid #ddd', borderRadius: 4, padding: '8px 10px', fontSize: 13, color: '#444', background: '#fff', cursor: 'pointer', outline: 'none' }}>
-              {tipos.map(t => <option key={t} value={t}>{tipoLabel(t)}</option>)}
-            </select>
+            <div tabIndex={0} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setTipoOpen(false) }} style={{ position: 'relative', border: `1.5px solid ${tipoOpen ? '#006D77' : '#ddd'}`, borderRadius: 6, background: '#fff', outline: 'none' }}>
+              <div onClick={() => setTipoOpen(o => !o)} style={{ padding: '9px 36px 9px 12px', fontSize: 13, cursor: 'pointer', userSelect: 'none', color: '#444', position: 'relative' }}>
+                {tipoLabel(tipo)}
+                <svg style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${tipoOpen ? 180 : 0}deg)`, transition: 'transform 0.15s', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+              </div>
+              {tipoOpen && (
+                <div style={{ position: 'absolute', top: 'calc(100% + 2px)', left: -2, right: -2, background: '#fff', border: '1.5px solid #006D77', borderRadius: 6, zIndex: 2001, boxShadow: '0 4px 16px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
+                  <div style={{ maxHeight: 260, overflowY: 'auto' }}>
+                    {tipos.map(t => (
+                      <div key={t} onClick={() => { setTipo(t); setTipoOpen(false) }} style={{ padding: '9px 14px', fontSize: 13, cursor: 'pointer', background: tipo === t ? '#f0fafa' : 'transparent', color: tipo === t ? '#006D77' : '#333', fontWeight: tipo === t ? 600 : 400 }}>{tipoLabel(t)}</div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* FILTRO PRECIO */}
