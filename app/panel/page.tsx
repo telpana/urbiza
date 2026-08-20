@@ -1508,7 +1508,7 @@ export default function Panel() {
                       <input type="text" value={pubTituloFr} onChange={e => { setPubTituloEditado(true); setPubTituloFr(e.target.value.slice(0, 50)) }} maxLength={50} placeholder="Ex : Appartement à Piantini avec vue mer" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                     )}
                   </div>
-                  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', alignSelf: 'stretch' }}>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.precio}</label>
                     <input type="text" value={pubPrecio} onChange={e => { const raw = e.target.value.replace(/\D/g, '').slice(0, 9); setPubPrecio(raw ? raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '') }} placeholder="Ej: 250.000" inputMode="numeric" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
