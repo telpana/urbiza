@@ -321,6 +321,8 @@ export default function Panel() {
   const [pubAnio, setPubAnio] = useState('')
   const [pubProvincia, setPubProvincia] = useState('')
   const [pubSector, setPubSector] = useState('')
+  const [pubProvinciaOpen, setPubProvinciaOpen] = useState(false)
+  const [pubSectorOpen, setPubSectorOpen] = useState(false)
   const [pubLat, setPubLat] = useState<number | null>(null)
   const [pubLng, setPubLng] = useState<number | null>(null)
   const [pubLoading, setPubLoading] = useState(false)
@@ -1430,22 +1432,36 @@ export default function Panel() {
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.provincia}</label>
-                    <div style={{ position: 'relative' }}>
-                      <select value={pubProvincia} onChange={e => { setPubProvincia(e.target.value); setPubSector(''); setPubLat(null); setPubLng(null) }} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 36px 10px 12px', fontSize: 13, outline: 'none', background: '#fff', appearance: 'none', cursor: 'pointer' }}>
-                        <option value="">{Tpanel.publicar.seleccionaProvincia}</option>
-                        {Object.keys(provinciasZonas).map(p => <option key={p} value={p}>{p}</option>)}
-                      </select>
-                      <svg style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    <div tabIndex={0} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setPubProvinciaOpen(false) }} style={{ border: `1.5px solid ${pubProvinciaOpen ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, background: '#fff', outline: 'none' }}>
+                      <div onClick={() => setPubProvinciaOpen(o => !o)} style={{ padding: '10px 36px 10px 12px', fontSize: 13, cursor: 'pointer', userSelect: 'none', color: pubProvincia ? '#333' : '#aaa', position: 'relative' }}>
+                        {pubProvincia || Tpanel.publicar.seleccionaProvincia}
+                        <svg style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${pubProvinciaOpen ? 180 : 0}deg)`, transition: 'transform 0.15s', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                      </div>
+                      {pubProvinciaOpen && (
+                        <div style={{ borderTop: '1px solid #f0f0f0', maxHeight: 200, overflowY: 'auto' }}>
+                          <div onClick={() => { setPubProvincia(''); setPubSector(''); setPubLat(null); setPubLng(null); setPubProvinciaOpen(false) }} style={{ padding: '9px 14px', fontSize: 13, cursor: 'pointer', color: '#aaa' }}>{Tpanel.publicar.seleccionaProvincia}</div>
+                          {Object.keys(provinciasZonas).map(p => (
+                            <div key={p} onClick={() => { setPubProvincia(p); setPubSector(''); setPubLat(null); setPubLng(null); setPubProvinciaOpen(false) }} style={{ padding: '9px 14px', fontSize: 13, cursor: 'pointer', background: pubProvincia === p ? '#f0fafa' : 'transparent', color: pubProvincia === p ? '#006D77' : '#333', fontWeight: pubProvincia === p ? 600 : 400 }}>{p}</div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div>
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.sector} <span style={{ fontWeight: 400, color: '#aaa' }}>{Tpanel.publicar.sectorOpcional}</span></label>
-                    <div style={{ position: 'relative' }}>
-                      <select value={pubSector} onChange={e => { setPubSector(e.target.value); setPubLat(null); setPubLng(null) }} disabled={!pubProvincia} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 36px 10px 12px', fontSize: 13, outline: 'none', background: pubProvincia ? '#fff' : '#f9f9f9', color: pubProvincia ? '#333' : '#aaa', appearance: 'none', cursor: pubProvincia ? 'pointer' : 'default' }}>
-                        <option value="">{Tpanel.publicar.seleccionaSector}</option>
-                        {pubProvincia && provinciasZonas[pubProvincia].map(z => <option key={z} value={z}>{z}</option>)}
-                      </select>
-                      <svg style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={pubProvincia ? '#888' : '#ccc'} strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                    <div tabIndex={0} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setPubSectorOpen(false) }} style={{ border: `1.5px solid ${pubSectorOpen ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, background: pubProvincia ? '#fff' : '#f9f9f9', outline: 'none' }}>
+                      <div onClick={() => { if (pubProvincia) setPubSectorOpen(o => !o) }} style={{ padding: '10px 36px 10px 12px', fontSize: 13, cursor: pubProvincia ? 'pointer' : 'default', userSelect: 'none', color: pubSector ? '#333' : '#aaa', position: 'relative' }}>
+                        {pubSector || Tpanel.publicar.seleccionaSector}
+                        <svg style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${pubSectorOpen ? 180 : 0}deg)`, transition: 'transform 0.15s', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={pubProvincia ? '#888' : '#ccc'} strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                      </div>
+                      {pubSectorOpen && pubProvincia && (
+                        <div style={{ borderTop: '1px solid #f0f0f0', maxHeight: 200, overflowY: 'auto' }}>
+                          <div onClick={() => { setPubSector(''); setPubLat(null); setPubLng(null); setPubSectorOpen(false) }} style={{ padding: '9px 14px', fontSize: 13, cursor: 'pointer', color: '#aaa' }}>{Tpanel.publicar.seleccionaSector}</div>
+                          {provinciasZonas[pubProvincia].map(z => (
+                            <div key={z} onClick={() => { setPubSector(z); setPubLat(null); setPubLng(null); setPubSectorOpen(false) }} style={{ padding: '9px 14px', fontSize: 13, cursor: 'pointer', background: pubSector === z ? '#f0fafa' : 'transparent', color: pubSector === z ? '#006D77' : '#333', fontWeight: pubSector === z ? 600 : 400 }}>{z}</div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div>
