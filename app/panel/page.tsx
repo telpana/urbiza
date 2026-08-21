@@ -1439,7 +1439,7 @@ export default function Panel() {
                       </div>
                       {pubTipoOpen && (
                         <div style={{ position: 'absolute', top: 'calc(100% + 2px)', left: -2, right: -2, background: '#fff', border: '1.5px solid #006D77', borderRadius: 6, zIndex: 2001, boxShadow: '0 4px 16px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
-                          {([['Apartamento', trLang.tipos.apartamento], ['Casa', trLang.tipos.casa], ['Villa', trLang.tipos.villa], ['Edificio', trLang.tipos.edificio], ['Oficina', trLang.tipos.oficina], ['Terreno', trLang.tipos.terreno], ['Local comercial', trLang.tipos.local], ['Penthouse', 'Penthouse'], ['Studio', 'Studio']] as [string,string][]).map(([val, label]) => (
+                          {([['Apartamento', trLang.tipos.apartamento], ['Casa', trLang.tipos.casa], ['Villa', trLang.tipos.villa], ['Edificio', trLang.tipos.edificio], ['Oficina', trLang.tipos.oficina], ['Terreno', trLang.tipos.terreno], ['Local comercial', trLang.tipos.local]] as [string,string][]).map(([val, label]) => (
                             <div key={val} onClick={() => { setPubTipo(val); setPubTipoOpen(false) }} style={{ padding: '9px 14px', fontSize: 13, cursor: 'pointer', background: pubTipo === val ? '#f0fafa' : 'transparent', color: pubTipo === val ? '#006D77' : '#333', fontWeight: pubTipo === val ? 600 : 400 }}>{label}</div>
                           ))}
                         </div>
