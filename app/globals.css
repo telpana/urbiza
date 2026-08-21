@@ -385,6 +385,10 @@ html { touch-action: manipulation; }
   .buscar-mapa-mini    { display: none !important; }
 }
 
+/* galería fotos: ocultar scrollbar sin perder scroll */
+.galeria-thumbs { scrollbar-width: none; -ms-overflow-style: none; }
+.galeria-thumbs::-webkit-scrollbar { display: none; }
+
 /* ══════════════════════════════════
    PROPIEDAD DETALLE ≤ 768px
 ══════════════════════════════════ */
