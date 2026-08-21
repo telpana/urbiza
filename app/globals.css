@@ -81,15 +81,19 @@ html { touch-action: manipulation; }
     font-size: 15px !important;
   }
   .hero-search select, .hero-tipo-mobile {
+    display: block !important;
     border: 1.5px solid #e0e0e0 !important;
     border-radius: 6px !important;
-    padding: 11px 14px !important;
+    padding: 11px 36px 11px 14px !important;
     width: 100% !important;
     font-size: 15px !important;
-    background-color: #fff !important;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
     color: #555 !important;
     outline: none !important;
     cursor: pointer !important;
+    box-sizing: border-box !important;
   }
   .hero-tipo-desktop { display: none !important; }
   .hero-search button {
