@@ -51,6 +51,10 @@ html { touch-action: manipulation; }
   gap: 16px;
 }
 
+/* hero tipo select: nativo en mobile, custom en desktop */
+.hero-tipo-mobile { display: none; }
+.hero-tipo-desktop { display: block; }
+
 /* ══════════════════════════════════
    MÓVIL ≤ 768px  — HOME
 ══════════════════════════════════ */
@@ -76,14 +80,18 @@ html { touch-action: manipulation; }
     width: 100% !important;
     font-size: 15px !important;
   }
-  .hero-search select {
+  .hero-search select, .hero-tipo-mobile {
     border: 1.5px solid #e0e0e0 !important;
     border-radius: 6px !important;
     padding: 11px 14px !important;
     width: 100% !important;
     font-size: 15px !important;
     background-color: #fff !important;
+    color: #555 !important;
+    outline: none !important;
+    cursor: pointer !important;
   }
+  .hero-tipo-desktop { display: none !important; }
   .hero-search button {
     border-radius: 6px !important;
     width: 100% !important;
