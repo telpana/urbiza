@@ -508,7 +508,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
         <div className="propiedad-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 24, alignItems: 'start' }}>
 
           {/* COLUMNA IZQUIERDA */}
-          <div>
+          <div style={{ minWidth: 0 }}>
 
             {/* GALERÍA */}
             <GaleriaFotos fotos={fotos} destacado={propiedad.destacado} />
