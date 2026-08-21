@@ -762,18 +762,7 @@ export default function Home() {
                   </div>
                 )}
               </div>{/* fin input wrapper */}
-              {/* Mobile: select nativo (abre picker nativo iOS/Android) */}
-              <select className="hero-tipo-mobile" value={tipoInmueble} onChange={e => setTipoInmueble(e.target.value)} style={{ appearance: 'none', WebkitAppearance: 'none' }}>
-                <option value="Apartamento">{tr.tipos.apartamento}</option>
-                <option value="Casa">{tr.tipos.casa}</option>
-                <option value="Villa">{tr.tipos.villa}</option>
-                <option value="Oficina">{tr.tipos.oficina}</option>
-                <option value="Terreno">{tr.tipos.terreno}</option>
-                <option value="Local comercial">{tr.tipos.local}</option>
-                <option value="Edificio">{tr.tipos.edificio}</option>
-              </select>
-              {/* Desktop: dropdown custom */}
-              <div className="hero-tipo-desktop" tabIndex={0} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setTipoInmuebleOpen(false) }} style={{ position: 'relative', borderLeft: '1px solid #e0e0e0', background: '#f9f9f9', outline: 'none', minWidth: 148 }}>
+              <div className="hero-tipo-wrapper" tabIndex={0} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setTipoInmuebleOpen(false) }} style={{ position: 'relative', borderLeft: '1px solid #e0e0e0', background: '#f9f9f9', outline: 'none', minWidth: 148 }}>
                 <div onClick={() => setTipoInmuebleOpen(o => !o)} style={{ padding: '0 32px 0 12px', fontSize: 13, cursor: 'pointer', userSelect: 'none', color: '#555', height: '100%', display: 'flex', alignItems: 'center', position: 'relative' }}>
                   {(() => { const map: Record<string,string> = { 'Apartamento': tr.tipos.apartamento, 'Casa': tr.tipos.casa, 'Villa': tr.tipos.villa, 'Oficina': tr.tipos.oficina, 'Terreno': tr.tipos.terreno, 'Local comercial': tr.tipos.local, 'Edificio': tr.tipos.edificio }; return map[tipoInmueble] || tipoInmueble })()}
                   <svg style={{ position: 'absolute', right: 10, top: '50%', transform: `translateY(-50%) rotate(${tipoInmuebleOpen ? 180 : 0}deg)`, transition: 'transform 0.15s', pointerEvents: 'none' }} width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
