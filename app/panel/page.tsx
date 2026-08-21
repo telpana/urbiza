@@ -1565,35 +1565,47 @@ export default function Panel() {
                 </div>
 
                 <div className="pub-form-grid-5" style={{ display: 'grid', gridTemplateColumns: '1.2fr 1.5fr 1.2fr 0.8fr 0.8fr', gap: 24, marginBottom: 16 }}>
-                  <div>
+                  <div className="pub-m2-field">
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.superficie} *</label>
                     <input type="text" value={pubM2} onChange={e => { const raw = e.target.value.replace(/\D/g, '').slice(0, 8); setPubM2(raw ? raw.replace(/\B(?=(\d{3})+(?!\d))/g, '.') : '') }} placeholder="Ej: 150" inputMode="numeric" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
                   {!['Edificio', 'Terreno', 'Local comercial'].includes(pubTipo) && (
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.habitaciones}</label>
-                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                      <div className="pub-hab-buttons" style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                         {[['0', Tpanel.publicar.estudio], ['1','1'], ['2','2'], ['3','3+']].map(([val, lbl]) => (
                           <button key={val} type="button" onClick={() => setPubHab(val)} style={{ padding: '7px 10px', borderRadius: 20, border: `1.5px solid ${pubHab === val ? '#006D77' : '#e0e0e0'}`, background: pubHab === val ? '#006D77' : '#fff', color: pubHab === val ? '#fff' : '#555', fontSize: 12, fontWeight: pubHab === val ? 600 : 400, cursor: 'pointer', transition: 'all 0.15s' }}>{lbl}</button>
                         ))}
                       </div>
+                      <select className="pub-field-select-mobile" value={pubHab} onChange={e => setPubHab(e.target.value)}>
+                        <option value="0">{Tpanel.publicar.estudio}</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3+</option>
+                      </select>
                     </div>
                   )}
                   {!['Edificio', 'Terreno'].includes(pubTipo) && (
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.banos}</label>
-                      <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                      <div className="pub-hab-buttons" style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                         {([...(['Local comercial', 'Oficina'].includes(pubTipo) ? [['0','0']] : []), ['1','1'], ['2','2'], ['3','3+']]).map(([val, lbl]) => (
                           <button key={val} type="button" onClick={() => setPubBanos(val)} style={{ padding: '7px 10px', borderRadius: 20, border: `1.5px solid ${pubBanos === val ? '#006D77' : '#e0e0e0'}`, background: pubBanos === val ? '#006D77' : '#fff', color: pubBanos === val ? '#fff' : '#555', fontSize: 12, fontWeight: pubBanos === val ? 600 : 400, cursor: 'pointer', transition: 'all 0.15s' }}>{lbl}</button>
                         ))}
                       </div>
+                      <select className="pub-field-select-mobile" value={pubBanos} onChange={e => setPubBanos(e.target.value)}>
+                        {(['Local comercial', 'Oficina'].includes(pubTipo)) && <option value="0">0</option>}
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3+</option>
+                      </select>
                     </div>
                   )}
-                  <div>
+                  <div className="pub-parqueos-field">
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.parqueos} <span style={{ color: '#aaa', fontWeight: 400 }}>{Tpanel.publicar.sectorOpcional}</span></label>
                     <input type="number" min="0" value={pubParqueos} onChange={e => setPubParqueos(e.target.value)} placeholder="Ej: 2" style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
-                  <div>
+                  <div className="pub-nivel-field">
                     <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.piso} <span style={{ color: '#aaa', fontWeight: 400 }}>{Tpanel.publicar.sectorOpcional}</span></label>
                     <input type="text" value={pubPlanta} onChange={e => setPubPlanta(e.target.value)} placeholder={Tpanel.publicar.pisoPlaceholder} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                   </div>
