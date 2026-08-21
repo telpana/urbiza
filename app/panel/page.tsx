@@ -316,6 +316,8 @@ export default function Panel() {
   const [pubOperacion, setPubOperacion] = useState('Venta')
   const [pubHab, setPubHab] = useState('1')
   const [pubBanos, setPubBanos] = useState('1')
+  const [pubHabOpen, setPubHabOpen] = useState(false)
+  const [pubBanosOpen, setPubBanosOpen] = useState(false)
   const [pubParqueos, setPubParqueos] = useState('')
   const [pubPlanta, setPubPlanta] = useState('')
   const [pubAnio, setPubAnio] = useState('')
@@ -1577,12 +1579,19 @@ export default function Panel() {
                           <button key={val} type="button" onClick={() => setPubHab(val)} style={{ padding: '7px 10px', borderRadius: 20, border: `1.5px solid ${pubHab === val ? '#006D77' : '#e0e0e0'}`, background: pubHab === val ? '#006D77' : '#fff', color: pubHab === val ? '#fff' : '#555', fontSize: 12, fontWeight: pubHab === val ? 600 : 400, cursor: 'pointer', transition: 'all 0.15s' }}>{lbl}</button>
                         ))}
                       </div>
-                      <select className="pub-field-select-mobile" value={pubHab} onChange={e => setPubHab(e.target.value)}>
-                        <option value="0">{Tpanel.publicar.estudio}</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3+</option>
-                      </select>
+                      <div className="pub-field-select-mobile" tabIndex={0} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setPubHabOpen(false) }} style={{ position: 'relative', border: `1.5px solid ${pubHabOpen ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, background: '#fff', outline: 'none' }}>
+                        <div onClick={() => setPubHabOpen(o => !o)} style={{ padding: '10px 36px 10px 12px', fontSize: 14, cursor: 'pointer', userSelect: 'none', color: '#333', position: 'relative' }}>
+                          {pubHab === '0' ? Tpanel.publicar.estudio : pubHab === '3' ? '3+' : pubHab}
+                          <svg style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${pubHabOpen ? 180 : 0}deg)`, transition: 'transform 0.15s', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                        {pubHabOpen && (
+                          <div style={{ position: 'absolute', top: 'calc(100% + 2px)', left: -2, right: -2, background: '#fff', border: '1.5px solid #006D77', borderRadius: 6, zIndex: 2001, boxShadow: '0 4px 16px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
+                            {[['0', Tpanel.publicar.estudio], ['1','1'], ['2','2'], ['3','3+']].map(([val, lbl]) => (
+                              <div key={val} onClick={() => { setPubHab(val); setPubHabOpen(false) }} style={{ padding: '10px 14px', fontSize: 14, cursor: 'pointer', background: pubHab === val ? '#f0fafa' : 'transparent', color: pubHab === val ? '#006D77' : '#333', fontWeight: pubHab === val ? 600 : 400 }}>{lbl}</div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                   {!['Edificio', 'Terreno'].includes(pubTipo) && (
@@ -1593,12 +1602,19 @@ export default function Panel() {
                           <button key={val} type="button" onClick={() => setPubBanos(val)} style={{ padding: '7px 10px', borderRadius: 20, border: `1.5px solid ${pubBanos === val ? '#006D77' : '#e0e0e0'}`, background: pubBanos === val ? '#006D77' : '#fff', color: pubBanos === val ? '#fff' : '#555', fontSize: 12, fontWeight: pubBanos === val ? 600 : 400, cursor: 'pointer', transition: 'all 0.15s' }}>{lbl}</button>
                         ))}
                       </div>
-                      <select className="pub-field-select-mobile" value={pubBanos} onChange={e => setPubBanos(e.target.value)}>
-                        {(['Local comercial', 'Oficina'].includes(pubTipo)) && <option value="0">0</option>}
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3+</option>
-                      </select>
+                      <div className="pub-field-select-mobile" tabIndex={0} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setPubBanosOpen(false) }} style={{ position: 'relative', border: `1.5px solid ${pubBanosOpen ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, background: '#fff', outline: 'none' }}>
+                        <div onClick={() => setPubBanosOpen(o => !o)} style={{ padding: '10px 36px 10px 12px', fontSize: 14, cursor: 'pointer', userSelect: 'none', color: '#333', position: 'relative' }}>
+                          {pubBanos === '3' ? '3+' : pubBanos}
+                          <svg style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${pubBanosOpen ? 180 : 0}deg)`, transition: 'transform 0.15s', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                        </div>
+                        {pubBanosOpen && (
+                          <div style={{ position: 'absolute', top: 'calc(100% + 2px)', left: -2, right: -2, background: '#fff', border: '1.5px solid #006D77', borderRadius: 6, zIndex: 2001, boxShadow: '0 4px 16px rgba(0,0,0,0.1)', overflow: 'hidden' }}>
+                            {([...(['Local comercial', 'Oficina'].includes(pubTipo) ? [['0','0']] : []), ['1','1'], ['2','2'], ['3','3+']]).map(([val, lbl]) => (
+                              <div key={val} onClick={() => { setPubBanos(val); setPubBanosOpen(false) }} style={{ padding: '10px 14px', fontSize: 14, cursor: 'pointer', background: pubBanos === val ? '#f0fafa' : 'transparent', color: pubBanos === val ? '#006D77' : '#333', fontWeight: pubBanos === val ? 600 : 400 }}>{lbl}</div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                   <div className="pub-parqueos-field">
