@@ -233,6 +233,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   const [propiedad, setPropiedad] = useState<any>(null)
   const [cargando, setCargando] = useState(true)
   const [dopRate, setDopRate] = useState(59.5)
+  const [precioExpandido, setPrecioExpandido] = useState(false)
   const [mensaje, setMensaje] = useState('')
   const [nombreContacto, setNombreContacto] = useState('')
   const [telefonoContacto, setTelefonoContacto] = useState('')
@@ -537,9 +538,18 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                   </div>
                 </div>
                 <div className="propiedad-precio-wrap" style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: 28, fontWeight: 700, color: '#006D77' }}>US$ {precio.toLocaleString('en-US')}</div>
-                  <div style={{ fontSize: 13, color: '#aaa' }}>{formatDOP(precio, dopRate)}</div>
-                  {m2 > 0 && <div style={{ fontSize: 12, color: '#aaa', marginTop: 2 }}>US$ {Math.round(precio / m2).toLocaleString('en-US')}/m²</div>}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 6 }}>
+                    <button onClick={() => setPrecioExpandido(o => !o)} style={{ all: 'unset', cursor: 'pointer', display: 'flex', alignItems: 'center', paddingTop: 4 }}>
+                      <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="#006D77" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: precioExpandido ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}><polyline points="1 1 7 9 13 1"/></svg>
+                    </button>
+                    <div style={{ fontSize: 28, fontWeight: 700, color: '#006D77' }}>US$ {precio.toLocaleString('en-US')}</div>
+                  </div>
+                  {precioExpandido && (
+                    <div style={{ marginTop: 4 }}>
+                      <div style={{ fontSize: 13, color: '#aaa' }}>{formatDOP(precio, dopRate)}</div>
+                      {m2 > 0 && <div style={{ fontSize: 12, color: '#aaa', marginTop: 2 }}>US$ {Math.round(precio / m2).toLocaleString('en-US')}/m²</div>}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
