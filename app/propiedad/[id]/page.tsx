@@ -514,7 +514,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
             {/* GALERÍA */}
             <GaleriaFotos fotos={fotos} destacado={propiedad.destacado} />
             {/* TÍTULO MÓVIL — debajo de la foto, con corazón de favorito */}
-            <div className="galeria-titulo-bajo" style={{ display: 'none', padding: '14px 16px 16px', background: '#fff' }}>
+            <div className="galeria-titulo-bajo" style={{ display: 'none', padding: '14px 16px 12px', background: '#fff' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 10 }}>
                 <h1 style={{ fontSize: 18, fontWeight: 700, color: '#111', margin: 0, lineHeight: 1.3, flex: 1, overflowWrap: 'break-word', wordBreak: 'break-word' }}>{tituloMostrar}</h1>
                 <button onClick={toggleGuardado} style={{ all: 'unset', cursor: 'pointer', padding: '2px 0 0 4px', flexShrink: 0 }}>
@@ -524,20 +524,6 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
               <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 13, color: '#888', marginTop: 5 }}>
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="#006D77"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/></svg>
                 {propiedad.zona}
-              </div>
-              <div style={{ marginTop: 12 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                  <button onClick={() => setPrecioExpandido(o => !o)} style={{ all: 'unset', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                    <svg width="11" height="6" viewBox="0 0 16 8" fill="none" stroke="#006D77" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: precioExpandido ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}><polyline points="1 1 8 7 15 1"/></svg>
-                  </button>
-                  <span style={{ fontSize: 24, fontWeight: 700, color: '#006D77' }}>US$ {precio.toLocaleString('en-US')}</span>
-                </div>
-                {precioExpandido && (
-                  <div style={{ marginTop: 3, paddingLeft: 17 }}>
-                    <div style={{ fontSize: 13, color: '#aaa' }}>{formatDOP(precio, dopRate)}</div>
-                    {m2 > 0 && <div style={{ fontSize: 12, color: '#aaa', marginTop: 1 }}>US$ {Math.round(precio / m2).toLocaleString('en-US')}/m²</div>}
-                  </div>
-                )}
               </div>
             </div>
 
