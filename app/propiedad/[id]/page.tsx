@@ -540,7 +540,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
                 <div className="propiedad-precio-wrap" style={{ textAlign: 'right' }}>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 6 }}>
                     <button onClick={() => setPrecioExpandido(o => !o)} style={{ all: 'unset', cursor: 'pointer', display: 'flex', alignItems: 'center', paddingTop: 4 }}>
-                      <svg width="16" height="8" viewBox="0 0 16 8" fill="none" stroke="#006D77" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: precioExpandido ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}><polyline points="1 1 8 7 15 1"/></svg>
+                      <svg width="11" height="6" viewBox="0 0 16 8" fill="none" stroke="#006D77" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: precioExpandido ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}><polyline points="1 1 8 7 15 1"/></svg>
                     </button>
                     <div style={{ fontSize: 28, fontWeight: 700, color: '#006D77' }}>US$ {precio.toLocaleString('en-US')}</div>
                   </div>
