@@ -269,6 +269,8 @@ html { touch-action: manipulation; }
   .zonas-grid  { grid-template-columns: repeat(3, 1fr) !important; }
 }
 
+.pub-field-select-mobile { display: none !important; }
+
 /* ══════════════════════════════════
    PANEL ≤ 900px
 ══════════════════════════════════ */

@@ -269,6 +269,7 @@ export default function Panel() {
   const Tn = trLang.nav
   const menuItems = getMenuItems(Tpanel)
   const [seccion, setSeccion] = useState('anuncios')
+  const [isMobileForm, setIsMobileForm] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [panelNavOpen, setPanelNavOpen] = useState(false)
   const [navUserMenuOpen, setNavUserMenuOpen] = useState(false)
@@ -373,6 +374,14 @@ export default function Panel() {
   useLayoutEffect(() => {
     const s = new URLSearchParams(window.location.search).get('s')
     if (s) setSeccion(s)
+  }, [])
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 900px)')
+    setIsMobileForm(mq.matches)
+    const handler = (e: MediaQueryListEvent) => setIsMobileForm(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
   }, [])
 
   useEffect(() => {
@@ -1574,12 +1583,12 @@ export default function Panel() {
                   {!['Edificio', 'Terreno', 'Local comercial'].includes(pubTipo) && (
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.habitaciones}</label>
-                      <div className="pub-hab-buttons" style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                      <div className="pub-hab-buttons" style={{ display: isMobileForm ? 'none' : 'flex', gap: 6, flexWrap: 'wrap' }}>
                         {[['0', Tpanel.publicar.estudio], ['1','1'], ['2','2'], ['3','3+']].map(([val, lbl]) => (
                           <button key={val} type="button" onClick={() => setPubHab(val)} style={{ padding: '7px 10px', borderRadius: 20, border: `1.5px solid ${pubHab === val ? '#006D77' : '#e0e0e0'}`, background: pubHab === val ? '#006D77' : '#fff', color: pubHab === val ? '#fff' : '#555', fontSize: 12, fontWeight: pubHab === val ? 600 : 400, cursor: 'pointer', transition: 'all 0.15s' }}>{lbl}</button>
                         ))}
                       </div>
-                      <div className="pub-field-select-mobile" tabIndex={0} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setPubHabOpen(false) }} style={{ position: 'relative', border: `1.5px solid ${pubHabOpen ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, background: '#fff', outline: 'none' }}>
+                      <div className="pub-field-select-mobile" tabIndex={0} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setPubHabOpen(false) }} style={{ display: isMobileForm ? 'block' : 'none', position: 'relative', border: `1.5px solid ${pubHabOpen ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, background: '#fff', outline: 'none' }}>
                         <div onClick={() => setPubHabOpen(o => !o)} style={{ padding: '10px 36px 10px 12px', fontSize: 14, cursor: 'pointer', userSelect: 'none', color: '#333', position: 'relative' }}>
                           {pubHab === '0' ? Tpanel.publicar.estudio : pubHab === '3' ? '3+' : pubHab}
                           <svg style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${pubHabOpen ? 180 : 0}deg)`, transition: 'transform 0.15s', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
@@ -1597,12 +1606,12 @@ export default function Panel() {
                   {!['Edificio', 'Terreno'].includes(pubTipo) && (
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.publicar.banos}</label>
-                      <div className="pub-hab-buttons" style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                      <div className="pub-hab-buttons" style={{ display: isMobileForm ? 'none' : 'flex', gap: 6, flexWrap: 'wrap' }}>
                         {([...(['Local comercial', 'Oficina'].includes(pubTipo) ? [['0','0']] : []), ['1','1'], ['2','2'], ['3','3+']]).map(([val, lbl]) => (
                           <button key={val} type="button" onClick={() => setPubBanos(val)} style={{ padding: '7px 10px', borderRadius: 20, border: `1.5px solid ${pubBanos === val ? '#006D77' : '#e0e0e0'}`, background: pubBanos === val ? '#006D77' : '#fff', color: pubBanos === val ? '#fff' : '#555', fontSize: 12, fontWeight: pubBanos === val ? 600 : 400, cursor: 'pointer', transition: 'all 0.15s' }}>{lbl}</button>
                         ))}
                       </div>
-                      <div className="pub-field-select-mobile" tabIndex={0} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setPubBanosOpen(false) }} style={{ position: 'relative', border: `1.5px solid ${pubBanosOpen ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, background: '#fff', outline: 'none' }}>
+                      <div className="pub-field-select-mobile" tabIndex={0} onBlur={e => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setPubBanosOpen(false) }} style={{ display: isMobileForm ? 'block' : 'none', position: 'relative', border: `1.5px solid ${pubBanosOpen ? '#006D77' : '#e0e0e0'}`, borderRadius: 6, background: '#fff', outline: 'none' }}>
                         <div onClick={() => setPubBanosOpen(o => !o)} style={{ padding: '10px 36px 10px 12px', fontSize: 14, cursor: 'pointer', userSelect: 'none', color: '#333', position: 'relative' }}>
                           {pubBanos === '3' ? '3+' : pubBanos}
                           <svg style={{ position: 'absolute', right: 12, top: '50%', transform: `translateY(-50%) rotate(${pubBanosOpen ? 180 : 0}deg)`, transition: 'transform 0.15s', pointerEvents: 'none' }} width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#888" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
