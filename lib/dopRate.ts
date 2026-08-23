@@ -1,7 +1,7 @@
 const FALLBACK = 62.5
-const CACHE_KEY = 'hb_dop_rate_v2'
-const CACHE_TS_KEY = 'hb_dop_rate_ts_v2'
-const TTL = 24 * 60 * 60 * 1000
+const CACHE_KEY = 'hb_dop_rate_v3'
+const CACHE_TS_KEY = 'hb_dop_rate_ts_v3'
+const TTL = 6 * 60 * 60 * 1000 // 6h para que se actualice varias veces al día
 
 let _rate = FALLBACK
 
@@ -17,10 +17,10 @@ export async function getDopRate(): Promise<number> {
   }
 
   try {
-    const r = await fetch('/api/dop-rate')
+    const r = await fetch('/api/dop-rate', { cache: 'no-store' })
     const d = await r.json()
     const rate = d?.rate
-    if (rate && typeof rate === 'number') {
+    if (rate && typeof rate === 'number' && rate > 40) {
       _rate = rate
       localStorage.setItem(CACHE_KEY, String(rate))
       localStorage.setItem(CACHE_TS_KEY, String(Date.now()))
