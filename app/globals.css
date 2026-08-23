@@ -396,6 +396,8 @@ html { touch-action: manipulation; }
   .propiedad-layout  { grid-template-columns: 1fr !important; }
   .propiedad-galeria { height: 250px !important; }
   .propiedad-sidebar { position: static !important; top: auto !important; }
+  .galeria-titulo-bajo { display: block !important; }
+  .propiedad-precio-bloque { display: none !important; }
 }
 
 /* ══════════════════════════════════
