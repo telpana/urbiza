@@ -939,13 +939,15 @@ export default function Home() {
       </div>
 
       {/* BANNER PARTICULARES */}
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px 32px' }}>
-        <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 2px 12px rgba(0,0,0,0.07)', padding: '28px 36px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
-          <div>
-            <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 8 }}>¿Eres particular?</div>
-            <div style={{ fontSize: 13, color: '#555', lineHeight: 1.7 }}>Publica hasta 2 anuncios <strong>GRATIS</strong> como particular.</div>
+      <div style={{ borderTop: '1px solid #e8e8e8', background: '#fff', padding: '24px 0 32px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
+            <div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 8 }}>¿Eres particular?</div>
+              <div style={{ fontSize: 13, color: '#555', lineHeight: 1.7 }}>Publica hasta 2 anuncios <strong>GRATIS</strong> como particular.</div>
+            </div>
+            <a href="/registro" style={{ background: '#006D77', color: '#fff', fontWeight: 700, fontSize: 14, padding: '12px 28px', borderRadius: 6, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>Regístrate gratis aquí</a>
           </div>
-          <a href="/registro" style={{ background: '#006D77', color: '#fff', fontWeight: 700, fontSize: 14, padding: '12px 28px', borderRadius: 6, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>Regístrate gratis aquí</a>
         </div>
       </div>
 
