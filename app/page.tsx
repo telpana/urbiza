@@ -941,7 +941,7 @@ export default function Home() {
       {/* BANNER PARTICULARES */}
       <div style={{ background: '#fff', padding: '0 0 32px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px' }}>
-          <div style={{ background: '#fff', borderRadius: 8, boxShadow: '0 4px 24px rgba(0,0,0,0.10)', padding: '32px 36px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
+          <div className="particulares-banner" style={{ background: '#fff', borderRadius: 8, boxShadow: '0 4px 24px rgba(0,0,0,0.10)', padding: '32px 36px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap' }}>
             <div>
               <div style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 10 }}>¿Eres particular?</div>
               <div style={{ fontSize: 13, color: '#555', lineHeight: 1.7 }}>Publica hasta 2 anuncios <strong>GRATIS</strong> como particular.</div>

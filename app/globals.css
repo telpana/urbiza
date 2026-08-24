@@ -60,6 +60,8 @@ html { touch-action: manipulation; }
   .nav-desktop-right  { display: none !important; }
   .nav-mobile-hamburger { display: flex !important; }
 
+  .particulares-banner { flex-direction: column !important; align-items: center !important; text-align: center !important; }
+
   .hero-search-box { padding: 14px !important; }
 
   .hero-search {
