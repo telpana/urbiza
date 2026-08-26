@@ -141,7 +141,7 @@ function MapaMini({ zona }: { zona: string }) {
         dragging: false,
         scrollWheelZoom: false,
       })
-      L.tileLayer(https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png).addTo(map)
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
       if (zona) {
         const icono = L.divIcon({
           className: '',
@@ -189,7 +189,7 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: any[], onCerrar:
         zoomControl: true,
         attributionControl: false,
       })
-      L.tileLayer(https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png).addTo(map)
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
 
       const marcadores: any[] = []
       propiedades.forEach(p => {
