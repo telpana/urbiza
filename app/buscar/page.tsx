@@ -141,7 +141,7 @@ function MapaMini({ zona }: { zona: string }) {
         dragging: false,
         scrollWheelZoom: false,
       })
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}').addTo(map)
+      L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png').addTo(map)
       if (zona) {
         const icono = L.divIcon({
           className: '',
@@ -189,7 +189,7 @@ function MapaCompleto({ propiedades, onCerrar }: { propiedades: any[], onCerrar:
         zoomControl: true,
         attributionControl: false,
       })
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}').addTo(map)
+      L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png').addTo(map)
 
       const marcadores: any[] = []
       propiedades.forEach(p => {

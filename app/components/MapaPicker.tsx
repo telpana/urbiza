@@ -50,7 +50,7 @@ export default function MapaPicker({ zona, lat, lng, onChange, hint }: Props) {
         scrollWheelZoom: false,
       })
       L.control.zoom({ position: 'bottomright' }).addTo(map)
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}').addTo(map)
+      L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}.png').addTo(map)
 
       const icono = L.divIcon({
         className: '',
