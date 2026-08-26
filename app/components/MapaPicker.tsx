@@ -50,7 +50,7 @@ export default function MapaPicker({ zona, lat, lng, onChange, hint }: Props) {
         scrollWheelZoom: false,
       })
       L.control.zoom({ position: 'bottomright' }).addTo(map)
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
+      L.tileLayer(`https://api.maptiler.com/maps/voyager/{z}/{x}/{y}.png?key=${process.env.NEXT_PUBLIC_MAPTILER_KEY}`).addTo(map)
 
       const icono = L.divIcon({
         className: '',
