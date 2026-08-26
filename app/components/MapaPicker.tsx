@@ -50,7 +50,7 @@ export default function MapaPicker({ zona, lat, lng, onChange, hint }: Props) {
         scrollWheelZoom: false,
       })
       L.control.zoom({ position: 'bottomright' }).addTo(map)
-      L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png').addTo(map)
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
 
       const icono = L.divIcon({
         className: '',
