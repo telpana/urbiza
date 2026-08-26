@@ -132,7 +132,7 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
       const L = (window as any).L
       if (!L || !mapRef.current) return
       const map = L.map(mapRef.current, { center: [18.7357, -70.1627], zoom: 6.8, zoomControl: true, attributionControl: false })
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}').addTo(map)
+      L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png').addTo(map)
       mapInstanceRef.current = { map, L }
     }
     if ((window as any).L) { load() }
@@ -248,7 +248,7 @@ function MapaMiniHome() {
         dragging: false,
         scrollWheelZoom: false,
       })
-      L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}').addTo(map)
+      L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}.png').addTo(map)
       // Santo Domingo, Bávaro, Santiago
       [[18.4890, -69.9370], [18.6835, -68.4070], [19.4517, -70.6970]].forEach(([lat, lng]) => {
         L.divIcon && L.marker([lat, lng], { icon: L.divIcon({
