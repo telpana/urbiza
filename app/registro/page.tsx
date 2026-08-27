@@ -40,7 +40,7 @@ export default function Registro() {
 
   const tipos = [
     { id: 'particular', titulo: T.particular, desc: T.particularDesc, icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> },
-    { id: 'profesional', titulo: T.profesional, desc: T.profesionalDesc, icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg> },
+    { id: 'profesional', titulo: T.profesional, desc: T.profesionalDesc, promo: '90 días GRATIS · Código WELCOME', icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg> },
   ]
 
   const registrarConEmail = async () => {
@@ -157,6 +157,7 @@ export default function Registro() {
                       <div style={{ flex: 1 }}>
                         <div style={{ fontSize: 15, fontWeight: 600, color: '#111', marginBottom: 3 }}>{t.titulo}</div>
                         <div style={{ fontSize: 13, color: '#777' }}>{t.desc}</div>
+                        {(t as any).promo && <div style={{ fontSize: 12, color: '#006D77', fontWeight: 600, marginTop: 3 }}>{(t as any).promo}</div>}
                       </div>
                       <div style={{ width: 20, height: 20, borderRadius: '50%', border: `2px solid ${tipoCuenta === t.id ? '#006D77' : '#e0e0e0'}`, background: tipoCuenta === t.id ? '#006D77' : '#fff', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         {tipoCuenta === t.id && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
