@@ -63,6 +63,7 @@ html { touch-action: manipulation; }
   .particulares-banner { flex-direction: column !important; align-items: center !important; text-align: center !important; }
   .pro-banner-text { text-align: center !important; }
   .pro-banner-card { align-items: center !important; }
+  .pro-banner-cta { background: #006D77 !important; color: #fff !important; padding: 12px 28px !important; border-radius: 6px !important; }
 
   .hero-search-box { padding: 14px !important; }
 
