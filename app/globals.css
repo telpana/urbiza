@@ -62,6 +62,7 @@ html { touch-action: manipulation; }
 
   .particulares-banner { flex-direction: column !important; align-items: center !important; text-align: center !important; }
   .pro-banner-text { text-align: center !important; }
+  .pro-banner-card { align-items: center !important; }
 
   .hero-search-box { padding: 14px !important; }
 
