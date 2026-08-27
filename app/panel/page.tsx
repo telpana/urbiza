@@ -362,7 +362,7 @@ export default function Panel() {
   const [verificandoPago, setVerificandoPago] = useState(false)
   const [modalBaja, setModalBaja] = useState(false)
   const [bajando, setBajando] = useState(false)
-  const [codigoPromo, setCodigoPromo] = useState('')
+  const [codigoPromo, setCodigoPromo] = useState('WELCOME')
   const [promoExpanded, setPromoExpanded] = useState(false)
   const [promoLoading, setPromoLoading] = useState(false)
   const [promoError, setPromoError] = useState('')
