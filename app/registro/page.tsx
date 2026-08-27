@@ -156,7 +156,7 @@ export default function Registro() {
                       <div style={{ width: 52, height: 52, borderRadius: 8, background: tipoCuenta === t.id ? '#e0f5f7' : '#f4f5f6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{t.icon}</div>
                       <div style={{ flex: 1 }}>
                         <div style={{ fontSize: 15, fontWeight: 600, color: '#111', marginBottom: 3 }}>{t.titulo}</div>
-                        <div style={{ fontSize: 13, color: '#777' }}>{t.desc}</div>
+                        <div style={{ fontSize: 13, color: '#777', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t.desc}</div>
                       </div>
                       <div style={{ width: 20, height: 20, borderRadius: '50%', border: `2px solid ${tipoCuenta === t.id ? '#006D77' : '#e0e0e0'}`, background: tipoCuenta === t.id ? '#006D77' : '#fff', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         {tipoCuenta === t.id && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
