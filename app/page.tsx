@@ -933,7 +933,7 @@ export default function Home() {
           <div className="pro-banner-card" style={{ flex: 1, background: '#fff', boxShadow: '0 4px 24px rgba(0,0,0,0.12)', padding: '32px 36px', display: 'flex', flexDirection: 'column', justifyContent: 'center', borderRadius: '0 8px 8px 0' }}>
             <div style={{ fontSize: 20, fontWeight: 700, color: '#111', lineHeight: 1.3, marginBottom: 12 }}>¿Eres agente o promotor inmobiliario?</div>
             <div style={{ fontSize: 13, color: '#555', lineHeight: 1.7, marginBottom: 18 }}>Llega a miles de compradores en República Dominicana.<br/>Anuncios ilimitados. Sin permanencia.</div>
-            <a href="/registro" style={{ color: '#006D77', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>90 días GRATIS con código WELCOME →</a>
+            <a href="/registro" style={{ color: '#006D77', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>Regístrate ahora · 90 días gratis con código WELCOME</a>
           </div>
         </div>
       </div>
