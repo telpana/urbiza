@@ -1403,20 +1403,28 @@ export default function Panel() {
                       <>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }}>
                           <span style={{ background: '#d1fae5', color: '#065f46', fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 20 }}>✓ {promoDias} días gratis</span>
-                          <button onClick={() => { setPromoValidado(false); setCodigoPromo(''); setPromoError('') }} style={{ all: 'unset', fontSize: 11, color: '#aaa', cursor: 'pointer', textDecoration: 'underline' }}>{Tpanel.planes.quitar}</button>
+                          <button onClick={() => { setPromoValidado(false); setCodigoPromo('WELCOME'); setPromoError('') }} style={{ all: 'unset', fontSize: 11, color: '#aaa', cursor: 'pointer', textDecoration: 'underline' }}>{Tpanel.planes.quitar}</button>
                         </div>
                       </>
                     ) : (
                       <>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center', background: '#f0fafb', border: '1.5px solid #83D4DB', borderRadius: 10, padding: '10px 14px', animation: 'promo-pulse 2s ease-in-out infinite', width: '100%', boxSizing: 'border-box' }}>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                          <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }}
-                            onKeyDown={async e => { if (e.key === 'Enter') { e.preventDefault(); await aplicarCodigo() } }}
-                            placeholder={Tpanel.planes.codigoPlaceholder.toUpperCase()} maxLength={32}
-                            style={{ border: 'none', background: 'transparent', fontSize: 12, flex: 1, minWidth: 0, outline: 'none', textAlign: 'center', letterSpacing: 1, fontWeight: 600, color: '#006D77' }} />
-                          <button onClick={aplicarCodigo} disabled={promoLoading || !codigoPromo.trim()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '5px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: (!codigoPromo.trim() || promoLoading) ? 'default' : 'pointer', opacity: (!codigoPromo.trim() || promoLoading) ? 0.4 : 1, whiteSpace: 'nowrap' }}>
-                            {Tpanel.planes.aplicar}
-                          </button>
+                        <div style={{ borderRadius: 12, overflow: 'hidden', border: '2px solid #006D77', boxShadow: '0 2px 12px rgba(0,109,119,0.12)' }}>
+                          <div style={{ background: '#006D77', padding: '7px 14px', display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }}>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                            <span style={{ fontSize: 11, color: '#fff', fontWeight: 600, letterSpacing: 0.5 }}>CÓDIGO PROMOCIONAL</span>
+                          </div>
+                          <div style={{ background: '#f0fafb', padding: '10px 14px', display: 'flex', gap: 8, alignItems: 'center' }}>
+                            <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }}
+                              onKeyDown={async e => { if (e.key === 'Enter') { e.preventDefault(); await aplicarCodigo() } }}
+                              placeholder={Tpanel.planes.codigoPlaceholder.toUpperCase()} maxLength={32}
+                              style={{ border: 'none', background: 'transparent', fontSize: 16, flex: 1, minWidth: 0, outline: 'none', textAlign: 'center', letterSpacing: 3, fontWeight: 700, color: '#006D77' }} />
+                            <button onClick={aplicarCodigo} disabled={promoLoading || !codigoPromo.trim()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '7px 14px', borderRadius: 7, fontSize: 12, fontWeight: 700, cursor: (!codigoPromo.trim() || promoLoading) ? 'default' : 'pointer', opacity: (!codigoPromo.trim() || promoLoading) ? 0.4 : 1, whiteSpace: 'nowrap' }}>
+                              {Tpanel.planes.aplicar}
+                            </button>
+                          </div>
+                          <div style={{ background: '#e8f5f6', padding: '6px 14px', textAlign: 'center' }}>
+                            <span style={{ fontSize: 11, color: '#006D77', fontWeight: 500 }}>🎁 Activa tu código y empieza 90 días gratis</span>
+                          </div>
                         </div>
                         {promoError && <div style={{ fontSize: 12, color: '#dc2626', marginTop: 6 }}>{promoError}</div>}
                       </>
