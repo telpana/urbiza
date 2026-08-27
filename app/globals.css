@@ -61,9 +61,6 @@ html { touch-action: manipulation; }
   .nav-mobile-hamburger { display: flex !important; }
 
   .particulares-banner { flex-direction: column !important; align-items: center !important; text-align: center !important; }
-  .pro-banner-text { text-align: center !important; }
-  .pro-banner-card { align-items: center !important; }
-  .pro-banner-cta { background: #006D77 !important; color: #fff !important; padding: 12px 28px !important; border-radius: 6px !important; }
 
   .hero-search-box { padding: 14px !important; }
 
@@ -252,7 +249,8 @@ html { touch-action: manipulation; }
   .home-zonas-section { padding: 24px 16px 24px !important; }
   .pro-banner-outer { flex-direction: column !important; }
   .pro-banner-img { width: 100% !important; height: 160px !important; border-radius: 8px 8px 0 0 !important; flex: none !important; }
-  .pro-banner-card { position: static !important; transform: none !important; top: auto !important; right: auto !important; width: 100% !important; flex: none !important; margin-top: 0 !important; padding: 20px 16px !important; border-radius: 0 0 8px 8px !important; }
+  .pro-banner-card { position: static !important; transform: none !important; top: auto !important; right: auto !important; width: 100% !important; flex: none !important; margin-top: 0 !important; padding: 20px 16px !important; border-radius: 0 0 8px 8px !important; align-items: center !important; text-align: center !important; }
+  .pro-banner-cta { background: #006D77 !important; color: #fff !important; padding: 12px 28px !important; border-radius: 6px !important; }
 
 
   .home-cards-section { margin-bottom: 8px !important; }
