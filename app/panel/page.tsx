@@ -1854,8 +1854,7 @@ export default function Panel() {
                               {m._numero_aei && <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 8, background: m._aei_aprobado ? '#065f46' : '#f59e0b', color: '#fff' }}>{m._aei_aprobado ? 'AEI ✓' : 'AEI'}</span>}
                             </div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                              <span style={{ fontSize: 11, color: '#006D77', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.propiedades?.titulo}</span>
-                              <a href={`/propiedad/${m.propiedad_id}`} style={{ fontSize: 10, color: '#006D77', textDecoration: 'none', fontWeight: 600, flexShrink: 0, background: '#e8f5f6', padding: '2px 8px', borderRadius: 10, border: '1px solid #c0e4e7', whiteSpace: 'nowrap' }}>{Tpanel.mensajes.ver}</a>
+                              <a href={`/propiedad/${m.propiedad_id}`} style={{ fontSize: 11, color: '#006D77', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textDecoration: 'none' }}>{m.propiedades?.titulo}</a>
                             </div>
                           </div>
                           <div className="chat-header-actions" style={{ display: 'flex', gap: 6, flexShrink: 0, alignItems: 'center' }}>
