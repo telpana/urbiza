@@ -1383,9 +1383,14 @@ export default function Panel() {
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                   </div>
                   <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 8 }}>Activa tu suscripción para publicar</h2>
-                  <p style={{ fontSize: 14, color: '#888', marginBottom: 24, maxWidth: 400, margin: '0 auto 24px' }}>
-                    Con el plan Profesional publicas anuncios ilimitados por solo US$9.99/mes.
-                  </p>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: '0 auto 24px', textAlign: 'left', display: 'inline-block' }}>
+                    {Tpanel.planes.ventajas.map((v: string) => (
+                      <li key={v} style={{ fontSize: 14, color: '#444', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                        {v}
+                      </li>
+                    ))}
+                  </ul>
                   <div style={{ maxWidth: 320, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
                     <button onClick={handleSuscribirse} disabled={promoLoading} style={{ background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: promoLoading ? 'default' : 'pointer', border: 'none', width: '100%', animation: promoValidado ? 'btn-pulse 2.5s ease-in-out infinite' : undefined }}>
                       {promoLoading ? 'Procesando...' : promoValidado
