@@ -241,7 +241,7 @@ function MapaMiniHome() {
       if (!L || !mapRef.current) return
       const map = L.map(mapRef.current, {
         center: [18.85, -70.35],
-        zoom: 6,
+        zoom: window.innerWidth <= 768 ? 5 : 6,
         zoomSnap: 0.5,
         zoomControl: false,
         attributionControl: false,
