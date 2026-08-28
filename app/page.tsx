@@ -240,7 +240,7 @@ function MapaMiniHome() {
       const L = (window as any).L
       if (!L || !mapRef.current) return
       const map = L.map(mapRef.current, {
-        center: [18.85, -70.35],
+        center: window.innerWidth <= 768 ? [18.85, -70.0] : [18.85, -70.35],
         zoom: window.innerWidth <= 768 ? 5.5 : 6,
         zoomSnap: 0.5,
         zoomControl: false,
