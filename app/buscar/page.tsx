@@ -1016,6 +1016,7 @@ function BuscarContent() {
                           <Image key={i} src={src} alt={i === 0 ? (p.titulo || '') : ''} fill
                             loading={cardIdx < 4 && i === 0 ? 'eager' : 'lazy'}
                             sizes="(max-width: 900px) 100vw, 300px"
+                            onError={e => { const t = e.currentTarget; t.srcset = ''; t.src = src }}
                             style={{ objectFit: 'cover', opacity: i === actIdx ? 1 : 0, transition: 'opacity 0.15s', zIndex: 1 }} />
                         )
                       })
