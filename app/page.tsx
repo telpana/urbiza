@@ -927,7 +927,7 @@ export default function Home() {
         <div className="pro-banner-outer" style={{ maxWidth: 1100, margin: '0 auto', padding: '0 20px', display: 'flex', alignItems: 'stretch', gap: 0 }}>
           {/* Imagen izquierda */}
           <div className="pro-banner-img" style={{ position: 'relative', flex: 1, height: 210, overflow: 'hidden', borderRadius: '8px 0 0 8px' }}>
-            {proImgUrl && <Image src={proImgUrl} alt="" fill sizes="530px" style={{ objectFit: 'cover', objectPosition: 'center top' }} />}
+            {proImgUrl && <img src={proImgUrl} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />}
           </div>
           {/* Tarjeta derecha */}
           <div className="pro-banner-card" style={{ flex: 1, background: '#fff', boxShadow: '0 4px 24px rgba(0,0,0,0.12)', padding: '32px 36px', display: 'flex', flexDirection: 'column', justifyContent: 'center', borderRadius: '0 8px 8px 0' }}>
