@@ -351,7 +351,7 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href, dopRa
                 onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                 <div style={{ height: 160, background: bgsNovedad[i % 4], position: 'relative', overflow: 'hidden' }}>
                   {Array.isArray(p.fotos) && p.fotos.length > 0
-                    ? <Image src={p.fotos[0]} alt={p.titulo || ''} fill sizes="400px" style={{ objectFit: 'cover' }} />
+                    ? <img src={p.fotos[0]} alt={p.titulo || ''} data-idx="0" onError={e => { const img = e.currentTarget as HTMLImageElement; const idx = parseInt(img.dataset.idx || '0') + 1; if (idx < p.fotos.length) { img.dataset.idx = String(idx); img.src = p.fotos[idx]; } else { img.style.display = 'none'; } }} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                     : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
                   }
                 </div>
@@ -806,7 +806,7 @@ export default function Home() {
             onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'}>
             <div style={{ width: 120, height: 90, borderRadius: 8, flexShrink: 0, background: '#006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
               {featureImgUrl
-                ? <Image src={featureImgUrl} alt="" fill sizes="120px" style={{ objectFit: 'cover' }} />
+                ? <Image src={featureImgUrl} alt="" fill sizes="120px" onError={e => { const t = e.currentTarget; t.srcset = ''; t.src = featureImgUrl }} style={{ objectFit: 'cover' }} />
                 : <svg width="40" height="64" viewBox="0 0 44 72" fill="none">
                     <rect x="4" y="4" width="36" height="64" rx="5" fill="#fff"/>
                     <rect x="8" y="12" width="28" height="40" rx="2" fill="#e0f5f7"/>
@@ -856,7 +856,7 @@ export default function Home() {
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                       <div className="home-prop-card-img" style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                         {Array.isArray(p.fotos) && p.fotos.length > 0
-                          ? <Image src={p.fotos[0]} alt={p.titulo ?? p.title ?? ''} fill sizes="(max-width: 768px) 100vw, 320px" style={{ objectFit: 'cover' }} />
+                          ? <img src={p.fotos[0]} alt={p.titulo ?? p.title ?? ''} data-idx="0" onError={e => { const img = e.currentTarget as HTMLImageElement; const idx = parseInt(img.dataset.idx || '0') + 1; if (idx < p.fotos.length) { img.dataset.idx = String(idx); img.src = p.fotos[idx]; } else { img.style.display = 'none'; } }} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                           : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         }
                         <div style={{ position: 'absolute', top: 8, right: 8, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>{tr.destacadas.destacado}</div>
@@ -896,7 +896,7 @@ export default function Home() {
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                       <div className="home-prop-card-img" style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                         {Array.isArray(p.fotos) && p.fotos.length > 0
-                          ? <Image src={p.fotos[0]} alt={p.titulo ?? p.title ?? ''} fill sizes="(max-width: 768px) 100vw, 320px" style={{ objectFit: 'cover' }} />
+                          ? <img src={p.fotos[0]} alt={p.titulo ?? p.title ?? ''} data-idx="0" onError={e => { const img = e.currentTarget as HTMLImageElement; const idx = parseInt(img.dataset.idx || '0') + 1; if (idx < p.fotos.length) { img.dataset.idx = String(idx); img.src = p.fotos[idx]; } else { img.style.display = 'none'; } }} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                           : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         }
                         <div style={{ position: 'absolute', top: 8, right: 8, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>{tr.destacadas.masVisto}</div>
