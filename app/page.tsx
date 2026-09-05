@@ -52,6 +52,16 @@ const ZONAS_COORDS_HOME: Record<string, [number, number]> = {
   'miches': [18.9803, -69.0424],
 }
 
+function sbImg(url: string, w: number, q = 75) {
+  if (!url) return url
+  try {
+    const u = new URL(url)
+    if (!u.hostname.includes('supabase.co')) return url
+    const path = u.pathname.replace('/storage/v1/object/public/', '')
+    return `${u.origin}/storage/v1/render/image/public/${path}?width=${w}&quality=${q}&resize=contain`
+  } catch { return url }
+}
+
 function coordsDeZona(zona: string): [number, number] {
   if (!zona) return [18.4861, -69.9312]
   const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
@@ -351,7 +361,7 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href, dopRa
                 onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                 <div style={{ height: 160, background: bgsNovedad[i % 4], position: 'relative', overflow: 'hidden' }}>
                   {Array.isArray(p.fotos) && p.fotos.length > 0
-                    ? <img src={p.fotos[0]} alt={p.titulo || ''} data-idx="0" onError={e => { const img = e.currentTarget as HTMLImageElement; const idx = parseInt(img.dataset.idx || '0') + 1; if (idx < p.fotos.length) { img.dataset.idx = String(idx); img.src = p.fotos[idx]; } else { img.style.display = 'none'; } }} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                    ? <img src={sbImg(p.fotos[0], 400)} alt={p.titulo || ''} data-idx="0" onError={e => { const img = e.currentTarget as HTMLImageElement; const idx = parseInt(img.dataset.idx || '0') + 1; if (idx < p.fotos.length) { img.dataset.idx = String(idx); img.src = sbImg(p.fotos[idx], 400); } else { img.style.display = 'none'; } }} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                     : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
                   }
                 </div>
@@ -856,7 +866,7 @@ export default function Home() {
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                       <div className="home-prop-card-img" style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                         {Array.isArray(p.fotos) && p.fotos.length > 0
-                          ? <img src={p.fotos[0]} alt={p.titulo ?? p.title ?? ''} data-idx="0" onError={e => { const img = e.currentTarget as HTMLImageElement; const idx = parseInt(img.dataset.idx || '0') + 1; if (idx < p.fotos.length) { img.dataset.idx = String(idx); img.src = p.fotos[idx]; } else { img.style.display = 'none'; } }} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                          ? <img src={sbImg(p.fotos[0], 400)} alt={p.titulo ?? p.title ?? ''} data-idx="0" onError={e => { const img = e.currentTarget as HTMLImageElement; const idx = parseInt(img.dataset.idx || '0') + 1; if (idx < p.fotos.length) { img.dataset.idx = String(idx); img.src = sbImg(p.fotos[idx], 400); } else { img.style.display = 'none'; } }} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                           : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         }
                         <div style={{ position: 'absolute', top: 8, right: 8, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>{tr.destacadas.destacado}</div>
@@ -896,7 +906,7 @@ export default function Home() {
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                       <div className="home-prop-card-img" style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                         {Array.isArray(p.fotos) && p.fotos.length > 0
-                          ? <img src={p.fotos[0]} alt={p.titulo ?? p.title ?? ''} data-idx="0" onError={e => { const img = e.currentTarget as HTMLImageElement; const idx = parseInt(img.dataset.idx || '0') + 1; if (idx < p.fotos.length) { img.dataset.idx = String(idx); img.src = p.fotos[idx]; } else { img.style.display = 'none'; } }} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+                          ? <img src={sbImg(p.fotos[0], 400)} alt={p.titulo ?? p.title ?? ''} data-idx="0" onError={e => { const img = e.currentTarget as HTMLImageElement; const idx = parseInt(img.dataset.idx || '0') + 1; if (idx < p.fotos.length) { img.dataset.idx = String(idx); img.src = sbImg(p.fotos[idx], 400); } else { img.style.display = 'none'; } }} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
                           : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         }
                         <div style={{ position: 'absolute', top: 8, right: 8, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>{tr.destacadas.masVisto}</div>
