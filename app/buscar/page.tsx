@@ -1013,10 +1013,9 @@ function BuscarContent() {
                         const actIdx = fotoIdx[String(p.id)] ?? 0
                         if (Math.abs(i - actIdx) > 2) return null
                         return (
-                          <Image key={i} src={src} alt={i === 0 ? (p.titulo || '') : ''} fill
+                          <Image key={i} src={src} alt={i === 0 ? (p.titulo || '') : ''} fill unoptimized
                             loading={cardIdx < 4 && i === 0 ? 'eager' : 'lazy'}
                             sizes="(max-width: 900px) 100vw, 300px"
-                            onError={e => { const t = e.currentTarget; t.srcset = ''; t.src = src }}
                             style={{ objectFit: 'cover', opacity: i === actIdx ? 1 : 0, transition: 'opacity 0.15s', zIndex: 1 }} />
                         )
                       })
