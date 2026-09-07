@@ -263,6 +263,28 @@ function GuardadosSeccion({ onLeer }: { onLeer?: (n: number) => void }) {
   )
 }
 
+async function compressImage(file: File, maxW = 1920, quality = 0.82): Promise<File> {
+  return new Promise(resolve => {
+    const img = new window.Image()
+    const url = URL.createObjectURL(file)
+    img.onload = () => {
+      URL.revokeObjectURL(url)
+      const scale = Math.min(1, maxW / img.width)
+      const w = Math.round(img.width * scale)
+      const h = Math.round(img.height * scale)
+      const canvas = document.createElement('canvas')
+      canvas.width = w
+      canvas.height = h
+      canvas.getContext('2d')!.drawImage(img, 0, 0, w, h)
+      canvas.toBlob(blob => {
+        resolve(blob ? new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }) : file)
+      }, 'image/jpeg', quality)
+    }
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(file) }
+    img.src = url
+  })
+}
+
 export default function Panel() {
   const { tr: trLang, idioma, setIdioma } = useIdioma()
   const Tpanel = trLang.panel
@@ -598,11 +620,11 @@ export default function Panel() {
 
     let nuevaFotoUrl: string | null = null
     if (fotoPerfilFile) {
-      const ext = fotoPerfilFile.name.split('.').pop() || 'jpg'
-      const path = `${user.id}/avatar-${Date.now()}.${ext}`
+      const compressed = await compressImage(fotoPerfilFile, 400)
+      const path = `${user.id}/avatar-${Date.now()}.jpg`
       const { data: uploadData, error: uploadErr } = await supabase.storage
         .from('propiedades')
-        .upload(path, fotoPerfilFile, { upsert: true })
+        .upload(path, compressed, { upsert: true, contentType: 'image/jpeg' })
       if (uploadErr) {
         alert('Error al subir foto: ' + uploadErr.message)
         return
@@ -750,9 +772,9 @@ export default function Panel() {
     const todasFotos: string[] = []
     for (const item of fotosLista) {
       if (item.file) {
-        const ext = item.file.name.split('.').pop()
-        const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
-        const { data: uploadData, error: uploadErr } = await supabase.storage.from('propiedades').upload(path, item.file, { upsert: true })
+        const compressed = await compressImage(item.file)
+        const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`
+        const { data: uploadData, error: uploadErr } = await supabase.storage.from('propiedades').upload(path, compressed, { upsert: true, contentType: 'image/jpeg' })
         if (!uploadErr && uploadData) {
           const { data: urlData } = supabase.storage.from('propiedades').getPublicUrl(uploadData.path)
           todasFotos.push(urlData.publicUrl)
