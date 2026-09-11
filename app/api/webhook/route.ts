@@ -18,13 +18,29 @@ const DIAS_GRACIA = 15
 async function bajarAPlaGratis(subscriptionId: string) {
   const { data: usuario } = await supabase.from('usuarios').select('id, email, nombre, plan, plan_activo_hasta').eq('stripe_subscription_id', subscriptionId).single()
   if (!usuario) return
-  const vencimiento = usuario.plan === 'past_due' && usuario.plan_activo_hasta
-    ? usuario.plan_activo_hasta
-    : new Date().toISOString()
-  await supabase.from('usuarios').update({ plan: 'gratis', tipo: 'particular', stripe_subscription_id: null, plan_activo_hasta: vencimiento }).eq('id', usuario.id)
-  console.log('[webhook] suscripción cancelada, anuncios se borran vía cron en:', vencimiento)
+
+  // Borrar propiedades y dependencias del usuario
+  const { data: propiedades } = await supabase.from('propiedades').select('id').eq('usuario_id', usuario.id)
+  const propIds = (propiedades || []).map((p: any) => p.id)
+  if (propIds.length > 0) {
+    await supabase.from('mensajes').delete().in('propiedad_id', propIds)
+    await supabase.from('favoritos').delete().in('propiedad_id', propIds)
+    await supabase.from('propiedades').delete().in('id', propIds)
+  }
+  await supabase.from('mensajes').delete().eq('remitente_id', usuario.id)
+
+  await supabase.from('usuarios').update({
+    plan: 'gratis',
+    tipo: 'particular',
+    stripe_subscription_id: null,
+    plan_activo_hasta: null,
+    numero_aei: null,
+    aei_aprobado: false,
+  }).eq('id', usuario.id)
+
+  console.log('[webhook] suscripción expirada, cuenta y anuncios eliminados:', usuario.id)
   if (usuario.email) {
-    const fechaStr = new Date(vencimiento).toLocaleDateString('es-DO', { day: 'numeric', month: 'long', year: 'numeric' })
+    const fechaStr = new Date().toLocaleDateString('es-DO', { day: 'numeric', month: 'long', year: 'numeric' })
     emailPlanCancelado(usuario.email, usuario.nombre || '', fechaStr).catch(e => console.error('email cancelacion error:', e))
   }
 }

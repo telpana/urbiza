@@ -2505,7 +2505,12 @@ export default function Panel() {
                             const res = await fetch('/api/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json', ...(cancelTok ? { Authorization: `Bearer ${cancelTok}` } : {}) }, body: JSON.stringify({ userId: user.id }) })
                             const data = await res.json()
                             setBajando(false)
-                            if (data.ok) { setModalBaja(false); alert(Tpanel.plan.cancelarOk); window.location.href = '/panel' }
+                            if (data.ok) {
+                              setModalBaja(false)
+                              const fechaFin = data.fechaFin ? new Date(data.fechaFin).toLocaleDateString('es-DO', { day: 'numeric', month: 'long', year: 'numeric' }) : ''
+                              alert(fechaFin ? `Tu plan seguirá activo hasta el ${fechaFin}. A partir de entonces se eliminarán tus anuncios.` : Tpanel.plan.cancelarOk)
+                              window.location.href = '/panel'
+                            }
                             else { alert(Tpanel.plan.cancelarErr); setModalBaja(false) }
                           }} style={{ all: 'unset', flex: 1, background: bajando ? '#fca5a5' : '#dc2626', color: '#fff', padding: '11px', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: bajando ? 'default' : 'pointer', textAlign: 'center' }}>
                             {bajando ? Tpanel.plan.procesando : Tpanel.plan.cancelarModalBoton}

@@ -23,50 +23,33 @@ export async function POST(req: Request) {
 
     const { data: usuario } = await supabase
       .from('usuarios')
-      .select('stripe_subscription_id')
+      .select('stripe_subscription_id, plan_activo_hasta')
       .eq('id', userId)
       .single()
 
-    // Cancelar suscripción en Stripe inmediatamente
+    let fechaFin: string | null = usuario?.plan_activo_hasta || null
+
+    // Marcar en Stripe que cancela al final del período (no inmediatamente)
     if (usuario?.stripe_subscription_id) {
       try {
-        await stripe.subscriptions.cancel(usuario.stripe_subscription_id)
+        const sub = await stripe.subscriptions.update(usuario.stripe_subscription_id, {
+          cancel_at_period_end: true,
+        })
+        // Usar la fecha real de fin de Stripe (trial_end o current_period_end)
+        const finTs = sub.trial_end ?? sub.current_period_end
+        if (finTs) fechaFin = new Date(finTs * 1000).toISOString()
       } catch {
-        // Si ya estaba cancelada en Stripe, seguimos igualmente
+        // Si falla Stripe igualmente marcamos en BD
       }
     }
 
-    // Obtener las propiedades del usuario para borrar sus dependencias
-    const { data: propiedades } = await supabase
-      .from('propiedades')
-      .select('id')
-      .eq('usuario_id', userId)
-
-    const propIds = (propiedades || []).map((p: any) => p.id)
-
-    if (propIds.length > 0) {
-      // Borrar mensajes recibidos sobre sus propiedades
-      await supabase.from('mensajes').delete().in('propiedad_id', propIds)
-      // Borrar favoritos de sus propiedades
-      await supabase.from('favoritos').delete().in('propiedad_id', propIds)
-      // Borrar las propiedades
-      await supabase.from('propiedades').delete().in('id', propIds)
-    }
-
-    // Borrar mensajes que el usuario haya enviado como comprador
-    await supabase.from('mensajes').delete().eq('remitente_id', userId)
-
-    // Degradar cuenta a particular, sin AEI ni suscripción
+    // Marcar como "cancelando" — sigue activo hasta fechaFin, el webhook limpia al expirar
     await supabase.from('usuarios').update({
-      plan: 'gratis',
-      tipo: 'particular',
-      plan_activo_hasta: null,
-      stripe_subscription_id: null,
-      numero_aei: null,
-      aei_aprobado: false,
+      tipo: 'cancelando',
+      plan_activo_hasta: fechaFin,
     }).eq('id', userId)
 
-    return NextResponse.json({ ok: true })
+    return NextResponse.json({ ok: true, fechaFin })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
