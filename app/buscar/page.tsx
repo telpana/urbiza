@@ -388,7 +388,7 @@ function BuscarContent() {
   const [debouncedM2Min, setDebouncedM2Min] = useState('')
   const [debouncedM2Max, setDebouncedM2Max] = useState('')
   const cargarRef = useRef<(pag: number) => void>(() => {})
-  const [propiedadesReales, setPropiedadesReales] = useState<any[]>([])
+  const [propiedadesReales, setPropiedadesReales] = useState<any[]>(() => { try { return JSON.parse(localStorage.getItem('hb_buscar_cache') || '[]') } catch { return [] } })
   const [cargando, setCargando] = useState(true)
   const [verMapa, setVerMapa] = useState(false)
   const [sesionActiva, setSesionActiva] = useState(() => {
@@ -565,6 +565,7 @@ function BuscarContent() {
         }
         setPropiedadesReales(sorted)
         setTotalEnBD(count ?? 0)
+        try { localStorage.setItem('hb_buscar_cache', JSON.stringify(sorted)) } catch {}
       }
       setCargando(false)
     }
