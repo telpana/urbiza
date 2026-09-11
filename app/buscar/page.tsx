@@ -65,6 +65,16 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'mao': [19.5543, -71.0763], 'dajabon': [19.5492, -71.7082],
 }
 
+function sbImg(url: string, w: number, q = 75) {
+  if (!url) return url
+  try {
+    const u = new URL(url)
+    if (!u.hostname.includes('supabase.co')) return url
+    const path = u.pathname.replace('/storage/v1/object/public/', '')
+    return `${u.origin}/storage/v1/render/image/public/${path}?width=${w}&quality=${q}&resize=contain`
+  } catch { return url }
+}
+
 function normalize(s: string) {
   return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
 }
@@ -1012,10 +1022,10 @@ function BuscarContent() {
                         const actIdx = fotoIdx[String(p.id)] ?? 0
                         if (Math.abs(i - actIdx) > 2) return null
                         return (
-                          <img key={i} src={src} alt={i === 0 ? (p.titulo || '') : ''}
+                          <img key={i} src={sbImg(src, 400)} alt={i === 0 ? (p.titulo || '') : ''}
                             loading={cardIdx < 4 && i === 0 ? 'eager' : 'lazy'}
                             data-idx={String(i)}
-                            onError={e => { const img = e.currentTarget as HTMLImageElement; const fotos: string[] = p.fotos; const idx = parseInt(img.dataset.idx || '0') + 1; if (idx < fotos.length) { img.dataset.idx = String(idx); img.src = fotos[idx]; } else { img.style.display = 'none'; } }}
+                            onError={e => { const img = e.currentTarget as HTMLImageElement; const fotos: string[] = p.fotos; const idx = parseInt(img.dataset.idx || '0') + 1; if (idx < fotos.length) { img.dataset.idx = String(idx); img.src = sbImg(fotos[idx], 400); } else { img.style.display = 'none'; } }}
                             style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: i === actIdx ? 1 : 0, transition: 'opacity 0.15s', zIndex: 1 }} />
                         )
                       })
