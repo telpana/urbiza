@@ -1,6 +1,5 @@
 ﻿'use client'
 import { useState, useEffect, useRef, Suspense } from 'react'
-import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../supabase'
 import { useIdioma } from '../../IdiomaContext'
@@ -1013,10 +1012,11 @@ function BuscarContent() {
                         const actIdx = fotoIdx[String(p.id)] ?? 0
                         if (Math.abs(i - actIdx) > 2) return null
                         return (
-                          <Image key={i} src={src} alt={i === 0 ? (p.titulo || '') : ''} fill unoptimized
+                          <img key={i} src={src} alt={i === 0 ? (p.titulo || '') : ''}
                             loading={cardIdx < 4 && i === 0 ? 'eager' : 'lazy'}
-                            sizes="(max-width: 900px) 100vw, 300px"
-                            style={{ objectFit: 'cover', opacity: i === actIdx ? 1 : 0, transition: 'opacity 0.15s', zIndex: 1 }} />
+                            data-idx={String(i)}
+                            onError={e => { const img = e.currentTarget as HTMLImageElement; const fotos: string[] = p.fotos; const idx = parseInt(img.dataset.idx || '0') + 1; if (idx < fotos.length) { img.dataset.idx = String(idx); img.src = fotos[idx]; } else { img.style.display = 'none'; } }}
+                            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: i === actIdx ? 1 : 0, transition: 'opacity 0.15s', zIndex: 1 }} />
                         )
                       })
                     : <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
