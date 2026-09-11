@@ -621,7 +621,7 @@ export const t = {
         suscribirse: "S'abonner au PRO", cargando: 'Chargement des données...',
         anunciosUsados: 'Vous avez utilisé {n} de vos {max} annonces gratuites',
         cancelar: "Résilier l'abonnement", cancelarBtn: 'Résilier mon abonnement',
-        cancelarDesc: 'Vous continuerez à profiter de votre plan Pro jusqu'à la fin de votre période en cours. Ensuite vous perdrez vos avantages Pro.',
+        cancelarDesc: "Vous continuerez à profiter de votre plan Pro jusqu'à la fin de votre période en cours. Ensuite vous perdrez vos avantages Pro.",
         cancelarConfirm: '⚠️ ATTENTION : En confirmant, toutes vos annonces, messages et interactions seront supprimés immédiatement et de façon irréversible. Votre compte deviendra un compte particulier sans possibilité de publier. Êtes-vous sûr ?',
         cancelarOk: 'Abonnement résilié. Vous gardez l\'accès jusqu\'à la fin de votre période en cours.',
         cancelarErr: 'Erreur lors de la résiliation. Écrivez-nous à soporte@habitade.com',
