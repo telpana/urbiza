@@ -173,7 +173,20 @@ export async function emailPlanCancelado(email: string, nombre: string, activoHa
   return resend.emails.send({ from: FROM, to: email, subject: 'Tu plan ha sido cancelado — Habitade', html })
 }
 
-// ── 6. RESET DE CONTRASEÑA ───────────────────────────────────────────────────
+// ── 6. PAGO FALLIDO ──────────────────────────────────────────────────────────
+export async function emailPagoFallido(email: string, nombre: string, fechaFallo: string) {
+  const html = layout(`
+    ${h1('Tu plan no pudo renovarse')}
+    ${p(`Hola${nombre ? ` ${nombre}` : ''}, intentamos renovar tu plan Profesional el <strong>${fechaFallo}</strong> pero no fue posible procesar el pago.`)}
+    ${p('Tus anuncios siguen activos por ahora. Actualiza tu método de pago para evitar que se desactiven en los próximos días.')}
+    ${btn('Actualizar método de pago', `${BASE}/panel?tab=plan`)}
+    ${p('Si ya actualizaste tu método de pago, puedes ignorar este mensaje — Stripe intentará el cobro de nuevo automáticamente.')}
+    <p style="margin:16px 0 0;font-size:13px;color:#999">¿Tienes alguna duda? Escríbenos a <a href="mailto:hola@habitade.com" style="color:#006D77">hola@habitade.com</a></p>
+  `)
+  return resend.emails.send({ from: FROM, to: email, subject: 'Acción requerida: actualiza tu método de pago — Habitade', html })
+}
+
+// ── 7. RESET DE CONTRASEÑA ───────────────────────────────────────────────────
 export async function emailResetPassword(email: string, link: string) {
   const html = layout(`
     ${h1('Restablece tu contraseña')}

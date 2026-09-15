@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import { emailPagoFallido } from '@/lib/emails'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -47,6 +48,28 @@ export async function GET(req: Request) {
     }).eq('id', u.id)
     procesados++
     console.log('[cron/cleanup] 15 días vencidos, anuncios pausados borrados:', u.id)
+  }
+
+  // Emails de pago fallido → enviar 24h después del fallo si no se ha cobrado
+  const hace24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+  const { data: pagosFallidos } = await supabase
+    .from('usuarios')
+    .select('id, email, nombre, pago_fallido_at')
+    .eq('plan', 'past_due')
+    .eq('pago_fallido_email_enviado', false)
+    .not('pago_fallido_at', 'is', null)
+    .lt('pago_fallido_at', hace24h)
+
+  for (const u of pagosFallidos || []) {
+    if (!u.email) continue
+    try {
+      const fechaStr = new Date(u.pago_fallido_at).toLocaleDateString('es-DO', { day: 'numeric', month: 'long', year: 'numeric' })
+      await emailPagoFallido(u.email, u.nombre || '', fechaStr)
+      await supabase.from('usuarios').update({ pago_fallido_email_enviado: true }).eq('id', u.id)
+      console.log('[cron/cleanup] email pago fallido enviado:', u.id)
+    } catch (e) {
+      console.error('[cron/cleanup] error enviando email pago fallido:', u.id, e)
+    }
   }
 
   // Anuncios con más de 2 años → borrar

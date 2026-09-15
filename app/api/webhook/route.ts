@@ -121,7 +121,9 @@ export async function POST(req: Request) {
         await supabase.from('usuarios').update({
           plan: 'profesional',
           tipo: 'profesional',
-          plan_activo_hasta: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+          plan_activo_hasta: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          pago_fallido_at: null,
+          pago_fallido_email_enviado: false,
         }).eq('id', usuario.id)
         // Reactivar propiedades que estaban pausadas por fallo de pago
         await supabase.from('propiedades').update({ estado: 'activo' }).eq('usuario_id', usuario.id).eq('estado', 'pausado')
@@ -139,7 +141,9 @@ export async function POST(req: Request) {
       if (usuario) {
         await supabase.from('usuarios').update({
           plan: 'past_due',
-          plan_activo_hasta: new Date(Date.now() + DIAS_GRACIA * 24 * 60 * 60 * 1000).toISOString()
+          plan_activo_hasta: new Date(Date.now() + DIAS_GRACIA * 24 * 60 * 60 * 1000).toISOString(),
+          pago_fallido_at: new Date().toISOString(),
+          pago_fallido_email_enviado: false,
         }).eq('id', usuario.id)
         // Ocultar anuncios inmediatamente
         await supabase.from('propiedades').update({ estado: 'pausado' }).eq('usuario_id', usuario.id).eq('estado', 'activo')
