@@ -43,9 +43,13 @@ export async function emailBienvenida(email: string, nombre: string, tipo?: stri
   const contenido = esProfesional ? `
     ${h1(`Bienvenido a Habitade${nombre ? `, ${nombre}` : ''}`)}
     ${p('Tu cuenta profesional ya está activa. Habitade es el portal inmobiliario de referencia en República Dominicana y estamos aquí para ayudarte a vender más y mejor.')}
-    <div style="background:#006D77;border-radius:8px;padding:14px 20px;margin:0 0 20px;text-align:center">
+    <div style="background:#006D77;border-radius:8px 8px 0 0;padding:14px 20px;text-align:center">
       <span style="color:rgba(255,255,255,0.8);font-size:13px">Plan Profesional · Todo incluido por solo </span>
-      <span style="color:#fff;font-size:18px;font-weight:700">US$9.99/mes</span>
+      <span style="color:rgba(255,255,255,0.55);font-size:18px;font-weight:700;text-decoration:line-through">US$9.99/mes</span>
+    </div>
+    <div style="background:#004f58;border-radius:0 0 8px 8px;padding:11px 20px;margin:0 0 20px;text-align:center">
+      <span style="background:#FFD166;color:#004f58;font-size:11px;font-weight:800;letter-spacing:0.06em;padding:3px 8px;border-radius:4px;text-transform:uppercase">WELCOME</span>
+      <span style="color:#fff;font-size:13px;font-weight:600;margin-left:8px">90 días gratis · Actívalo en tu perfil</span>
     </div>
     <table width="100%" cellpadding="0" cellspacing="0" style="margin:20px 0">
       <tr>
