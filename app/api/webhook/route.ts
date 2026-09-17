@@ -88,12 +88,18 @@ export async function POST(req: Request) {
     // Plan profesional (suscripción)
     const codigoPromo = session.metadata?.codigoPromo
     if (userId && subscriptionId) {
-      const proximaFactura = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      // Si hay trial, usar trial_end como fecha de vencimiento, si no, +30 días
+      let planActivoHasta = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      try {
+        const sub = await stripe.subscriptions.retrieve(subscriptionId)
+        if (sub.trial_end) planActivoHasta = new Date(sub.trial_end * 1000)
+      } catch (e) { console.error('[webhook] error leyendo trial_end:', e) }
+
       const { error } = await supabase.from('usuarios').update({
         plan: 'profesional',
         tipo: 'profesional',
         stripe_subscription_id: subscriptionId,
-        plan_activo_hasta: proximaFactura.toISOString(),
+        plan_activo_hasta: planActivoHasta.toISOString(),
         ya_suscrito: true,
         ...(codigoPromo ? { codigo_promo_usado: codigoPromo } : {}),
       }).eq('id', userId)
@@ -105,7 +111,7 @@ export async function POST(req: Request) {
       }
       const { data: u } = await supabase.from('usuarios').select('email, nombre').eq('id', userId).single()
       if (u?.email) {
-        const fechaStr = proximaFactura.toLocaleDateString('es-DO', { day: 'numeric', month: 'long', year: 'numeric' })
+        const fechaStr = planActivoHasta.toLocaleDateString('es-DO', { day: 'numeric', month: 'long', year: 'numeric' })
         emailPagoConfirmado(u.email, u.nombre || '', fechaStr).catch(e => console.error('email pago error:', e))
       }
     }
