@@ -1,11 +1,16 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
+import Stripe from 'stripe'
 import { emailPagoFallido } from '@/lib/emails'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2026-05-27.dahlia',
+})
 
 export async function GET(req: Request) {
   const cronSecret = process.env.CRON_SECRET
@@ -16,6 +21,30 @@ export async function GET(req: Request) {
 
   let procesados = 0
   const ahora = new Date().toISOString()
+
+  // Sincronizar plan_activo_hasta con Stripe para usuarios pro con fecha vencida o próxima a vencer
+  const en7dias = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+  const { data: prosPorVencer } = await supabase
+    .from('usuarios')
+    .select('id, stripe_subscription_id')
+    .eq('plan', 'profesional')
+    .not('stripe_subscription_id', 'is', null)
+    .lt('plan_activo_hasta', en7dias)
+
+  for (const u of prosPorVencer || []) {
+    try {
+      const sub = await stripe.subscriptions.retrieve(u.stripe_subscription_id)
+      if (sub.status === 'active' || sub.status === 'trialing') {
+        const nuevaFecha = sub.trial_end
+          ? new Date(sub.trial_end * 1000)
+          : new Date(sub.current_period_end * 1000)
+        await supabase.from('usuarios').update({ plan_activo_hasta: nuevaFecha.toISOString() }).eq('id', u.id)
+        console.log('[cron/cleanup] plan_activo_hasta sincronizado:', u.id, nuevaFecha.toISOString())
+      }
+    } catch (e) {
+      console.error('[cron/cleanup] error sincronizando con Stripe:', u.id, e)
+    }
+  }
 
   // Destacados vencidos → quitar badge
   const { data: destacadosVencidos } = await supabase
