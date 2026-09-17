@@ -158,6 +158,25 @@ export async function POST(req: Request) {
     }
   }
 
+  // Suscripción actualizada (renovación, cambio de trial, etc.) → sincronizar fecha
+  if (event.type === 'customer.subscription.updated') {
+    const subscription = event.data.object as Stripe.Subscription
+    if (subscription.status === 'active' || subscription.status === 'trialing') {
+      const planActivoHasta = subscription.trial_end
+        ? new Date(subscription.trial_end * 1000)
+        : new Date(subscription.current_period_end * 1000)
+      const { data: usuario } = await supabase.from('usuarios').select('id').eq('stripe_subscription_id', subscription.id).single()
+      if (usuario) {
+        await supabase.from('usuarios').update({
+          plan: 'profesional',
+          tipo: 'profesional',
+          plan_activo_hasta: planActivoHasta.toISOString(),
+        }).eq('id', usuario.id)
+        console.log('[webhook] suscripción sincronizada:', usuario.id, planActivoHasta.toISOString())
+      }
+    }
+  }
+
   // Stripe cancela la suscripción tras agotar reintentos → borrar todo
   if (event.type === 'customer.subscription.deleted') {
     const subscription = event.data.object as Stripe.Subscription
