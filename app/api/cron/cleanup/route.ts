@@ -23,13 +23,13 @@ export async function GET(req: Request) {
   const ahora = new Date().toISOString()
 
   // Sincronizar plan_activo_hasta con Stripe para usuarios pro con fecha vencida o próxima a vencer
-  const en7dias = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
+  const en60dias = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString()
   const { data: prosPorVencer } = await supabase
     .from('usuarios')
     .select('id, stripe_subscription_id')
     .eq('plan', 'profesional')
     .not('stripe_subscription_id', 'is', null)
-    .lt('plan_activo_hasta', en7dias)
+    .lt('plan_activo_hasta', en60dias)
 
   for (const u of prosPorVencer || []) {
     try {
