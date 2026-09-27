@@ -772,7 +772,7 @@ export default function Admin() {
                             <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 11, color: '#aaa', fontFamily: 'monospace' }}>{u.stripe_subscription_id || '—'}</span></td>
                             <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
                               {u.plan_activo_hasta
-                                ? <Badge txt={fmtFecha(u.plan_activo_hasta)} color={new Date(u.plan_activo_hasta) > new Date() ? '#065f46' : '#991b1b'} bg={new Date(u.plan_activo_hasta) > new Date() ? '#d1fae5' : '#fee2e2'} />
+                                ? <Badge txt={fmtFecha(u.plan_activo_hasta)} color={u.plan === 'past_due' ? '#991b1b' : '#065f46'} bg={u.plan === 'past_due' ? '#fee2e2' : '#d1fae5'} />
                                 : <span style={{ color: '#aaa', fontSize: 12 }}>—</span>}
                             </td>
                           </tr>
