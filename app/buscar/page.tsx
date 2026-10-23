@@ -1,4 +1,5 @@
 ﻿'use client'
+import Image from 'next/image'
 import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '../../supabase'
@@ -65,15 +66,6 @@ const ZONAS_COORDS: Record<string, [number, number]> = {
   'mao': [19.5543, -71.0763], 'dajabon': [19.5492, -71.7082],
 }
 
-function sbImg(url: string, w: number, q = 75) {
-  if (!url) return url
-  try {
-    const u = new URL(url)
-    if (!u.hostname.includes('supabase.co')) return url
-    const path = u.pathname.replace('/storage/v1/object/public/', '')
-    return `${u.origin}/storage/v1/render/image/public/${path}?width=${w}&quality=${q}&resize=contain`
-  } catch { return url }
-}
 
 function normalize(s: string) {
   return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
@@ -1023,11 +1015,11 @@ function BuscarContent() {
                         const actIdx = fotoIdx[String(p.id)] ?? 0
                         if (Math.abs(i - actIdx) > 2) return null
                         return (
-                          <img key={i} src={sbImg(src, 400)} alt={i === 0 ? (p.titulo || '') : ''}
+                          <Image key={i} src={src} alt={i === 0 ? (p.titulo || '') : ''}
+                            fill sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             loading={cardIdx < 4 && i === 0 ? 'eager' : 'lazy'}
-                            data-idx={String(i)}
-                            onError={e => { const img = e.currentTarget as HTMLImageElement; const fotos: string[] = p.fotos; const idx = parseInt(img.dataset.idx || '0') + 1; if (idx < fotos.length) { img.dataset.idx = String(idx); img.src = sbImg(fotos[idx], 400); } else { img.style.display = 'none'; } }}
-                            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: i === actIdx ? 1 : 0, transition: 'opacity 0.15s', zIndex: 1 }} />
+                            onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+                            style={{ objectFit: 'cover', opacity: i === actIdx ? 1 : 0, transition: 'opacity 0.15s', zIndex: 1 }} />
                         )
                       })
                     : <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>

@@ -52,15 +52,6 @@ function MapaUbicacion({ zona, propLat, propLng }: { zona: string, propLat?: num
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />
 }
 
-function sbImg(url: string, w: number, q = 75) {
-  if (!url) return url
-  try {
-    const u = new URL(url)
-    if (!u.hostname.includes('supabase.co')) return url
-    const path = u.pathname.replace('/storage/v1/object/public/', '')
-    return `${u.origin}/storage/v1/render/image/public/${path}?width=${w}&quality=${q}&resize=contain`
-  } catch { return url }
-}
 
 function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolean }) {
   const [activa, setActiva] = useState(0)
@@ -86,7 +77,7 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
       >
         {destacado && <div style={{ position: 'absolute', top: 8, right: 8, zIndex: 2, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10 }}>DESTACADO</div>}
         {fotos.map((foto, i) => (
-          <img key={i} src={sbImg(foto, 1200)} fetchPriority={i === 0 ? 'high' : 'low'} decoding="async" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', opacity: i === activa ? 1 : 0, transition: 'opacity 0.2s', zIndex: 1 }} />
+          <Image key={i} src={foto} fill sizes="100vw" priority={i === 0} decoding="async" style={{ objectFit: 'cover', opacity: i === activa ? 1 : 0, transition: 'opacity 0.2s', zIndex: 1 }} alt="" />
         ))}
         <div style={{ position: 'absolute', bottom: 12, right: 12, background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: 11, padding: '4px 10px', borderRadius: 20, zIndex: 4 }}>{activa + 1} / {fotos.length}</div>
         {activa > 0 && <button onClick={() => setActiva(a => a - 1)} style={{ all: 'unset', position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.9)', width: 36, height: 36, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 20, color: '#333', zIndex: 4 }}>‹</button>}
@@ -95,7 +86,7 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
       {fotos.length > 1 && (
         <div className="galeria-thumbs" style={{ display: 'flex', gap: 6, padding: '10px 12px', background: '#f9f9f9', overflowX: 'auto' }}>
           {fotos.map((src, i) => (
-            <img key={i} src={sbImg(src, 150, 60)} onClick={() => setActiva(i)} loading="lazy" decoding="async" style={{ width: 72, height: 52, objectFit: 'cover', borderRadius: 4, flexShrink: 0, cursor: 'pointer', border: activa === i ? '2px solid #006D77' : '2px solid transparent' }} />
+            <Image key={i} src={src} width={72} height={52} onClick={() => setActiva(i)} loading="lazy" decoding="async" style={{ objectFit: 'cover', borderRadius: 4, flexShrink: 0, cursor: 'pointer', border: activa === i ? '2px solid #006D77' : '2px solid transparent', display: 'block' }} alt="" />
           ))}
         </div>
       )}
