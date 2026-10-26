@@ -86,7 +86,9 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
       {fotos.length > 1 && (
         <div className="galeria-thumbs" style={{ display: 'flex', gap: 6, padding: '10px 12px', background: '#f9f9f9', overflowX: 'auto' }}>
           {fotos.map((src, i) => (
-            <Image key={i} src={src} width={72} height={52} onClick={() => setActiva(i)} loading="lazy" decoding="async" style={{ objectFit: 'cover', borderRadius: 4, flexShrink: 0, cursor: 'pointer', border: activa === i ? '2px solid #006D77' : '2px solid transparent', display: 'block' }} alt="" />
+            <div key={i} onClick={() => setActiva(i)} style={{ width: 96, height: 64, flexShrink: 0, position: 'relative', borderRadius: 4, overflow: 'hidden', cursor: 'pointer', border: activa === i ? '2px solid #006D77' : '2px solid transparent', boxSizing: 'border-box' }}>
+              <Image src={src} fill loading="lazy" style={{ objectFit: 'cover' }} alt="" />
+            </div>
           ))}
         </div>
       )}
