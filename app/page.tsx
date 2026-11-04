@@ -521,13 +521,11 @@ export default function Home() {
         setDestReales(sorted)
         try { localStorage.setItem('hb_dest', JSON.stringify(sorted)) } catch {}
       }
-      const { data: vistas } = await supabase.from('propiedades')
-        .select('id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,operacion,fotos,visitas,impresiones').eq('estado', 'activo').order('visitas', { ascending: false }).order('impresiones', { ascending: false }).limit(6)
+      const { data: vistas, error: vistasErr } = await supabase.from('propiedades')
+        .select('id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,operacion,fotos,visitas,impresiones').eq('estado', 'activo').order('visitas', { ascending: false }).limit(6)
+      if (vistasErr) console.error('[home] vistas error:', vistasErr)
       if (vistas && vistas.length > 0) {
-        const sorted = [...vistas].sort((a, b) => {
-          const va = (b.visitas || 0) - (a.visitas || 0)
-          return va !== 0 ? va : (b.impresiones || 0) - (a.impresiones || 0)
-        })
+        const sorted = [...vistas].sort((a, b) => (b.visitas || 0) - (a.visitas || 0))
         setMasVistasReales(sorted)
         try { localStorage.setItem('hb_mas_vistos', JSON.stringify(sorted)) } catch {}
       }
