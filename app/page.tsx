@@ -524,13 +524,15 @@ export default function Home() {
       const { data: vistas, error: vistasErr } = await supabase.from('propiedades')
         .select('id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,operacion,fotos,visitas,impresiones').eq('estado', 'activo').order('visitas', { ascending: false }).limit(6)
       if (vistasErr) console.error('[home] vistas error:', vistasErr)
+      let vistasOk = false
       if (vistas && vistas.length > 0) {
         const sorted = [...vistas].sort((a, b) => (b.visitas || 0) - (a.visitas || 0))
         setMasVistasReales(sorted)
         try { localStorage.setItem('hb_mas_vistos', JSON.stringify(sorted)) } catch {}
+        vistasOk = true
       }
 
-      const campos = 'id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,tipo,operacion,fotos'
+      const campos = 'id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,tipo,operacion,fotos,visitas'
       const [{ data: sd }, { data: pc }, { data: stg }] = await Promise.all([
         supabase.from('propiedades').select(campos).eq('estado', 'activo')
           .or('zona.ilike.%Santo Domingo%,zona.ilike.%Distrito Nacional%,zona.ilike.%Piantini%,zona.ilike.%Naco%,zona.ilike.%Bella Vista%,zona.ilike.%Gazcue%,zona.ilike.%Piantini%,zona.ilike.%Serralles%,zona.ilike.%Arroyo Hondo%,zona.ilike.%Miramar%,zona.ilike.%La Esperilla%,zona.ilike.%Evaristo Morales%,zona.ilike.%Los Cacicazgos%,zona.ilike.%Ciudad Colonial%')
@@ -545,6 +547,14 @@ export default function Home() {
       if (sd && sd.length > 0) { setNovedadesSantoDomingo(sd); try { localStorage.setItem('hb_nov_sd', JSON.stringify(sd)) } catch {} }
       if (pc && pc.length > 0) { setNovedadesPuntaCana(pc); try { localStorage.setItem('hb_nov_pc', JSON.stringify(pc)) } catch {} }
       if (stg && stg.length > 0) { setNovedadesSamana(stg); try { localStorage.setItem('hb_nov_lt', JSON.stringify(stg)) } catch {} }
+      if (!vistasOk) {
+        const all = [...(sd || []), ...(pc || []), ...(stg || [])]
+        if (all.length > 0) {
+          const sorted = [...all].sort((a, b) => (b.visitas || 0) - (a.visitas || 0)).slice(0, 6)
+          setMasVistasReales(sorted)
+          try { localStorage.setItem('hb_mas_vistos', JSON.stringify(sorted)) } catch {}
+        }
+      }
     }
     cargar()
   }, [])
