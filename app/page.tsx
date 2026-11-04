@@ -404,7 +404,7 @@ export default function Home() {
   const lsGet = (k: string) => { try { return typeof window !== 'undefined' ? JSON.parse(localStorage.getItem(k) || '[]') : [] } catch { return [] } }
   const lsGetDaily = (k: string) => { try { if (typeof window === 'undefined') return []; const raw = localStorage.getItem(k); if (!raw) return []; const { data, date } = JSON.parse(raw); return date === new Date().toDateString() ? (data || []) : [] } catch { return [] } }
   const [destReales, setDestReales] = useState<any[]>([])
-  const [masVistasReales, setMasVistasReales] = useState<any[]>([])
+  const [masVistasReales, setMasVistasReales] = useState<any[]>(() => lsGet('hb_mas_vistos'))
   const [novedadesSantoDomingo, setNovedadesSantoDomingo] = useState<any[]>(() => lsGet('hb_nov_sd'))
   const [novedadesPuntaCana, setNovedadesPuntaCana] = useState<any[]>(() => lsGet('hb_nov_pc'))
   const [novedadesSamana, setNovedadesSamana] = useState<any[]>(() => lsGet('hb_nov_lt'))
@@ -529,6 +529,7 @@ export default function Home() {
           return va !== 0 ? va : (b.impresiones || 0) - (a.impresiones || 0)
         })
         setMasVistasReales(sorted)
+        try { localStorage.setItem('hb_mas_vistos', JSON.stringify(sorted)) } catch {}
       }
 
       const campos = 'id,titulo,titulo_en,titulo_fr,precio,zona,habitaciones,m2,tipo,operacion,fotos'
