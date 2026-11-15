@@ -10,6 +10,10 @@ import { getDopRate, formatDOP } from '../../../lib/dopRate'
 import { getZonaCenter } from '../../lib/zonasCoords'
 
 const getLatLng = getZonaCenter
+const sbThumb = (url: string) => {
+  if (!url || !url.includes('/storage/v1/object/public/')) return url
+  return url.replace('/storage/v1/object/public/', '/storage/v1/render/image/public/') + '?width=200&quality=75'
+}
 
 function MapaUbicacion({ zona, propLat, propLng }: { zona: string, propLat?: number | null, propLng?: number | null }) {
   const mapRef = useRef<HTMLDivElement>(null)
@@ -87,7 +91,7 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
         <div className="galeria-thumbs" style={{ display: 'flex', gap: 6, padding: '10px 12px', background: '#f9f9f9', overflowX: 'auto' }}>
           {fotos.map((src, i) => (
             <div key={i} onClick={() => setActiva(i)} style={{ width: 96, height: 64, flexShrink: 0, position: 'relative', borderRadius: 4, overflow: 'hidden', cursor: 'pointer', border: activa === i ? '2px solid #006D77' : '2px solid transparent', boxSizing: 'border-box' }}>
-              <Image src={src} fill loading="lazy" style={{ objectFit: 'cover' }} alt="" />
+              <Image src={sbThumb(src)} fill loading="lazy" style={{ objectFit: 'cover' }} alt="" />
             </div>
           ))}
         </div>
