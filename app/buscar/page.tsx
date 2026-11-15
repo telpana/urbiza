@@ -8,11 +8,6 @@ import NavUserMenu from '../../components/NavUserMenu'
 
 import { getDopRate, formatDOP } from '../../lib/dopRate'
 
-const sbThumb = (url: string) => {
-  if (!url || !url.includes('/storage/v1/object/public/')) return url
-  return url.replace('/storage/v1/object/public/', '/storage/v1/render/image/public/') + '?width=600&quality=70'
-}
-
 const propiedadesEjemplo = [
   { id: 1, precio: 285000, titulo: 'Apartamento en Piantini', zona: 'Piantini, Distrito Nacional', hab: 3, banos: 2, m2: 150, parqueos: 2, tipo: 'Apartamento', operacion: 'venta', dest: true, visitas: false, bg: '#e0f5f7', lat: 18.4890, lng: -69.9370, desc: 'Amplio apartamento en el corazón de Piantini con acabados de alta calidad, pisos de mármol importado y vista panorámica.' },
   { id: 2, precio: 620000, titulo: 'Villa en Bávaro', zona: 'Bávaro, La Altagracia', hab: 4, banos: 3, m2: 500, parqueos: 3, tipo: 'Villa', operacion: 'venta', dest: true, visitas: false, bg: '#ddf0e8', lat: 18.6835, lng: -68.4070, desc: 'Espectacular villa con piscina privada, jardín tropical y acceso a playa privada.' },
@@ -1020,7 +1015,7 @@ function BuscarContent() {
                         const actIdx = fotoIdx[String(p.id)] ?? 0
                         if (Math.abs(i - actIdx) > 2) return null
                         return (
-                          <Image key={i} src={i === 0 ? sbThumb(src) : src} alt={i === 0 ? (p.titulo || '') : ''}
+                          <Image key={i} src={src} alt={i === 0 ? (p.titulo || '') : ''}
                             fill sizes="(max-width: 600px) 100vw, (max-width: 1024px) 50vw, 33vw"
                             loading={cardIdx < 4 && i === 0 ? 'eager' : 'lazy'}
                             onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}

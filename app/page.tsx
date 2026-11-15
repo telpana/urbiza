@@ -321,10 +321,6 @@ const zonas = [
 ]
 
 const bgsNovedad = ['#e0f5f7','#ddf0e8','#e8eaf0','#f0ebe0']
-const sbThumb = (url: string) => {
-  if (!url || !url.includes('/storage/v1/object/public/')) return url
-  return url.replace('/storage/v1/object/public/', '/storage/v1/render/image/public/') + '?width=600&quality=70'
-}
 
 function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href, dopRate }: {
   titulo: string, subtitulo: string, zona: string, href?: string,
@@ -356,7 +352,7 @@ function SeccionNovedad({ titulo, subtitulo, reales, ejemplos, zona, href, dopRa
                 onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                 <div style={{ height: 160, background: bgsNovedad[i % 4], position: 'relative', overflow: 'hidden' }}>
                   {Array.isArray(p.fotos) && p.fotos.length > 0
-                    ? <Image src={sbThumb(p.fotos[0])} alt={p.titulo || ''} fill sizes="(max-width: 600px) 100vw, 25vw" loading={i < 2 ? 'eager' : 'lazy'} onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }} style={{ objectFit: 'cover' }} />
+                    ? <Image src={p.fotos[0]} alt={p.titulo || ''} fill sizes="(max-width: 600px) 100vw, 25vw" loading={i < 2 ? 'eager' : 'lazy'} onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }} style={{ objectFit: 'cover' }} />
                     : <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
                   }
                 </div>
@@ -870,7 +866,7 @@ export default function Home() {
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                       <div className="home-prop-card-img" style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                         {Array.isArray(p.fotos) && p.fotos.length > 0
-                          ? <Image src={sbThumb(p.fotos[0])} alt={p.titulo ?? p.title ?? ''} fill sizes="(max-width: 600px) 100vw, 33vw" loading="lazy" onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }} style={{ objectFit: 'cover' }} />
+                          ? <Image src={p.fotos[0]} alt={p.titulo ?? p.title ?? ''} fill sizes="(max-width: 600px) 100vw, 33vw" loading="lazy" onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }} style={{ objectFit: 'cover' }} />
                           : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         }
                         <div style={{ position: 'absolute', top: 8, right: 8, background: '#006D77', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>{tr.destacadas.destacado}</div>
@@ -910,7 +906,7 @@ export default function Home() {
                       onMouseLeave={e => (e.currentTarget.style.boxShadow = 'none')}>
                       <div className="home-prop-card-img" style={{ height: 180, background: bgs[i % bgs.length], display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
                         {Array.isArray(p.fotos) && p.fotos.length > 0
-                          ? <Image src={sbThumb(p.fotos[0])} alt={p.titulo ?? p.title ?? ''} fill sizes="(max-width: 600px) 100vw, 33vw" loading="lazy" onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }} style={{ objectFit: 'cover' }} />
+                          ? <Image src={p.fotos[0]} alt={p.titulo ?? p.title ?? ''} fill sizes="(max-width: 600px) 100vw, 33vw" loading="lazy" onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none' }} style={{ objectFit: 'cover' }} />
                           : <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1" opacity="0.25"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
                         }
                         <div style={{ position: 'absolute', top: 8, right: 8, background: '#17A6B4', color: '#fff', fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, zIndex: 1 }}>{tr.destacadas.masVisto}</div>
