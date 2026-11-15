@@ -96,7 +96,7 @@ function GaleriaFotos({ fotos, destacado }: { fotos: string[], destacado: boolea
         <div className="galeria-thumbs" style={{ display: 'flex', gap: 6, padding: '10px 12px', background: '#f9f9f9', overflowX: 'auto' }}>
           {fotos.map((src, i) => (
             <div key={i} onClick={() => setActiva(i)} style={{ width: 96, height: 64, flexShrink: 0, position: 'relative', borderRadius: 4, overflow: 'hidden', cursor: 'pointer', border: activa === i ? '2px solid #006D77' : '2px solid transparent', boxSizing: 'border-box' }}>
-              <Image src={sbThumb(src)} fill loading="lazy" style={{ objectFit: 'cover' }} alt="" />
+              <Image src={sbThumb(src)} fill loading="eager" style={{ objectFit: 'cover' }} alt="" />
             </div>
           ))}
         </div>
