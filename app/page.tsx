@@ -78,6 +78,7 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
   const [filtroTipo, setFiltroTipo] = useState('Todos')
   const [menuAbierto, setMenuAbierto] = useState(false)
   const [propiedades, setPropiedades] = useState<any[]>([])
+  const [mapaListo, setMapaListo] = useState(false)
   const [dopRate, setDopRate] = useState<number | undefined>(undefined)
   const { tr, idioma } = useIdioma()
 
@@ -135,6 +136,7 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
       const map = L.map(mapRef.current, { center: [18.7357, -70.1627], zoom: 6.8, zoomControl: true, attributionControl: false })
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
       mapInstanceRef.current = { map, L }
+      setMapaListo(true)
     }
     if ((window as any).L) { load() }
     else {
@@ -155,7 +157,7 @@ function MapaCompletoPropiedades({ onCerrar }: { onCerrar: () => void }) {
     if (!mapInstanceRef.current || propiedades.length === 0) return
     const { L, map } = mapInstanceRef.current
     actualizarMarkers(L, map, filtroTipo, propiedades)
-  }, [filtroTipo, propiedades])
+  }, [filtroTipo, propiedades, mapaListo])
 
   const visibles = filtroTipo === 'Todos' ? propiedades.length : propiedades.filter(p => p.tipo === filtroTipo).length
 
