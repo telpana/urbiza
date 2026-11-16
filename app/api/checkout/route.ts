@@ -12,10 +12,27 @@ const supabase = createClient(
 )
 
 const PRECIOS: Record<string, string> = {
+  // Planes nuevos
+  'plata_mensual': process.env.STRIPE_PRICE_PLATA_MENSUAL!,
+  'plata_anual': process.env.STRIPE_PRICE_PLATA_ANUAL!,
+  'oro_mensual': process.env.STRIPE_PRICE_ORO_MENSUAL!,
+  'oro_anual': process.env.STRIPE_PRICE_ORO_ANUAL!,
+  // Plan legado (mantener compatibilidad con usuarios fundador)
+  'fundador': 'price_1TyDBVFCPtfA6ME6yIOiNbaE',
   'profesional': 'price_1TyDBVFCPtfA6ME6yIOiNbaE',
+  // Destacados (pago único)
   '15': 'price_1TyDBWFCPtfA6ME6t2uzizW2',
   '30': 'price_1TyDBZFCPtfA6ME69xpOdAgK',
   '60': 'price_1TyDBZFCPtfA6ME6xL1TWFSR',
+}
+
+// Extrae el nombre del plan y el intervalo desde el tipo
+function parseTipo(tipo: string): { planNombre: string; intervalo: string } {
+  if (tipo === 'plata_mensual') return { planNombre: 'plata', intervalo: 'mensual' }
+  if (tipo === 'plata_anual') return { planNombre: 'plata', intervalo: 'anual' }
+  if (tipo === 'oro_mensual') return { planNombre: 'oro', intervalo: 'mensual' }
+  if (tipo === 'oro_anual') return { planNombre: 'oro', intervalo: 'anual' }
+  return { planNombre: 'fundador', intervalo: 'mensual' }
 }
 
 async function validarCodigoPromo(codigo: string): Promise<{ ok: boolean; diasTrial?: number; error?: string }> {
@@ -58,16 +75,20 @@ export async function POST(req: Request) {
     // Siempre usar el userId del token, nunca del body
     const userId = authUser.id
 
-    const priceId = PRECIOS[tipo || 'profesional']
-    const esDestacado = ['15', '30', '60'].includes(tipo)
+    const tipoNorm = tipo || 'profesional'
+    const priceId = PRECIOS[tipoNorm]
+    if (!priceId) return NextResponse.json({ error: 'Plan no válido' }, { status: 400 })
+    const esDestacado = ['15', '30', '60'].includes(tipoNorm)
+    const { planNombre, intervalo } = parseTipo(tipoNorm)
     const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
-    console.log('[checkout] NEXT_PUBLIC_SITE_URL:', process.env.NEXT_PUBLIC_SITE_URL, '| baseUrl:', baseUrl, '| tipo:', tipo, '| propiedadId:', propiedadId)
+    console.log('[checkout] NEXT_PUBLIC_SITE_URL:', process.env.NEXT_PUBLIC_SITE_URL, '| baseUrl:', baseUrl, '| tipo:', tipoNorm, '| propiedadId:', propiedadId)
 
     // Validar código promo antes de crear sesión
     let diasTrial = 30
     if (codigoPromo && !esDestacado) {
       const { data: usuarioActual } = await supabase.from('usuarios').select('plan, plan_activo_hasta, telefono').eq('id', userId).single()
-      const tieneProActivo = usuarioActual?.plan === 'profesional' && (!usuarioActual?.plan_activo_hasta || new Date(usuarioActual.plan_activo_hasta) > new Date())
+      const planesActivos = ['profesional', 'fundador', 'plata', 'oro', 'platino']
+      const tieneProActivo = planesActivos.includes(usuarioActual?.plan) && (!usuarioActual?.plan_activo_hasta || new Date(usuarioActual.plan_activo_hasta) > new Date())
       if (tieneProActivo) {
         return NextResponse.json({ error: 'Este código es solo para nuevos usuarios' }, { status: 400 })
       }
@@ -93,9 +114,9 @@ export async function POST(req: Request) {
       customer_email: email || undefined,
       line_items: [{ price: priceId, quantity: 1 }],
       locale: stripeLocale as Stripe.Checkout.SessionCreateParams['locale'],
-      success_url: `${baseUrl}/panel?pago=ok&session_id={CHECKOUT_SESSION_ID}&tipo=${tipo || 'profesional'}`,
+      success_url: `${baseUrl}/panel?pago=ok&session_id={CHECKOUT_SESSION_ID}&tipo=${tipoNorm}`,
       cancel_url: `${baseUrl}/panel?pago=cancelado`,
-      metadata: { userId, tipo, ...(propiedadId ? { propiedadId } : {}), ...(codigoPromo ? { codigoPromo: codigoPromo.toUpperCase() } : {}) },
+      metadata: { userId, tipo: tipoNorm, planNombre, intervalo, ...(propiedadId ? { propiedadId } : {}), ...(codigoPromo ? { codigoPromo: codigoPromo.toUpperCase() } : {}) },
     }
 
     if (codigoPromo && !esDestacado) {

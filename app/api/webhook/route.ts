@@ -12,33 +12,29 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-const DIAS_GRACIA = 15
+const DIAS_GRACIA = 7
 
-// Stripe agotó reintentos — dejar en gratis, el cron borra a los 15 días
-async function bajarAPlaGratis(subscriptionId: string) {
+// Stripe canceló la suscripción — pausar anuncios 30 días, el cron los borra después
+async function pausarPorCancelacion(subscriptionId: string) {
   const { data: usuario } = await supabase.from('usuarios').select('id, email, nombre, plan, plan_activo_hasta').eq('stripe_subscription_id', subscriptionId).single()
   if (!usuario) return
 
-  // Borrar propiedades y dependencias del usuario
-  const { data: propiedades } = await supabase.from('propiedades').select('id').eq('usuario_id', usuario.id)
-  const propIds = (propiedades || []).map((p: any) => p.id)
-  if (propIds.length > 0) {
-    await supabase.from('mensajes').delete().in('propiedad_id', propIds)
-    await supabase.from('favoritos').delete().in('propiedad_id', propIds)
-    await supabase.from('propiedades').delete().in('id', propIds)
-  }
-  await supabase.from('mensajes').delete().eq('remitente_id', usuario.id)
+  const limpiezaEn30dias = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+
+  // Pausar propiedades activas (no borrar)
+  await supabase.from('propiedades').update({ estado: 'pausado' }).eq('usuario_id', usuario.id).eq('estado', 'activo')
 
   await supabase.from('usuarios').update({
     plan: 'gratis',
     tipo: 'particular',
     stripe_subscription_id: null,
-    plan_activo_hasta: null,
+    plan_activo_hasta: limpiezaEn30dias,
+    plan_intervalo: null,
     numero_aei: null,
     aei_aprobado: false,
   }).eq('id', usuario.id)
 
-  console.log('[webhook] suscripción expirada, cuenta y anuncios eliminados:', usuario.id)
+  console.log('[webhook] suscripción cancelada, anuncios pausados 30 días:', usuario.id)
   if (usuario.email) {
     const fechaStr = new Date().toLocaleDateString('es-DO', { day: 'numeric', month: 'long', year: 'numeric' })
     emailPlanCancelado(usuario.email, usuario.nombre || '', fechaStr).catch(e => console.error('email cancelacion error:', e))
@@ -85,21 +81,25 @@ export async function POST(req: Request) {
       console.log('[webhook] destacado:', { propiedadId, dias, error: error?.message })
     }
 
-    // Plan profesional (suscripción)
+    // Plan de suscripción (plata/oro/fundador)
     const codigoPromo = session.metadata?.codigoPromo
+    const planNombre = session.metadata?.planNombre || 'fundador'
+    const intervalo = session.metadata?.intervalo || 'mensual'
     if (userId && subscriptionId) {
-      // Si hay trial, usar trial_end como fecha de vencimiento, si no, +30 días
+      // Si hay trial, usar trial_end como fecha de vencimiento, si no, leer period_end de Stripe
       let planActivoHasta = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
       try {
         const sub = await stripe.subscriptions.retrieve(subscriptionId)
         if (sub.trial_end) planActivoHasta = new Date(sub.trial_end * 1000)
+        else if (sub.current_period_end) planActivoHasta = new Date(sub.current_period_end * 1000)
       } catch (e) { console.error('[webhook] error leyendo trial_end:', e) }
 
       const { error } = await supabase.from('usuarios').update({
-        plan: 'profesional',
-        tipo: 'profesional',
+        plan: planNombre,
+        tipo: planNombre === 'fundador' ? 'profesional' : planNombre,
         stripe_subscription_id: subscriptionId,
         plan_activo_hasta: planActivoHasta.toISOString(),
+        plan_intervalo: intervalo,
         ya_suscrito: true,
         ...(codigoPromo ? { codigo_promo_usado: codigoPromo } : {}),
       }).eq('id', userId)
@@ -124,10 +124,14 @@ export async function POST(req: Request) {
     if (subscriptionId) {
       const { data: usuario } = await supabase.from('usuarios').select('id').eq('stripe_subscription_id', subscriptionId).single()
       if (usuario) {
+        // Leer la fecha real de Stripe en lugar de +30 días fijos
+        let nuevaFecha = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+        try {
+          const sub = await stripe.subscriptions.retrieve(usuario.stripe_subscription_id)
+          if (sub.current_period_end) nuevaFecha = new Date(sub.current_period_end * 1000)
+        } catch {}
         await supabase.from('usuarios').update({
-          plan: 'profesional',
-          tipo: 'profesional',
-          plan_activo_hasta: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+          plan_activo_hasta: nuevaFecha.toISOString(),
           pago_fallido_at: null,
           pago_fallido_email_enviado: false,
         }).eq('id', usuario.id)
@@ -165,11 +169,10 @@ export async function POST(req: Request) {
       const planActivoHasta = subscription.trial_end
         ? new Date(subscription.trial_end * 1000)
         : new Date(subscription.current_period_end * 1000)
-      const { data: usuario } = await supabase.from('usuarios').select('id').eq('stripe_subscription_id', subscription.id).single()
+      const { data: usuario } = await supabase.from('usuarios').select('id, plan').eq('stripe_subscription_id', subscription.id).single()
       if (usuario) {
+        // Solo actualiza la fecha, no sobreescribe el nombre del plan
         await supabase.from('usuarios').update({
-          plan: 'profesional',
-          tipo: 'profesional',
           plan_activo_hasta: planActivoHasta.toISOString(),
         }).eq('id', usuario.id)
         console.log('[webhook] suscripción sincronizada:', usuario.id, planActivoHasta.toISOString())
@@ -177,10 +180,10 @@ export async function POST(req: Request) {
     }
   }
 
-  // Stripe cancela la suscripción tras agotar reintentos → borrar todo
+  // Stripe cancela la suscripción tras agotar reintentos → pausar anuncios 30 días
   if (event.type === 'customer.subscription.deleted') {
     const subscription = event.data.object as Stripe.Subscription
-    await bajarAPlaGratis(subscription.id)
+    await pausarPorCancelacion(subscription.id)
   }
 
   return NextResponse.json({ ok: true })

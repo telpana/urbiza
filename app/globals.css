@@ -457,3 +457,16 @@ a, button, [role="button"], input, select, textarea, label {
 
 @keyframes promo-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,109,119,0.25)} 50%{box-shadow:0 0 0 6px rgba(0,109,119,0)} }
 @keyframes btn-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,109,119,0.4), 0 4px 12px rgba(0,109,119,0.2)} 50%{box-shadow:0 0 0 8px rgba(0,109,119,0), 0 4px 12px rgba(0,109,119,0.05)} }
+
+/* ══════════════════════════════════
+   PLANES ≤ 768px
+══════════════════════════════════ */
+@media (max-width: 768px) {
+  .planes-cards { grid-template-columns: 1fr !important; }
+  .planes-faq   { grid-template-columns: 1fr !important; }
+  .planes-hero-h1 { font-size: 28px !important; }
+  .planes-kpi-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .planes-mockup-grid { grid-template-columns: 1fr !important; }
+  .planes-mockup-cards { display: none !important; }
+  .planes-platino { flex-direction: column !important; text-align: center !important; }
+}
