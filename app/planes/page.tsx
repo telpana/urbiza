@@ -172,7 +172,7 @@ export default function Planes() {
       </div>
 
       {/* FEATURES */}
-      <div style={{ background: '#f4f6f7', padding: '80px 24px' }}>
+      <div style={{ background: '#fff', padding: '80px 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <h2 style={{ fontSize: 36, fontWeight: 900, color: '#111', margin: '0 0 12px', letterSpacing: '-0.5px' }}>Herramientas que convierten visitas en ventas</h2>
@@ -197,11 +197,11 @@ export default function Planes() {
                       <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{n.nombre[0]}</span>
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: '#111' }}>{n.nombre}</div>
-                      <div style={{ fontSize: 11, color: '#888', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{n.msg}</div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>{n.nombre}</div>
+                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{n.msg}</div>
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4, flexShrink: 0 }}>
-                      <span style={{ fontSize: 10, color: '#bbb' }}>{n.time}</span>
+                      <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>{n.time}</span>
                       {n.unread && <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#4ade80' }} />}
                     </div>
                   </div>
