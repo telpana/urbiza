@@ -287,6 +287,15 @@ export default function Planes() {
           })}
         </div>
 
+        {/* Platino */}
+        <div className="planes-platino" style={{ marginTop: 20, background: `linear-gradient(135deg, ${BRAND_DARK}, ${BRAND})`, borderRadius: 16, padding: '28px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
+          <div>
+            <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Platino — Para grandes agencias</div>
+            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)' }}>Propiedades ilimitadas, integraciones personalizadas y cuenta dedicada.</div>
+          </div>
+          <a href="mailto:hola@habitade.com" style={{ background: '#fff', color: BRAND, padding: '12px 28px', borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: 'none', whiteSpace: 'nowrap' }}>Contactar</a>
+        </div>
+
         {/* FAQ */}
         <div style={{ marginTop: 80, textAlign: 'center' }}>
           <h3 style={{ fontSize: 24, fontWeight: 800, color: '#111', marginBottom: 32 }}>Preguntas frecuentes</h3>
