@@ -70,15 +70,17 @@ export default function Planes() {
   const [sesionActiva, setSesionActiva] = useState(false)
   const [cargando, setCargando] = useState(false)
   const [planActual, setPlanActual] = useState<string | null>(null)
+  const [iniciado, setIniciado] = useState(false)
 
   useEffect(() => { setIsEmbed(window.self !== window.top) }, [])
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIniciado(true)
+      if (session?.user) {
         setSesionActiva(true)
-        supabase.from('usuarios').select('plan').eq('id', user.id).single()
-          .then(({ data }) => { if (data) setPlanActual(data.plan) })
+        supabase.from('usuarios').select('plan').eq('id', session.user.id).single()
+          .then(({ data }) => { if (data?.plan) setPlanActual(data.plan) })
       }
     })
   }, [])
@@ -114,7 +116,7 @@ export default function Planes() {
       href: '/registro',
       tipo: null,
       limite: '2 propiedades',
-      features: ['2 propiedades publicadas', 'Fotos básicas', 'Visible en búsquedas', 'Mensajes de contacto'],
+      features: ['2 propiedades publicadas', 'Fotos básicas', 'Visible en búsquedas', 'Chat con clientes'],
       noIncludes: ['Sin destacados', 'Sin estadísticas', 'Sin soporte prioritario'],
     },
     {
@@ -129,7 +131,7 @@ export default function Planes() {
       cta: 'Empezar con Plata',
       tipo: anual ? 'plata_anual' : 'plata_mensual',
       limite: '15 propiedades',
-      features: ['15 propiedades publicadas', 'Fotos ilimitadas por propiedad', 'Estadísticas de visitas', 'Destacados disponibles', 'Soporte por email', 'Perfil de agente verificado'],
+      features: ['15 propiedades publicadas', 'Más fotos por propiedad', 'Chat con clientes', 'Estadísticas de visitas', 'Destacados disponibles', 'Soporte por email', 'Perfil de agente verificado'],
       noIncludes: [],
     },
     {
@@ -144,13 +146,13 @@ export default function Planes() {
       cta: 'Empezar con Oro',
       tipo: anual ? 'oro_anual' : 'oro_mensual',
       limite: '50 propiedades',
-      features: ['50 propiedades publicadas', 'Todo lo del plan Plata', 'Destacados incluidos (2/mes)', 'Soporte prioritario', 'Perfil premium con logo', 'Acceso anticipado a funciones'],
+      features: ['50 propiedades publicadas', 'Más fotos por propiedad', 'Chat con clientes', 'Estadísticas de visitas', 'Destacados disponibles', 'Soporte prioritario', 'Perfil de agente verificado', 'Acceso anticipado a funciones'],
       noIncludes: [],
     },
   ]
 
   return (
-    <div style={{ minHeight: '100vh', background: '#f8fafb', fontFamily: 'Arial, Helvetica, sans-serif' }}>
+    <div style={{ minHeight: '100vh', background: '#f8fafb', fontFamily: 'Arial, Helvetica, sans-serif', opacity: iniciado ? 1 : 0, transition: 'opacity 0.15s' }}>
       <style>{`
         @media (max-width: 768px) {
           .planes-features { grid-template-columns: 1fr !important; }
@@ -186,6 +188,113 @@ export default function Planes() {
           </div>
         </div>
       </div>}
+
+      {/* PLANES */}
+      <div style={{ maxWidth: 920, margin: '0 auto', padding: '56px 24px 80px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+          <h2 style={{ fontSize: 32, fontWeight: 900, color: '#111', margin: '0 0 12px', letterSpacing: '-0.5px' }}>
+            {Tp.elegirPlan}
+          </h2>
+          <p style={{ fontSize: 16, color: '#666', margin: '0 0 28px' }}>{Tp.sinPermanencia}</p>
+
+          {/* Toggle */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, background: '#fff', border: '1.5px solid #e8e8e8', borderRadius: 100, padding: '6px 20px' }}>
+            <span style={{ fontSize: 14, fontWeight: 600, color: anual ? '#aaa' : '#111' }}>{Tp.mensual}</span>
+            <button onClick={() => setAnual(v => !v)} style={{ width: 44, height: 24, borderRadius: 100, border: 'none', cursor: 'pointer', background: anual ? BRAND : '#ccc', position: 'relative', transition: 'background 0.2s', padding: 0 }}>
+              <div style={{ width: 18, height: 18, borderRadius: '50%', background: '#fff', position: 'absolute', top: 3, left: anual ? 23 : 3, transition: 'left 0.2s', boxShadow: '0 1px 4px rgba(0,0,0,0.2)' }} />
+            </button>
+            <span style={{ fontSize: 14, fontWeight: 600, color: anual ? '#111' : '#aaa' }}>
+              {Tp.anual}
+              <span style={{ marginLeft: 6, background: '#e6f7f1', color: '#00a870', fontSize: 11, fontWeight: 700, padding: '2px 7px', borderRadius: 100 }}>−12%</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Banner fundador / profesional */}
+        {['fundador', 'profesional', 'platino'].includes(planActual || '') && (
+          <div style={{ background: `linear-gradient(135deg, ${BRAND_DARK}, ${BRAND})`, borderRadius: 12, padding: '18px 24px', marginBottom: 28, display: 'flex', alignItems: 'center', gap: 16 }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>
+                {planActual === 'fundador' ? 'Plan Fundador · Acceso ilimitado' : planActual === 'platino' ? 'Plan Platino · Acceso ilimitado' : 'Plan Profesional · Acceso ilimitado'}
+              </div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', marginTop: 2 }}>Ya tienes acceso completo a todas las funciones de la plataforma.</div>
+            </div>
+          </div>
+        )}
+
+        {/* Cards */}
+        <div className="planes-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
+          {planesData.map(plan => {
+            const esPlanEspecial = ['fundador', 'profesional', 'platino'].includes(planActual || '')
+            const esPlanActual = !esPlanEspecial && (planActual === plan.id || (plan.id === 'gratis' && (!planActual || planActual === 'gratis')))
+            const esPopular = !!plan.badge
+            const precio = anual ? plan.precioAnual : plan.precioMes
+            return (
+              <div key={plan.id} style={{ background: plan.color, borderRadius: 16, padding: 28, border: esPopular ? `2px solid ${BRAND}` : '1.5px solid #e8e8e8', position: 'relative', display: 'flex', flexDirection: 'column', boxShadow: esPopular ? '0 8px 40px rgba(0,109,119,0.18)' : '0 2px 12px rgba(0,0,0,0.05)' }}>
+                {plan.badge && (
+                  <div style={{ position: 'absolute', top: -13, left: '50%', transform: 'translateX(-50%)', background: BRAND, color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 14px', borderRadius: 100, whiteSpace: 'nowrap' }}>{plan.badge}</div>
+                )}
+                <div style={{ marginBottom: 20 }}>
+                  <div style={{ fontSize: 20, fontWeight: 800, color: plan.colorTexto, marginBottom: 4 }}>{plan.nombre}</div>
+                  <div style={{ fontSize: 13, color: esPopular ? 'rgba(255,255,255,0.75)' : '#888' }}>{plan.desc}</div>
+                </div>
+                <div style={{ marginBottom: 24 }}>
+                  {precio === 0
+                    ? <div style={{ fontSize: 36, fontWeight: 900, color: plan.colorTexto }}>Gratis</div>
+                    : <>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+                          <span style={{ fontSize: 13, fontWeight: 600, color: esPopular ? 'rgba(255,255,255,0.75)' : '#888' }}>US$</span>
+                          <span style={{ fontSize: 36, fontWeight: 900, color: plan.colorTexto, lineHeight: 1 }}>{precio.toFixed(2)}</span>
+                          <span style={{ fontSize: 13, color: esPopular ? 'rgba(255,255,255,0.75)' : '#888' }}>/mes</span>
+                        </div>
+                        {anual && <div style={{ fontSize: 12, color: esPopular ? 'rgba(255,255,255,0.65)' : '#aaa', marginTop: 4 }}>{Tp.facturadoAnual}</div>}
+                      </>
+                  }
+                  <div style={{ fontSize: 13, fontWeight: 600, color: esPopular ? 'rgba(255,255,255,0.75)' : '#888', marginTop: 8 }}>
+                    {plan.limite}
+                  </div>
+                </div>
+                {esPlanActual
+                  ? <div style={{ width: '100%', padding: '11px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: 'rgba(0,0,0,0.08)', color: plan.colorTexto, marginBottom: 20 }}>{Tp.planActual}</div>
+                  : plan.tipo
+                    ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: '12px 0', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, background: esPopular ? '#fff' : BRAND, color: esPopular ? BRAND : '#fff', marginBottom: 20 }}>
+                        {plan.cta}
+                      </button>
+                    : <a href={sesionActiva ? '/panel' : (plan.href || '/registro')} onClick={e => { e.preventDefault(); (window.top || window).location.href = sesionActiva ? '/panel' : (plan.href || '/registro') }} style={{ display: 'block', width: '100%', padding: '12px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: BRAND, color: '#fff', textDecoration: 'none', marginBottom: 20 }}>{plan.cta}</a>
+                }
+                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                  {plan.features.map(f => (
+                    <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: plan.colorTexto }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={esPopular ? '#fff' : BRAND} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}><polyline points="20 6 9 17 4 12"/></svg>
+                      {f}
+                    </div>
+                  ))}
+                  {(plan.noIncludes || []).map(f => (
+                    <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: '#bbb' }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                      {f}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Platino */}
+        <div style={{ marginTop: 40, textAlign: 'center', marginBottom: 16 }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: '#999', textTransform: 'uppercase', letterSpacing: 1.2, margin: '0 0 6px' }}>{Tp.necesitasMedida}</p>
+        </div>
+        <div className="planes-platino" style={{ background: `linear-gradient(135deg, ${BRAND_DARK}, ${BRAND})`, borderRadius: 16, padding: '28px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
+          <div>
+            <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Platino</div>
+            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)' }}>{Tp.platinoDesc}</div>
+          </div>
+          <a href="mailto:hola@habitade.com" style={{ background: '#fff', color: BRAND, padding: '12px 28px', borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: 'none', whiteSpace: 'nowrap' }}>{Tp.contactar}</a>
+        </div>
+
+      </div>
 
       {/* FEATURES */}
       <div style={{ background: '#f8fafb', padding: '80px 24px' }}>
@@ -272,113 +381,9 @@ export default function Planes() {
         </div>
       </div>
 
-      {/* PLANES */}
-      <div style={{ maxWidth: 920, margin: '0 auto', padding: '56px 24px 80px' }}>
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
-          <h2 style={{ fontSize: 32, fontWeight: 900, color: '#111', margin: '0 0 12px', letterSpacing: '-0.5px' }}>
-            {Tp.elegirPlan}
-          </h2>
-          <p style={{ fontSize: 16, color: '#666', margin: '0 0 28px' }}>{Tp.sinPermanencia}</p>
-
-          {/* Toggle */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, background: '#fff', border: '1.5px solid #e8e8e8', borderRadius: 100, padding: '6px 20px' }}>
-            <span style={{ fontSize: 14, fontWeight: 600, color: anual ? '#aaa' : '#111' }}>{Tp.mensual}</span>
-            <button onClick={() => setAnual(v => !v)} style={{ width: 44, height: 24, borderRadius: 100, border: 'none', cursor: 'pointer', background: anual ? BRAND : '#ccc', position: 'relative', transition: 'background 0.2s', padding: 0 }}>
-              <div style={{ width: 18, height: 18, borderRadius: '50%', background: '#fff', position: 'absolute', top: 3, left: anual ? 23 : 3, transition: 'left 0.2s', boxShadow: '0 1px 4px rgba(0,0,0,0.2)' }} />
-            </button>
-            <span style={{ fontSize: 14, fontWeight: 600, color: anual ? '#111' : '#aaa' }}>
-              {Tp.anual}
-              <span style={{ marginLeft: 6, background: '#e6f7f1', color: '#00a870', fontSize: 11, fontWeight: 700, padding: '2px 7px', borderRadius: 100 }}>−12%</span>
-            </span>
-          </div>
-        </div>
-
-        {/* Banner fundador / profesional */}
-        {['fundador', 'profesional', 'platino'].includes(planActual || '') && (
-          <div style={{ background: `linear-gradient(135deg, ${BRAND_DARK}, ${BRAND})`, borderRadius: 12, padding: '18px 24px', marginBottom: 28, display: 'flex', alignItems: 'center', gap: 16 }}>
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>
-                {planActual === 'fundador' ? 'Plan Fundador · Acceso ilimitado' : planActual === 'platino' ? 'Plan Platino · Acceso ilimitado' : 'Plan Profesional · Acceso ilimitado'}
-              </div>
-              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', marginTop: 2 }}>Ya tienes acceso completo a todas las funciones de la plataforma.</div>
-            </div>
-          </div>
-        )}
-
-        {/* Cards */}
-        <div className="planes-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
-          {planesData.map(plan => {
-            const esPlanEspecial = ['fundador', 'profesional', 'platino'].includes(planActual || '')
-            const esPlanActual = !esPlanEspecial && (planActual === plan.id || (plan.id === 'gratis' && (!planActual || planActual === 'gratis')))
-            const esPopular = !!plan.badge
-            const precio = anual ? plan.precioAnual : plan.precioMes
-            return (
-              <div key={plan.id} style={{ background: plan.color, borderRadius: 16, padding: 28, border: esPopular ? `2px solid ${BRAND}` : '1.5px solid #e8e8e8', position: 'relative', display: 'flex', flexDirection: 'column', boxShadow: esPopular ? '0 8px 40px rgba(0,109,119,0.18)' : '0 2px 12px rgba(0,0,0,0.05)' }}>
-                {plan.badge && (
-                  <div style={{ position: 'absolute', top: -13, left: '50%', transform: 'translateX(-50%)', background: BRAND, color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 14px', borderRadius: 100, whiteSpace: 'nowrap' }}>{plan.badge}</div>
-                )}
-                <div style={{ marginBottom: 20 }}>
-                  <div style={{ fontSize: 20, fontWeight: 800, color: plan.colorTexto, marginBottom: 4 }}>{plan.nombre}</div>
-                  <div style={{ fontSize: 13, color: esPopular ? 'rgba(255,255,255,0.75)' : '#888' }}>{plan.desc}</div>
-                </div>
-                <div style={{ marginBottom: 24 }}>
-                  {precio === 0
-                    ? <div style={{ fontSize: 36, fontWeight: 900, color: plan.colorTexto }}>Gratis</div>
-                    : <>
-                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
-                          <span style={{ fontSize: 13, fontWeight: 600, color: esPopular ? 'rgba(255,255,255,0.75)' : '#888' }}>US$</span>
-                          <span style={{ fontSize: 36, fontWeight: 900, color: plan.colorTexto, lineHeight: 1 }}>{precio.toFixed(2)}</span>
-                          <span style={{ fontSize: 13, color: esPopular ? 'rgba(255,255,255,0.75)' : '#888' }}>/mes</span>
-                        </div>
-                        {anual && <div style={{ fontSize: 12, color: esPopular ? 'rgba(255,255,255,0.65)' : '#aaa', marginTop: 4 }}>{Tp.facturadoAnual}</div>}
-                      </>
-                  }
-                  <div style={{ fontSize: 12, fontWeight: 700, color: esPopular ? 'rgba(255,255,255,0.9)' : BRAND, marginTop: 8, background: esPopular ? 'rgba(255,255,255,0.15)' : '#e8f7f8', display: 'inline-block', padding: '3px 10px', borderRadius: 6 }}>
-                    {plan.limite}
-                  </div>
-                </div>
-                {esPlanActual
-                  ? <div style={{ width: '100%', padding: '11px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: 'rgba(0,0,0,0.08)', color: plan.colorTexto, marginBottom: 20 }}>{Tp.planActual}</div>
-                  : plan.tipo
-                    ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: '12px 0', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, background: esPopular ? '#fff' : BRAND, color: esPopular ? BRAND : '#fff', marginBottom: 20 }}>
-                        {plan.cta}
-                      </button>
-                    : <a href={sesionActiva ? '/panel' : (plan.href || '/registro')} onClick={e => { e.preventDefault(); (window.top || window).location.href = sesionActiva ? '/panel' : (plan.href || '/registro') }} style={{ display: 'block', width: '100%', padding: '12px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: BRAND, color: '#fff', textDecoration: 'none', marginBottom: 20 }}>{plan.cta}</a>
-                }
-                <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  {plan.features.map(f => (
-                    <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: plan.colorTexto }}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={esPopular ? '#fff' : BRAND} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}><polyline points="20 6 9 17 4 12"/></svg>
-                      {f}
-                    </div>
-                  ))}
-                  {(plan.noIncludes || []).map(f => (
-                    <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 13, color: '#bbb' }}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-                      {f}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )
-          })}
-        </div>
-
-        {/* Platino */}
-        <div style={{ marginTop: 40, textAlign: 'center', marginBottom: 16 }}>
-          <p style={{ fontSize: 13, fontWeight: 600, color: '#999', textTransform: 'uppercase', letterSpacing: 1.2, margin: '0 0 6px' }}>{Tp.necesitasMedida}</p>
-        </div>
-        <div className="planes-platino" style={{ background: `linear-gradient(135deg, ${BRAND_DARK}, ${BRAND})`, borderRadius: 16, padding: '28px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
-          <div>
-            <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Platino</div>
-            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)' }}>{Tp.platinoDesc}</div>
-          </div>
-          <a href="mailto:hola@habitade.com" style={{ background: '#fff', color: BRAND, padding: '12px 28px', borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: 'none', whiteSpace: 'nowrap' }}>{Tp.contactar}</a>
-        </div>
-
-        {/* FAQ */}
-        <div style={{ marginTop: 80, textAlign: 'center' }}>
+      {/* FAQ */}
+      <div style={{ maxWidth: 920, margin: '0 auto', padding: '80px 24px' }}>
+        <div style={{ textAlign: 'center' }}>
           <h3 style={{ fontSize: 24, fontWeight: 800, color: '#111', marginBottom: 32 }}>{Tp.preguntasFrecuentes}</h3>
           <div className="planes-faq" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 20, textAlign: 'left' }}>
             {Tp.faq.map((faq: { p: string; r: string }) => (

@@ -437,6 +437,7 @@ export default function Home() {
     const initAuth = async (user: any) => {
       if (!user) { setAuthReady(true); setSesionActiva(false); return }
       setSesionActiva(true)
+      setAuthReady(true)
       const meta = user.user_metadata || {}
       const avatarMeta = meta.avatar_url || meta.picture || ''
       const { data: usr } = await supabase.from('usuarios').select('plan,tipo,foto_url,nombre').eq('id', user.id).single()
@@ -449,7 +450,6 @@ export default function Home() {
         const leidos: Record<string, boolean> = JSON.parse(localStorage.getItem(`habitade_leidos_${user.id}`) || '{}')
         setNoLeidosNav(msgs.filter((m: any) => !leidos[m.id]).length)
       }
-      // Fetch guardados notifications via service_role API
       try {
         const { data: { session } } = await supabase.auth.getSession()
         if (session?.access_token) {
@@ -462,7 +462,6 @@ export default function Home() {
           }
         }
       } catch {}
-      setAuthReady(true)
     }
     supabase.auth.getUser().then(({ data }) => initAuth(data.user))
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -659,7 +658,6 @@ export default function Home() {
           {[
             { label: tr.nav.comprar, href: '/buscar?operacion=venta' },
             { label: tr.nav.alquilar, href: '/buscar?operacion=alquiler' },
-            { label: 'Planes', href: '/planes' },
           ].map((item) => (
             <a key={item.label} href={item.href} style={{ padding: '0 14px', height: 60, display: 'flex', alignItems: 'center', fontSize: 14, color: '#555', textDecoration: 'none', borderBottom: '2.5px solid transparent' }}
               onMouseEnter={e => { e.currentTarget.style.color = '#006D77'; e.currentTarget.style.borderBottomColor = '#006D77' }}
@@ -691,11 +689,12 @@ export default function Home() {
               </div>
             )}
           </div>
-          {sesionActiva && <NavUserMenu dark={false} />}
-          {authReady && !sesionActiva && <>
-            <a href="/login" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.entrar}</a>
-            <a href="/registro" style={{ fontSize: 13, color: '#fff', background: '#006D77', padding: '8px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.publicar}</a>
-          </>}
+          <NavUserMenu dark={false} onNoSesion={authReady ? (
+            <div style={{ display: 'flex', gap: 8 }}>
+              <a href="/login" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.entrar}</a>
+              <a href="/registro" style={{ fontSize: 13, color: '#fff', background: '#006D77', padding: '8px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.publicar}</a>
+            </div>
+          ) : null} />
         </div>
 
         {/* Móvil: hamburger con avatar */}

@@ -1086,13 +1086,13 @@ export default function Panel() {
         </button>
       </nav>
 
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', height: 'calc(100vh - 54px)', overflow: 'hidden' }}>
 
         {/* SIDEBAR OVERLAY (móvil) */}
         {sidebarOpen && <div className="panel-sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
 
         {/* SIDEBAR */}
-        <div className={`panel-sidebar${sidebarOpen ? ' open' : ''}`} style={{ width: 220, background: '#004E57', minHeight: 'calc(100vh - 54px)', padding: '20px 0', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
+        <div className={`panel-sidebar${sidebarOpen ? ' open' : ''}`} style={{ width: 220, background: '#004E57', height: '100%', overflowY: 'auto', padding: '20px 0', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
           {menuItems.filter(item => (item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)) && (!('proOnly' in item) || tipoUsuario === 'profesional')).map(item => (
             <button key={item.id} onClick={() => { if (item.id === 'publicar' && !(perfilNombre && perfilTelefono)) { setSeccion('publicar'); setSidebarOpen(false); return } if (item.id === 'publicar' && !anuncioEditando && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis) { setSeccion('planes'); setSidebarOpen(false); return } setSeccion(item.id); setSidebarOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.6)', background: seccion === item.id ? 'rgba(255,255,255,0.12)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? '3px solid #83D4DB' : '3px solid transparent', boxSizing: 'border-box', position: 'relative' }}>
               {item.icon}
@@ -1108,7 +1108,7 @@ export default function Panel() {
         </div>
 
         {/* CONTENIDO */}
-        <div className="panel-main" style={{ flex: 1, padding: '28px 32px', overflowY: 'auto' }}>
+        <div className="panel-main" style={{ flex: 1, padding: '28px 32px', overflowY: 'auto', height: '100%' }}>
 
           {cargando && (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
@@ -1395,7 +1395,7 @@ export default function Panel() {
               )}
 
               {/* Si es profesional sin plan pagado, mostrar pantalla de pago o verificando */}
-              {(perfilNombre && perfilTelefono) && (usuario?.tipo === 'profesional' && usuario?.plan !== 'profesional' ? (
+              {(perfilNombre && perfilTelefono) && (usuario?.tipo === 'profesional' && !['profesional', 'fundador', 'platino'].includes(usuario?.plan || '') ? (
                 <div style={{ background: '#fff', borderRadius: 8, padding: '48px 32px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)', textAlign: 'center' }}>
                   {verificandoPago ? (
                     <>
@@ -1772,32 +1772,36 @@ export default function Panel() {
             })
             return (
             <div>
-              {/* Header */}
-              <div style={{ background: 'linear-gradient(135deg, #006D77 0%, #17A6B4 100%)', borderRadius: 12, padding: '20px 24px', marginBottom: 20, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                  <div>
-                    <div style={{ fontSize: 18, fontWeight: 700 }}>{Tpanel.mensajes.titulo}</div>
-                    <div style={{ fontSize: 12, opacity: 0.8, marginTop: 2 }}>{conversaciones.length} {conversaciones.length !== 1 ? Tpanel.mensajes.conversacionesPlural : Tpanel.mensajes.conversaciones}</div>
-                  </div>
-                </div>
-                {noLeidos > 0 && <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 12, fontWeight: 700, padding: '5px 14px', borderRadius: 20, border: '1px solid rgba(255,255,255,0.3)' }}>{noLeidos} sin leer</span>}
-              </div>
-              <div className="chat-grid" style={{ display: 'grid', gridTemplateColumns: '300px 1fr', height: 'calc(100vh - 220px)', minHeight: 520, borderRadius: 12, overflow: 'hidden', boxShadow: '0 2px 16px rgba(0,0,0,0.08)', border: '1px solid #e8e8e8' }}>
+              <div className="chat-grid" style={{ display: 'grid', gridTemplateColumns: '320px 1fr', height: 'calc(100vh - 140px)', minHeight: 520, borderRadius: 14, overflow: 'hidden', boxShadow: '0 2px 20px rgba(0,0,0,0.09)', border: '1px solid #e4e8ec' }}>
                 {/* Lista de conversaciones */}
-                <div className={`chat-list${convActiva ? ' chat-list-hidden' : ''}`} style={{ background: '#fff', borderRight: '1px solid #f0f0f0', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ padding: '16px 16px 10px', borderBottom: '1px solid #f0f0f0', flexShrink: 0 }}>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#111', letterSpacing: -0.2 }}>{Tpanel.mensajes.titulo}</div>
-                    <div style={{ fontSize: 11, color: '#aaa', marginTop: 2 }}>{conversaciones.length} {conversaciones.length !== 1 ? Tpanel.mensajes.conversacionesPlural : Tpanel.mensajes.conversaciones}{noLeidos > 0 ? ` · ${noLeidos} sin leer` : ''}</div>
+                <div className={`chat-list${convActiva ? ' chat-list-hidden' : ''}`} style={{ background: '#f4f7f8', borderRight: '1px solid #e4e8ec', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+                  <div style={{ flexShrink: 0, background: 'linear-gradient(135deg, #004E57 0%, #006D77 100%)', padding: '18px 16px 14px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+                      <div>
+                        <div style={{ fontSize: 16, fontWeight: 800, color: '#fff', letterSpacing: -0.3 }}>{Tpanel.mensajes.titulo}</div>
+                        <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', marginTop: 1 }}>{conversaciones.length} {conversaciones.length === 1 ? 'conversación' : 'conversaciones'}</div>
+                      </div>
+                      {noLeidos > 0 && <span style={{ background: '#fff', color: '#006D77', fontSize: 11, fontWeight: 800, padding: '3px 10px', borderRadius: 20, boxShadow: '0 2px 6px rgba(0,0,0,0.15)' }}>{noLeidos} nuevos</span>}
+                    </div>
+                    <div style={{ background: 'rgba(255,255,255,0.12)', borderRadius: 8, padding: '8px 12px', display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                      <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>Buscar conversación...</span>
+                    </div>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <div style={{ flex: 1, background: 'rgba(255,255,255,0.18)', borderRadius: 7, padding: '5px 0', textAlign: 'center', fontSize: 11, fontWeight: 700, color: '#fff', cursor: 'pointer' }}>Todos</div>
+                      <div style={{ flex: 1, background: 'transparent', borderRadius: 7, padding: '5px 0', textAlign: 'center', fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.55)', cursor: 'pointer', border: '1px solid rgba(255,255,255,0.15)' }}>No leídos {noLeidos > 0 && `(${noLeidos})`}</div>
+                    </div>
                   </div>
                   {!cargando && conversaciones.length === 0 && (
-                    <div style={{ padding: '48px 20px', textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                      <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#f4f5f6', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
-                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ccc" strokeWidth="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    <div style={{ padding: '48px 20px', textAlign: 'center', flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 10 }}>
+                      <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'linear-gradient(135deg, #e8f5f6, #d0edf0)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', boxShadow: '0 4px 14px rgba(0,109,119,0.1)' }}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5" strokeOpacity="0.7"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                       </div>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: '#bbb' }}>{Tpanel.mensajes.sinMensajes}</div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: '#888' }}>{Tpanel.mensajes.sinMensajes}</div>
+                      <div style={{ fontSize: 11, color: '#bbb', maxWidth: 160, lineHeight: 1.5 }}>Cuando alguien te contacte, verás sus mensajes aquí</div>
                     </div>
                   )}
+                  <div style={{ height: 8, flexShrink: 0 }} />
                   {conversaciones.map((conv) => {
                     const m = conv.msg
                     const esEnviado = m._tipo === 'enviado'
@@ -1823,23 +1827,31 @@ export default function Panel() {
                           const { data: { user } } = await supabase.auth.getUser()
                           if (user && conv.propiedadId && conv.otherUserId) { cargarHilo(conv.propiedadId, user.id, conv.otherUserId) } else { setHilo([m]) }
                         }}
-                        style={{ padding: '12px 14px', cursor: 'pointer', background: seleccionada ? '#f0fafb' : 'transparent', borderLeft: `3px solid ${seleccionada ? '#006D77' : 'transparent'}`, transition: 'background 0.1s' }}
-                        onMouseEnter={e => { if (!seleccionada) e.currentTarget.style.background = '#fafafa' }}
-                        onMouseLeave={e => { if (!seleccionada) e.currentTarget.style.background = 'transparent' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                          <div style={{ width: 40, height: 40, borderRadius: '50%', background: colores[colorIdx], display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: '#fff', flexShrink: 0, overflow: 'hidden', letterSpacing: 0.5 }}>
-                            {m._foto ? <img src={m._foto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : iniciales}
+                        style={{ padding: '10px 12px', cursor: 'pointer', margin: '0 10px 6px', borderRadius: 10, background: seleccionada ? '#fff' : '#fff', boxShadow: seleccionada ? '0 4px 16px rgba(0,109,119,0.18)' : '0 1px 5px rgba(0,0,0,0.07)', border: `1.5px solid ${seleccionada ? '#006D77' : 'transparent'}`, transition: 'all 0.15s' }}
+                        onMouseEnter={e => { if (!seleccionada) { e.currentTarget.style.boxShadow = '0 4px 14px rgba(0,0,0,0.11)'; e.currentTarget.style.transform = 'translateY(-1px)' } }}
+                        onMouseLeave={e => { if (!seleccionada) { e.currentTarget.style.boxShadow = '0 1px 5px rgba(0,0,0,0.07)'; e.currentTarget.style.transform = 'none' } }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                          <div style={{ position: 'relative', flexShrink: 0 }}>
+                            <div style={{ width: 44, height: 44, borderRadius: '50%', background: `linear-gradient(135deg, ${colores[colorIdx]}, ${colores[(colorIdx+2)%colores.length]})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#fff', overflow: 'hidden', boxShadow: `0 3px 10px ${colores[colorIdx]}55` }}>
+                              {m._foto ? <img src={m._foto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : iniciales}
+                            </div>
+                            {conv.tieneNoLeido && <div style={{ position: 'absolute', bottom: 0, right: 0, width: 14, height: 14, borderRadius: '50%', background: '#006D77', border: '2px solid #f4f7f8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><div style={{ width: 5, height: 5, borderRadius: '50%', background: '#fff' }} /></div>}
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 2 }}>
-                              <div style={{ fontSize: 13, fontWeight: conv.tieneNoLeido ? 700 : 500, color: '#111', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 150 }}>{nombreMostrar}</div>
-                              <div style={{ fontSize: 10, color: conv.tieneNoLeido ? '#006D77' : '#bbb', fontWeight: conv.tieneNoLeido ? 600 : 400, flexShrink: 0, marginLeft: 6 }}>{formatFecha(m.created_at, Tpanel.mensajes.hace, Tpanel.mensajes.hoy)}</div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
+                              <div style={{ fontSize: 14, fontWeight: conv.tieneNoLeido ? 700 : 600, color: '#0a0a0a', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 130 }}>{nombreMostrar}</div>
+                              <div style={{ fontSize: 10, color: conv.tieneNoLeido ? '#006D77' : '#c0c0c0', fontWeight: conv.tieneNoLeido ? 700 : 400, flexShrink: 0 }}>{formatFecha(m.created_at, Tpanel.mensajes.hace, Tpanel.mensajes.hoy)}</div>
                             </div>
-                            <div style={{ fontSize: 11, color: '#006D77', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginBottom: 2 }}>{m.propiedades?.titulo}</div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                              {esEnviado && <svg width="11" height="8" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>}
-                              <div style={{ fontSize: 12, color: conv.tieneNoLeido ? '#333' : '#999', fontWeight: conv.tieneNoLeido ? 500 : 400, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.mensaje}</div>
-                              {conv.tieneNoLeido && <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#006D77', flexShrink: 0, marginLeft: 'auto' }} />}
+                            <div style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#e8f7f8', borderRadius: 5, padding: '2px 7px', marginBottom: 5, maxWidth: '100%' }}>
+                              <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                              <span style={{ fontSize: 10, color: '#006D77', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{m.propiedades?.titulo}</span>
+                            </div>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 4 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: 4, minWidth: 0 }}>
+                                {esEnviado && <svg width="11" height="8" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12"/></svg>}
+                                <div style={{ fontSize: 12, color: conv.tieneNoLeido ? '#222' : '#aaa', fontWeight: conv.tieneNoLeido ? 600 : 400, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontStyle: conv.tieneNoLeido ? 'normal' : 'italic' }}>{m.mensaje}</div>
+                              </div>
+                              {conv.tieneNoLeido && <span style={{ flexShrink: 0, background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, minWidth: 18, height: 18, borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 5px' }}>1</span>}
                             </div>
                           </div>
                         </div>
@@ -1850,13 +1862,23 @@ export default function Panel() {
 
                 {/* Detalle — chat */}
                 {!convActiva && (
-                  <div style={{ background: '#f8f9fa', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
-                    <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>
-                      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5" opacity="0.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                    </div>
-                    <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontSize: 14, fontWeight: 600, color: '#bbb', marginBottom: 4 }}>{Tpanel.mensajes.seleccionar}</div>
-                      <div style={{ fontSize: 12, color: '#ccc' }}>{Tpanel.mensajes.seleccionarDesc}</div>
+                  <div style={{ background: 'linear-gradient(160deg, #f4f8f9 0%, #eaf4f5 100%)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 20, position: 'relative', overflow: 'hidden' }}>
+                    {/* Círculos decorativos */}
+                    <div style={{ position: 'absolute', top: -60, right: -60, width: 200, height: 200, borderRadius: '50%', background: 'rgba(0,109,119,0.05)' }} />
+                    <div style={{ position: 'absolute', bottom: -40, left: -40, width: 150, height: 150, borderRadius: '50%', background: 'rgba(0,109,119,0.04)' }} />
+                    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+                      <div style={{ position: 'relative' }}>
+                        <div style={{ width: 90, height: 90, borderRadius: '50%', background: 'linear-gradient(135deg, #006D77 0%, #008a97 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 32px rgba(0,109,119,0.25)' }}>
+                          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="1.4"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                        </div>
+                        <div style={{ position: 'absolute', bottom: 2, right: 2, width: 24, height: 24, borderRadius: '50%', background: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                          <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'linear-gradient(135deg, #10b981, #059669)' }} />
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'center', maxWidth: 260 }}>
+                        <div style={{ fontSize: 18, fontWeight: 800, color: '#1a1a1a', marginBottom: 8, letterSpacing: -0.3 }}>{Tpanel.mensajes.seleccionar}</div>
+                        <div style={{ fontSize: 13, color: '#888', lineHeight: 1.6 }}>{Tpanel.mensajes.seleccionarDesc}</div>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -1873,54 +1895,55 @@ export default function Panel() {
                   return (
                     <div className="chat-detail-panel" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#fff' }}>
                       {/* Header del chat */}
-                      <div style={{ padding: '12px 18px', borderBottom: '1px solid #f0f0f0', flexShrink: 0, background: '#fff' }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <div style={{ padding: '14px 20px', borderBottom: '1px solid #f0f0f0', flexShrink: 0, background: '#fff', boxShadow: '0 1px 6px rgba(0,0,0,0.04)' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                           <button className="chat-back-btn" onClick={() => setConvActiva(null)} style={{ display: 'none', all: 'unset', cursor: 'pointer', color: '#006D77', padding: '4px 6px 4px 0', flexShrink: 0 }}>
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="15 18 9 12 15 6"/></svg>
                           </button>
-                          <div style={{ width: 40, height: 40, borderRadius: '50%', background: colores[colorIdx], display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 700, color: '#fff', flexShrink: 0, overflow: 'hidden' }}>
+                          <div style={{ width: 46, height: 46, borderRadius: '50%', background: `linear-gradient(135deg, ${colores[colorIdx]}, ${colores[(colorIdx+2)%colores.length]})`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15, fontWeight: 700, color: '#fff', flexShrink: 0, overflow: 'hidden', boxShadow: '0 2px 8px rgba(0,0,0,0.15)' }}>
                             {m._foto ? <img src={m._foto} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : iniciales}
                           </div>
                           <div style={{ flex: 1, minWidth: 0 }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 3 }}>
-                              <span style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>{contactoNombre}</span>
-                              <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 8, background: esPro ? '#006D77' : '#f0f0f0', color: esPro ? '#fff' : '#888' }}>{esPro ? 'PRO' : Tpanel.mensajes.particular}</span>
-                              {m._numero_aei && <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 6px', borderRadius: 8, background: m._aei_aprobado ? '#065f46' : '#f59e0b', color: '#fff' }}>{m._aei_aprobado ? 'AEI ✓' : 'AEI'}</span>}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                              <span style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>{contactoNombre}</span>
+                              <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, background: esPro ? '#006D77' : '#f0f0f0', color: esPro ? '#fff' : '#888', letterSpacing: 0.3 }}>{esPro ? 'PRO' : Tpanel.mensajes.particular}</span>
+                              {m._numero_aei && <span style={{ fontSize: 9, fontWeight: 700, padding: '2px 7px', borderRadius: 10, background: m._aei_aprobado ? '#065f46' : '#f59e0b', color: '#fff' }}>{m._aei_aprobado ? 'AEI ✓' : 'AEI'}</span>}
                             </div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                              <a href={`/propiedad/${m.propiedad_id}`} style={{ fontSize: 11, color: '#006D77', fontWeight: 500, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', textDecoration: 'none' }}>{m.propiedades?.titulo}</a>
-                            </div>
+                            <a href={`/propiedad/${m.propiedad_id}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 11, color: '#006D77', fontWeight: 600, textDecoration: 'none', background: '#e8f7f8', padding: '3px 8px', borderRadius: 5 }}>
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+                              {m.propiedades?.titulo}
+                            </a>
                           </div>
                           <div className="chat-header-actions" style={{ display: 'flex', gap: 6, flexShrink: 0, alignItems: 'center' }}>
-                            {contactoTel && <a href={`tel:${contactoTel}`} style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#006D77', textDecoration: 'none', fontWeight: 600, background: '#e8f5f6', padding: '5px 10px', borderRadius: 6, border: '1px solid #c0e4e7' }}>
-                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                            {contactoTel && <a href={`tel:${contactoTel}`} style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 12, color: '#006D77', textDecoration: 'none', fontWeight: 700, background: '#e8f7f8', padding: '7px 12px', borderRadius: 8, border: '1.5px solid #c0e4e7' }}>
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l1.62-1.62a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                               {contactoTel}
                             </a>}
                             {contactoId && <button onClick={() => toggleBloqueo(contactoId)}
-                              style={{ all: 'unset', border: `1px solid ${bloqueadosSet.has(contactoId) ? '#e0e0e0' : '#fca5a5'}`, color: bloqueadosSet.has(contactoId) ? '#888' : '#dc2626', padding: '5px 10px', borderRadius: 6, fontSize: 11, cursor: 'pointer', fontWeight: 500 }}>
+                              style={{ all: 'unset', border: `1.5px solid ${bloqueadosSet.has(contactoId) ? '#e0e0e0' : '#fca5a5'}`, color: bloqueadosSet.has(contactoId) ? '#999' : '#dc2626', padding: '7px 12px', borderRadius: 8, fontSize: 12, cursor: 'pointer', fontWeight: 600 }}>
                               {bloqueadosSet.has(contactoId) ? Tpanel.mensajes.desbloquear : Tpanel.mensajes.bloquear}
                             </button>}
-                            <button onClick={() => eliminarMensaje(m.id)} style={{ all: 'unset', border: '1px solid #f0f0f0', color: '#bbb', padding: '5px 10px', borderRadius: 6, fontSize: 11, cursor: 'pointer' }}>{Tpanel.mensajes.eliminar}</button>
+                            <button onClick={() => eliminarMensaje(m.id)} style={{ all: 'unset', border: '1.5px solid #e8e8e8', color: '#ccc', padding: '7px 12px', borderRadius: 8, fontSize: 12, cursor: 'pointer' }}>{Tpanel.mensajes.eliminar}</button>
                           </div>
                         </div>
                       </div>
                       {/* Área de mensajes */}
-                      <div style={{ flex: 1, padding: '20px 20px 12px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 8, background: '#f8f9fa' }}>
+                      <div style={{ flex: 1, padding: '24px 24px 16px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 4, background: 'linear-gradient(180deg, #f4f7f8 0%, #eef3f4 100%)' }}>
                         {hiloLoading ? (
                           <div style={{ textAlign: 'center', padding: '40px 0' }}>
-                            <div style={{ width: 24, height: 24, border: '2.5px solid #e0e0e0', borderTopColor: '#006D77', borderRadius: '50%', margin: '0 auto', animation: 'spin 0.8s linear infinite' }} />
+                            <div style={{ width: 28, height: 28, border: '3px solid #e0e0e0', borderTopColor: '#006D77', borderRadius: '50%', margin: '0 auto', animation: 'spin 0.8s linear infinite' }} />
                           </div>
                         ) : hilo.map((msg: any, idx: number) => {
                           const esMio = msg.remitente_id === usuario?.id
                           const hora = new Date(msg.created_at).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })
                           const anteriorEsMismo = idx > 0 && (hilo[idx-1].remitente_id === usuario?.id) === esMio
                           return (
-                            <div key={msg.id} style={{ display: 'flex', justifyContent: esMio ? 'flex-end' : 'flex-start', marginTop: anteriorEsMismo ? 2 : 10 }}>
-                              <div style={{ maxWidth: '72%' }}>
-                                <div style={{ background: esMio ? '#006D77' : '#fff', color: esMio ? '#fff' : '#222', borderRadius: esMio ? '16px 16px 4px 16px' : '16px 16px 16px 4px', padding: '10px 14px', fontSize: 13, lineHeight: 1.5, boxShadow: esMio ? 'none' : '0 1px 4px rgba(0,0,0,0.08)', wordBreak: 'break-word' }}>
+                            <div key={msg.id} style={{ display: 'flex', justifyContent: esMio ? 'flex-end' : 'flex-start', marginTop: anteriorEsMismo ? 3 : 14 }}>
+                              <div style={{ maxWidth: '68%' }}>
+                                <div style={{ background: esMio ? 'linear-gradient(135deg, #006D77, #008a97)' : '#fff', color: esMio ? '#fff' : '#1a1a1a', borderRadius: esMio ? '18px 18px 4px 18px' : '18px 18px 18px 4px', padding: '11px 16px', fontSize: 13, lineHeight: 1.6, boxShadow: esMio ? '0 2px 8px rgba(0,109,119,0.3)' : '0 2px 8px rgba(0,0,0,0.07)', wordBreak: 'break-word' }}>
                                   {msg.mensaje}
                                 </div>
-                                <div style={{ fontSize: 10, color: '#bbb', marginTop: 3, textAlign: esMio ? 'right' : 'left', paddingInline: 4 }}>{hora}</div>
+                                <div style={{ fontSize: 10, color: '#b0b8bb', marginTop: 4, textAlign: esMio ? 'right' : 'left', paddingInline: 4 }}>{hora}</div>
                               </div>
                             </div>
                           )
@@ -1928,16 +1951,16 @@ export default function Panel() {
                         <div ref={hiloBottomRef} />
                       </div>
                       {/* Input */}
-                      <div style={{ padding: '12px 16px', background: '#fff', borderTop: '1px solid #f0f0f0', flexShrink: 0 }}>
-                        <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end', background: '#f4f5f6', borderRadius: 24, padding: '8px 8px 8px 16px', border: '1.5px solid transparent', transition: 'border-color 0.15s' }}
-                          onFocusCapture={e => e.currentTarget.style.borderColor = '#006D77'}
-                          onBlurCapture={e => e.currentTarget.style.borderColor = 'transparent'}>
+                      <div style={{ padding: '14px 18px', background: '#fff', borderTop: '1px solid #eef0f2', flexShrink: 0 }}>
+                        <div style={{ display: 'flex', gap: 10, alignItems: 'flex-end', background: '#f4f6f7', borderRadius: 28, padding: '10px 10px 10px 18px', border: '1.5px solid transparent', transition: 'border-color 0.2s, box-shadow 0.2s' }}
+                          onFocusCapture={e => { e.currentTarget.style.borderColor = '#006D77'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(0,109,119,0.08)' }}
+                          onBlurCapture={e => { e.currentTarget.style.borderColor = 'transparent'; e.currentTarget.style.boxShadow = 'none' }}>
                           <textarea value={respuesta} onChange={e => setRespuesta(e.target.value)}
                             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviarRespuesta(m, respuesta) } }}
                             placeholder={Tpanel.mensajes.escribir ?? 'Escribe un mensaje...'} rows={1}
-                            style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', resize: 'none', fontFamily: 'sans-serif', fontSize: 13, color: '#111', lineHeight: 1.5, maxHeight: 100, overflowY: 'auto', paddingTop: 2 }} />
+                            style={{ flex: 1, background: 'transparent', border: 'none', outline: 'none', resize: 'none', fontFamily: 'inherit', fontSize: 13, color: '#111', lineHeight: 1.5, maxHeight: 100, overflowY: 'auto' }} />
                           <button type="button" onClick={() => enviarRespuesta(m, respuesta)} disabled={!respuesta.trim()}
-                            style={{ width: 36, height: 36, borderRadius: '50%', background: respuesta.trim() ? '#006D77' : '#e0e0e0', border: 'none', cursor: respuesta.trim() ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background 0.15s' }}>
+                            style={{ width: 38, height: 38, borderRadius: '50%', background: respuesta.trim() ? 'linear-gradient(135deg, #006D77, #008a97)' : '#e8eaeb', border: 'none', cursor: respuesta.trim() ? 'pointer' : 'default', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.2s', boxShadow: respuesta.trim() ? '0 2px 8px rgba(0,109,119,0.35)' : 'none' }}>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
                           </button>
                         </div>
@@ -2210,7 +2233,7 @@ export default function Panel() {
 
           {/* PLANES — iframe embebido */}
           {!cargando && seccion === 'planes' && (
-            <div style={{ margin: '-28px -32px', height: 'calc(100vh - 54px)' }}>
+            <div style={{ margin: '-28px -32px', height: '100%' }}>
               <iframe src="/planes" style={{ width: '100%', height: '100%', border: 'none', display: 'block' }} />
             </div>
           )}
@@ -2489,148 +2512,166 @@ export default function Panel() {
 
           {/* MI PERFIL */}
           {!cargando && seccion === 'perfil' && (
-            <div>
-              <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 24 }}>{Tpanel.perfil.titulo}</h1>
+            <div style={{ maxWidth: 860 }}>
+              {/* Header tarjeta */}
+              <div style={{ background: `linear-gradient(135deg, #004E57 0%, #006D77 100%)`, borderRadius: 16, padding: '28px 32px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 24 }}>
+                <div style={{ position: 'relative', flexShrink: 0 }}>
+                  <div style={{ width: 88, height: 88, borderRadius: '50%', background: 'rgba(255,255,255,0.15)', border: '3px solid rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, fontWeight: 700, color: '#fff', overflow: 'hidden' }}>
+                    {fotoPerfilUrl ? <img src={fotoPerfilUrl} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : (perfilNombre || usuario?.nombre || 'U').split(' ').map((n: string) => n[0]).join('').slice(0,2).toUpperCase()}
+                  </div>
+                  <label style={{ position: 'absolute', bottom: 0, right: 0, width: 26, height: 26, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', boxShadow: '0 2px 6px rgba(0,0,0,0.2)' }}>
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <input type="file" accept="image/*" style={{ display: 'none' }} onChange={e => {
+                      const file = e.target.files?.[0]
+                      if (file) {
+                        setFotoPerfilFile(file)
+                        const reader = new FileReader()
+                        reader.onload = ev => setFotoPerfilUrl(ev.target?.result as string)
+                        reader.readAsDataURL(file)
+                      }
+                    }} />
+                  </label>
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 6, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{perfilNombre || usuario?.nombre || 'Tu nombre'}</div>
+                  <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', marginBottom: 10 }}>{usuario?.email}</div>
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    {tipoUsuario === 'profesional' && <span style={{ background: 'rgba(255,255,255,0.2)', color: '#fff', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20 }}>{Tpanel.anuncios.roles.profesional}</span>}
+                    {perfilAei && usuario?.aei_aprobado === true && <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 11, fontWeight: 700, padding: '3px 10px', borderRadius: 20 }}>✓ AEI</span>}
+                    {perfilAei && usuario?.aei_aprobado !== true && <span style={{ background: '#f59e0b', color: '#fff', fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 20 }}>⏳ AEI pendiente</span>}
+                  </div>
+                </div>
+              </div>
+
               {!perfilTelefono && (
-                <div style={{ background: '#fff3cd', border: '1px solid #ffc107', borderRadius: 8, padding: '14px 18px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#856404" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                  <span style={{ fontSize: 13, color: '#856404', fontWeight: 500 }}>{Tpanel.anuncios.avisoTel}</span>
+                <div style={{ background: '#fff3cd', border: '1px solid #ffc107', borderRadius: 10, padding: '12px 16px', marginBottom: 16, display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#856404" strokeWidth="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  <span style={{ fontSize: 13, color: '#856404' }}>{Tpanel.anuncios.avisoTel}</span>
                 </div>
               )}
-              <div style={{ background: '#fff', borderRadius: 8, padding: '24px', boxShadow: '0 1px 6px rgba(0,0,0,0.06)' }}>
-                <div className="perfil-avatar-row" style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24, paddingBottom: 20, borderBottom: '1px solid #f0f0f0' }}>
-                  <div style={{ position: 'relative', flexShrink: 0 }}>
-                    <div style={{ width: 72, height: 72, borderRadius: '50%', background: '#e0f5f7', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 24, fontWeight: 700, color: '#006D77', overflow: 'hidden' }}>
-                      {fotoPerfilUrl ? <img src={fotoPerfilUrl} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'opacity 0.25s' }} /> : (perfilNombre || usuario?.nombre || 'U').split(' ').map((n: string) => n[0]).join('').slice(0,2).toUpperCase()}
-                    </div>
-                    <label style={{ position: 'absolute', bottom: 0, right: 0, width: 24, height: 24, borderRadius: '50%', background: '#006D77', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                      <input type="file" accept="image/*" style={{ display: 'none' }} onChange={e => {
-                        const file = e.target.files?.[0]
-                        if (file) {
-                          setFotoPerfilFile(file)
-                          const reader = new FileReader()
-                          reader.onload = ev => setFotoPerfilUrl(ev.target?.result as string)
-                          reader.readAsDataURL(file)
-                        }
-                      }} />
-                    </label>
+
+              {/* Card: Datos personales */}
+              <div style={{ background: '#fff', borderRadius: 12, padding: '20px 24px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', marginBottom: 14 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#006D77', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 16 }}>Datos personales</div>
+                <div className="perfil-fields-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 5 }}>{Tpanel.perfil.nombre} <span style={{ color: '#e53e3e' }}>*</span></label>
+                    <input value={perfilNombre} onChange={e => setPerfilNombre(e.target.value)} maxLength={25} style={{ width: '100%', border: `1.5px solid ${!perfilNombre ? '#e53e3e' : '#e8e8e8'}`, borderRadius: 8, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box', background: '#fafafa' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor= perfilNombre ? '#e8e8e8' : '#e53e3e'} />
+                    {!perfilNombre && <div style={{ fontSize: 11, color: '#e53e3e', marginTop: 3 }}>{Tpanel.perfil.err_nombre}</div>}
                   </div>
                   <div>
-                    <div style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 6 }}>{perfilNombre || usuario?.nombre || Tpanel.perfil.titulo}</div>
-                    <div className="perfil-badges-row" style={{ display: 'flex', gap: 8 }}>
-                      {tipoUsuario === 'profesional' && <span style={{ background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>{Tpanel.anuncios.roles.profesional}</span>}
-                      {perfilAei && usuario?.aei_aprobado === true && <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>✓ AEI</span>}
-                      {perfilAei && usuario?.aei_aprobado !== true && <span style={{ background: '#f59e0b', color: '#fff', fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>⏳ AEI pendiente</span>}
-                    </div>
-                    {tipoUsuario === 'profesional' && !['profesional', 'fundador', 'platino'].includes(usuario?.plan || '') && (
-                      <div style={{ marginTop: 8, display: 'inline-flex', alignItems: 'center', gap: 6, background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 6, padding: '5px 10px' }}>
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                        <span style={{ fontSize: 11, color: '#6b7280' }}>Plan profesional pendiente ·{' '}</span>
-                        <button onClick={() => setSeccion('publicar')} style={{ all: 'unset', fontSize: 11, color: '#006D77', fontWeight: 600, cursor: 'pointer', textDecoration: 'underline' }}>activar</button>
-                      </div>
-                    )}
-                    <div style={{ fontSize: 12, color: '#aaa', marginTop: 4 }}>{Tpanel.perfil.fotoHint}</div>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 5 }}>{Tpanel.perfil.email}</label>
+                    <input value={usuario?.email || ''} disabled style={{ width: '100%', border: '1.5px solid #e8e8e8', borderRadius: 8, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box', background: '#f4f4f4', color: '#bbb' }} />
                   </div>
-                </div>
-                <div className="perfil-fields-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.nombre} <span style={{ color: '#e53e3e' }}>*</span></label>
-                    <input value={perfilNombre} onChange={e => setPerfilNombre(e.target.value)} maxLength={25} style={{ width: '100%', border: `1.5px solid ${!perfilNombre ? '#e53e3e' : '#e0e0e0'}`, borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor= perfilNombre ? '#e0e0e0' : '#e53e3e'} />
-                    {!perfilNombre && <div style={{ fontSize: 11, color: '#e53e3e', marginTop: 4 }}>{Tpanel.perfil.err_nombre}</div>}
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.email}</label>
-                    <input value={usuario?.email || ''} disabled style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box', background: '#f9f9f9', color: '#aaa' }} />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.telefono}</label>
-                    <div style={{ display: 'flex', border: `1.5px solid ${!perfilTelefono ? '#e53e3e' : '#e0e0e0'}`, borderRadius: 6, overflow: 'hidden', boxSizing: 'border-box' }}>
-                      <select value={perfilTelPrefijo} onChange={e => setPerfilTelPrefijo(e.target.value)} style={{ border: 'none', borderRight: '1.5px solid #e0e0e0', padding: '10px 6px', fontSize: 12, background: '#f9f9f9', outline: 'none', cursor: 'pointer', color: '#333', flexShrink: 0, textAlign: 'center' }}>
+                  <div style={{ gridColumn: '1 / -1' }}>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 5 }}>{Tpanel.perfil.telefono} <span style={{ color: '#e53e3e' }}>*</span></label>
+                    <div style={{ display: 'flex', border: `1.5px solid ${!perfilTelefono ? '#e53e3e' : '#e8e8e8'}`, borderRadius: 8, overflow: 'hidden', background: '#fafafa' }}>
+                      <select value={perfilTelPrefijo} onChange={e => setPerfilTelPrefijo(e.target.value)} style={{ border: 'none', borderRight: '1.5px solid #e8e8e8', padding: '10px 6px', fontSize: 12, background: 'transparent', outline: 'none', cursor: 'pointer', color: '#333', flexShrink: 0 }}>
                         {PREFIJOS.map(p => <option key={p} value={p}>{p}</option>)}
                       </select>
-                      <input value={perfilTelNumero} onChange={e => setPerfilTelNumero(e.target.value.replace(/[^\d\s\-()]/g, ''))} type="tel" inputMode="tel" placeholder="809 000 0000" style={{ flex: 1, border: 'none', padding: '10px 12px', fontSize: 13, outline: 'none', minWidth: 0 }} onFocus={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = '#006D77' }} onBlur={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = perfilTelefono ? '#e0e0e0' : '#e53e3e' }} />
+                      <input value={perfilTelNumero} onChange={e => setPerfilTelNumero(e.target.value.replace(/[^\d\s\-()]/g, ''))} type="tel" inputMode="tel" placeholder="809 000 0000" style={{ flex: 1, border: 'none', padding: '10px 12px', fontSize: 13, outline: 'none', background: 'transparent', minWidth: 0 }} onFocus={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = '#006D77' }} onBlur={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = perfilTelefono ? '#e8e8e8' : '#e53e3e' }} />
                     </div>
-                    {!perfilTelefono && <div style={{ fontSize: 11, color: '#e53e3e', marginTop: 4 }}>{Tpanel.perfil.err_telefono}</div>}
+                    {!perfilTelefono && <div style={{ fontSize: 11, color: '#e53e3e', marginTop: 3 }}>{Tpanel.perfil.err_telefono}</div>}
                   </div>
-                  {usuario?.plan && usuario.plan !== 'gratis' && (
-                    <div>
-                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.inmobiliaria}</label>
-                      <input value={perfilInmobiliaria} onChange={e => setPerfilInmobiliaria(e.target.value)} placeholder='Nombre de tu agencia (opcional)' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                    </div>
-                  )}
-                  {usuario?.plan && usuario.plan !== 'gratis' && (
-                    <div>
-                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.web}</label>
-                      <input value={perfilWebUrl} onChange={e => setPerfilWebUrl(e.target.value)} placeholder='https://tuinmobiliaria.com (opcional)' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                    </div>
-                  )}
-                  {usuario?.plan && usuario.plan !== 'gratis' && (
-                    <div>
-                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Instagram</label>
-                      <input value={perfilInstagram} onChange={e => setPerfilInstagram(e.target.value)} placeholder='https://instagram.com/tuagencia (opcional)' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                    </div>
-                  )}
-                  {usuario?.plan && usuario.plan !== 'gratis' && (
-                    <div>
-                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.aei}</label>
-                      <div data-aei style={{ display: 'flex', alignItems: 'center', border: `1.5px solid ${usuario?.aei_aprobado === true ? '#d1fae5' : '#e0e0e0'}`, borderRadius: 6, overflow: 'hidden', background: usuario?.aei_aprobado === true ? '#f0fdf4' : '#fff' }}>
-                        <span style={{ padding: '10px 8px 10px 12px', fontSize: 13, color: usuario?.aei_aprobado === true ? '#065f46' : '#555', background: usuario?.aei_aprobado === true ? '#d1fae5' : '#f5f5f5', borderRight: `1px solid ${usuario?.aei_aprobado === true ? '#a7f3d0' : '#e0e0e0'}`, userSelect: 'none', fontWeight: 700 }}>AEI-</span>
-                        <input
-                          value={perfilAei}
-                          readOnly={usuario?.aei_aprobado === true}
-                          onChange={e => setPerfilAei(e.target.value.replace(/\D/g, ''))}
-                          inputMode="numeric"
-                          placeholder='0000'
-                          style={{ flex: 1, border: 'none', padding: '10px 12px', fontSize: 13, outline: 'none', background: 'transparent', color: usuario?.aei_aprobado === true ? '#065f46' : '#111', cursor: usuario?.aei_aprobado === true ? 'not-allowed' : 'text', fontWeight: usuario?.aei_aprobado === true ? 700 : 400 }}
-                          onFocus={e => { if (usuario?.aei_aprobado !== true) { const p = e.target.closest('div[data-aei]') as HTMLElement; if (p) p.style.borderColor='#006D77' } }}
-                          onBlur={e => { if (usuario?.aei_aprobado !== true) { const p = e.target.closest('div[data-aei]') as HTMLElement; if (p) p.style.borderColor='#e0e0e0' } }}
-                        />
-                      </div>
-                      {perfilAei && usuario?.aei_aprobado !== true && (
-                        <div style={{ fontSize: 11, color: '#92400e', marginTop: 5, display: 'flex', alignItems: 'center', gap: 4 }}>
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                          Pendiente de verificación por Habitade
-                        </div>
-                      )}
-                      {perfilAei && usuario?.aei_aprobado === true && (
-                        <div style={{ fontSize: 11, color: '#065f46', marginTop: 5, display: 'flex', alignItems: 'center', gap: 4 }}>
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>
-                          Verificado por Habitade
-                        </div>
-                      )}
-                    </div>
-                  )}
                 </div>
-                {usuario?.plan && usuario.plan !== 'gratis' && (
-                  <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid #f0f0f0' }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 10 }}>{Tpanel.perfil.idiomasLabel}</div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                      {['Español','English','Français','Português','Italiano','Deutsch','中文','Русский','العربية'].map(lang => {
-                        const sel = perfilIdiomas.includes(lang)
-                        return (
-                          <button key={lang} onClick={() => setPerfilIdiomas(prev => sel ? prev.filter(l => l !== lang) : [...prev, lang])}
-                            style={{ all: 'unset', padding: '6px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: `1.5px solid ${sel ? '#006D77' : '#e0e0e0'}`, background: sel ? '#f0fafb' : '#fff', color: sel ? '#006D77' : '#888', transition: 'all 0.15s' }}>
-                            {lang}
-                          </button>
-                        )
-                      })}
+              </div>
+
+              {/* Card: Tu agencia (solo planes de pago) */}
+              {usuario?.plan && usuario.plan !== 'gratis' && (
+                <div style={{ background: '#fff', borderRadius: 12, padding: '20px 24px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', marginBottom: 14 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: '#006D77', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 16 }}>Tu agencia</div>
+                  <div className="perfil-fields-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 5 }}>{Tpanel.perfil.inmobiliaria}</label>
+                      <input value={perfilInmobiliaria} onChange={e => setPerfilInmobiliaria(e.target.value)} placeholder='Nombre de tu agencia' style={{ width: '100%', border: '1.5px solid #e8e8e8', borderRadius: 8, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box', background: '#fafafa' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e8e8e8'} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 5 }}>{Tpanel.perfil.web}</label>
+                      <input value={perfilWebUrl} onChange={e => setPerfilWebUrl(e.target.value)} placeholder='https://tuinmobiliaria.com' style={{ width: '100%', border: '1.5px solid #e8e8e8', borderRadius: 8, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box', background: '#fafafa' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e8e8e8'} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 5 }}>Instagram</label>
+                      <input value={perfilInstagram} onChange={e => setPerfilInstagram(e.target.value)} placeholder='https://instagram.com/tuagencia' style={{ width: '100%', border: '1.5px solid #e8e8e8', borderRadius: 8, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box', background: '#fafafa' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e8e8e8'} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 5 }}>{Tpanel.perfil.aei}</label>
+                      <div data-aei style={{ display: 'flex', alignItems: 'center', border: `1.5px solid ${usuario?.aei_aprobado === true ? '#d1fae5' : '#e8e8e8'}`, borderRadius: 8, overflow: 'hidden', background: usuario?.aei_aprobado === true ? '#f0fdf4' : '#fafafa' }}>
+                        <span style={{ padding: '10px 8px 10px 12px', fontSize: 13, color: usuario?.aei_aprobado === true ? '#065f46' : '#555', background: usuario?.aei_aprobado === true ? '#d1fae5' : '#f0f0f0', borderRight: `1px solid ${usuario?.aei_aprobado === true ? '#a7f3d0' : '#e8e8e8'}`, userSelect: 'none', fontWeight: 700 }}>AEI-</span>
+                        <input value={perfilAei} readOnly={usuario?.aei_aprobado === true} onChange={e => setPerfilAei(e.target.value.replace(/\D/g, ''))} inputMode="numeric" placeholder='0000' style={{ flex: 1, border: 'none', padding: '10px 12px', fontSize: 13, outline: 'none', background: 'transparent', color: usuario?.aei_aprobado === true ? '#065f46' : '#111', cursor: usuario?.aei_aprobado === true ? 'not-allowed' : 'text', fontWeight: usuario?.aei_aprobado === true ? 700 : 400 }} onFocus={e => { if (usuario?.aei_aprobado !== true) { const p = e.target.closest('div[data-aei]') as HTMLElement; if (p) p.style.borderColor='#006D77' } }} onBlur={e => { if (usuario?.aei_aprobado !== true) { const p = e.target.closest('div[data-aei]') as HTMLElement; if (p) p.style.borderColor='#e8e8e8' } }} />
+                      </div>
+                      {perfilAei && usuario?.aei_aprobado !== true && <div style={{ fontSize: 11, color: '#92400e', marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Pendiente de verificación</div>}
+                      {perfilAei && usuario?.aei_aprobado === true && <div style={{ fontSize: 11, color: '#065f46', marginTop: 4, display: 'flex', alignItems: 'center', gap: 4 }}><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12"/></svg>Verificado por Habitade</div>}
                     </div>
                   </div>
-                )}
-                <button className="perfil-save-btn" onClick={guardarPerfil} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '11px 28px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', marginTop: 20 }}>
+                </div>
+              )}
+
+              {/* Card: Idiomas (solo planes de pago) */}
+              {usuario?.plan && usuario.plan !== 'gratis' && (
+                <div style={{ background: '#fff', borderRadius: 12, padding: '20px 24px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', marginBottom: 20 }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: '#006D77', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 14 }}>{Tpanel.perfil.idiomasLabel}</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    {['Español','English','Français','Português','Italiano','Deutsch','中文','Русский','العربية'].map(lang => {
+                      const sel = perfilIdiomas.includes(lang)
+                      return (
+                        <button key={lang} onClick={() => setPerfilIdiomas(prev => sel ? prev.filter(l => l !== lang) : [...prev, lang])}
+                          style={{ all: 'unset', padding: '7px 16px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer', border: `1.5px solid ${sel ? '#006D77' : '#e0e0e0'}`, background: sel ? '#e8f7f8' : '#fff', color: sel ? '#006D77' : '#888', transition: 'all 0.15s' }}>
+                          {lang}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Card: Mi plan */}
+              <div style={{ background: '#fff', borderRadius: 12, padding: '20px 24px', boxShadow: '0 1px 4px rgba(0,0,0,0.06)', marginBottom: 20 }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: '#006D77', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 16 }}>Mi plan</div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                    <div style={{ width: 44, height: 44, borderRadius: 10, background: `linear-gradient(135deg, #004E57, #006D77)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>
+                        {usuario?.plan ? `Plan ${usuario.plan.charAt(0).toUpperCase() + usuario.plan.slice(1)}` : 'Plan Gratuito'}
+                      </div>
+                      <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>
+                        {['fundador','platino','profesional'].includes(usuario?.plan || '') ? 'Acceso completo a todas las funciones' : usuario?.plan === 'oro' ? 'Hasta 20 anuncios activos' : usuario?.plan === 'plata' ? 'Hasta 5 anuncios activos' : '1 anuncio activo'}
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    {usuario?.plan === 'platino' ? (
+                      <a href="mailto:hola@habitade.com" style={{ all: 'unset', background: '#f0fafb', border: '1.5px solid #006D77', color: '#006D77', padding: '8px 18px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
+                        Contactar soporte
+                      </a>
+                    ) : (
+                      <>
+                        <button onClick={() => setSeccion('planes')} style={{ all: 'unset', background: '#f0fafb', border: '1.5px solid #006D77', color: '#006D77', padding: '8px 18px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
+                          Cambiar plan
+                        </button>
+                        {['plata','oro','fundador','profesional'].includes(usuario?.plan || '') && (
+                          <button onClick={() => setModalBaja(true)} style={{ all: 'unset', background: '#fff5f5', border: '1.5px solid #fca5a5', color: '#dc2626', padding: '8px 18px', borderRadius: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
+                            Dar de baja
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <button className="perfil-save-btn" onClick={guardarPerfil} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '12px 32px', borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: 'pointer' }}>
                   {Tpanel.perfil.guardar}
                 </button>
-
-                {/* Cerrar sesión */}
-                <div style={{ marginTop: 32, paddingTop: 20, borderTop: '1px solid #f0f0f0' }}>
-                  <button onClick={async () => { await supabase.auth.signOut(); window.location.href = '/' }} style={{ all: 'unset', fontSize: 12, color: '#aaa', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
-                    onMouseEnter={e => e.currentTarget.style.color = '#e55'}
-                    onMouseLeave={e => e.currentTarget.style.color = '#aaa'}>
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-                    {Tn.cerrarSesion}
-                  </button>
-                </div>
+                <button onClick={async () => { await supabase.auth.signOut(); window.location.href = '/' }} style={{ all: 'unset', fontSize: 12, color: '#bbb', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6 }}
+                  onMouseEnter={e => e.currentTarget.style.color = '#e55'}
+                  onMouseLeave={e => e.currentTarget.style.color = '#bbb'}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                  {Tn.cerrarSesion}
+                </button>
               </div>
             </div>
           )}

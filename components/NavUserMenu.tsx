@@ -1,16 +1,20 @@
 ﻿'use client'
-import { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { supabase } from '../supabase'
 import { useIdioma } from '../IdiomaContext'
 
 interface Props {
-  dark?: boolean // true = navbar teal, false = navbar blanco
+  dark?: boolean
+  onNoSesion?: React.ReactNode
 }
 
-export default function NavUserMenu({ dark = false }: Props) {
+export default function NavUserMenu({ dark = false, onNoSesion }: Props) {
   const [sesion, setSesion] = useState(false)
   const [fotoUrl, setFotoUrl] = useState<string | null>(null)
   const [inicial, setInicial] = useState('U')
+  const [nombre, setNombre] = useState('')
+  const [plan, setPlan] = useState('')
+  const [email, setEmail] = useState('')
   const [noLeidos, setNoLeidos] = useState(0)
   const [noLeidosGuardados, setNoLeidosGuardados] = useState(0)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -45,13 +49,15 @@ export default function NavUserMenu({ dark = false }: Props) {
         }
       } catch {}
 
+      setEmail(user.email || '')
       const { data: perfil } = await supabase
         .from('usuarios')
-        .select('foto_url, nombre')
+        .select('foto_url, nombre, plan')
         .eq('id', user.id)
         .single()
       if (perfil?.foto_url) { setFotoUrl(perfil.foto_url); try { localStorage.setItem('hb_perfil_foto', perfil.foto_url); localStorage.setItem('hb_perfil_uid', user.id) } catch {} }
       if (perfil?.nombre) {
+        setNombre(perfil.nombre)
         const partes = perfil.nombre.trim().split(/\s+/)
         const ini = partes.length >= 2
           ? (partes[0][0] + partes[1][0]).toUpperCase()
@@ -59,6 +65,7 @@ export default function NavUserMenu({ dark = false }: Props) {
         setInicial(ini)
         try { localStorage.setItem('hb_perfil_inicial', ini) } catch {}
       }
+      if (perfil?.plan) setPlan(perfil.plan)
 
       // Contar mensajes no leídos
       const { data: msgs } = await supabase
@@ -131,7 +138,7 @@ export default function NavUserMenu({ dark = false }: Props) {
     </a>
   )
 
-  if (!sesion) return null
+  if (!sesion) return onNoSesion ? <>{onNoSesion}</> : null
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
@@ -161,34 +168,55 @@ export default function NavUserMenu({ dark = false }: Props) {
         </button>
 
         {menuOpen && (
-          <div style={{ position: 'absolute', top: 'calc(100% + 8px)', right: 0, background: '#fff', border: '1px solid #e8e8e8', borderRadius: 10, boxShadow: '0 8px 24px rgba(0,0,0,0.12)', overflow: 'hidden', minWidth: 180, zIndex: 300 }}>
-            {[
-              { label: tr.panel.menu.miPanel, href: '/panel', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>, badge: 0 },
-              { label: tr.panel.menu.anuncios, href: '/panel?s=anuncios', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, badge: 0 },
-              { label: tr.panel.menu.mensajes, href: '/panel?s=mensajes', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, badge: noLeidos },
-              { label: tr.panel.menu.guardados, href: '/panel?s=guardados', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>, badge: noLeidosGuardados },
-            ].map(item => (
-              <a key={item.href} href={item.href}
-                style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', fontSize: 13, color: '#222', textDecoration: 'none', borderBottom: '1px solid #f5f5f5', position: 'relative' }}
-                onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = '#f0fafb'}
-                onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'}>
-                {item.icon}
-                {item.label}
-                {!!item.badge && (
-                  <span style={{ marginLeft: 'auto', background: '#e63946', color: '#fff', fontSize: 10, fontWeight: 700, minWidth: 18, height: 18, borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px' }}>
-                    {item.badge > 9 ? '9+' : item.badge}
-                  </span>
+          <div style={{ position: 'absolute', top: 'calc(100% + 10px)', right: 0, background: '#fff', border: '1px solid #e8ecee', borderRadius: 14, boxShadow: '0 12px 40px rgba(0,0,0,0.14)', overflow: 'hidden', minWidth: 220, zIndex: 300 }}>
+            {/* Header usuario */}
+            <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 100%)', padding: '16px 18px', display: 'flex', alignItems: 'center', gap: 12 }}>
+              <div style={{ width: 42, height: 42, borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: '2px solid rgba(255,255,255,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, fontWeight: 700, color: '#fff', flexShrink: 0, overflow: 'hidden' }}>
+                {fotoUrl ? <img src={fotoUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} referrerPolicy="no-referrer" /> : inicial}
+              </div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{nombre || inicial}</div>
+                <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.6)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: 1 }}>{email}</div>
+                {plan && plan !== 'gratis' && (
+                  <span style={{ display: 'inline-block', marginTop: 4, background: 'rgba(255,255,255,0.18)', color: '#fff', fontSize: 10, fontWeight: 700, padding: '1px 8px', borderRadius: 10, textTransform: 'capitalize' }}>Plan {plan}</span>
                 )}
-              </a>
-            ))}
-            <button
-              onClick={async () => { await supabase.auth.signOut(); window.location.href = '/' }}
-              style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '12px 16px', fontSize: 13, color: '#e63946', cursor: 'pointer', boxSizing: 'border-box' }}
-              onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.background = '#fff5f5'}
-              onMouseLeave={e => (e.currentTarget as HTMLButtonElement).style.background = 'transparent'}>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e63946" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-              {tr.nav.cerrarSesion}
-            </button>
+              </div>
+            </div>
+            {/* Links */}
+            <div style={{ padding: '6px 0' }}>
+              {[
+                { label: tr.panel.menu.miPanel, href: '/panel', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>, badge: 0 },
+                { label: tr.panel.menu.anuncios, href: '/panel?s=anuncios', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>, badge: 0 },
+                { label: tr.panel.menu.mensajes, href: '/panel?s=mensajes', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>, badge: noLeidos },
+                { label: tr.panel.menu.guardados, href: '/panel?s=guardados', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>, badge: noLeidosGuardados },
+              ].map(item => (
+                <a key={item.href} href={item.href}
+                  style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', fontSize: 13, color: '#222', textDecoration: 'none', position: 'relative', transition: 'background 0.1s' }}
+                  onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = '#f0fafb'}
+                  onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'}>
+                  <span style={{ width: 28, height: 28, borderRadius: 7, background: '#f0fafb', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{item.icon}</span>
+                  {item.label}
+                  {!!item.badge && (
+                    <span style={{ marginLeft: 'auto', background: '#e63946', color: '#fff', fontSize: 10, fontWeight: 700, minWidth: 18, height: 18, borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 4px' }}>
+                      {item.badge > 9 ? '9+' : item.badge}
+                    </span>
+                  )}
+                </a>
+              ))}
+            </div>
+            {/* Cerrar sesión */}
+            <div style={{ borderTop: '1px solid #f0f0f0', padding: '6px 0' }}>
+              <button
+                onClick={async () => { await supabase.auth.signOut(); window.location.href = '/' }}
+                style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 10, padding: '10px 16px', fontSize: 13, color: '#e63946', cursor: 'pointer', boxSizing: 'border-box', transition: 'background 0.1s' }}
+                onMouseEnter={e => (e.currentTarget as HTMLButtonElement).style.background = '#fff5f5'}
+                onMouseLeave={e => (e.currentTarget as HTMLButtonElement).style.background = 'transparent'}>
+                <span style={{ width: 28, height: 28, borderRadius: 7, background: '#fff5f5', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#e63946" strokeWidth="2" strokeLinecap="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                </span>
+                {tr.nav.cerrarSesion}
+              </button>
+            </div>
           </div>
         )}
       </div>
