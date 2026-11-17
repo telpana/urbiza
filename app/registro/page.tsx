@@ -25,23 +25,18 @@ export default function Registro() {
 
   const [paso, setPaso] = useState(1)
   const [metodo, setMetodo] = useState('')
-  const [tipoCuenta, setTipoCuenta] = useState('')
+  const [tipoCuenta] = useState('particular')
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [telPrefijo, setTelPrefijo] = useState('+1')
   const [telNumero, setTelNumero] = useState('')
-  const [cedula, setCedula] = useState('')
-  const [aei, setAei] = useState('')
+  const [cedula] = useState('')
+  const [aei] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [mostrarPassword, setMostrarPassword] = useState(false)
   const [aceptaTerminos, setAceptaTerminos] = useState(false)
-
-  const tipos = [
-    { id: 'particular', titulo: T.particular, desc: T.particularDesc, icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg> },
-    { id: 'profesional', titulo: T.profesional, desc: T.profesionalDesc, promo: 'Código WELCOME · 90 días de prueba gratis', icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg> },
-  ]
 
   const registrarConEmail = async () => {
     if (!nombre || !email || !password || !telNumero.trim()) { setError(T.err_campos); return }
@@ -64,7 +59,8 @@ export default function Registro() {
       const { error: loginErr } = await supabase.auth.signInWithPassword({ email, password })
       if (loginErr) { setError(loginErr.message); setLoading(false); return }
 
-      window.location.href = tipoCuenta === 'profesional' ? '/planes' : '/panel'
+      const next = new URLSearchParams(window.location.search).get('next')
+      window.location.href = (next && next.startsWith('/')) ? next : '/panel'
     } catch (e) {
       setError(T.err_generico)
     }
@@ -105,16 +101,20 @@ export default function Registro() {
             </div>
           </div>
 
-          {paso > 1 && paso < 4 && (
+          {paso === 3 && (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 0, marginBottom: 24 }}>
-              {[1, 2, 3].map((n, i) => (
-                <div key={n} style={{ display: 'flex', alignItems: 'center' }}>
-                  <div style={{ width: 28, height: 28, borderRadius: '50%', background: paso > n ? '#006D77' : paso === n ? '#006D77' : '#e0e0e0', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700 }}>
-                    {paso > n ? <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg> : n}
+              {[1, 2].map((n, i) => {
+                const pasoVisual = paso === 3 ? 2 : 1
+                const activo = pasoVisual >= n
+                return (
+                  <div key={n} style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ width: 28, height: 28, borderRadius: '50%', background: activo ? '#006D77' : '#e0e0e0', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700 }}>
+                      {pasoVisual > n ? <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg> : n}
+                    </div>
+                    {i < 1 && <div style={{ width: 50, height: 2, background: pasoVisual > 1 ? '#006D77' : '#e0e0e0' }} />}
                   </div>
-                  {i < 2 && <div style={{ width: 50, height: 2, background: paso > n + 1 ? '#006D77' : '#e0e0e0' }} />}
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
 
@@ -139,35 +139,9 @@ export default function Registro() {
                 </div>
                 <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
                   <a href="/" style={{ all: 'unset', flex: 1, border: '1.5px solid #e0e0e0', color: '#555', padding: '13px', borderRadius: 7, fontSize: 14, fontWeight: 500, cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box' }}>{T.back}</a>
-                  <button onClick={() => { setMetodo('email'); setPaso(2) }} style={{ all: 'unset', flex: 2, background: '#006D77', color: '#fff', padding: '13px', borderRadius: 7, fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box' }}>
+                  <button onClick={() => { setMetodo('email'); setPaso(3) }} style={{ all: 'unset', flex: 2, background: '#006D77', color: '#fff', padding: '13px', borderRadius: 7, fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box' }}>
                     {T.registrarse}
                   </button>
-                </div>
-              </div>
-            )}
-
-            {paso === 2 && (
-              <div>
-                <h2 style={{ fontSize: 18, fontWeight: 700, color: '#111', marginBottom: 6 }}>{T.titulo2}</h2>
-                <p style={{ fontSize: 13, color: '#888', marginBottom: 20 }}>{T.subtitulo2}</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
-                  {tipos.map(t => (
-                    <div key={t.id} onClick={() => setTipoCuenta(t.id)} style={{ display: 'flex', alignItems: 'center', gap: 16, padding: '16px 18px', border: `2px solid ${tipoCuenta === t.id ? '#006D77' : '#e0e0e0'}`, borderRadius: 8, cursor: 'pointer', background: tipoCuenta === t.id ? '#f0fafb' : '#fff' }}>
-                      <div style={{ width: 52, height: 52, borderRadius: 8, background: tipoCuenta === t.id ? '#e0f5f7' : '#f4f5f6', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{t.icon}</div>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontSize: 15, fontWeight: 600, color: '#111', marginBottom: 3 }}>{t.titulo}</div>
-                        <div style={{ fontSize: 13, color: '#777' }}>{t.desc}</div>
-                        {(t as any).promo && <div style={{ fontSize: 12, color: '#006D77', fontWeight: 600, marginTop: 3 }}>{(t as any).promo}</div>}
-                      </div>
-                      <div style={{ width: 20, height: 20, borderRadius: '50%', border: `2px solid ${tipoCuenta === t.id ? '#006D77' : '#e0e0e0'}`, background: tipoCuenta === t.id ? '#006D77' : '#fff', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        {tipoCuenta === t.id && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3"><polyline points="20 6 9 17 4 12"/></svg>}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div style={{ display: 'flex', gap: 10 }}>
-                  <button onClick={() => setPaso(1)} style={{ all: 'unset', flex: 1, border: '1.5px solid #e0e0e0', color: '#555', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box' }}>{T.back}</button>
-                  <button onClick={() => tipoCuenta && setPaso(3)} style={{ all: 'unset', flex: 2, background: tipoCuenta ? '#006D77' : '#e0e0e0', color: '#fff', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: tipoCuenta ? 'pointer' : 'default', textAlign: 'center', boxSizing: 'border-box' }}>{T.continuar}</button>
                 </div>
               </div>
             )}
@@ -207,22 +181,6 @@ export default function Registro() {
                       <input value={telNumero} onChange={e => setTelNumero(e.target.value.replace(/[^\d\s\-()]/g, ''))} type="tel" inputMode="tel" placeholder="809 000 0000" maxLength={15} style={{ flex: 1, border: 'none', padding: '11px 14px', fontSize: 14, outline: 'none', minWidth: 0 }} onFocus={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = '#006D77' }} onBlur={e => { (e.currentTarget.parentElement as HTMLElement).style.borderColor = '#e0e0e0' }} />
                     </div>
                   </div>
-                  {tipoCuenta === 'profesional' && (
-                    <>
-                      <div>
-                        <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{T.cedula} <span style={{ fontWeight: 400, color: '#aaa' }}>{T.opcional}</span></label>
-                        <input value={cedula} onChange={e => setCedula(e.target.value)} type="text" placeholder={T.cedula} style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '11px 14px', fontSize: 14, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
-                      </div>
-                      <div>
-                        <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{T.aei} <span style={{ color: '#aaa', fontWeight: 400 }}>{T.aeiOpcional}</span></label>
-                        <div style={{ display: 'flex', alignItems: 'center', border: '1.5px solid #e0e0e0', borderRadius: 6, overflow: 'hidden' }} onFocus={e => (e.currentTarget.style.borderColor='#006D77')} onBlur={e => (e.currentTarget.style.borderColor='#e0e0e0')}>
-                          <span style={{ padding: '11px 10px 11px 14px', fontSize: 14, color: '#555', background: '#f5f5f5', borderRight: '1px solid #e0e0e0', userSelect: 'none', fontWeight: 600 }}>AEI-</span>
-                          <input value={aei} onChange={e => setAei(e.target.value.replace(/\D/g, ''))} type="text" inputMode="numeric" placeholder="0000" style={{ flex: 1, border: 'none', padding: '11px 14px', fontSize: 14, outline: 'none', boxSizing: 'border-box' }} />
-                        </div>
-                        <div style={{ fontSize: 11, color: '#aaa', marginTop: 4 }}>{T.aeiDesc}</div>
-                      </div>
-                    </>
-                  )}
                 </div>
                 <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, marginTop: 20, cursor: 'pointer' }}>
                   <input type="checkbox" checked={aceptaTerminos} onChange={e => setAceptaTerminos(e.target.checked)} style={{ marginTop: 2, flexShrink: 0, accentColor: '#006D77', width: 15, height: 15 }} />
@@ -232,7 +190,7 @@ export default function Registro() {
                   </span>
                 </label>
                 <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
-                  <button onClick={() => setPaso(2)} style={{ all: 'unset', flex: 1, border: '1.5px solid #e0e0e0', color: '#555', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box' }}>{T.back}</button>
+                  <button onClick={() => setPaso(1)} style={{ all: 'unset', flex: 1, border: '1.5px solid #e0e0e0', color: '#555', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box' }}>{T.back}</button>
                   <button onClick={registrarConEmail} disabled={loading} style={{ all: 'unset', flex: 2, background: loading ? '#aaa' : '#006D77', color: '#fff', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: loading ? 'default' : 'pointer', textAlign: 'center', boxSizing: 'border-box' }}>
                     {loading ? T.creando : T.crearCuenta}
                   </button>
@@ -250,12 +208,7 @@ export default function Registro() {
                   {T.verificacion} <strong style={{ color: '#333' }}>{email}</strong>
                 </p>
                 <p style={{ fontSize: 13, color: '#aaa', marginBottom: 24 }}>{T.verificaEmail}</p>
-                {aei && (
-                  <div style={{ background: '#e0f5f7', border: '1px solid #c5e8ea', borderRadius: 6, padding: '10px 14px', fontSize: 13, color: '#004E57', marginBottom: 20 }}>
-                    {T.aeiVerificacion}
-                  </div>
-                )}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+<div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                   <a href="/panel" style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '13px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'center', display: 'block' }}>
                     {T.irPanel}
                   </a>
