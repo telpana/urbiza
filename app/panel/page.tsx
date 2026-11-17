@@ -36,13 +36,13 @@ const Ip = (paths: React.ReactNode) => <svg width="18" height="18" viewBox="2 2 
 
 function getMenuItems(Tpanel: any) {
   return [
+    { id: 'planes', label: Tpanel?.menu?.planes ?? 'Planes', href: '/planes', icon: Ip(<><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></>) },
     { id: 'anuncios', label: Tpanel?.menu?.anuncios ?? 'Mis anuncios', icon: Ip(<><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></>) },
     { id: 'perfil', label: Tpanel?.menu?.perfil ?? 'Mi perfil', icon: Ip(<><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>) },
     { id: 'publicar', label: Tpanel?.menu?.publicar ?? 'Publicar anuncio', icon: Ip(<><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></>) },
     { id: 'mensajes', label: Tpanel?.menu?.mensajes ?? 'Mensajes', icon: Ip(<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>) },
     { id: 'estadisticas', label: Tpanel?.menu?.estadisticas ?? 'Estadísticas', icon: Ip(<><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></>) },
     { id: 'destacar', label: Tpanel?.menu?.destacar ?? 'Destacar anuncio', icon: Ip(<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>) },
-    { id: 'plan', label: Tpanel?.menu?.plan ?? 'Mi plan', icon: Ip(<><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></>) },
     { id: 'guardados', label: Tpanel?.menu?.guardados ?? 'Guardados', icon: Ip(<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>) },
 
     { id: 'ayuda', label: Tpanel?.menu?.ayuda ?? 'Ayuda', proOnly: true, icon: Ip(<><circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></>) },
@@ -1094,16 +1094,21 @@ export default function Panel() {
         {/* SIDEBAR */}
         <div className={`panel-sidebar${sidebarOpen ? ' open' : ''}`} style={{ width: 220, background: '#004E57', minHeight: 'calc(100vh - 54px)', padding: '20px 0', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
           {menuItems.filter(item => (item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)) && (!('proOnly' in item) || tipoUsuario === 'profesional')).map(item => (
-            <button key={item.id} onClick={() => { if (item.id === 'publicar' && !(perfilNombre && perfilTelefono)) { setSeccion('publicar'); setSidebarOpen(false); return } if (item.id === 'publicar' && !anuncioEditando && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis) { setSeccion('planes'); setSidebarOpen(false); return } setSeccion(item.id); setSidebarOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.6)', background: seccion === item.id ? 'rgba(255,255,255,0.12)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? '3px solid #83D4DB' : '3px solid transparent', boxSizing: 'border-box', position: 'relative' }}>
-              {item.icon}
-              {item.label}
-              {item.id === 'mensajes' && noLeidos > 0 && (
-                <span style={{ position: 'absolute', right: 14, background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 700, width: 18, height: 18, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{noLeidos}</span>
-              )}
-              {item.id === 'guardados' && noLeidosGuardados > 0 && (
-                <span style={{ position: 'absolute', right: 14, background: '#e63946', color: '#fff', fontSize: 10, fontWeight: 700, width: 18, height: 18, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{noLeidosGuardados > 9 ? '9+' : noLeidosGuardados}</span>
-              )}
-            </button>
+            ('href' in item)
+              ? <a key={item.id} href={(item as any).href} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: 'rgba(255,255,255,0.6)', background: 'transparent', cursor: 'pointer', borderLeft: '3px solid transparent', boxSizing: 'border-box' } as React.CSSProperties}>
+                  {item.icon}
+                  {item.label}
+                </a>
+              : <button key={item.id} onClick={() => { if (item.id === 'publicar' && !(perfilNombre && perfilTelefono)) { setSeccion('publicar'); setSidebarOpen(false); return } if (item.id === 'publicar' && !anuncioEditando && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis) { setSeccion('planes'); setSidebarOpen(false); return } setSeccion(item.id); setSidebarOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.6)', background: seccion === item.id ? 'rgba(255,255,255,0.12)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? '3px solid #83D4DB' : '3px solid transparent', boxSizing: 'border-box', position: 'relative' }}>
+                  {item.icon}
+                  {item.label}
+                  {item.id === 'mensajes' && noLeidos > 0 && (
+                    <span style={{ position: 'absolute', right: 14, background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 700, width: 18, height: 18, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{noLeidos}</span>
+                  )}
+                  {item.id === 'guardados' && noLeidosGuardados > 0 && (
+                    <span style={{ position: 'absolute', right: 14, background: '#e63946', color: '#fff', fontSize: 10, fontWeight: 700, width: 18, height: 18, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{noLeidosGuardados > 9 ? '9+' : noLeidosGuardados}</span>
+                  )}
+                </button>
           ))}
         </div>
 
@@ -1288,7 +1293,7 @@ export default function Panel() {
                       Hubo un problema con tu último pago. Estamos intentando cobrarlo de nuevo. En cuanto se resuelva, tus anuncios vuelven a publicarse automáticamente.<br/>
                       <span style={{ fontWeight: 600 }}>Si no se resuelve en 15 días, tus anuncios serán eliminados.</span>
                     </div>
-                    <button onClick={() => setSeccion('plan')} style={{ all: 'unset', marginTop: 10, background: '#c2410c', color: '#fff', padding: '7px 16px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'inline-block' }}>Actualizar método de pago</button>
+                    <a href="/planes" style={{ marginTop: 10, background: '#c2410c', color: '#fff', padding: '7px 16px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', display: 'inline-block', textDecoration: 'none' }}>Actualizar método de pago</a>
                   </div>
                 </div>
               )}
@@ -2343,14 +2348,14 @@ export default function Panel() {
           )}
 
           {/* BANNER SUSCRIPCIÓN VENCIDA */}
-          {!cargando && suscripcionVencida && seccion !== 'plan' && (
+          {!cargando && suscripcionVencida && (
             <div style={{ background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: 10, padding: '16px 20px', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#92400e" strokeWidth="2" style={{ flexShrink: 0 }}><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
               <div style={{ flex: 1 }}>
                 <div style={{ fontSize: 14, fontWeight: 600, color: '#92400e' }}>Tu suscripción ha vencido</div>
                 <div style={{ fontSize: 13, color: '#78350f', marginTop: 2 }}>Reactiva tu plan para volver a publicar tus anuncios. Tus propiedades están pausadas hasta que renueves.</div>
               </div>
-              <button onClick={() => setSeccion('plan')} style={{ all: 'unset', background: '#92400e', color: '#fff', padding: '8px 18px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>Reactivar plan</button>
+              <a href="/planes" style={{ background: '#92400e', color: '#fff', padding: '8px 18px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', textDecoration: 'none' }}>Reactivar plan</a>
             </div>
           )}
 
