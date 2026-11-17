@@ -328,7 +328,7 @@ export default function Planes() {
                   ? <div style={{ width: '100%', padding: '11px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: 'rgba(0,0,0,0.08)', color: plan.colorTexto, marginBottom: 20 }}>{Tp.planActual}</div>
                   : plan.tipo
                     ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: '12px 0', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, background: esPopular ? '#fff' : BRAND, color: esPopular ? BRAND : '#fff', marginBottom: 20 }}>
-                        {cargando ? '...' : plan.cta}
+                        {plan.cta}
                       </button>
                     : <a href={sesionActiva ? '/panel' : (plan.href || '/registro')} onClick={e => { e.preventDefault(); (window.top || window).location.href = sesionActiva ? '/panel' : (plan.href || '/registro') }} style={{ display: 'block', width: '100%', padding: '12px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: BRAND, color: '#fff', textDecoration: 'none', marginBottom: 20 }}>{plan.cta}</a>
                 }
