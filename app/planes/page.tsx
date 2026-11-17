@@ -1,23 +1,58 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '../../supabase'
 
 const BRAND = '#006D77'
 const BRAND_DARK = '#004E57'
 
-function coordsDeZona(zona: string): [number, number] {
-  const z = zona.toLowerCase()
-  if (z.includes('piantini')) return [18.489, -69.937]
-  if (z.includes('naco')) return [18.495, -69.945]
-  if (z.includes('bella vista')) return [18.476, -69.945]
-  if (z.includes('punta cana') || z.includes('bávaro') || z.includes('bavaro')) return [18.567, -68.363]
-  if (z.includes('cap cana')) return [18.51, -68.39]
-  if (z.includes('santiago')) return [19.451, -70.697]
-  if (z.includes('la romana')) return [18.427, -68.972]
-  if (z.includes('puerto plata')) return [19.793, -70.688]
-  if (z.includes('san pedro')) return [18.453, -69.302]
-  return [18.4861, -69.9312]
+const LISTADOS = [
+  { zona: 'Piantini, D.N.', precio: '$285,000', tipo: 'Apartamento', hab: 3, banos: 2 },
+  { zona: 'Cap Cana', precio: '$420,000', tipo: 'Villa', hab: 4, banos: 3 },
+  { zona: 'Punta Cana', precio: '$195,000', tipo: 'Apartamento', hab: 2, banos: 2 },
+  { zona: 'Santiago', precio: '$148,000', tipo: 'Casa', hab: 3, banos: 2 },
+]
+
+function MapaRD() {
+  return (
+    <svg viewBox="0 0 400 220" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
+      <rect width="400" height="220" fill="#dbeeff" rx="8"/>
+      <path d="M5,90 L10,55 L30,30 L70,15 L120,10 L175,18 L210,22 L235,8 L265,2 L282,18 L292,32 L320,42 L370,58 L395,80 L398,110 L385,148 L355,172 L310,188 L255,196 L190,196 L130,190 L70,182 L28,165 L5,130 Z"
+        fill="#e8f5e9" stroke="#b2dfb0" strokeWidth="1.5"/>
+      <path d="M60,80 Q120,55 180,70 Q240,55 290,75 Q330,90 350,120 Q300,140 240,145 Q180,150 130,140 Q80,130 60,110 Z"
+        fill="#c8e6c9" opacity="0.5"/>
+      {/* Santo Domingo */}
+      <g transform="translate(192,165)">
+        <path d="M0,-14 C-5,-14 -9,-10 -9,-5 C-9,2 0,12 0,12 C0,12 9,2 9,-5 C9,-10 5,-14 0,-14Z" fill={BRAND} stroke="#fff" strokeWidth="1.2"/>
+        <circle cx="0" cy="-5" r="3.5" fill="#fff"/>
+        <text y="20" textAnchor="middle" fontSize="8" fill={BRAND_DARK} fontWeight="700">Sto. Domingo</text>
+      </g>
+      {/* Punta Cana */}
+      <g transform="translate(372,110)">
+        <path d="M0,-14 C-5,-14 -9,-10 -9,-5 C-9,2 0,12 0,12 C0,12 9,2 9,-5 C9,-10 5,-14 0,-14Z" fill={BRAND} stroke="#fff" strokeWidth="1.2"/>
+        <circle cx="0" cy="-5" r="3.5" fill="#fff"/>
+        <text y="20" textAnchor="middle" fontSize="8" fill={BRAND_DARK} fontWeight="700">Punta Cana</text>
+      </g>
+      {/* Santiago */}
+      <g transform="translate(118,72)">
+        <path d="M0,-14 C-5,-14 -9,-10 -9,-5 C-9,2 0,12 0,12 C0,12 9,2 9,-5 C9,-10 5,-14 0,-14Z" fill={BRAND} stroke="#fff" strokeWidth="1.2"/>
+        <circle cx="0" cy="-5" r="3.5" fill="#fff"/>
+        <text y="20" textAnchor="middle" fontSize="8" fill={BRAND_DARK} fontWeight="700">Santiago</text>
+      </g>
+      {/* La Romana */}
+      <g transform="translate(302,168)">
+        <path d="M0,-12 C-4,-12 -8,-9 -8,-4 C-8,2 0,10 0,10 C0,10 8,2 8,-4 C8,-9 4,-12 0,-12Z" fill="#f59e0b" stroke="#fff" strokeWidth="1.2"/>
+        <circle cx="0" cy="-4" r="3" fill="#fff"/>
+        <text y="18" textAnchor="middle" fontSize="7.5" fill="#92400e" fontWeight="700">La Romana</text>
+      </g>
+      {/* Puerto Plata */}
+      <g transform="translate(100,32)">
+        <path d="M0,-12 C-4,-12 -8,-9 -8,-4 C-8,2 0,10 0,10 C0,10 8,2 8,-4 C8,-9 4,-12 0,-12Z" fill="#f59e0b" stroke="#fff" strokeWidth="1.2"/>
+        <circle cx="0" cy="-4" r="3" fill="#fff"/>
+        <text y="18" textAnchor="middle" fontSize="7.5" fill="#92400e" fontWeight="700">Pto. Plata</text>
+      </g>
+    </svg>
+  )
 }
 
 export default function Planes() {
@@ -25,10 +60,6 @@ export default function Planes() {
   const [sesionActiva, setSesionActiva] = useState(false)
   const [cargando, setCargando] = useState(false)
   const [planActual, setPlanActual] = useState<string | null>(null)
-  const mapRef = useRef<HTMLDivElement>(null)
-  const mapInstanceRef = useRef<any>(null)
-  const [mapaListo, setMapaListo] = useState(false)
-  const [propiedadesMap, setPropiedadesMap] = useState<any[]>([])
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {
@@ -38,70 +69,7 @@ export default function Planes() {
           .then(({ data }) => { if (data) setPlanActual(data.plan) })
       }
     })
-
-    // Propiedades para el mapa
-    supabase.from('propiedades')
-      .select('id,titulo,precio,zona,tipo,fotos,lat,lng')
-      .eq('estado', 'activo')
-      .limit(200)
-      .then(({ data }) => { if (data) setPropiedadesMap(data) })
   }, [])
-
-  // Inicializar mapa Leaflet
-  useEffect(() => {
-    if (mapInstanceRef.current || !mapRef.current) return
-    if (!document.querySelector('link[href*="leaflet"]')) {
-      const link = document.createElement('link')
-      link.rel = 'stylesheet'
-      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'
-      document.head.appendChild(link)
-    }
-    const load = () => {
-      const L = (window as any).L
-      if (!L || !mapRef.current) return
-      const map = L.map(mapRef.current, {
-        center: [18.7357, -70.1627], zoom: 7,
-        zoomControl: false, attributionControl: false,
-        scrollWheelZoom: false,
-      })
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
-      mapInstanceRef.current = { map, L }
-      setMapaListo(true)
-    }
-    if ((window as any).L) { load() }
-    else {
-      const s = document.createElement('script')
-      s.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
-      s.onload = load
-      document.head.appendChild(s)
-    }
-    return () => {
-      if (mapInstanceRef.current) { mapInstanceRef.current.map.remove(); mapInstanceRef.current = null }
-    }
-  }, [])
-
-  // Añadir pines al mapa cuando carguen las propiedades
-  useEffect(() => {
-    if (!mapInstanceRef.current || propiedadesMap.length === 0 || !mapaListo) return
-    const { L, map } = mapInstanceRef.current
-    propiedadesMap.forEach(p => {
-      const [lat, lng] = (p.lat != null && p.lng != null) ? [p.lat, p.lng] : coordsDeZona(p.zona || '')
-      const icono = L.divIcon({
-        className: '',
-        html: `<svg width="18" height="24" viewBox="0 0 22 30" xmlns="http://www.w3.org/2000/svg"><path d="M11 0C4.925 0 0 4.925 0 11c0 7.667 11 19 11 19s11-11.333 11-19C22 4.925 17.075 0 11 0z" fill="#006D77" stroke="#fff" stroke-width="1.5"/><circle cx="11" cy="11" r="4.5" fill="#fff"/></svg>`,
-        iconSize: [18, 24], iconAnchor: [9, 24], popupAnchor: [0, -24],
-      })
-      const fotos = Array.isArray(p.fotos) ? p.fotos : (typeof p.fotos === 'string' ? (() => { try { return JSON.parse(p.fotos) } catch { return [] } })() : [])
-      L.marker([lat, lng], { icon: icono }).addTo(map).bindPopup(`
-        <div style="width:180px;font-family:Arial,sans-serif;padding:2px 0">
-          ${fotos[0] ? `<img src="${fotos[0]}" style="width:100%;height:100px;object-fit:cover;border-radius:6px;margin-bottom:8px">` : ''}
-          <div style="font-size:11px;font-weight:700;color:#111;margin-bottom:4px">${p.titulo || ''}</div>
-          <div style="font-size:14px;font-weight:800;color:#006D77">US$ ${(p.precio || 0).toLocaleString('en-US')}</div>
-          <a href="/propiedad/${p.id}" style="display:block;background:#006D77;color:#fff;padding:6px;border-radius:5px;text-align:center;text-decoration:none;font-size:12px;font-weight:600;margin-top:8px">Ver propiedad</a>
-        </div>
-      `, { maxWidth: 200 })
-    })
-  }, [propiedadesMap, mapaListo])
 
   const irACheckout = async (tipo: string) => {
     if (!sesionActiva) { window.location.href = '/registro?next=/planes'; return }
@@ -173,7 +141,7 @@ export default function Planes() {
     <div style={{ minHeight: '100vh', background: '#f8fafb', fontFamily: 'Arial, Helvetica, sans-serif' }}>
 
       {/* NAV */}
-      <nav style={{ background: BRAND_DARK, height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', position: 'sticky', top: 0, zIndex: 900 }}>
+      <nav style={{ background: BRAND_DARK, height: 54, display: 'flex', alignItems: 'center', padding: '0 24px', position: 'sticky', top: 0, zIndex: 900 }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Link href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', marginRight: 28 }}>habitade.</Link>
           {[{ label: 'Comprar', href: '/buscar?operacion=venta' }, { label: 'Alquilar', href: '/buscar?operacion=alquiler' }].map(item => (
@@ -184,13 +152,13 @@ export default function Planes() {
 
       {/* HERO */}
       <div style={{ background: `linear-gradient(135deg, ${BRAND_DARK} 0%, ${BRAND} 100%)`, padding: '56px 24px 0', overflow: 'hidden' }}>
-        <div style={{ maxWidth: 920, margin: '0 auto', textAlign: 'center' }}>
+        <div style={{ maxWidth: 960, margin: '0 auto', textAlign: 'center' }}>
           <h1 style={{ fontSize: 42, fontWeight: 900, color: '#fff', margin: '0 0 40px', lineHeight: 1.15, letterSpacing: '-1px' }}>
             Publica. Llega. Vende.
           </h1>
 
           {/* Mockup plataforma */}
-          <div style={{ background: '#fff', borderRadius: '16px 16px 0 0', boxShadow: '0 -4px 60px rgba(0,0,0,0.25)', padding: '16px 16px 0', maxWidth: 860, margin: '0 auto', textAlign: 'left' }}>
+          <div style={{ background: '#fff', borderRadius: '16px 16px 0 0', boxShadow: '0 -4px 60px rgba(0,0,0,0.25)', padding: '16px 16px 0', maxWidth: 900, margin: '0 auto', textAlign: 'left' }}>
 
             {/* Barra de browser */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 14 }}>
@@ -205,10 +173,10 @@ export default function Planes() {
             {/* KPIs */}
             <div className="planes-kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10, marginBottom: 14 }}>
               {[
-                { label: 'Propiedades activas', valor: '250+', icon: '🏠', color: BRAND },
-                { label: 'Agentes verificados', valor: '18', icon: '✅', color: '#10b981' },
-                { label: 'Visitas al portal', valor: '4.2K', icon: '👁️', color: '#f59e0b' },
-                { label: 'Provincias cubiertas', valor: '12', icon: '📍', color: '#8b5cf6' },
+                { label: 'Propiedades activas', valor: '1,850+', icon: '🏠', color: BRAND },
+                { label: 'Agentes verificados', valor: '280+', icon: '✅', color: '#10b981' },
+                { label: 'Visitas mensuales', valor: '42K', icon: '👁️', color: '#f59e0b' },
+                { label: 'Provincias cubiertas', valor: '32', icon: '📍', color: '#8b5cf6' },
               ].map(k => (
                 <div key={k.label} style={{ background: '#f8fafb', borderRadius: 10, padding: '12px', border: '1px solid #eee' }}>
                   <div style={{ fontSize: 20 }}>{k.icon}</div>
@@ -218,14 +186,23 @@ export default function Planes() {
               ))}
             </div>
 
-            {/* Mapa Leaflet */}
-            <div style={{ position: 'relative', borderRadius: '10px 10px 0 0', overflow: 'hidden', height: 180 }}>
-              <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
-              {propiedadesMap.length > 0 && (
-                <div style={{ position: 'absolute', bottom: 10, left: 10, background: '#fff', borderRadius: 6, padding: '4px 10px', fontSize: 12, fontWeight: 700, color: BRAND, boxShadow: '0 2px 8px rgba(0,0,0,0.12)', zIndex: 400 }}>
-                  🗺️ {propiedadesMap.length} propiedades en el mapa
-                </div>
-              )}
+            {/* Mapa + listados */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 220px', gap: 0, borderRadius: '10px 10px 0 0', overflow: 'hidden', height: 200 }}>
+              {/* SVG mapa ilustrativo */}
+              <div style={{ background: '#dbeeff', overflow: 'hidden' }}>
+                <MapaRD />
+              </div>
+              {/* Listados con precio */}
+              <div style={{ background: '#f8fafb', borderLeft: '1px solid #e8e8e8', padding: '10px 0', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto' }}>
+                <div style={{ padding: '0 12px 6px', fontSize: 10, fontWeight: 700, color: '#aaa', letterSpacing: 0.5, textTransform: 'uppercase' }}>Recientes</div>
+                {LISTADOS.map((l, i) => (
+                  <div key={i} style={{ padding: '8px 12px', borderBottom: '1px solid #f0f0f0' }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: '#111', marginBottom: 2 }}>{l.zona}</div>
+                    <div style={{ fontSize: 10, color: '#888', marginBottom: 4 }}>{l.tipo} · {l.hab} hab · {l.banos} baños</div>
+                    <div style={{ fontSize: 13, fontWeight: 900, color: BRAND }}>{l.precio}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
