@@ -73,7 +73,7 @@ export default function CompletarPerfil() {
 
     const d = await res.json()
     if (!res.ok) { setError(d.error || 'Error al guardar'); setGuardando(false); return }
-    window.location.href = '/planes'
+    window.location.href = '/panel?s=planes'
   }
 
   if (loading) {
