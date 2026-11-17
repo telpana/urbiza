@@ -164,23 +164,9 @@ export default function Planes() {
           </h1>
 
           {/* Mockup plataforma */}
-          <div style={{ background: '#fff', borderRadius: '16px 16px 0 0', boxShadow: '0 -4px 60px rgba(0,0,0,0.25)', padding: '16px 16px 0', maxWidth: 900, margin: '0 auto', textAlign: 'left' }}>
-
-            {/* Barra de browser */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 14 }}>
-              <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#ff5f57' }} />
-              <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
-              <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
-              <div style={{ flex: 1, background: '#f4f5f6', borderRadius: 6, height: 26, display: 'flex', alignItems: 'center', padding: '0 10px', marginLeft: 8 }}>
-                <span style={{ fontSize: 11, color: '#aaa' }}>habitade.com/buscar</span>
-              </div>
-            </div>
-
-            {/* Screenshot real de búsqueda con overlays sobre textos */}
-            <div style={{ position: 'relative', borderRadius: '10px 10px 0 0', overflow: 'hidden' }}>
-              <img src="/buscar-preview.png" alt="Habitade búsqueda"
-                style={{ width: '100%', display: 'block', objectFit: 'cover', objectPosition: 'top', maxHeight: 360 }} />
-            </div>
+          <div style={{ borderRadius: '12px 12px 0 0', boxShadow: '0 -4px 60px rgba(0,0,0,0.25)', maxWidth: 900, margin: '0 auto', overflow: 'hidden', border: '6px solid #fff', borderBottom: 'none' }}>
+            <img src="/buscar-preview.png" alt="Habitade búsqueda"
+              style={{ width: '100%', display: 'block', objectFit: 'cover', objectPosition: 'top', maxHeight: 380 }} />
           </div>
         </div>
       </div>
