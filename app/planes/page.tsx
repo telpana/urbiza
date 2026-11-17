@@ -171,6 +171,93 @@ export default function Planes() {
         </div>
       </div>
 
+      {/* FEATURES */}
+      <div style={{ background: '#f8f9fa', padding: '80px 24px' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 60 }}>
+            <h2 style={{ fontSize: 34, fontWeight: 900, color: '#111', margin: '0 0 12px', letterSpacing: '-0.5px' }}>Herramientas que convierten visitas en ventas</h2>
+            <p style={{ fontSize: 17, color: '#666', margin: 0 }}>Todo lo que necesitas para gestionar tus propiedades y cerrar más rápido.</p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 28 }}>
+
+            {/* Chat directo */}
+            <div style={{ background: '#fff', borderRadius: 20, padding: 28, boxShadow: '0 2px 20px rgba(0,0,0,0.06)' }}>
+              <div style={{ width: 44, height: 44, borderRadius: 12, background: '#e8f5f6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={BRAND} strokeWidth="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+              </div>
+              <h3 style={{ fontSize: 17, fontWeight: 800, color: '#111', margin: '0 0 8px' }}>Chat directo con compradores</h3>
+              <p style={{ fontSize: 14, color: '#777', margin: '0 0 20px', lineHeight: 1.6 }}>Responde a los interesados en tiempo real desde tu panel. Sin intermediarios.</p>
+              {/* Notificaciones mock */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {[
+                  { nombre: 'Carlos M.', msg: '¿Está disponible para visita este fin?', time: '2 min' },
+                  { nombre: 'Ana R.', msg: 'Me interesa la propiedad, ¿tiene garaje?', time: '14 min' },
+                  { nombre: 'José L.', msg: 'Envíame más fotos por favor', time: '1 h' },
+                ].map((n, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#f8f9fa', borderRadius: 10, padding: '8px 12px' }}>
+                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: `hsl(${i*60+180},45%,55%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>{n.nombre[0]}</span>
+                    </div>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: '#111' }}>{n.nombre}</div>
+                      <div style={{ fontSize: 10.5, color: '#888', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{n.msg}</div>
+                    </div>
+                    <span style={{ fontSize: 9.5, color: '#bbb', flexShrink: 0 }}>{n.time}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* KPIs */}
+            <div style={{ background: '#fff', borderRadius: 20, padding: 28, boxShadow: '0 2px 20px rgba(0,0,0,0.06)' }}>
+              <div style={{ width: 44, height: 44, borderRadius: 12, background: '#e8f5f6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={BRAND} strokeWidth="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              </div>
+              <h3 style={{ fontSize: 17, fontWeight: 800, color: '#111', margin: '0 0 8px' }}>Métricas en tiempo real</h3>
+              <p style={{ fontSize: 14, color: '#777', margin: '0 0 20px', lineHeight: 1.6 }}>Visitas, contactos y tasa de conversión de cada propiedad actualizada al instante.</p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                {[
+                  { label: 'Visitas hoy', val: '1.247', delta: '+12%', up: true },
+                  { label: 'Contactos', val: '48', delta: '+8%', up: true },
+                  { label: 'Conversión', val: '3.8%', delta: '+0.4pp', up: true },
+                  { label: 'Favoritos', val: '134', delta: '+21%', up: true },
+                ].map((k, i) => (
+                  <div key={i} style={{ background: '#f8f9fa', borderRadius: 12, padding: '12px 14px' }}>
+                    <div style={{ fontSize: 10, color: '#999', marginBottom: 4 }}>{k.label}</div>
+                    <div style={{ fontSize: 20, fontWeight: 900, color: '#111', lineHeight: 1 }}>{k.val}</div>
+                    <div style={{ fontSize: 10, color: '#00a870', marginTop: 4, fontWeight: 600 }}>↑ {k.delta}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Filtros + soporte */}
+            <div style={{ background: '#fff', borderRadius: 20, padding: 28, boxShadow: '0 2px 20px rgba(0,0,0,0.06)' }}>
+              <div style={{ width: 44, height: 44, borderRadius: 12, background: '#e8f5f6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={BRAND} strokeWidth="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              </div>
+              <h3 style={{ fontSize: 17, fontWeight: 800, color: '#111', margin: '0 0 8px' }}>Filtros avanzados y soporte prioritario</h3>
+              <p style={{ fontSize: 14, color: '#777', margin: '0 0 20px', lineHeight: 1.6 }}>Aparece primero en las búsquedas con filtros de precio, zona, tipo y superficie. Soporte dedicado para agentes.</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {[
+                  { icon: '🏆', text: 'Destacado en resultados de búsqueda' },
+                  { icon: '🎯', text: 'Filtros por precio, zona y tipología' },
+                  { icon: '⚡', text: 'Soporte prioritario por WhatsApp' },
+                  { icon: '📸', text: 'Galería ilimitada por propiedad' },
+                ].map((f, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: '#444' }}>
+                    <span style={{ fontSize: 16 }}>{f.icon}</span>
+                    {f.text}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
       {/* PLANES */}
       <div style={{ maxWidth: 920, margin: '0 auto', padding: '56px 24px 80px' }}>
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
