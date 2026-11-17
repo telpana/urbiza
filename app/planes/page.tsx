@@ -13,44 +13,40 @@ const LISTADOS = [
   { zona: 'Santiago', precio: '$148,000', tipo: 'Casa', hab: 3, banos: 2 },
 ]
 
+function Pin({ x, y, color = '#006D77', size = 14 }: { x: number; y: number; color?: string; size?: number }) {
+  const r = size
+  return (
+    <g transform={`translate(${x},${y})`}>
+      <path d={`M0,${-r} C${-r * 0.56},${-r} ${-r},${-r * 0.56} ${-r},0 C${-r},${r * 0.6} 0,${r * 1.1} 0,${r * 1.1} C0,${r * 1.1} ${r},${r * 0.6} ${r},0 C${r},${-r * 0.56} ${r * 0.56},${-r} 0,${-r}Z`}
+        fill={color} stroke="#fff" strokeWidth="1.2"/>
+      <circle cx="0" cy="0" r={r * 0.32} fill="#fff"/>
+    </g>
+  )
+}
+
 function MapaRD() {
   return (
-    <svg viewBox="0 0 400 220" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
-      <rect width="400" height="220" fill="#dbeeff" rx="8"/>
-      <path d="M5,90 L10,55 L30,30 L70,15 L120,10 L175,18 L210,22 L235,8 L265,2 L282,18 L292,32 L320,42 L370,58 L395,80 L398,110 L385,148 L355,172 L310,188 L255,196 L190,196 L130,190 L70,182 L28,165 L5,130 Z"
-        fill="#e8f5e9" stroke="#b2dfb0" strokeWidth="1.5"/>
-      <path d="M60,80 Q120,55 180,70 Q240,55 290,75 Q330,90 350,120 Q300,140 240,145 Q180,150 130,140 Q80,130 60,110 Z"
-        fill="#c8e6c9" opacity="0.5"/>
-      {/* Santo Domingo */}
-      <g transform="translate(192,165)">
-        <path d="M0,-14 C-5,-14 -9,-10 -9,-5 C-9,2 0,12 0,12 C0,12 9,2 9,-5 C9,-10 5,-14 0,-14Z" fill={BRAND} stroke="#fff" strokeWidth="1.2"/>
-        <circle cx="0" cy="-5" r="3.5" fill="#fff"/>
-        <text y="20" textAnchor="middle" fontSize="8" fill={BRAND_DARK} fontWeight="700">Sto. Domingo</text>
-      </g>
-      {/* Punta Cana */}
-      <g transform="translate(372,110)">
-        <path d="M0,-14 C-5,-14 -9,-10 -9,-5 C-9,2 0,12 0,12 C0,12 9,2 9,-5 C9,-10 5,-14 0,-14Z" fill={BRAND} stroke="#fff" strokeWidth="1.2"/>
-        <circle cx="0" cy="-5" r="3.5" fill="#fff"/>
-        <text y="20" textAnchor="middle" fontSize="8" fill={BRAND_DARK} fontWeight="700">Punta Cana</text>
-      </g>
-      {/* Santiago */}
-      <g transform="translate(118,72)">
-        <path d="M0,-14 C-5,-14 -9,-10 -9,-5 C-9,2 0,12 0,12 C0,12 9,2 9,-5 C9,-10 5,-14 0,-14Z" fill={BRAND} stroke="#fff" strokeWidth="1.2"/>
-        <circle cx="0" cy="-5" r="3.5" fill="#fff"/>
-        <text y="20" textAnchor="middle" fontSize="8" fill={BRAND_DARK} fontWeight="700">Santiago</text>
-      </g>
-      {/* La Romana */}
-      <g transform="translate(302,168)">
-        <path d="M0,-12 C-4,-12 -8,-9 -8,-4 C-8,2 0,10 0,10 C0,10 8,2 8,-4 C8,-9 4,-12 0,-12Z" fill="#f59e0b" stroke="#fff" strokeWidth="1.2"/>
-        <circle cx="0" cy="-4" r="3" fill="#fff"/>
-        <text y="18" textAnchor="middle" fontSize="7.5" fill="#92400e" fontWeight="700">La Romana</text>
-      </g>
-      {/* Puerto Plata */}
-      <g transform="translate(100,32)">
-        <path d="M0,-12 C-4,-12 -8,-9 -8,-4 C-8,2 0,10 0,10 C0,10 8,2 8,-4 C8,-9 4,-12 0,-12Z" fill="#f59e0b" stroke="#fff" strokeWidth="1.2"/>
-        <circle cx="0" cy="-4" r="3" fill="#fff"/>
-        <text y="18" textAnchor="middle" fontSize="7.5" fill="#92400e" fontWeight="700">Pto. Plata</text>
-      </g>
+    <svg viewBox="0 0 420 220" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
+      {/* Mar */}
+      <rect width="420" height="220" fill="#cce8f8"/>
+      {/* Silueta República Dominicana */}
+      <path d="
+        M 10,82 L 15,52 L 32,28 L 68,12 L 110,6 L 155,8 L 188,14
+        L 215,10 L 232,4 L 255,2 L 272,8 L 268,26 L 282,32
+        L 308,38 L 348,55 L 390,78 L 415,100 L 416,118
+        L 408,148 L 384,168 L 348,182 L 308,190 L 262,194
+        L 215,194 L 168,191 L 122,186 L 75,178 L 36,165
+        L 10,148 L 5,118 L 10,82 Z"
+        fill="#d4edda" stroke="#9ecfaa" strokeWidth="1.5"/>
+      {/* Sombreado interior montañas */}
+      <path d="M 55,80 Q 110,55 170,68 Q 230,55 285,72 Q 325,88 340,118 Q 295,142 238,146 Q 178,150 128,140 Q 82,128 55,105 Z"
+        fill="#b8dfc0" opacity="0.5"/>
+      {/* Pines: Santo Domingo, Santiago, Punta Cana, La Romana, Puerto Plata */}
+      <Pin x={198} y={170} color={BRAND} size={13}/>
+      <Pin x={112} y={68} color={BRAND} size={12}/>
+      <Pin x={395} y={112} color={BRAND} size={12}/>
+      <Pin x={312} y={178} color="#f59e0b" size={11}/>
+      <Pin x={82} y={22} color="#f59e0b" size={11}/>
     </svg>
   )
 }
