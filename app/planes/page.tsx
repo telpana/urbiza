@@ -207,11 +207,11 @@ export default function Planes() {
             <p style={{ fontSize: 15, color: '#666', margin: 0 }}>Todo lo que necesitas para gestionar tus propiedades y cerrar más rápido.</p>
           </div>
           <div className="planes-features" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
-            <div style={{ background: BRAND_DARK, borderRadius: 20, padding: 28 }}>
+            <div style={{ background: BRAND_DARK, borderRadius: 20, padding: 28, display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 12 }}>Mensajería</div>
               <h3 style={{ fontSize: 20, fontWeight: 800, color: '#fff', margin: '0 0 10px', lineHeight: 1.3 }}>Chat directo con compradores</h3>
               <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', margin: '0 0 24px', lineHeight: 1.65 }}>Responde a los interesados en tiempo real desde tu panel. Sin intermediarios ni esperas.</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
                 {[
                   { nombre: 'Carlos M.', msg: '¿Cuándo se puede visitar?', time: '2 min', unread: true },
                   { nombre: 'Ana R.', msg: '¿Tiene parqueo disponible?', time: '14 min', unread: true },
@@ -233,11 +233,11 @@ export default function Planes() {
                 ))}
               </div>
             </div>
-            <div style={{ background: BRAND_DARK, borderRadius: 20, padding: 28 }}>
+            <div style={{ background: BRAND_DARK, borderRadius: 20, padding: 28, display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 12 }}>Analítica</div>
               <h3 style={{ fontSize: 20, fontWeight: 800, color: '#fff', margin: '0 0 10px', lineHeight: 1.3 }}>Métricas en tiempo real</h3>
               <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', margin: '0 0 24px', lineHeight: 1.65 }}>Visitas, contactos y tasa de conversión de cada propiedad actualizada al instante.</p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, flex: 1, alignContent: 'start' }}>
                 {[
                   { label: 'Visitas hoy', val: '1.247', delta: '+12%' },
                   { label: 'Contactos', val: '48', delta: '+8%' },
@@ -252,11 +252,11 @@ export default function Planes() {
                 ))}
               </div>
             </div>
-            <div style={{ background: BRAND_DARK, borderRadius: 20, padding: 28 }}>
+            <div style={{ background: BRAND_DARK, borderRadius: 20, padding: 28, display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 12 }}>Visibilidad</div>
               <h3 style={{ fontSize: 20, fontWeight: 800, color: '#fff', margin: '0 0 10px', lineHeight: 1.3 }}>Destacado y soporte prioritario</h3>
               <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', margin: '0 0 24px', lineHeight: 1.65 }}>Aparece primero ante miles de compradores. Con soporte dedicado para agentes e inmobiliarias.</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
                 {['Destacado en los primeros resultados de búsqueda','Filtros avanzados por precio, zona y tipología','Soporte prioritario por WhatsApp y email','Acceso anticipado a nuevas funciones'].map((f, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13.5, color: 'rgba(255,255,255,0.75)', lineHeight: 1.4 }}>
                     <div style={{ width: 18, height: 18, borderRadius: '50%', border: '1.5px solid rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
