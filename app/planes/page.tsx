@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '../../supabase'
+import { useIdioma } from '../../IdiomaContext'
 
 const BRAND = '#006D77'
 const BRAND_DARK = '#004E57'
@@ -62,6 +63,8 @@ function MapaRD() {
 }
 
 export default function Planes() {
+  const { tr } = useIdioma()
+  const Tp = tr.panel.planesPage
   const [anual, setAnual] = useState(true)
   const [sesionActiva, setSesionActiva] = useState(false)
   const [cargando, setCargando] = useState(false)
@@ -104,7 +107,7 @@ export default function Planes() {
       color: '#f8f9fa',
       colorTexto: '#333',
       badge: null,
-      cta: 'Empezar gratis',
+      get cta() { return Tp.empezarGratis },
       href: '/registro',
       tipo: null,
       limite: '2 propiedades',
@@ -145,6 +148,16 @@ export default function Planes() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#f8fafb', fontFamily: 'Arial, Helvetica, sans-serif' }}>
+      <style>{`
+        @media (max-width: 768px) {
+          .planes-features { grid-template-columns: 1fr !important; }
+          .planes-cards { grid-template-columns: 1fr !important; }
+          .planes-faq { grid-template-columns: 1fr !important; }
+          .planes-platino { flex-direction: column !important; align-items: flex-start !important; }
+          .planes-hero-title { font-size: 32px !important; }
+          .planes-section-title { font-size: 26px !important; }
+        }
+      `}</style>
 
       {/* NAV */}
       <nav style={{ background: BRAND_DARK, height: 54, display: 'flex', alignItems: 'center', padding: '0 24px', position: 'sticky', top: 0, zIndex: 900 }}>
@@ -160,7 +173,7 @@ export default function Planes() {
       <div style={{ background: `linear-gradient(135deg, ${BRAND_DARK} 0%, ${BRAND} 100%)`, padding: '56px 24px 0', overflow: 'hidden' }}>
         <div style={{ maxWidth: 960, margin: '0 auto', textAlign: 'center' }}>
           <h1 style={{ fontSize: 42, fontWeight: 900, color: '#fff', margin: '0 0 40px', lineHeight: 1.15, letterSpacing: '-1px' }}>
-            Publica. Llega. Vende.
+            {Tp.heroTitulo}
           </h1>
 
           {/* Mockup plataforma */}
@@ -179,7 +192,7 @@ export default function Planes() {
             <p style={{ fontSize: 17, color: '#666', margin: 0 }}>Todo lo que necesitas para gestionar tus propiedades y cerrar más rápido.</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
+          <div className="planes-features" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
 
             {/* Chat directo */}
             <div style={{ background: BRAND_DARK, borderRadius: 20, padding: 28 }}>
@@ -260,18 +273,18 @@ export default function Planes() {
       <div style={{ maxWidth: 920, margin: '0 auto', padding: '56px 24px 80px' }}>
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <h2 style={{ fontSize: 32, fontWeight: 900, color: '#111', margin: '0 0 12px', letterSpacing: '-0.5px' }}>
-            Elige tu plan
+            {Tp.elegirPlan}
           </h2>
-          <p style={{ fontSize: 16, color: '#666', margin: '0 0 28px' }}>Sin permanencia. Cancela cuando quieras.</p>
+          <p style={{ fontSize: 16, color: '#666', margin: '0 0 28px' }}>{Tp.sinPermanencia}</p>
 
           {/* Toggle */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, background: '#fff', border: '1.5px solid #e8e8e8', borderRadius: 100, padding: '6px 20px' }}>
-            <span style={{ fontSize: 14, fontWeight: 600, color: anual ? '#aaa' : '#111' }}>Mensual</span>
+            <span style={{ fontSize: 14, fontWeight: 600, color: anual ? '#aaa' : '#111' }}>{Tp.mensual}</span>
             <button onClick={() => setAnual(v => !v)} style={{ width: 44, height: 24, borderRadius: 100, border: 'none', cursor: 'pointer', background: anual ? BRAND : '#ccc', position: 'relative', transition: 'background 0.2s', padding: 0 }}>
               <div style={{ width: 18, height: 18, borderRadius: '50%', background: '#fff', position: 'absolute', top: 3, left: anual ? 23 : 3, transition: 'left 0.2s', boxShadow: '0 1px 4px rgba(0,0,0,0.2)' }} />
             </button>
             <span style={{ fontSize: 14, fontWeight: 600, color: anual ? '#111' : '#aaa' }}>
-              Anual
+              {Tp.anual}
               <span style={{ marginLeft: 6, background: '#e6f7f1', color: '#00a870', fontSize: 11, fontWeight: 700, padding: '2px 7px', borderRadius: 100 }}>−12%</span>
             </span>
           </div>
@@ -301,7 +314,7 @@ export default function Planes() {
                           <span style={{ fontSize: 36, fontWeight: 900, color: plan.colorTexto, lineHeight: 1 }}>{precio.toFixed(2)}</span>
                           <span style={{ fontSize: 13, color: esPopular ? 'rgba(255,255,255,0.75)' : '#888' }}>/mes</span>
                         </div>
-                        {anual && <div style={{ fontSize: 12, color: esPopular ? 'rgba(255,255,255,0.65)' : '#aaa', marginTop: 4 }}>Facturado anualmente</div>}
+                        {anual && <div style={{ fontSize: 12, color: esPopular ? 'rgba(255,255,255,0.65)' : '#aaa', marginTop: 4 }}>{Tp.facturadoAnual}</div>}
                       </>
                   }
                   <div style={{ fontSize: 12, fontWeight: 700, color: esPopular ? 'rgba(255,255,255,0.9)' : BRAND, marginTop: 8, background: esPopular ? 'rgba(255,255,255,0.15)' : '#e8f7f8', display: 'inline-block', padding: '3px 10px', borderRadius: 6 }}>
@@ -309,7 +322,7 @@ export default function Planes() {
                   </div>
                 </div>
                 {esPlanActual
-                  ? <div style={{ width: '100%', padding: '11px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: 'rgba(0,0,0,0.08)', color: plan.colorTexto, marginBottom: 20 }}>Plan actual</div>
+                  ? <div style={{ width: '100%', padding: '11px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: 'rgba(0,0,0,0.08)', color: plan.colorTexto, marginBottom: 20 }}>{Tp.planActual}</div>
                   : plan.tipo
                     ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: '12px 0', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, background: esPopular ? '#fff' : BRAND, color: esPopular ? BRAND : '#fff', marginBottom: 20 }}>
                         {cargando ? '...' : plan.cta}
@@ -337,26 +350,21 @@ export default function Planes() {
 
         {/* Platino */}
         <div style={{ marginTop: 40, textAlign: 'center', marginBottom: 16 }}>
-          <p style={{ fontSize: 13, fontWeight: 600, color: '#999', textTransform: 'uppercase', letterSpacing: 1.2, margin: '0 0 6px' }}>¿Necesitas un plan a medida?</p>
+          <p style={{ fontSize: 13, fontWeight: 600, color: '#999', textTransform: 'uppercase', letterSpacing: 1.2, margin: '0 0 6px' }}>{Tp.necesitasMedida}</p>
         </div>
         <div className="planes-platino" style={{ background: `linear-gradient(135deg, ${BRAND_DARK}, ${BRAND})`, borderRadius: 16, padding: '28px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
           <div>
             <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Platino</div>
-            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)' }}>Propiedades a medida, integraciones personalizadas y soluciones inteligentes para tu negocio.</div>
+            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)' }}>{Tp.platinoDesc}</div>
           </div>
-          <a href="mailto:hola@habitade.com" style={{ background: '#fff', color: BRAND, padding: '12px 28px', borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: 'none', whiteSpace: 'nowrap' }}>Contactar</a>
+          <a href="mailto:hola@habitade.com" style={{ background: '#fff', color: BRAND, padding: '12px 28px', borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: 'none', whiteSpace: 'nowrap' }}>{Tp.contactar}</a>
         </div>
 
         {/* FAQ */}
         <div style={{ marginTop: 80, textAlign: 'center' }}>
-          <h3 style={{ fontSize: 24, fontWeight: 800, color: '#111', marginBottom: 32 }}>Preguntas frecuentes</h3>
+          <h3 style={{ fontSize: 24, fontWeight: 800, color: '#111', marginBottom: 32 }}>{Tp.preguntasFrecuentes}</h3>
           <div className="planes-faq" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 20, textAlign: 'left' }}>
-            {[
-              { p: '¿Puedo cancelar en cualquier momento?', r: 'Sí. Sin permanencia ni penalizaciones. Si cancelas, tus anuncios quedan visibles hasta el final del periodo pagado.' },
-              { p: '¿Qué pasa si supero el límite de propiedades?', r: 'No podrás publicar nuevas hasta que elimines alguna existente o mejores de plan.' },
-              { p: '¿Puedo cambiar de plan más adelante?', r: 'Sí. Puedes subir de plan en cualquier momento desde tu panel.' },
-              { p: '¿Hay periodo de prueba?', r: 'Sí, en ocasiones ofrecemos códigos promocionales con días de prueba gratuita. Consulta con soporte.' },
-            ].map(faq => (
+            {Tp.faq.map((faq: { p: string; r: string }) => (
               <div key={faq.p} style={{ background: '#fff', borderRadius: 12, padding: '20px 24px', border: '1px solid #e8e8e8' }}>
                 <div style={{ fontSize: 15, fontWeight: 700, color: '#111', marginBottom: 8 }}>{faq.p}</div>
                 <div style={{ fontSize: 14, color: '#666', lineHeight: 1.6 }}>{faq.r}</div>
