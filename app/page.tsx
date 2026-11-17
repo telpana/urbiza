@@ -468,9 +468,9 @@ export default function Home() {
       if (session?.user) { setSesionActiva(true); setAuthReady(true); initAuth(session.user) }
       else { setSesionActiva(false); setAuthReady(true) }
     })
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) initAuth(session.user)
-      else { setSesionActiva(false); setAuthReady(true) }
+      else if (event === 'SIGNED_OUT') { setSesionActiva(false); setAuthReady(true) }
     })
     // Poll guardados notifications every 20s
     const interval = setInterval(async () => {
