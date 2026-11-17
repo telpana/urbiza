@@ -254,7 +254,7 @@ export default function Planes() {
             </div>
             <div style={{ flex: 1, background: BRAND_DARK, borderRadius: 20, padding: 22, display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 10 }}>Visibilidad</div>
-              <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.3 }}>Destacado y soporte prioritario</h3>
+              <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.3 }}>Soporte prioritario</h3>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', margin: '0 0 16px', lineHeight: 1.5 }}>Aparece primero ante miles de compradores e inmobiliarias.</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {['Destacado en resultados de búsqueda','Filtros por precio, zona y tipología','Soporte prioritario por WhatsApp','Acceso anticipado a nuevas funciones'].map((f, i) => (
