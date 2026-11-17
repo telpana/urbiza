@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '../../supabase'
 import { useIdioma } from '../../IdiomaContext'
+import { useSearchParams } from 'next/navigation'
 
 const BRAND = '#006D77'
 const BRAND_DARK = '#004E57'
@@ -65,6 +66,8 @@ function MapaRD() {
 export default function Planes() {
   const { tr } = useIdioma()
   const Tp = tr.panel.planesPage
+  const searchParams = useSearchParams()
+  const isEmbed = searchParams.get('embed') === '1'
   const [anual, setAnual] = useState(true)
   const [sesionActiva, setSesionActiva] = useState(false)
   const [cargando, setCargando] = useState(false)
@@ -160,17 +163,17 @@ export default function Planes() {
       `}</style>
 
       {/* NAV */}
-      <nav style={{ background: BRAND_DARK, height: 54, display: 'flex', alignItems: 'center', padding: '0 24px', position: 'sticky', top: 0, zIndex: 900 }}>
+      {!isEmbed && <nav style={{ background: BRAND_DARK, height: 54, display: 'flex', alignItems: 'center', padding: '0 24px', position: 'sticky', top: 0, zIndex: 900 }}>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Link href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', marginRight: 28 }}>habitade.</Link>
           {[{ label: 'Comprar', href: '/buscar?operacion=venta' }, { label: 'Alquilar', href: '/buscar?operacion=alquiler' }].map(item => (
             <Link key={item.label} href={item.href} style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>{item.label}</Link>
           ))}
         </div>
-      </nav>
+      </nav>}
 
       {/* HERO */}
-      <div style={{ background: `linear-gradient(135deg, ${BRAND_DARK} 0%, ${BRAND} 100%)`, padding: '56px 24px 0', overflow: 'hidden' }}>
+      {!isEmbed && <div style={{ background: `linear-gradient(135deg, ${BRAND_DARK} 0%, ${BRAND} 100%)`, padding: '56px 24px 0', overflow: 'hidden' }}>
         <div style={{ maxWidth: 960, margin: '0 auto', textAlign: 'center' }}>
           <h1 style={{ fontSize: 42, fontWeight: 900, color: '#fff', margin: '0 0 40px', lineHeight: 1.15, letterSpacing: '-1px' }}>
             {Tp.heroTitulo}
@@ -182,7 +185,7 @@ export default function Planes() {
               style={{ width: '100%', display: 'block', objectFit: 'cover', objectPosition: 'top', maxHeight: 380 }} />
           </div>
         </div>
-      </div>
+      </div>}
 
       {/* FEATURES */}
       <div style={{ background: '#f8fafb', padding: '80px 24px' }}>
@@ -375,7 +378,7 @@ export default function Planes() {
       </div>
 
       {/* FOOTER */}
-      <footer style={{ background: BRAND_DARK, color: 'rgba(255,255,255,0.5)', padding: '28px 24px 20px', textAlign: 'center' }}>
+      {!isEmbed && <footer style={{ background: BRAND_DARK, color: 'rgba(255,255,255,0.5)', padding: '28px 24px 20px', textAlign: 'center' }}>
         <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap', marginBottom: 16 }}>
           {[
             { label: 'Aviso legal', href: '/legal/aviso-legal' },
@@ -387,7 +390,7 @@ export default function Planes() {
           ))}
         </div>
         <div style={{ fontSize: 12 }}>© {new Date().getFullYear()} Habitade. Todos los derechos reservados.</div>
-      </footer>
+      </footer>}
     </div>
   )
 }

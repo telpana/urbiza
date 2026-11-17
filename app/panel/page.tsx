@@ -36,7 +36,7 @@ const Ip = (paths: React.ReactNode) => <svg width="18" height="18" viewBox="2 2 
 
 function getMenuItems(Tpanel: any) {
   return [
-    { id: 'planes', label: Tpanel?.menu?.planes ?? 'Planes', href: '/planes', icon: Ip(<><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></>) },
+    { id: 'planes', label: Tpanel?.menu?.planes ?? 'Planes', icon: Ip(<><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></>) },
     { id: 'anuncios', label: Tpanel?.menu?.anuncios ?? 'Mis anuncios', icon: Ip(<><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></>) },
     { id: 'perfil', label: Tpanel?.menu?.perfil ?? 'Mi perfil', icon: Ip(<><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>) },
     { id: 'publicar', label: Tpanel?.menu?.publicar ?? 'Publicar anuncio', icon: Ip(<><circle cx="12" cy="12" r="9"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></>) },
@@ -2213,72 +2213,10 @@ export default function Panel() {
             </div>
           )}
 
-          {/* PLANES PRO — pantalla para particulares que llegan al límite */}
+          {/* PLANES — iframe embebido */}
           {!cargando && seccion === 'planes' && (
-            <div style={{ maxWidth: 560, margin: '0 auto', textAlign: 'center' }}>
-              <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 8 }}>Mejora tu plan</h1>
-              <p style={{ fontSize: 15, color: '#888', marginBottom: 32 }}>
-                {limiteAnuncios < 999
-                  ? `Tienes ${anunciosUsados} de ${limiteAnuncios} propiedades usadas en tu plan actual.`
-                  : 'Gestiona tu suscripción desde aquí.'}
-              </p>
-
-              {/* Cards compactas Plata / Oro */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
-                {[
-                  { nombre: 'Plata', precio: '16.99', limite: '15 prop.', tipo: 'plata_mensual', popular: false },
-                  { nombre: 'Oro', precio: '39.99', limite: '50 prop.', tipo: 'oro_mensual', popular: true },
-                ].map(p => (
-                  <div key={p.nombre} style={{ background: p.popular ? '#006D77' : '#fff', border: p.popular ? '2px solid #006D77' : '1.5px solid #e8e8e8', borderRadius: 12, padding: '20px 18px', position: 'relative' }}>
-                    {p.popular && <div style={{ position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)', background: '#004E57', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 12px', borderRadius: 10, whiteSpace: 'nowrap' }}>MÁS POPULAR</div>}
-                    <div style={{ fontSize: 18, fontWeight: 800, color: p.popular ? '#fff' : '#111', marginBottom: 2 }}>{p.nombre}</div>
-                    <div style={{ fontSize: 28, fontWeight: 900, color: p.popular ? '#fff' : '#006D77', lineHeight: 1 }}>US$ {p.precio}<span style={{ fontSize: 13, fontWeight: 400, opacity: 0.7 }}>/mes</span></div>
-                    <div style={{ fontSize: 12, color: p.popular ? 'rgba(255,255,255,0.75)' : '#888', margin: '6px 0 16px' }}>{p.limite}</div>
-                    <button
-                      onClick={async () => {
-                        promoLoading || (() => {})()
-                        const { data: { session } } = await supabase.auth.getSession()
-                        const { data: { user: u } } = await supabase.auth.getUser()
-                        const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token ?? ''}` }, body: JSON.stringify({ userId: u?.id, email: u?.email, tipo: p.tipo }) })
-                        const d = await res.json()
-                        if (d.url) window.location.href = d.url
-                      }}
-                      style={{ all: 'unset', display: 'block', width: '100%', background: p.popular ? '#fff' : '#006D77', color: p.popular ? '#006D77' : '#fff', padding: '10px 0', borderRadius: 7, fontSize: 13, fontWeight: 700, cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box' }}
-                    >
-                      Empezar
-                    </button>
-                  </div>
-                ))}
-              </div>
-
-              <a href="/planes" target="_blank" style={{ fontSize: 13, color: '#006D77', textDecoration: 'none', fontWeight: 600 }}>
-                Ver todos los planes y comparativa →
-              </a>
-
-              {/* Código promo */}
-              {!planInfo?.ya_suscrito && (
-                <div style={{ marginTop: 24 }}>
-                  {promoValidado ? (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }}>
-                      <span style={{ background: '#d1fae5', color: '#065f46', fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 20 }}>✓ {promoDias} días gratis</span>
-                      <button onClick={() => { setPromoValidado(false); setCodigoPromo(''); setPromoError('') }} style={{ all: 'unset', fontSize: 11, color: '#aaa', cursor: 'pointer', textDecoration: 'underline' }}>Quitar</button>
-                    </div>
-                  ) : (
-                    <>
-                      <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center', background: '#f0fafb', border: '1.5px solid #83D4DB', borderRadius: 10, padding: '10px 14px', width: '100%', boxSizing: 'border-box' }}>
-                        <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }}
-                          onKeyDown={async e => { if (e.key === 'Enter') { e.preventDefault(); await aplicarCodigo() } }}
-                          placeholder="CÓDIGO PROMO" maxLength={32}
-                          style={{ border: 'none', background: 'transparent', fontSize: 12, flex: 1, minWidth: 0, outline: 'none', textAlign: 'center', letterSpacing: 1, fontWeight: 600, color: '#006D77', WebkitTextFillColor: '#006D77' }} />
-                        <button onClick={aplicarCodigo} disabled={promoLoading || !codigoPromo.trim()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '5px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: (!codigoPromo.trim() || promoLoading) ? 'default' : 'pointer', opacity: (!codigoPromo.trim() || promoLoading) ? 0.4 : 1, whiteSpace: 'nowrap' }}>
-                          Aplicar
-                        </button>
-                      </div>
-                      {promoError && <div style={{ fontSize: 12, color: '#dc2626', marginTop: 6 }}>{promoError}</div>}
-                    </>
-                  )}
-                </div>
-              )}
+            <div style={{ margin: '-28px -32px', height: 'calc(100vh - 54px)' }}>
+              <iframe src="/planes?embed=1" style={{ width: '100%', height: '100%', border: 'none', display: 'block' }} />
             </div>
           )}
 
