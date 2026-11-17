@@ -172,83 +172,81 @@ export default function Planes() {
       </div>
 
       {/* FEATURES */}
-      <div style={{ background: '#f8f9fa', padding: '80px 24px' }}>
+      <div style={{ background: BRAND_DARK, padding: '80px 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 60 }}>
-            <h2 style={{ fontSize: 34, fontWeight: 900, color: '#111', margin: '0 0 12px', letterSpacing: '-0.5px' }}>Herramientas que convierten visitas en ventas</h2>
-            <p style={{ fontSize: 17, color: '#666', margin: 0 }}>Todo lo que necesitas para gestionar tus propiedades y cerrar más rápido.</p>
+          <div style={{ textAlign: 'center', marginBottom: 56 }}>
+            <h2 style={{ fontSize: 36, fontWeight: 900, color: '#fff', margin: '0 0 12px', letterSpacing: '-0.5px' }}>Herramientas que convierten visitas en ventas</h2>
+            <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.65)', margin: 0 }}>Todo lo que necesitas para gestionar tus propiedades y cerrar más rápido.</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 28 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
 
             {/* Chat directo */}
-            <div style={{ background: '#fff', borderRadius: 20, padding: 28, boxShadow: '0 2px 20px rgba(0,0,0,0.06)' }}>
-              <div style={{ width: 44, height: 44, borderRadius: 12, background: '#e8f5f6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={BRAND} strokeWidth="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-              </div>
-              <h3 style={{ fontSize: 17, fontWeight: 800, color: '#111', margin: '0 0 8px' }}>Chat directo con compradores</h3>
-              <p style={{ fontSize: 14, color: '#777', margin: '0 0 20px', lineHeight: 1.6 }}>Responde a los interesados en tiempo real desde tu panel. Sin intermediarios.</p>
-              {/* Notificaciones mock */}
+            <div style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 20, padding: 28 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 12 }}>Mensajería</div>
+              <h3 style={{ fontSize: 20, fontWeight: 800, color: '#fff', margin: '0 0 10px', lineHeight: 1.3 }}>Chat directo con compradores</h3>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', margin: '0 0 24px', lineHeight: 1.65 }}>Responde a los interesados en tiempo real desde tu panel. Sin intermediarios ni esperas.</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {[
-                  { nombre: 'Carlos M.', msg: '¿Está disponible para visita este fin?', time: '2 min' },
-                  { nombre: 'Ana R.', msg: 'Me interesa la propiedad, ¿tiene garaje?', time: '14 min' },
-                  { nombre: 'José L.', msg: 'Envíame más fotos por favor', time: '1 h' },
+                  { nombre: 'Carlos M.', msg: '¿Está disponible para visita este fin?', time: '2 min', unread: true },
+                  { nombre: 'Ana R.', msg: 'Me interesa la propiedad, ¿tiene garaje?', time: '14 min', unread: true },
+                  { nombre: 'José L.', msg: 'Envíame más fotos por favor', time: '1 h', unread: false },
                 ].map((n, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, background: '#f8f9fa', borderRadius: 10, padding: '8px 12px' }}>
-                    <div style={{ width: 32, height: 32, borderRadius: '50%', background: `hsl(${i*60+180},45%,55%)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>{n.nombre[0]}</span>
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(255,255,255,0.06)', borderRadius: 12, padding: '10px 12px' }}>
+                    <div style={{ width: 34, height: 34, borderRadius: '50%', background: ['#2a9d8f','#e76f51','#457b9d'][i], display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{n.nombre[0]}</span>
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: '#111' }}>{n.nombre}</div>
-                      <div style={{ fontSize: 10.5, color: '#888', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{n.msg}</div>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>{n.nombre}</div>
+                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{n.msg}</div>
                     </div>
-                    <span style={{ fontSize: 9.5, color: '#bbb', flexShrink: 0 }}>{n.time}</span>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4, flexShrink: 0 }}>
+                      <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>{n.time}</span>
+                      {n.unread && <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#4ade80' }} />}
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* KPIs */}
-            <div style={{ background: '#fff', borderRadius: 20, padding: 28, boxShadow: '0 2px 20px rgba(0,0,0,0.06)' }}>
-              <div style={{ width: 44, height: 44, borderRadius: 12, background: '#e8f5f6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={BRAND} strokeWidth="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              </div>
-              <h3 style={{ fontSize: 17, fontWeight: 800, color: '#111', margin: '0 0 8px' }}>Métricas en tiempo real</h3>
-              <p style={{ fontSize: 14, color: '#777', margin: '0 0 20px', lineHeight: 1.6 }}>Visitas, contactos y tasa de conversión de cada propiedad actualizada al instante.</p>
+            <div style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 20, padding: 28 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 12 }}>Analítica</div>
+              <h3 style={{ fontSize: 20, fontWeight: 800, color: '#fff', margin: '0 0 10px', lineHeight: 1.3 }}>Métricas en tiempo real</h3>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', margin: '0 0 24px', lineHeight: 1.65 }}>Visitas, contactos y tasa de conversión de cada propiedad actualizada al instante.</p>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
                 {[
-                  { label: 'Visitas hoy', val: '1.247', delta: '+12%', up: true },
-                  { label: 'Contactos', val: '48', delta: '+8%', up: true },
-                  { label: 'Conversión', val: '3.8%', delta: '+0.4pp', up: true },
-                  { label: 'Favoritos', val: '134', delta: '+21%', up: true },
+                  { label: 'Visitas hoy', val: '1.247', delta: '+12%' },
+                  { label: 'Contactos', val: '48', delta: '+8%' },
+                  { label: 'Conversión', val: '3.8%', delta: '+0.4pp' },
+                  { label: 'Favoritos', val: '134', delta: '+21%' },
                 ].map((k, i) => (
-                  <div key={i} style={{ background: '#f8f9fa', borderRadius: 12, padding: '12px 14px' }}>
-                    <div style={{ fontSize: 10, color: '#999', marginBottom: 4 }}>{k.label}</div>
-                    <div style={{ fontSize: 20, fontWeight: 900, color: '#111', lineHeight: 1 }}>{k.val}</div>
-                    <div style={{ fontSize: 10, color: '#00a870', marginTop: 4, fontWeight: 600 }}>↑ {k.delta}</div>
+                  <div key={i} style={{ background: 'rgba(255,255,255,0.06)', borderRadius: 14, padding: '14px 16px' }}>
+                    <div style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.45)', marginBottom: 6, fontWeight: 500 }}>{k.label}</div>
+                    <div style={{ fontSize: 24, fontWeight: 900, color: '#fff', lineHeight: 1 }}>{k.val}</div>
+                    <div style={{ fontSize: 11, color: '#4ade80', marginTop: 6, fontWeight: 600 }}>↑ {k.delta}</div>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Filtros + soporte */}
-            <div style={{ background: '#fff', borderRadius: 20, padding: 28, boxShadow: '0 2px 20px rgba(0,0,0,0.06)' }}>
-              <div style={{ width: 44, height: 44, borderRadius: 12, background: '#e8f5f6', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={BRAND} strokeWidth="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
-              </div>
-              <h3 style={{ fontSize: 17, fontWeight: 800, color: '#111', margin: '0 0 8px' }}>Filtros avanzados y soporte prioritario</h3>
-              <p style={{ fontSize: 14, color: '#777', margin: '0 0 20px', lineHeight: 1.6 }}>Aparece primero en las búsquedas con filtros de precio, zona, tipo y superficie. Soporte dedicado para agentes.</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: 20, padding: 28 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 12 }}>Visibilidad</div>
+              <h3 style={{ fontSize: 20, fontWeight: 800, color: '#fff', margin: '0 0 10px', lineHeight: 1.3 }}>Destacado y soporte prioritario</h3>
+              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', margin: '0 0 24px', lineHeight: 1.65 }}>Aparece primero ante miles de compradores. Con soporte dedicado para agentes e inmobiliarias.</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 {[
-                  { icon: '🏆', text: 'Destacado en resultados de búsqueda' },
-                  { icon: '🎯', text: 'Filtros por precio, zona y tipología' },
-                  { icon: '⚡', text: 'Soporte prioritario por WhatsApp' },
-                  { icon: '📸', text: 'Galería ilimitada por propiedad' },
+                  'Destacado en los primeros resultados de búsqueda',
+                  'Filtros avanzados por precio, zona y tipología',
+                  'Soporte prioritario por WhatsApp y email',
+                  'Acceso anticipado a nuevas funciones',
                 ].map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, color: '#444' }}>
-                    <span style={{ fontSize: 16 }}>{f.icon}</span>
-                    {f.text}
+                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13.5, color: 'rgba(255,255,255,0.75)', lineHeight: 1.4 }}>
+                    <div style={{ width: 18, height: 18, borderRadius: '50%', border: '1.5px solid rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
+                      <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#fff" strokeWidth="2"><polyline points="2 6 5 9 10 3"/></svg>
+                    </div>
+                    {f}
                   </div>
                 ))}
               </div>
