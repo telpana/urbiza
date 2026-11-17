@@ -257,7 +257,7 @@ export default function Planes() {
               <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.3 }}>Soporte prioritario</h3>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', margin: '0 0 16px', lineHeight: 1.5 }}>Aparece primero ante miles de compradores e inmobiliarias.</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {['Destacado en resultados de búsqueda','Filtros por precio, zona y tipología','Soporte prioritario por WhatsApp','Acceso anticipado a nuevas funciones'].map((f, i) => (
+                {['Destacado en resultados de búsqueda','Filtros por precio, zona y tipología','Soporte prioritario','Acceso anticipado a nuevas funciones'].map((f, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, fontSize: 13, color: 'rgba(255,255,255,0.75)' }}>
                     <div style={{ width: 16, height: 16, borderRadius: '50%', border: '1.5px solid rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                       <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="#fff" strokeWidth="2.5"><polyline points="2 6 5 9 10 3"/></svg>
