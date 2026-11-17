@@ -206,61 +206,61 @@ export default function Planes() {
             <h3 style={{ fontSize: 26, fontWeight: 900, color: '#111', margin: '0 0 10px', letterSpacing: '-0.3px' }}>Herramientas que convierten visitas en ventas</h3>
             <p style={{ fontSize: 15, color: '#666', margin: 0 }}>Todo lo que necesitas para gestionar tus propiedades y cerrar más rápido.</p>
           </div>
-          <div className="planes-features" style={{ display: 'flex', gap: 20, alignItems: 'stretch' }}>
-            <div style={{ flex: 1, background: BRAND_DARK, borderRadius: 20, padding: 28, display: 'flex', flexDirection: 'column' }}>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 12 }}>Mensajería</div>
-              <h3 style={{ fontSize: 20, fontWeight: 800, color: '#fff', margin: '0 0 10px', lineHeight: 1.3 }}>Chat directo con compradores</h3>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', margin: '0 0 24px', lineHeight: 1.65 }}>Responde a los interesados en tiempo real desde tu panel. Sin intermediarios ni esperas.</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
+          <div className="planes-features" style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
+            <div style={{ flex: 1, background: BRAND_DARK, borderRadius: 20, padding: 22, display: 'flex', flexDirection: 'column', aspectRatio: '1', overflow: 'hidden' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 10 }}>Mensajería</div>
+              <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.3 }}>Chat directo con compradores</h3>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', margin: '0 0 16px', lineHeight: 1.5 }}>Responde a los interesados en tiempo real desde tu panel.</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
                 {[
                   { nombre: 'Carlos M.', msg: '¿Cuándo se puede visitar?', time: '2 min', unread: true },
                   { nombre: 'Ana R.', msg: '¿Tiene parqueo disponible?', time: '14 min', unread: true },
                   { nombre: 'José L.', msg: 'Envíame más fotos por favor', time: '1 h', unread: false },
                 ].map((n, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'rgba(255,255,255,0.08)', borderRadius: 12, padding: '10px 12px' }}>
-                    <div style={{ width: 34, height: 34, borderRadius: '50%', background: ['#2a9d8f','#e76f51','#457b9d'][i], display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{n.nombre[0]}</span>
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, background: 'rgba(255,255,255,0.08)', borderRadius: 10, padding: '8px 10px' }}>
+                    <div style={{ width: 30, height: 30, borderRadius: '50%', background: ['#2a9d8f','#e76f51','#457b9d'][i], display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>{n.nombre[0]}</span>
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 12, fontWeight: 700, color: '#fff' }}>{n.nombre}</div>
-                      <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{n.msg}</div>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: '#fff' }}>{n.nombre}</div>
+                      <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.55)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{n.msg}</div>
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 4, flexShrink: 0 }}>
-                      <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)' }}>{n.time}</span>
-                      {n.unread && <div style={{ width: 7, height: 7, borderRadius: '50%', background: '#4ade80' }} />}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 3, flexShrink: 0 }}>
+                      <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.35)' }}>{n.time}</span>
+                      {n.unread && <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#4ade80' }} />}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            <div style={{ flex: 1, background: BRAND_DARK, borderRadius: 20, padding: 28, display: 'flex', flexDirection: 'column' }}>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 12 }}>Analítica</div>
-              <h3 style={{ fontSize: 20, fontWeight: 800, color: '#fff', margin: '0 0 10px', lineHeight: 1.3 }}>Métricas en tiempo real</h3>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', margin: '0 0 24px', lineHeight: 1.65 }}>Visitas, contactos y tasa de conversión de cada propiedad actualizada al instante.</p>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, flex: 1, alignContent: 'start' }}>
+            <div style={{ flex: 1, background: BRAND_DARK, borderRadius: 20, padding: 22, display: 'flex', flexDirection: 'column', aspectRatio: '1', overflow: 'hidden' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 10 }}>Analítica</div>
+              <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.3 }}>Métricas en tiempo real</h3>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', margin: '0 0 16px', lineHeight: 1.5 }}>Visitas, contactos y conversión de cada propiedad.</p>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                 {[
                   { label: 'Visitas hoy', val: '1.247', delta: '+12%' },
                   { label: 'Contactos', val: '48', delta: '+8%' },
                   { label: 'Conversión', val: '3.8%', delta: '+0.4pp' },
                   { label: 'Favoritos', val: '134', delta: '+21%' },
                 ].map((k, i) => (
-                  <div key={i} style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 14, padding: '14px 16px' }}>
-                    <div style={{ fontSize: 10.5, color: 'rgba(255,255,255,0.45)', marginBottom: 6, fontWeight: 500 }}>{k.label}</div>
-                    <div style={{ fontSize: 24, fontWeight: 900, color: '#fff', lineHeight: 1 }}>{k.val}</div>
-                    <div style={{ fontSize: 11, color: '#4ade80', marginTop: 6, fontWeight: 600 }}>↑ {k.delta}</div>
+                  <div key={i} style={{ background: 'rgba(255,255,255,0.08)', borderRadius: 12, padding: '10px 12px' }}>
+                    <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.45)', marginBottom: 4, fontWeight: 500 }}>{k.label}</div>
+                    <div style={{ fontSize: 20, fontWeight: 900, color: '#fff', lineHeight: 1 }}>{k.val}</div>
+                    <div style={{ fontSize: 10, color: '#4ade80', marginTop: 4, fontWeight: 600 }}>↑ {k.delta}</div>
                   </div>
                 ))}
               </div>
             </div>
-            <div style={{ flex: 1, background: BRAND_DARK, borderRadius: 20, padding: 28, display: 'flex', flexDirection: 'column' }}>
-              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 12 }}>Visibilidad</div>
-              <h3 style={{ fontSize: 20, fontWeight: 800, color: '#fff', margin: '0 0 10px', lineHeight: 1.3 }}>Destacado y soporte prioritario</h3>
-              <p style={{ fontSize: 14, color: 'rgba(255,255,255,0.6)', margin: '0 0 24px', lineHeight: 1.65 }}>Aparece primero ante miles de compradores. Con soporte dedicado para agentes e inmobiliarias.</p>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
-                {['Destacado en los primeros resultados de búsqueda','Filtros avanzados por precio, zona y tipología','Soporte prioritario por WhatsApp y email','Acceso anticipado a nuevas funciones'].map((f, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, fontSize: 13.5, color: 'rgba(255,255,255,0.75)', lineHeight: 1.4 }}>
-                    <div style={{ width: 18, height: 18, borderRadius: '50%', border: '1.5px solid rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: 1 }}>
-                      <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#fff" strokeWidth="2.5"><polyline points="2 6 5 9 10 3"/></svg>
+            <div style={{ flex: 1, background: BRAND_DARK, borderRadius: 20, padding: 22, display: 'flex', flexDirection: 'column', aspectRatio: '1', overflow: 'hidden' }}>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 10 }}>Visibilidad</div>
+              <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.3 }}>Destacado y soporte prioritario</h3>
+              <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', margin: '0 0 16px', lineHeight: 1.5 }}>Aparece primero ante miles de compradores e inmobiliarias.</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {['Destacado en resultados de búsqueda','Filtros por precio, zona y tipología','Soporte prioritario por WhatsApp','Acceso anticipado a nuevas funciones'].map((f, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 9, fontSize: 13, color: 'rgba(255,255,255,0.75)' }}>
+                    <div style={{ width: 16, height: 16, borderRadius: '50%', border: '1.5px solid rgba(255,255,255,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <svg width="8" height="8" viewBox="0 0 12 12" fill="none" stroke="#fff" strokeWidth="2.5"><polyline points="2 6 5 9 10 3"/></svg>
                     </div>
                     {f}
                   </div>
