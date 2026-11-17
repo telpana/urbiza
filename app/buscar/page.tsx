@@ -1054,7 +1054,7 @@ function BuscarContent() {
                   <div>
                     <div className="pc-zona-text">{p.zona}</div>
                     <div className="pc-titulo" style={{ fontSize: 15, fontWeight: 600, color: '#006D77', marginBottom: 8 }}>
-                      {idioma === 'en' && p.titulo_en ? p.titulo_en : idioma === 'fr' && p.titulo_fr ? p.titulo_fr : p.titulo}
+                      {(idioma === 'en' && p.titulo_en ? p.titulo_en : idioma === 'fr' && p.titulo_fr ? p.titulo_fr : p.titulo).replace(/^(Vendo|Alquilo|Se vende|Se alquila)\s+/i, '')}
                     </div>
                     <div className="pc-precio-wrap" style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 2 }}>
                       US$ {p.precio.toLocaleString('en-US')}
