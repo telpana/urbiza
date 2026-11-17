@@ -180,10 +180,6 @@ export default function Planes() {
             <div style={{ position: 'relative', borderRadius: '10px 10px 0 0', overflow: 'hidden' }}>
               <img src="/buscar-preview.png" alt="Habitade búsqueda"
                 style={{ width: '100%', display: 'block', objectFit: 'cover', objectPosition: 'top', maxHeight: 360 }} />
-              {/* Tapar "212 propiedades..." y mostrar 7.320 */}
-              <div style={{ position: 'absolute', zIndex: 1, top: '11%', left: '15%', right: 0, height: '10%', background: '#fff', display: 'flex', alignItems: 'center', paddingLeft: 4 }}>
-                <span style={{ fontSize: 9.5, fontWeight: 700, color: '#111' }}>7.320 propiedades en República Dominicana</span>
-              </div>
             </div>
           </div>
         </div>
