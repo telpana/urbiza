@@ -816,7 +816,7 @@ export default function Home() {
               <span style={{ fontSize: 12, fontWeight: 600, color: '#006D77', background: '#e0f5f7', padding: '4px 12px', borderRadius: 20 }}>{tr.secciones.mapaLink}</span>
             </div>
           </a>
-          <a href="/unete"
+          <a href={sesionActiva ? '/panel' : '/unete'}
             style={{ display: 'flex', gap: 20, padding: '28px 32px', textDecoration: 'none', alignItems: 'center', transition: 'background 0.15s' }}
             onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = '#f8fdfd'}
             onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'}>
