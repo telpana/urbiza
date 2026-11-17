@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { supabase } from '../../supabase'
 import { useIdioma } from '../../IdiomaContext'
-import { useSearchParams } from 'next/navigation'
 
 const BRAND = '#006D77'
 const BRAND_DARK = '#004E57'
@@ -66,12 +65,13 @@ function MapaRD() {
 export default function Planes() {
   const { tr } = useIdioma()
   const Tp = tr.panel.planesPage
-  const searchParams = useSearchParams()
-  const isEmbed = searchParams.get('embed') === '1'
+  const [isEmbed, setIsEmbed] = useState(false)
   const [anual, setAnual] = useState(true)
   const [sesionActiva, setSesionActiva] = useState(false)
   const [cargando, setCargando] = useState(false)
   const [planActual, setPlanActual] = useState<string | null>(null)
+
+  useEffect(() => { setIsEmbed(window.self !== window.top) }, [])
 
   useEffect(() => {
     supabase.auth.getUser().then(({ data: { user } }) => {

@@ -1094,21 +1094,16 @@ export default function Panel() {
         {/* SIDEBAR */}
         <div className={`panel-sidebar${sidebarOpen ? ' open' : ''}`} style={{ width: 220, background: '#004E57', minHeight: 'calc(100vh - 54px)', padding: '20px 0', flexShrink: 0, display: 'flex', flexDirection: 'column' }}>
           {menuItems.filter(item => (item.id !== 'equipo' || ['agencia', 'unlimited'].includes(tipoUsuario)) && (!('proOnly' in item) || tipoUsuario === 'profesional')).map(item => (
-            ('href' in item)
-              ? <a key={item.id} href={(item as any).href} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: 'rgba(255,255,255,0.6)', background: 'transparent', cursor: 'pointer', borderLeft: '3px solid transparent', boxSizing: 'border-box' } as React.CSSProperties}>
-                  {item.icon}
-                  {item.label}
-                </a>
-              : <button key={item.id} onClick={() => { if (item.id === 'publicar' && !(perfilNombre && perfilTelefono)) { setSeccion('publicar'); setSidebarOpen(false); return } if (item.id === 'publicar' && !anuncioEditando && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis) { setSeccion('planes'); setSidebarOpen(false); return } setSeccion(item.id); setSidebarOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.6)', background: seccion === item.id ? 'rgba(255,255,255,0.12)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? '3px solid #83D4DB' : '3px solid transparent', boxSizing: 'border-box', position: 'relative' }}>
-                  {item.icon}
-                  {item.label}
-                  {item.id === 'mensajes' && noLeidos > 0 && (
-                    <span style={{ position: 'absolute', right: 14, background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 700, width: 18, height: 18, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{noLeidos}</span>
-                  )}
-                  {item.id === 'guardados' && noLeidosGuardados > 0 && (
-                    <span style={{ position: 'absolute', right: 14, background: '#e63946', color: '#fff', fontSize: 10, fontWeight: 700, width: 18, height: 18, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{noLeidosGuardados > 9 ? '9+' : noLeidosGuardados}</span>
-                  )}
-                </button>
+            <button key={item.id} onClick={() => { if (item.id === 'publicar' && !(perfilNombre && perfilTelefono)) { setSeccion('publicar'); setSidebarOpen(false); return } if (item.id === 'publicar' && !anuncioEditando && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis) { setSeccion('planes'); setSidebarOpen(false); return } setSeccion(item.id); setSidebarOpen(false) }} style={{ all: 'unset', width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px', fontSize: 13, color: seccion === item.id ? '#fff' : 'rgba(255,255,255,0.6)', background: seccion === item.id ? 'rgba(255,255,255,0.12)' : 'transparent', cursor: 'pointer', borderLeft: seccion === item.id ? '3px solid #83D4DB' : '3px solid transparent', boxSizing: 'border-box', position: 'relative' }}>
+              {item.icon}
+              {item.label}
+              {item.id === 'mensajes' && noLeidos > 0 && (
+                <span style={{ position: 'absolute', right: 14, background: '#17A6B4', color: '#fff', fontSize: 10, fontWeight: 700, width: 18, height: 18, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{noLeidos}</span>
+              )}
+              {item.id === 'guardados' && noLeidosGuardados > 0 && (
+                <span style={{ position: 'absolute', right: 14, background: '#e63946', color: '#fff', fontSize: 10, fontWeight: 700, width: 18, height: 18, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{noLeidosGuardados > 9 ? '9+' : noLeidosGuardados}</span>
+              )}
+            </button>
           ))}
         </div>
 
@@ -2216,7 +2211,7 @@ export default function Panel() {
           {/* PLANES — iframe embebido */}
           {!cargando && seccion === 'planes' && (
             <div style={{ margin: '-28px -32px', height: 'calc(100vh - 54px)' }}>
-              <iframe src="/planes?embed=1" style={{ width: '100%', height: '100%', border: 'none', display: 'block' }} />
+              <iframe src="/planes" style={{ width: '100%', height: '100%', border: 'none', display: 'block' }} />
             </div>
           )}
 
