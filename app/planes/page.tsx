@@ -172,7 +172,7 @@ export default function Planes() {
       </div>
 
       {/* FEATURES */}
-      <div style={{ background: '#fff', padding: '80px 24px' }}>
+      <div style={{ background: '#f8fafb', padding: '80px 24px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
             <h2 style={{ fontSize: 36, fontWeight: 900, color: '#111', margin: '0 0 12px', letterSpacing: '-0.5px' }}>Herramientas que convierten visitas en ventas</h2>
