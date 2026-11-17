@@ -180,19 +180,21 @@ export default function Planes() {
             <div style={{ position: 'relative', borderRadius: '10px 10px 0 0', overflow: 'hidden' }}>
               <img src="/buscar-preview.png" alt="Habitade búsqueda"
                 style={{ width: '100%', display: 'block', objectFit: 'cover', objectPosition: 'top', maxHeight: 360 }} />
-              {/* Tapar "212 propiedades en República Dominicana" */}
-              <div style={{ position: 'absolute', top: '10.8%', left: '15.3%', right: 0, height: '5.2%', background: '#fff' }} />
-              {/* Tapar "Vendo" en título 1 y reemplazar */}
-              <div style={{ position: 'absolute', top: '23%', left: '26.5%', right: 0, height: '5%', background: '#fff', display: 'flex', alignItems: 'center', paddingLeft: 4 }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: BRAND }}>Villa en Cap Cana, Punta Cana</span>
+              {/* Tapar "212 propiedades..." y mostrar 7.320 */}
+              <div style={{ position: 'absolute', zIndex: 1, top: '9%', left: '15%', right: 0, height: '8%', background: '#fff', display: 'flex', alignItems: 'center', paddingLeft: 4 }}>
+                <span style={{ fontSize: 9.5, fontWeight: 700, color: '#111' }}>7.320 propiedades en República Dominicana</span>
               </div>
-              {/* Tapar "Vendo" en título 2 y reemplazar */}
-              <div style={{ position: 'absolute', top: '46%', left: '26.5%', right: 0, height: '5%', background: '#fff', display: 'flex', alignItems: 'center', paddingLeft: 4 }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: BRAND }}>Villa en Cap Cana, Punta Cana</span>
+              {/* Título 1 — columna de texto de la tarjeta (empieza tras la foto ~57%) */}
+              <div style={{ position: 'absolute', zIndex: 1, top: '19.5%', left: '57%', right: 0, height: '5.5%', background: '#fff', display: 'flex', alignItems: 'center', paddingLeft: 4 }}>
+                <span style={{ fontSize: 8.5, fontWeight: 700, color: BRAND }}>Villa en Cap Cana, Punta Cana</span>
               </div>
-              {/* Tapar "Vendo" en título 3 y reemplazar */}
-              <div style={{ position: 'absolute', top: '68%', left: '26.5%', right: 0, height: '5%', background: '#fff', display: 'flex', alignItems: 'center', paddingLeft: 4 }}>
-                <span style={{ fontSize: 10, fontWeight: 700, color: BRAND }}>Villa en Punta Cana</span>
+              {/* Título 2 */}
+              <div style={{ position: 'absolute', zIndex: 1, top: '42%', left: '57%', right: 0, height: '5.5%', background: '#fff', display: 'flex', alignItems: 'center', paddingLeft: 4 }}>
+                <span style={{ fontSize: 8.5, fontWeight: 700, color: BRAND }}>Villa en Cap Cana, Punta Cana</span>
+              </div>
+              {/* Título 3 */}
+              <div style={{ position: 'absolute', zIndex: 1, top: '64%', left: '57%', right: 0, height: '5.5%', background: '#fff', display: 'flex', alignItems: 'center', paddingLeft: 4 }}>
+                <span style={{ fontSize: 8.5, fontWeight: 700, color: BRAND }}>Villa en Punta Cana</span>
               </div>
             </div>
           </div>
