@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { supabase } from '../../supabase'
-import NavUserMenu from '../../components/NavUserMenu'
 
 const BRAND = '#006D77'
 const BRAND_DARK = '#004E57'
@@ -22,11 +21,10 @@ function coordsDeZona(zona: string): [number, number] {
 }
 
 export default function Planes() {
-  const [anual, setAnual] = useState(false)
+  const [anual, setAnual] = useState(true)
   const [sesionActiva, setSesionActiva] = useState(false)
   const [cargando, setCargando] = useState(false)
   const [planActual, setPlanActual] = useState<string | null>(null)
-  const [kpis, setKpis] = useState({ props: 0, agentes: 0, visitas: 0, provincias: 0 })
   const mapRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<any>(null)
   const [mapaListo, setMapaListo] = useState(false)
@@ -39,22 +37,6 @@ export default function Planes() {
         supabase.from('usuarios').select('plan').eq('id', user.id).single()
           .then(({ data }) => { if (data) setPlanActual(data.plan) })
       }
-    })
-
-    // KPIs reales
-    Promise.all([
-      supabase.from('propiedades').select('*', { count: 'exact', head: true }).eq('estado', 'activo'),
-      supabase.from('usuarios').select('*', { count: 'exact', head: true }).in('plan', ['profesional', 'fundador', 'plata', 'oro', 'platino']),
-      supabase.from('configuracion').select('valor').eq('clave', 'visitas_web').single(),
-      supabase.from('propiedades').select('provincia').eq('estado', 'activo'),
-    ]).then(([{ count: props }, { count: agentes }, { data: vis }, { data: provs }]) => {
-      const provinciasUnicas = new Set((provs || []).map((p: any) => p.provincia).filter(Boolean)).size
-      setKpis({
-        props: props || 0,
-        agentes: agentes || 0,
-        visitas: parseInt((vis as any)?.valor || '0'),
-        provincias: provinciasUnicas,
-      })
     })
 
     // Propiedades para el mapa
@@ -120,8 +102,6 @@ export default function Planes() {
       `, { maxWidth: 200 })
     })
   }, [propiedadesMap, mapaListo])
-
-  const fmtNum = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(1)}K` : String(n)
 
   const irACheckout = async (tipo: string) => {
     if (!sesionActiva) { window.location.href = '/registro?next=/planes'; return }
@@ -193,39 +173,21 @@ export default function Planes() {
     <div style={{ minHeight: '100vh', background: '#f8fafb', fontFamily: 'Arial, Helvetica, sans-serif' }}>
 
       {/* NAV */}
-      <nav style={{ background: '#fff', borderBottom: '1px solid #e8e8e8', height: 60, display: 'flex', alignItems: 'center', padding: '0 24px', position: 'sticky', top: 0, zIndex: 900 }}>
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
-          <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
-            <rect width="36" height="36" rx="8" fill={BRAND}/>
-            <path d="M8 20L18 11L28 20V28H23V23H13V28H8V20Z" fill="#fff"/>
-          </svg>
-          <span style={{ fontWeight: 800, fontSize: 18, color: '#111', letterSpacing: '-0.5px' }}>urbiza</span>
-        </Link>
-        <div style={{ flex: 1 }} />
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <Link href="/buscar" style={{ fontSize: 14, color: '#555', textDecoration: 'none', fontWeight: 500 }}>Buscar</Link>
-          {sesionActiva
-            ? <><NavUserMenu dark={false} /><Link href="/panel" style={{ fontSize: 14, background: BRAND, color: '#fff', padding: '8px 16px', borderRadius: 6, textDecoration: 'none', fontWeight: 600 }}>Panel</Link></>
-            : <>
-                <Link href="/login" style={{ fontSize: 14, color: '#555', textDecoration: 'none', fontWeight: 500 }}>Entrar</Link>
-                <Link href="/registro" style={{ fontSize: 14, background: BRAND, color: '#fff', padding: '8px 16px', borderRadius: 6, textDecoration: 'none', fontWeight: 600 }}>Crear cuenta</Link>
-              </>
-          }
+      <nav style={{ background: BRAND_DARK, height: 54, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 24px', position: 'sticky', top: 0, zIndex: 900 }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Link href="/" style={{ fontSize: 24, fontWeight: 700, color: '#fff', letterSpacing: -1.5, textDecoration: 'none', marginRight: 28 }}>habitade.</Link>
+          {[{ label: 'Comprar', href: '/buscar?operacion=venta' }, { label: 'Alquilar', href: '/buscar?operacion=alquiler' }].map(item => (
+            <Link key={item.label} href={item.href} style={{ padding: '0 12px', height: 54, display: 'flex', alignItems: 'center', fontSize: 13, color: 'rgba(255,255,255,0.8)', textDecoration: 'none' }}>{item.label}</Link>
+          ))}
         </div>
       </nav>
 
       {/* HERO */}
       <div style={{ background: `linear-gradient(135deg, ${BRAND_DARK} 0%, ${BRAND} 100%)`, padding: '56px 24px 0', overflow: 'hidden' }}>
         <div style={{ maxWidth: 920, margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ display: 'inline-block', background: 'rgba(255,255,255,0.15)', borderRadius: 100, padding: '6px 18px', fontSize: 13, color: '#fff', fontWeight: 600, marginBottom: 20 }}>
-            🇩🇴 La plataforma inmobiliaria de República Dominicana
-          </div>
-          <h1 style={{ fontSize: 42, fontWeight: 900, color: '#fff', margin: '0 0 16px', lineHeight: 1.15, letterSpacing: '-1px' }}>
+          <h1 style={{ fontSize: 42, fontWeight: 900, color: '#fff', margin: '0 0 40px', lineHeight: 1.15, letterSpacing: '-1px' }}>
             Publica. Llega. Vende.
           </h1>
-          <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.85)', margin: '0 auto 40px', maxWidth: 520, lineHeight: 1.6 }}>
-            Miles de compradores buscan propiedades en Urbiza cada mes. Pon tus anuncios donde te van a encontrar.
-          </p>
 
           {/* Mockup plataforma */}
           <div style={{ background: '#fff', borderRadius: '16px 16px 0 0', boxShadow: '0 -4px 60px rgba(0,0,0,0.25)', padding: '16px 16px 0', maxWidth: 860, margin: '0 auto', textAlign: 'left' }}>
@@ -236,17 +198,17 @@ export default function Planes() {
               <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#febc2e' }} />
               <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#28c840' }} />
               <div style={{ flex: 1, background: '#f4f5f6', borderRadius: 6, height: 26, display: 'flex', alignItems: 'center', padding: '0 10px', marginLeft: 8 }}>
-                <span style={{ fontSize: 11, color: '#aaa' }}>urbiza.com/buscar</span>
+                <span style={{ fontSize: 11, color: '#aaa' }}>habitade.com/buscar</span>
               </div>
             </div>
 
-            {/* KPIs reales */}
+            {/* KPIs */}
             <div className="planes-kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10, marginBottom: 14 }}>
               {[
-                { label: 'Propiedades activas', valor: kpis.props > 0 ? `${kpis.props.toLocaleString()}` : '—', icon: '🏠', color: BRAND },
-                { label: 'Agentes verificados', valor: kpis.agentes > 0 ? String(kpis.agentes) : '—', icon: '✅', color: '#10b981' },
-                { label: 'Visitas al portal', valor: kpis.visitas > 0 ? fmtNum(kpis.visitas) : '—', icon: '👁️', color: '#f59e0b' },
-                { label: 'Provincias cubiertas', valor: kpis.provincias > 0 ? String(kpis.provincias) : '—', icon: '📍', color: '#8b5cf6' },
+                { label: 'Propiedades activas', valor: '250+', icon: '🏠', color: BRAND },
+                { label: 'Agentes verificados', valor: '18', icon: '✅', color: '#10b981' },
+                { label: 'Visitas al portal', valor: '4.2K', icon: '👁️', color: '#f59e0b' },
+                { label: 'Provincias cubiertas', valor: '12', icon: '📍', color: '#8b5cf6' },
               ].map(k => (
                 <div key={k.label} style={{ background: '#f8fafb', borderRadius: 10, padding: '12px', border: '1px solid #eee' }}>
                   <div style={{ fontSize: 20 }}>{k.icon}</div>
@@ -256,8 +218,8 @@ export default function Planes() {
               ))}
             </div>
 
-            {/* Mapa real de Leaflet */}
-            <div style={{ position: 'relative', borderRadius: '10px 10px 0 0', overflow: 'hidden', height: 240 }}>
+            {/* Mapa Leaflet */}
+            <div style={{ position: 'relative', borderRadius: '10px 10px 0 0', overflow: 'hidden', height: 180 }}>
               <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
               {propiedadesMap.length > 0 && (
                 <div style={{ position: 'absolute', bottom: 10, left: 10, background: '#fff', borderRadius: 6, padding: '4px 10px', fontSize: 12, fontWeight: 700, color: BRAND, boxShadow: '0 2px 8px rgba(0,0,0,0.12)', zIndex: 400 }}>
@@ -348,17 +310,8 @@ export default function Planes() {
           })}
         </div>
 
-        {/* Platino */}
-        <div className="planes-platino" style={{ marginTop: 20, background: `linear-gradient(135deg, ${BRAND_DARK}, ${BRAND})`, borderRadius: 16, padding: '28px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
-          <div>
-            <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Platino — Para grandes agencias</div>
-            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)' }}>Propiedades ilimitadas, integraciones personalizadas y cuenta dedicada.</div>
-          </div>
-          <a href="mailto:hola@urbiza.com" style={{ background: '#fff', color: BRAND, padding: '12px 28px', borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: 'none', whiteSpace: 'nowrap' }}>Contactar</a>
-        </div>
-
         {/* FAQ */}
-        <div style={{ marginTop: 64, textAlign: 'center' }}>
+        <div style={{ marginTop: 80, textAlign: 'center' }}>
           <h3 style={{ fontSize: 24, fontWeight: 800, color: '#111', marginBottom: 32 }}>Preguntas frecuentes</h3>
           <div className="planes-faq" style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr)', gap: 20, textAlign: 'left' }}>
             {[
@@ -388,7 +341,7 @@ export default function Planes() {
             <Link key={l.href} href={l.href} style={{ fontSize: 13, color: 'rgba(255,255,255,0.5)', textDecoration: 'none' }}>{l.label}</Link>
           ))}
         </div>
-        <div style={{ fontSize: 12 }}>© {new Date().getFullYear()} Urbiza. Todos los derechos reservados.</div>
+        <div style={{ fontSize: 12 }}>© {new Date().getFullYear()} Habitade. Todos los derechos reservados.</div>
       </footer>
     </div>
   )
