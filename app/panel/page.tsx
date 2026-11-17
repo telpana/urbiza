@@ -909,10 +909,17 @@ export default function Panel() {
     const interval = setInterval(fetchNotifs, 20000)
     return () => clearInterval(interval)
   }, [])
-  const tipoUsuario: string = usuario?.plan === 'profesional'
+  const tipoUsuario: string = ['profesional', 'fundador', 'plata', 'oro', 'platino'].includes(usuario?.plan)
     ? 'profesional'
     : (usuario?.tipo && !['profesional', 'cancelando'].includes(usuario.tipo) ? usuario.tipo : 'particular')
-  const anunciosGratis = 2
+  const limiteAnuncios = (() => {
+    const p = usuario?.plan
+    if (p === 'plata') return 15
+    if (p === 'oro') return 50
+    if (['fundador', 'profesional', 'platino'].includes(p)) return 999
+    return 2
+  })()
+  const anunciosGratis = limiteAnuncios
   const anunciosUsados = anunciosReales.length
   const suscripcionVencida = usuario?.plan === 'gratis' && usuario?.plan_activo_hasta && new Date(usuario.plan_activo_hasta) < new Date()
 
@@ -2203,53 +2210,70 @@ export default function Panel() {
 
           {/* PLANES PRO — pantalla para particulares que llegan al límite */}
           {!cargando && seccion === 'planes' && (
-            <div style={{ maxWidth: 480, margin: '0 auto', textAlign: 'center' }}>
-              <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 8 }}>{Tpanel.planes.titulo}</h1>
-              <p style={{ fontSize: 15, color: '#888', marginBottom: 32 }}>{Tpanel.planes.desc.replace('{n}', String(anunciosGratis))}</p>
-              <div style={{ background: '#fff', borderRadius: 10, padding: '32px 28px', boxShadow: '0 2px 16px rgba(0,109,119,0.12)', border: '2px solid #006D77', position: 'relative' }}>
-                <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 16px', borderRadius: 10, whiteSpace: 'nowrap' }}>{Tpanel.plan.planPro.toUpperCase()}</div>
-                <div style={{ fontSize: 42, fontWeight: 700, color: '#006D77', marginBottom: 4 }}>US$ 9.99<span style={{ fontSize: 18, fontWeight: 400, color: '#aaa' }}>/mes</span></div>
-                <div style={{ fontSize: 13, color: '#888', marginBottom: 24 }}>Cancela cuando quieras · Sin permanencia</div>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 28, textAlign: 'left' }}>
-                  {(Tpanel.planes.ventajas as string[]).map((f: string) => (
-                    <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: '#444' }}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                      {f}
-                    </div>
-                  ))}
-                </div>
-                <button onClick={handleSuscribirse} disabled={promoLoading} style={{ display: 'block', width: '100%', background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '14px', borderRadius: 6, fontSize: 15, fontWeight: 700, cursor: promoLoading ? 'default' : 'pointer', border: 'none', animation: promoValidado ? 'btn-pulse 2.5s ease-in-out infinite' : undefined }}>
-                  {promoLoading ? 'Procesando...' : promoValidado
-                    ? <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}><span>Activar</span><span style={{ fontSize: 11, opacity: 0.85, fontWeight: 500 }}>{promoDias} días gratis</span></div>
-                    : Tpanel.planes.suscribirse}
-                </button>
-                {!planInfo?.ya_suscrito && (
-                  <div style={{ marginTop: 14, textAlign: 'center' }}>
-                    {promoValidado ? (
-                      <>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }}>
-                          <span style={{ background: '#d1fae5', color: '#065f46', fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 20 }}>✓ {promoDias} días gratis</span>
-                          <button onClick={() => { setPromoValidado(false); setCodigoPromo(''); setPromoError('') }} style={{ all: 'unset', fontSize: 11, color: '#aaa', cursor: 'pointer', textDecoration: 'underline' }}>{Tpanel.planes.quitar}</button>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center', background: '#f0fafb', border: '1.5px solid #83D4DB', borderRadius: 10, padding: '10px 14px', animation: 'promo-pulse 2s ease-in-out infinite', width: '100%', boxSizing: 'border-box' }}>
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-                          <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }}
-                            onKeyDown={async e => { if (e.key === 'Enter') { e.preventDefault(); await aplicarCodigo() } }}
-                            placeholder={Tpanel.planes.codigoPlaceholder.toUpperCase()} maxLength={32}
-                            style={{ border: 'none', background: 'transparent', fontSize: 12, flex: 1, minWidth: 0, outline: 'none', textAlign: 'center', letterSpacing: 1, fontWeight: 600, color: '#006D77', WebkitTextFillColor: '#006D77' }} />
-                          <button onClick={aplicarCodigo} disabled={promoLoading || !codigoPromo.trim()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '5px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: (!codigoPromo.trim() || promoLoading) ? 'default' : 'pointer', opacity: (!codigoPromo.trim() || promoLoading) ? 0.4 : 1, whiteSpace: 'nowrap' }}>
-                            {Tpanel.planes.aplicar}
-                          </button>
-                        </div>
-                        {promoError && <div style={{ fontSize: 12, color: '#dc2626', marginTop: 6 }}>{promoError}</div>}
-                      </>
-                    )}
+            <div style={{ maxWidth: 560, margin: '0 auto', textAlign: 'center' }}>
+              <h1 style={{ fontSize: 24, fontWeight: 700, color: '#111', marginBottom: 8 }}>Mejora tu plan</h1>
+              <p style={{ fontSize: 15, color: '#888', marginBottom: 32 }}>
+                {limiteAnuncios < 999
+                  ? `Tienes ${anunciosUsados} de ${limiteAnuncios} propiedades usadas en tu plan actual.`
+                  : 'Gestiona tu suscripción desde aquí.'}
+              </p>
+
+              {/* Cards compactas Plata / Oro */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
+                {[
+                  { nombre: 'Plata', precio: '16.99', limite: '15 prop.', tipo: 'plata_mensual', popular: false },
+                  { nombre: 'Oro', precio: '39.99', limite: '50 prop.', tipo: 'oro_mensual', popular: true },
+                ].map(p => (
+                  <div key={p.nombre} style={{ background: p.popular ? '#006D77' : '#fff', border: p.popular ? '2px solid #006D77' : '1.5px solid #e8e8e8', borderRadius: 12, padding: '20px 18px', position: 'relative' }}>
+                    {p.popular && <div style={{ position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)', background: '#004E57', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 12px', borderRadius: 10, whiteSpace: 'nowrap' }}>MÁS POPULAR</div>}
+                    <div style={{ fontSize: 18, fontWeight: 800, color: p.popular ? '#fff' : '#111', marginBottom: 2 }}>{p.nombre}</div>
+                    <div style={{ fontSize: 28, fontWeight: 900, color: p.popular ? '#fff' : '#006D77', lineHeight: 1 }}>US$ {p.precio}<span style={{ fontSize: 13, fontWeight: 400, opacity: 0.7 }}>/mes</span></div>
+                    <div style={{ fontSize: 12, color: p.popular ? 'rgba(255,255,255,0.75)' : '#888', margin: '6px 0 16px' }}>{p.limite}</div>
+                    <button
+                      onClick={async () => {
+                        promoLoading || (() => {})()
+                        const { data: { session } } = await supabase.auth.getSession()
+                        const { data: { user: u } } = await supabase.auth.getUser()
+                        const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${session?.access_token ?? ''}` }, body: JSON.stringify({ userId: u?.id, email: u?.email, tipo: p.tipo }) })
+                        const d = await res.json()
+                        if (d.url) window.location.href = d.url
+                      }}
+                      style={{ all: 'unset', display: 'block', width: '100%', background: p.popular ? '#fff' : '#006D77', color: p.popular ? '#006D77' : '#fff', padding: '10px 0', borderRadius: 7, fontSize: 13, fontWeight: 700, cursor: 'pointer', textAlign: 'center', boxSizing: 'border-box' }}
+                    >
+                      Empezar
+                    </button>
                   </div>
-                )}
+                ))}
               </div>
+
+              <a href="/planes" target="_blank" style={{ fontSize: 13, color: '#006D77', textDecoration: 'none', fontWeight: 600 }}>
+                Ver todos los planes y comparativa →
+              </a>
+
+              {/* Código promo */}
+              {!planInfo?.ya_suscrito && (
+                <div style={{ marginTop: 24 }}>
+                  {promoValidado ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }}>
+                      <span style={{ background: '#d1fae5', color: '#065f46', fontSize: 12, fontWeight: 700, padding: '4px 12px', borderRadius: 20 }}>✓ {promoDias} días gratis</span>
+                      <button onClick={() => { setPromoValidado(false); setCodigoPromo(''); setPromoError('') }} style={{ all: 'unset', fontSize: 11, color: '#aaa', cursor: 'pointer', textDecoration: 'underline' }}>Quitar</button>
+                    </div>
+                  ) : (
+                    <>
+                      <div style={{ display: 'flex', gap: 8, alignItems: 'center', justifyContent: 'center', background: '#f0fafb', border: '1.5px solid #83D4DB', borderRadius: 10, padding: '10px 14px', width: '100%', boxSizing: 'border-box' }}>
+                        <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }}
+                          onKeyDown={async e => { if (e.key === 'Enter') { e.preventDefault(); await aplicarCodigo() } }}
+                          placeholder="CÓDIGO PROMO" maxLength={32}
+                          style={{ border: 'none', background: 'transparent', fontSize: 12, flex: 1, minWidth: 0, outline: 'none', textAlign: 'center', letterSpacing: 1, fontWeight: 600, color: '#006D77', WebkitTextFillColor: '#006D77' }} />
+                        <button onClick={aplicarCodigo} disabled={promoLoading || !codigoPromo.trim()} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '5px 12px', borderRadius: 6, fontSize: 11, fontWeight: 700, cursor: (!codigoPromo.trim() || promoLoading) ? 'default' : 'pointer', opacity: (!codigoPromo.trim() || promoLoading) ? 0.4 : 1, whiteSpace: 'nowrap' }}>
+                          Aplicar
+                        </button>
+                      </div>
+                      {promoError && <div style={{ fontSize: 12, color: '#dc2626', marginTop: 6 }}>{promoError}</div>}
+                    </>
+                  )}
+                </div>
+              )}
             </div>
           )}
 

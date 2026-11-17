@@ -659,6 +659,7 @@ export default function Home() {
           {[
             { label: tr.nav.comprar, href: '/buscar?operacion=venta' },
             { label: tr.nav.alquilar, href: '/buscar?operacion=alquiler' },
+            { label: 'Planes', href: '/planes' },
           ].map((item) => (
             <a key={item.label} href={item.href} style={{ padding: '0 14px', height: 60, display: 'flex', alignItems: 'center', fontSize: 14, color: '#555', textDecoration: 'none', borderBottom: '2.5px solid transparent' }}
               onMouseEnter={e => { e.currentTarget.style.color = '#006D77'; e.currentTarget.style.borderBottomColor = '#006D77' }}
@@ -1021,7 +1022,7 @@ export default function Home() {
                 { label: tr.footer.privacidad, href: '/legal/privacidad' },
                 { label: tr.footer.cookies, href: '/legal/cookies' },
                 { label: tr.footer.publicar, href: '/panel' },
-                { label: tr.footer.planes, href: '/panel?s=plan' },
+                { label: tr.footer.planes, href: '/planes' },
               ].map(({ label, href }) => (
                 <a key={href} href={href} style={{ color: 'rgba(255,255,255,0.5)', textDecoration: 'none', fontSize: 12 }}>{label}</a>
               ))}
