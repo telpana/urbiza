@@ -293,10 +293,26 @@ export default function Planes() {
           </div>
         </div>
 
+        {/* Banner fundador / profesional */}
+        {['fundador', 'profesional', 'platino'].includes(planActual || '') && (
+          <div style={{ background: `linear-gradient(135deg, ${BRAND_DARK}, ${BRAND})`, borderRadius: 12, padding: '18px 24px', marginBottom: 28, display: 'flex', alignItems: 'center', gap: 16 }}>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <div>
+              <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>
+                {planActual === 'fundador' ? 'Plan Fundador — acceso ilimitado' : planActual === 'platino' ? 'Plan Platino — acceso ilimitado' : 'Plan Profesional — acceso ilimitado'}
+              </div>
+              <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', marginTop: 2 }}>Ya tienes acceso completo a todas las funciones de la plataforma.</div>
+            </div>
+          </div>
+        )}
+
         {/* Cards */}
         <div className="planes-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
           {planesData.map(plan => {
-            const esPlanActual = planActual === plan.id || (plan.id === 'gratis' && (!planActual || planActual === 'gratis'))
+            const esPlanEspecial = ['fundador', 'profesional', 'platino'].includes(planActual || '')
+            const esPlanActual = esPlanEspecial
+              ? plan.id === 'oro'
+              : planActual === plan.id || (plan.id === 'gratis' && (!planActual || planActual === 'gratis'))
             const esPopular = !!plan.badge
             const precio = anual ? plan.precioAnual : plan.precioMes
             return (
