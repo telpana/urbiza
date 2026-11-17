@@ -2553,25 +2553,25 @@ export default function Panel() {
                     </div>
                     {!perfilTelefono && <div style={{ fontSize: 11, color: '#e53e3e', marginTop: 4 }}>{Tpanel.perfil.err_telefono}</div>}
                   </div>
-                  {tipoUsuario === 'profesional' && usuario?.plan === 'profesional' && (
+                  {tipoUsuario === 'profesional' && ['profesional', 'fundador', 'platino'].includes(usuario?.plan || '') && (
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.inmobiliaria}</label>
                       <input value={perfilInmobiliaria} onChange={e => setPerfilInmobiliaria(e.target.value)} placeholder='Nombre de tu agencia (opcional)' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                     </div>
                   )}
-                  {tipoUsuario === 'profesional' && usuario?.plan === 'profesional' && (
+                  {tipoUsuario === 'profesional' && ['profesional', 'fundador', 'platino'].includes(usuario?.plan || '') && (
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.web}</label>
                       <input value={perfilWebUrl} onChange={e => setPerfilWebUrl(e.target.value)} placeholder='https://tuinmobiliaria.com (opcional)' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                     </div>
                   )}
-                  {tipoUsuario === 'profesional' && usuario?.plan === 'profesional' && (
+                  {tipoUsuario === 'profesional' && ['profesional', 'fundador', 'platino'].includes(usuario?.plan || '') && (
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>Instagram</label>
                       <input value={perfilInstagram} onChange={e => setPerfilInstagram(e.target.value)} placeholder='https://instagram.com/tuagencia (opcional)' style={{ width: '100%', border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '10px 12px', fontSize: 13, outline: 'none', boxSizing: 'border-box' }} onFocus={e => e.target.style.borderColor='#006D77'} onBlur={e => e.target.style.borderColor='#e0e0e0'} />
                     </div>
                   )}
-                  {tipoUsuario === 'profesional' && usuario?.plan === 'profesional' && (
+                  {tipoUsuario === 'profesional' && ['profesional', 'fundador', 'platino'].includes(usuario?.plan || '') && (
                     <div>
                       <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 6 }}>{Tpanel.perfil.aei}</label>
                       <div data-aei style={{ display: 'flex', alignItems: 'center', border: `1.5px solid ${usuario?.aei_aprobado === true ? '#d1fae5' : '#e0e0e0'}`, borderRadius: 6, overflow: 'hidden', background: usuario?.aei_aprobado === true ? '#f0fdf4' : '#fff' }}>
@@ -2602,7 +2602,7 @@ export default function Panel() {
                     </div>
                   )}
                 </div>
-                {tipoUsuario === 'profesional' && usuario?.plan === 'profesional' && (
+                {tipoUsuario === 'profesional' && ['profesional', 'fundador', 'platino'].includes(usuario?.plan || '') && (
                   <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid #f0f0f0' }}>
                     <div style={{ fontSize: 13, fontWeight: 600, color: '#333', marginBottom: 10 }}>{Tpanel.perfil.idiomasLabel}</div>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
