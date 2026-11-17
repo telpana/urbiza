@@ -26,27 +26,37 @@ function Pin({ x, y, color = '#006D77', size = 14 }: { x: number; y: number; col
 
 function MapaRD() {
   return (
-    <svg viewBox="0 0 420 220" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
-      {/* Mar */}
-      <rect width="420" height="220" fill="#cce8f8"/>
-      {/* Silueta República Dominicana */}
+    <svg viewBox="0 0 420 250" preserveAspectRatio="xMidYMid slice" style={{ width: '100%', height: '100%' }} xmlns="http://www.w3.org/2000/svg">
+      <rect width="420" height="250" fill="#c8e6f8"/>
+      {/* Silueta RD — trazada sobre la forma real */}
       <path d="
-        M 10,82 L 15,52 L 32,28 L 68,12 L 110,6 L 155,8 L 188,14
-        L 215,10 L 232,4 L 255,2 L 272,8 L 268,26 L 282,32
-        L 308,38 L 348,55 L 390,78 L 415,100 L 416,118
-        L 408,148 L 384,168 L 348,182 L 308,190 L 262,194
-        L 215,194 L 168,191 L 122,186 L 75,178 L 36,165
-        L 10,148 L 5,118 L 10,82 Z"
-        fill="#d4edda" stroke="#9ecfaa" strokeWidth="1.5"/>
-      {/* Sombreado interior montañas */}
-      <path d="M 55,80 Q 110,55 170,68 Q 230,55 285,72 Q 325,88 340,118 Q 295,142 238,146 Q 178,150 128,140 Q 82,128 55,105 Z"
-        fill="#b8dfc0" opacity="0.5"/>
-      {/* Pines: Santo Domingo, Santiago, Punta Cana, La Romana, Puerto Plata */}
-      <Pin x={198} y={170} color={BRAND} size={13}/>
-      <Pin x={112} y={68} color={BRAND} size={12}/>
-      <Pin x={395} y={112} color={BRAND} size={12}/>
-      <Pin x={312} y={178} color="#f59e0b" size={11}/>
-      <Pin x={82} y={22} color="#f59e0b" size={11}/>
+        M 32,80 L 38,62 L 48,48 L 62,36 L 80,24 L 100,16 L 122,10
+        L 148,7 L 172,8 L 194,12 L 208,16
+        L 212,12 L 220,6 L 232,2 L 246,1 L 258,4
+        L 266,10 L 264,20 L 258,28
+        L 268,24 L 280,24 L 294,28 L 312,36
+        L 334,46 L 358,60 L 382,76 L 402,96
+        L 416,116 L 416,136 L 410,156
+        L 400,170 L 384,180 L 364,188 L 340,194
+        L 312,198 L 282,200 L 252,200 L 222,198
+        L 192,196 L 162,193 L 134,189 L 106,183
+        L 80,175 L 56,165 L 36,153
+        L 22,140 L 16,124 L 18,106
+        L 22,90 L 28,80 Z"
+        fill="#d4edda" stroke="#a5d6a7" strokeWidth="1.2"/>
+      {/* Isla Saona */}
+      <ellipse cx="380" cy="210" rx="16" ry="7" fill="#d4edda" stroke="#a5d6a7" strokeWidth="1"/>
+      {/* Isla Beata */}
+      <ellipse cx="118" cy="216" rx="9" ry="5" fill="#d4edda" stroke="#a5d6a7" strokeWidth="1"/>
+      {/* Relieve interior suave */}
+      <path d="M 70,90 Q 130,65 190,76 Q 250,62 300,80 Q 335,95 345,125 Q 300,148 240,152 Q 178,156 128,144 Q 85,132 70,110 Z"
+        fill="#b8dfc0" opacity="0.4"/>
+      {/* Pines */}
+      <Pin x={200} y={178} color={BRAND} size={13}/>
+      <Pin x={128} y={72} color={BRAND} size={12}/>
+      <Pin x={408} y={124} color={BRAND} size={12}/>
+      <Pin x={338} y={184} color="#f59e0b" size={11}/>
+      <Pin x={88} y={26} color="#f59e0b" size={11}/>
     </svg>
   )
 }
