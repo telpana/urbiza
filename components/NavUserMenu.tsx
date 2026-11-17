@@ -108,7 +108,15 @@ export default function NavUserMenu({ dark = false, onNoSesion }: Props) {
       } catch {}
     }, 20000)
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => init())
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) init()
+      else if (event === 'SIGNED_OUT') {
+        setSesion(false)
+        setFotoUrl(null)
+        setInicial('U')
+        try { localStorage.removeItem('hb_perfil_foto'); localStorage.removeItem('hb_perfil_inicial'); localStorage.removeItem('hb_perfil_uid') } catch {}
+      }
+    })
     return () => { subscription.unsubscribe(); clearInterval(interval) }
   }, [])
 
