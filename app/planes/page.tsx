@@ -164,7 +164,7 @@ export default function Planes() {
           </h1>
 
           {/* Mockup plataforma */}
-          <div style={{ borderRadius: '12px 12px 0 0', boxShadow: '0 -4px 60px rgba(0,0,0,0.25)', maxWidth: 900, margin: '0 auto', overflow: 'hidden', border: '6px solid #fff', borderBottom: 'none' }}>
+          <div style={{ borderRadius: '12px 12px 0 0', boxShadow: '0 -8px 80px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.15)', maxWidth: 900, margin: '0 auto', overflow: 'hidden' }}>
             <img src="/buscar-preview.png" alt="Habitade búsqueda"
               style={{ width: '100%', display: 'block', objectFit: 'cover', objectPosition: 'top', maxHeight: 380 }} />
           </div>
