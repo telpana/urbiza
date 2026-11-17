@@ -104,7 +104,7 @@ export default function Planes() {
       color: '#f8f9fa',
       colorTexto: '#333',
       badge: null,
-      cta: 'Crear cuenta gratis',
+      cta: 'Empezar gratis',
       href: '/registro',
       tipo: null,
       limite: '2 propiedades',
@@ -314,7 +314,7 @@ export default function Planes() {
                     ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: '12px 0', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, background: esPopular ? '#fff' : BRAND, color: esPopular ? BRAND : '#fff', marginBottom: 20 }}>
                         {cargando ? '...' : plan.cta}
                       </button>
-                    : <Link href={plan.href || '/registro'} style={{ display: 'block', width: '100%', padding: '12px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: '#f0f0f0', color: '#333', textDecoration: 'none', marginBottom: 20 }}>{plan.cta}</Link>
+                    : <Link href={sesionActiva ? '/panel' : (plan.href || '/registro')} style={{ display: 'block', width: '100%', padding: '12px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: BRAND, color: '#fff', textDecoration: 'none', marginBottom: 20 }}>{plan.cta}</Link>
                 }
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {plan.features.map(f => (
@@ -336,10 +336,13 @@ export default function Planes() {
         </div>
 
         {/* Platino */}
-        <div className="planes-platino" style={{ marginTop: 20, background: `linear-gradient(135deg, ${BRAND_DARK}, ${BRAND})`, borderRadius: 16, padding: '28px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
+        <div style={{ marginTop: 40, textAlign: 'center', marginBottom: 16 }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: '#999', textTransform: 'uppercase', letterSpacing: 1.2, margin: '0 0 6px' }}>¿Necesitas un plan a medida?</p>
+        </div>
+        <div className="planes-platino" style={{ background: `linear-gradient(135deg, ${BRAND_DARK}, ${BRAND})`, borderRadius: 16, padding: '28px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
           <div>
-            <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Platino — Para grandes agencias</div>
-            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)' }}>Propiedades ilimitadas, integraciones personalizadas y cuenta dedicada.</div>
+            <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Platino</div>
+            <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)' }}>Propiedades a medida, integraciones personalizadas y soluciones inteligentes para tu negocio.</div>
           </div>
           <a href="mailto:hola@habitade.com" style={{ background: '#fff', color: BRAND, padding: '12px 28px', borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: 'none', whiteSpace: 'nowrap' }}>Contactar</a>
         </div>
