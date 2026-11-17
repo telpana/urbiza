@@ -633,7 +633,7 @@ export default function Home() {
             </>) : authReady ? (
               <div style={{ borderTop: '1px solid #f0f0f0', padding: '14px 20px', display: 'flex', gap: 10 }}>
                 <a href="/login" style={{ flex: 1, display: 'block', textAlign: 'center', padding: '11px', fontSize: 14, fontWeight: 600, color: '#006D77', border: '1.5px solid #006D77', borderRadius: 8, textDecoration: 'none' }}>{tr.nav.entrar}</a>
-                <a href="/registro" style={{ flex: 1, display: 'block', textAlign: 'center', padding: '11px', fontSize: 14, fontWeight: 600, color: '#fff', background: '#006D77', borderRadius: 8, textDecoration: 'none' }}>{tr.nav.publicar}</a>
+                <a href="/unete" style={{ flex: 1, display: 'block', textAlign: 'center', padding: '11px', fontSize: 14, fontWeight: 600, color: '#fff', background: '#006D77', borderRadius: 8, textDecoration: 'none' }}>{tr.nav.publicar}</a>
               </div>
             ) : null}
 
@@ -696,7 +696,7 @@ export default function Home() {
           <NavUserMenu dark={false} onNoSesion={authReady ? (
             <div style={{ display: 'flex', gap: 8 }}>
               <a href="/login" style={{ fontSize: 13, color: '#006D77', border: '1.5px solid #006D77', padding: '7px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.entrar}</a>
-              <a href="/registro" style={{ fontSize: 13, color: '#fff', background: '#006D77', padding: '8px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.publicar}</a>
+              <a href="/unete" style={{ fontSize: 13, color: '#fff', background: '#006D77', padding: '8px 18px', borderRadius: 4, textDecoration: 'none', fontWeight: 500 }}>{tr.nav.publicar}</a>
             </div>
           ) : null} />
         </div>
@@ -816,7 +816,7 @@ export default function Home() {
               <span style={{ fontSize: 12, fontWeight: 600, color: '#006D77', background: '#e0f5f7', padding: '4px 12px', borderRadius: 20 }}>{tr.secciones.mapaLink}</span>
             </div>
           </a>
-          <a href="/registro"
+          <a href="/unete"
             style={{ display: 'flex', gap: 20, padding: '28px 32px', textDecoration: 'none', alignItems: 'center', transition: 'background 0.15s' }}
             onMouseEnter={e => (e.currentTarget as HTMLAnchorElement).style.background = '#f8fdfd'}
             onMouseLeave={e => (e.currentTarget as HTMLAnchorElement).style.background = 'transparent'}>
@@ -949,7 +949,7 @@ export default function Home() {
           <div className="pro-banner-card" style={{ flex: 1, background: '#fff', boxShadow: '0 4px 24px rgba(0,0,0,0.12)', padding: '32px 36px', display: 'flex', flexDirection: 'column', justifyContent: 'center', borderRadius: '0 8px 8px 0' }}>
             <div style={{ fontSize: 20, fontWeight: 700, color: '#111', lineHeight: 1.3, marginBottom: 12 }}>¿Eres agente o promotor inmobiliario?</div>
             <div style={{ fontSize: 13, color: '#555', lineHeight: 1.7, marginBottom: 18 }}>Llega a miles de compradores en República Dominicana.<br/>Anuncios ilimitados. Sin permanencia.</div>
-            <a href="/registro" className="pro-banner-cta" style={{ color: '#006D77', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>Regístrate aquí</a>
+            <a href="/unete" className="pro-banner-cta" style={{ color: '#006D77', fontWeight: 700, fontSize: 14, textDecoration: 'none' }}>Regístrate aquí</a>
           </div>
         </div>
       </div>
@@ -962,7 +962,7 @@ export default function Home() {
               <div style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 10 }}>¿Eres particular?</div>
               <div style={{ fontSize: 13, color: '#555', lineHeight: 1.7 }}>Publica hasta 2 anuncios <strong>GRATIS</strong> como particular.</div>
             </div>
-            <a href="/registro" style={{ background: '#006D77', color: '#fff', fontWeight: 700, fontSize: 14, padding: '12px 28px', borderRadius: 6, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>Regístrate gratis aquí</a>
+            <a href="/unete" style={{ background: '#006D77', color: '#fff', fontWeight: 700, fontSize: 14, padding: '12px 28px', borderRadius: 6, textDecoration: 'none', whiteSpace: 'nowrap', flexShrink: 0 }}>Regístrate gratis aquí</a>
           </div>
         </div>
       </div>

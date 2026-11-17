@@ -101,7 +101,7 @@ export default function ZonaPage({ params }: { params: { zona: string } }) {
               <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 6 }}>¿Tienes una propiedad en {z.nombre}?</div>
               <div style={{ fontSize: 14, opacity: 0.85 }}>Publica gratis y llega a miles de compradores e inquilinos.</div>
             </div>
-            <a href="/registro" style={{ background: '#fff', color: '#006D77', padding: '12px 28px', borderRadius: 8, fontSize: 14, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>Publicar anuncio</a>
+            <a href="/unete" style={{ background: '#fff', color: '#006D77', padding: '12px 28px', borderRadius: 8, fontSize: 14, fontWeight: 700, textDecoration: 'none', whiteSpace: 'nowrap' }}>Publicar anuncio</a>
           </div>
         </div>
         <footer style={{ borderTop: '1px solid #e8e8e8', padding: '20px', textAlign: 'center', fontSize: 12, color: '#aaa' }}>

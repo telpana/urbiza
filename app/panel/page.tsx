@@ -2629,9 +2629,6 @@ export default function Panel() {
                 <div style={{ fontSize: 12, fontWeight: 700, color: '#006D77', textTransform: 'uppercase', letterSpacing: 0.8, marginBottom: 16 }}>Mi plan</div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                    <div style={{ width: 44, height: 44, borderRadius: 10, background: `linear-gradient(135deg, #004E57, #006D77)`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    </div>
                     <div>
                       <div style={{ fontSize: 15, fontWeight: 700, color: '#111' }}>
                         {usuario?.plan ? `Plan ${usuario.plan.charAt(0).toUpperCase() + usuario.plan.slice(1)}` : 'Plan Gratuito'}

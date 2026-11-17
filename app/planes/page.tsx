@@ -86,7 +86,7 @@ export default function Planes() {
   }, [])
 
   const irACheckout = async (tipo: string) => {
-    if (!sesionActiva) { (window.top || window).location.href = '/registro?next=/planes'; return }
+    if (!sesionActiva) { (window.top || window).location.href = '/registro?next=/unete'; return }
     setCargando(true)
     try {
       const { data: { session } } = await supabase.auth.getSession()
