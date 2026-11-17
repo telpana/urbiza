@@ -463,7 +463,11 @@ export default function Home() {
         }
       } catch {}
     }
-    supabase.auth.getUser().then(({ data }) => initAuth(data.user))
+    // getSession lee de localStorage (instantáneo) → authReady inmediato
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) { setSesionActiva(true); setAuthReady(true); initAuth(session.user) }
+      else { setSesionActiva(false); setAuthReady(true) }
+    })
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session?.user) initAuth(session.user)
       else { setSesionActiva(false); setAuthReady(true) }

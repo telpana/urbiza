@@ -60,7 +60,7 @@ export default function Registro() {
       if (loginErr) { setError(loginErr.message); setLoading(false); return }
 
       const next = new URLSearchParams(window.location.search).get('next')
-      window.location.href = (next && next.startsWith('/')) ? next : '/panel'
+      window.location.href = (next && next.startsWith('/')) ? next : '/planes'
     } catch (e) {
       setError(T.err_generico)
     }
@@ -209,7 +209,7 @@ export default function Registro() {
                 </p>
                 <p style={{ fontSize: 13, color: '#aaa', marginBottom: 24 }}>{T.verificaEmail}</p>
 <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  <a href="/panel" style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '13px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'center', display: 'block' }}>
+                  <a href="/planes" style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '13px', borderRadius: 6, fontSize: 14, fontWeight: 600, cursor: 'pointer', textAlign: 'center', display: 'block' }}>
                     {T.irPanel}
                   </a>
                   <a href="/buscar" style={{ all: 'unset', border: '1.5px solid #e0e0e0', color: '#555', padding: '12px', borderRadius: 6, fontSize: 14, fontWeight: 500, cursor: 'pointer', textAlign: 'center', display: 'block' }}>
