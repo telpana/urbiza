@@ -176,38 +176,66 @@ export default function Planes() {
               </div>
             </div>
 
-            {/* KPIs */}
-            <div className="planes-kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 10, marginBottom: 14 }}>
-              {[
-                { label: 'Propiedades activas', valor: '1,850+', icon: '🏠', color: BRAND },
-                { label: 'Agentes verificados', valor: '280+', icon: '✅', color: '#10b981' },
-                { label: 'Visitas mensuales', valor: '42K', icon: '👁️', color: '#f59e0b' },
-                { label: 'Provincias cubiertas', valor: '32', icon: '📍', color: '#8b5cf6' },
-              ].map(k => (
-                <div key={k.label} style={{ background: '#f8fafb', borderRadius: 10, padding: '12px', border: '1px solid #eee' }}>
-                  <div style={{ fontSize: 20 }}>{k.icon}</div>
-                  <div style={{ fontSize: 22, fontWeight: 900, color: k.color, lineHeight: 1.2, marginTop: 2 }}>{k.valor}</div>
-                  <div style={{ fontSize: 10, color: '#888', marginTop: 2, lineHeight: 1.3 }}>{k.label}</div>
+            {/* Recreación página de búsqueda */}
+            <div style={{ borderRadius: '10px 10px 0 0', overflow: 'hidden' }}>
+              {/* Nav búsqueda */}
+              <div style={{ background: BRAND_DARK, padding: '7px 12px', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: 13, fontWeight: 800, color: '#fff', letterSpacing: -0.5, marginRight: 6 }}>habitade.</span>
+                {['Comprar','Alquilar'].map(l => <span key={l} style={{ fontSize: 10, color: 'rgba(255,255,255,0.75)', marginRight: 2 }}>{l}</span>)}
+                <div style={{ flex: 1, background: '#fff', borderRadius: 4, padding: '4px 10px', display: 'flex', alignItems: 'center', gap: 6, maxWidth: 340 }}>
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke={BRAND} strokeWidth="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                  <span style={{ fontSize: 9, color: '#bbb' }}>Zona, sector, municipio...</span>
+                  <div style={{ marginLeft: 'auto', background: BRAND, padding: '2px 8px', borderRadius: 3, fontSize: 8, color: '#fff', fontWeight: 600 }}>Buscar</div>
                 </div>
-              ))}
-            </div>
-
-            {/* Mapa + listados */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 220px', gap: 0, borderRadius: '10px 10px 0 0', overflow: 'hidden', height: 200 }}>
-              {/* SVG mapa ilustrativo */}
-              <div style={{ background: '#dbeeff', overflow: 'hidden' }}>
-                <MapaRD />
+                <div style={{ flex: 1 }}/>
+                <div style={{ border: '1px solid rgba(255,255,255,0.4)', padding: '3px 7px', borderRadius: 3, fontSize: 8, color: '#fff' }}>Entrar</div>
+                <div style={{ border: '1px solid rgba(255,255,255,0.4)', padding: '3px 7px', borderRadius: 3, fontSize: 8, color: '#fff' }}>+ Publicar gratis</div>
               </div>
-              {/* Listados con precio */}
-              <div style={{ background: '#f8fafb', borderLeft: '1px solid #e8e8e8', padding: '10px 0', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto' }}>
-                <div style={{ padding: '0 12px 6px', fontSize: 10, fontWeight: 700, color: '#aaa', letterSpacing: 0.5, textTransform: 'uppercase' }}>Recientes</div>
-                {LISTADOS.map((l, i) => (
-                  <div key={i} style={{ padding: '8px 12px', borderBottom: '1px solid #f0f0f0' }}>
-                    <div style={{ fontSize: 11, fontWeight: 700, color: '#111', marginBottom: 2 }}>{l.zona}</div>
-                    <div style={{ fontSize: 10, color: '#888', marginBottom: 4 }}>{l.tipo} · {l.hab} hab · {l.banos} baños</div>
-                    <div style={{ fontSize: 13, fontWeight: 900, color: BRAND }}>{l.precio}</div>
+
+              {/* Cuerpo */}
+              <div style={{ display: 'grid', gridTemplateColumns: '170px 1fr', background: '#fff' }}>
+                {/* Sidebar */}
+                <div style={{ borderRight: '1px solid #f0f0f0', padding: 8 }}>
+                  <div style={{ height: 115, borderRadius: 6, overflow: 'hidden', marginBottom: 8 }}>
+                    <MapaRD />
                   </div>
-                ))}
+                  <div style={{ fontSize: 9, fontWeight: 700, color: '#333', marginBottom: 4 }}>Operación</div>
+                  <div style={{ display: 'flex', gap: 3, marginBottom: 8 }}>
+                    {['Todos','Venta','Alquiler'].map((l,i) => <div key={l} style={{ padding: '3px 6px', borderRadius: 3, fontSize: 8, background: i===0 ? BRAND_DARK : '#f4f5f6', color: i===0 ? '#fff' : '#555', fontWeight: i===0 ? 600 : 400 }}>{l}</div>)}
+                  </div>
+                  <div style={{ fontSize: 9, fontWeight: 700, color: '#333', marginBottom: 4 }}>Tipo de inmueble</div>
+                  <div style={{ border: '1px solid #e0e0e0', borderRadius: 3, padding: '3px 7px', fontSize: 8, color: '#777', marginBottom: 8, display: 'flex', justifyContent: 'space-between' }}>Todos <span>▾</span></div>
+                  <div style={{ fontSize: 9, fontWeight: 700, color: '#333', marginBottom: 4 }}>Precio (US$)</div>
+                  <div style={{ display: 'flex', gap: 3 }}>
+                    <div style={{ flex: 1, border: '1px solid #e0e0e0', borderRadius: 3, padding: '3px 5px', fontSize: 7, color: '#ccc' }}>Min</div>
+                    <div style={{ flex: 1, border: '1px solid #e0e0e0', borderRadius: 3, padding: '3px 5px', fontSize: 7, color: '#ccc' }}>Máx</div>
+                  </div>
+                </div>
+
+                {/* Resultados */}
+                <div style={{ padding: '8px 10px', overflow: 'hidden' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
+                    <span style={{ fontSize: 8, color: '#777' }}>Ordenar por:</span>
+                    {['Relevancia','Recientes','Más baratos','Más caros'].map((l,i) => <div key={l} style={{ padding: '3px 6px', border: `1px solid ${i===3 ? BRAND_DARK : '#e0e0e0'}`, borderRadius: 3, fontSize: 7.5, color: i===3 ? '#fff' : '#555', background: i===3 ? BRAND_DARK : '#fff' }}>{l}</div>)}
+                  </div>
+                  {[
+                    { title: 'Vendo villa en Cap. Cana, Punta Cana', price: 'US$ 6,900,000', det: '3 hab · 1800 m² · 3 baños', zone: 'Punta Cana, La Altagracia', g1: '#1a6b5a', g2: '#0d4a3f' },
+                    { title: 'Vendo villa en Cap. Cana, Punta Cana', price: 'US$ 4,990,000', det: '3 hab · 3421 m² · 3 baños', zone: 'Punta Cana, La Altagracia', g1: '#2d5a8e', g2: '#1a3a5c' },
+                    { title: 'Vendo villa en Punta Cana', price: 'US$ 3,900,000', det: '3 hab · 181 m² · 3 baños', zone: 'Punta Cana, La Altagracia', g1: '#6b4e1a', g2: '#4a360d' },
+                  ].map((p, i) => (
+                    <div key={i} style={{ display: 'grid', gridTemplateColumns: '120px 1fr', border: '1px solid #f0f0f0', borderRadius: 7, overflow: 'hidden', marginBottom: 6 }}>
+                      <div style={{ background: `linear-gradient(135deg, ${p.g1}, ${p.g2})`, height: 62, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="1.2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                      </div>
+                      <div style={{ padding: '6px 8px' }}>
+                        <div style={{ fontSize: 8.5, fontWeight: 700, color: BRAND, marginBottom: 2, lineHeight: 1.3 }}>{p.title}</div>
+                        <div style={{ fontSize: 12, fontWeight: 900, color: '#111', marginBottom: 2 }}>{p.price}</div>
+                        <div style={{ fontSize: 7.5, color: '#888' }}>{p.det}</div>
+                        <div style={{ fontSize: 7.5, color: '#aaa', marginTop: 2 }}>📍 {p.zone}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
