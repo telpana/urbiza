@@ -306,7 +306,7 @@ export default function Planes() {
         <div className="planes-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
           {planesData.map(plan => {
             const esPlanEspecial = ['fundador', 'profesional', 'platino'].includes(planActual || '')
-            const esPlanActual = !esPlanEspecial && (planActual === plan.id || (plan.id === 'gratis' && (!planActual || planActual === 'gratis')))
+            const esPlanActual = sesionActiva && !esPlanEspecial && (planActual === plan.id || (plan.id === 'gratis' && (!planActual || planActual === 'gratis')))
             const esPopular = !!plan.badge
             const precio = anual ? plan.precioAnual : plan.precioMes
             return (
