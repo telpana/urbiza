@@ -2523,7 +2523,7 @@ export default function Panel() {
                       {perfilAei && usuario?.aei_aprobado === true && <span style={{ background: '#1a3a5c', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>✓ AEI</span>}
                       {perfilAei && usuario?.aei_aprobado !== true && <span style={{ background: '#f59e0b', color: '#fff', fontSize: 10, fontWeight: 600, padding: '2px 8px', borderRadius: 10 }}>⏳ AEI pendiente</span>}
                     </div>
-                    {tipoUsuario === 'profesional' && usuario?.plan !== 'profesional' && (
+                    {tipoUsuario === 'profesional' && !['profesional', 'fundador', 'platino'].includes(usuario?.plan || '') && (
                       <div style={{ marginTop: 8, display: 'inline-flex', alignItems: 'center', gap: 6, background: '#f9fafb', border: '1px solid #e5e7eb', borderRadius: 6, padding: '5px 10px' }}>
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                         <span style={{ fontSize: 11, color: '#6b7280' }}>Plan profesional pendiente ·{' '}</span>
