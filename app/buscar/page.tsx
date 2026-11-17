@@ -634,7 +634,7 @@ function BuscarContent() {
 
   const tituloOperacion = operacion === 'alquiler' ? Tb.operacion.alquiler : Tb.operacion.venta
   const totalMostrado = totalEnBD > 0 ? totalEnBD.toLocaleString('es-DO') : `${filtradas.length}`
-  const tituloPagina = `${totalMostrado} ${query ? `${Tb.propiedadesEn} ${query.split(',')[0].trim()}` : Tb.titulo}`
+  const tituloPagina = query ? `${Tb.propiedadesEn} ${query.split(',')[0].trim()}` : Tb.titulo
 
   return (
     <>
