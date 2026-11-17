@@ -206,8 +206,8 @@ export default function Planes() {
             <h3 style={{ fontSize: 26, fontWeight: 900, color: '#111', margin: '0 0 10px', letterSpacing: '-0.3px' }}>Herramientas que convierten visitas en ventas</h3>
             <p style={{ fontSize: 15, color: '#666', margin: 0 }}>Todo lo que necesitas para gestionar tus propiedades y cerrar más rápido.</p>
           </div>
-          <div className="planes-features" style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
-            <div style={{ flex: 1, background: BRAND_DARK, borderRadius: 20, padding: 22, display: 'flex', flexDirection: 'column', aspectRatio: '1', overflow: 'hidden' }}>
+          <div className="planes-features" style={{ display: 'flex', gap: 20, alignItems: 'stretch' }}>
+            <div style={{ flex: 1, background: BRAND_DARK, borderRadius: 20, padding: 22, display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 10 }}>Mensajería</div>
               <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.3 }}>Chat directo con compradores</h3>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', margin: '0 0 16px', lineHeight: 1.5 }}>Responde a los interesados en tiempo real desde tu panel.</p>
@@ -233,7 +233,7 @@ export default function Planes() {
                 ))}
               </div>
             </div>
-            <div style={{ flex: 1, background: BRAND_DARK, borderRadius: 20, padding: 22, display: 'flex', flexDirection: 'column', aspectRatio: '1', overflow: 'hidden' }}>
+            <div style={{ flex: 1, background: BRAND_DARK, borderRadius: 20, padding: 22, display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 10 }}>Analítica</div>
               <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.3 }}>Métricas en tiempo real</h3>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', margin: '0 0 16px', lineHeight: 1.5 }}>Visitas, contactos y conversión de cada propiedad.</p>
@@ -252,7 +252,7 @@ export default function Planes() {
                 ))}
               </div>
             </div>
-            <div style={{ flex: 1, background: BRAND_DARK, borderRadius: 20, padding: 22, display: 'flex', flexDirection: 'column', aspectRatio: '1', overflow: 'hidden' }}>
+            <div style={{ flex: 1, background: BRAND_DARK, borderRadius: 20, padding: 22, display: 'flex', flexDirection: 'column' }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, color: 'rgba(255,255,255,0.45)', textTransform: 'uppercase', marginBottom: 10 }}>Visibilidad</div>
               <h3 style={{ fontSize: 18, fontWeight: 800, color: '#fff', margin: '0 0 8px', lineHeight: 1.3 }}>Destacado y soporte prioritario</h3>
               <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.6)', margin: '0 0 16px', lineHeight: 1.5 }}>Aparece primero ante miles de compradores e inmobiliarias.</p>
