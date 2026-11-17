@@ -84,7 +84,7 @@ export default function Planes() {
   }, [])
 
   const irACheckout = async (tipo: string) => {
-    if (!sesionActiva) { window.location.href = '/registro?next=/planes'; return }
+    if (!sesionActiva) { (window.top || window).location.href = '/registro?next=/planes'; return }
     setCargando(true)
     try {
       const { data: { session } } = await supabase.auth.getSession()
@@ -95,7 +95,7 @@ export default function Planes() {
         body: JSON.stringify({ userId: user?.id, email: user?.email, tipo })
       })
       const data = await res.json()
-      if (data.url) window.location.href = data.url
+      if (data.url) (window.top || window).location.href = data.url
     } catch {}
     setCargando(false)
   }
@@ -330,7 +330,7 @@ export default function Planes() {
                     ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: '12px 0', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, background: esPopular ? '#fff' : BRAND, color: esPopular ? BRAND : '#fff', marginBottom: 20 }}>
                         {cargando ? '...' : plan.cta}
                       </button>
-                    : <Link href={sesionActiva ? '/panel' : (plan.href || '/registro')} style={{ display: 'block', width: '100%', padding: '12px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: BRAND, color: '#fff', textDecoration: 'none', marginBottom: 20 }}>{plan.cta}</Link>
+                    : <a href={sesionActiva ? '/panel' : (plan.href || '/registro')} onClick={e => { e.preventDefault(); (window.top || window).location.href = sesionActiva ? '/panel' : (plan.href || '/registro') }} style={{ display: 'block', width: '100%', padding: '12px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: BRAND, color: '#fff', textDecoration: 'none', marginBottom: 20 }}>{plan.cta}</a>
                 }
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {plan.features.map(f => (
