@@ -190,7 +190,7 @@ export default function Planes() {
       </div>}
 
       {/* PLANES */}
-      <div style={{ maxWidth: 920, margin: '0 auto', padding: '56px 24px 80px' }}>
+      <div style={{ maxWidth: 920, margin: '0 auto', padding: '56px 24px 80px', display: 'flex', flexDirection: 'column' }}>
         {/* CTA Únete */}
         {!sesionActiva && <div style={{ textAlign: 'center', marginBottom: 56 }}>
           <div style={{ fontSize: 13, fontWeight: 700, color: BRAND, textTransform: 'uppercase', letterSpacing: 1.2, marginBottom: 12 }}>Empieza hoy</div>
@@ -201,7 +201,7 @@ export default function Planes() {
         </div>}
 
         {/* Features */}
-        <div style={{ background: '#f8fafb', borderRadius: 20, padding: '48px 32px', marginBottom: 56 }}>
+        <div style={{ background: '#f8fafb', borderRadius: 20, padding: '48px 32px', marginBottom: 56, order: isEmbed ? 1 : 0 }}>
           <div style={{ textAlign: 'center', marginBottom: 40 }}>
             <h3 style={{ fontSize: 26, fontWeight: 900, color: '#111', margin: '0 0 10px', letterSpacing: '-0.3px' }}>Herramientas que convierten visitas en ventas</h3>
             <p style={{ fontSize: 15, color: '#666', margin: 0 }}>Todo lo que necesitas para gestionar tus propiedades y cerrar más rápido.</p>
@@ -270,6 +270,7 @@ export default function Planes() {
           </div>
         </div>
 
+        <div style={{ order: isEmbed ? 0 : 1 }}>
         <div style={{ textAlign: 'center', marginBottom: 40 }}>
           <h2 style={{ fontSize: 32, fontWeight: 900, color: '#111', margin: '0 0 12px', letterSpacing: '-0.5px' }}>
             {Tp.elegirPlan}
@@ -371,6 +372,7 @@ export default function Planes() {
             <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)' }}>{Tp.platinoDesc}</div>
           </div>
           <a href="mailto:hola@habitade.com" style={{ background: '#fff', color: BRAND, padding: '12px 28px', borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: 'none', whiteSpace: 'nowrap' }}>{Tp.contactar}</a>
+        </div>
         </div>
 
       </div>
