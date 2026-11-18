@@ -86,7 +86,7 @@ export default function Planes() {
   }, [])
 
   const irACheckout = async (tipo: string) => {
-    if (!sesionActiva) { (window.top || window).location.href = '/registro?next=/unete'; return }
+    if (!sesionActiva) { (window.top || window).location.href = '/registro'; return }
     setCargando(true)
     try {
       const { data: { session } } = await supabase.auth.getSession()
@@ -158,7 +158,8 @@ export default function Planes() {
           .planes-features { flex-direction: column !important; }
           .planes-cards { grid-template-columns: 1fr !important; }
           .planes-faq { grid-template-columns: 1fr !important; }
-          .planes-platino { flex-direction: column !important; align-items: flex-start !important; }
+          .planes-platino { flex-direction: column !important; align-items: stretch !important; text-align: center !important; }
+          .planes-platino a { text-align: center !important; }
           .planes-hero-title { font-size: 32px !important; }
           .planes-section-title { font-size: 26px !important; }
         }
