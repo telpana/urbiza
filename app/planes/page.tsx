@@ -98,7 +98,7 @@ export default function Planes() {
     try {
       const res = await fetch('/api/validar-promo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codigo: codigoPromo.trim() }) })
       const data = await res.json()
-      if (data.ok) { setPromoValidado(true); setPromoDias(data.dias) }
+      if (data.ok) { setPromoValidado(true); setPromoDias(data.dias); setAnual(false) }
       else setPromoError(data.error || 'Código no válido')
     } catch { setPromoError('Error de conexión') }
     finally { setPromoLoading(false) }
@@ -111,7 +111,7 @@ export default function Planes() {
       const { data: { session } } = await supabase.auth.getSession()
       const { data: { user } } = await supabase.auth.getUser()
       const body: any = { userId: user?.id, email: user?.email, tipo }
-      if (promoValidado && codigoPromo.trim() && tipo.startsWith('plata')) body.codigoPromo = codigoPromo.trim().toUpperCase()
+      if (promoValidado && codigoPromo.trim() && tipo === 'plata_mensual') body.codigoPromo = codigoPromo.trim().toUpperCase()
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token ?? ''}` },
@@ -302,7 +302,7 @@ export default function Planes() {
           {/* Toggle */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, background: '#fff', border: '1.5px solid #e8e8e8', borderRadius: 100, padding: '6px 20px' }}>
             <span style={{ fontSize: 14, fontWeight: 600, color: anual ? '#aaa' : '#111' }}>{Tp.mensual}</span>
-            <button onClick={() => setAnual(v => !v)} style={{ width: 44, height: 24, borderRadius: 100, border: 'none', cursor: 'pointer', background: anual ? BRAND : '#ccc', position: 'relative', transition: 'background 0.2s', padding: 0 }}>
+            <button onClick={() => { if (!promoValidado) setAnual(v => !v) }} title={promoValidado ? 'El código aplica solo al plan mensual' : undefined} style={{ width: 44, height: 24, borderRadius: 100, border: 'none', cursor: promoValidado ? 'not-allowed' : 'pointer', background: anual ? BRAND : '#ccc', position: 'relative', transition: 'background 0.2s', padding: 0, opacity: promoValidado ? 0.6 : 1 }}>
               <div style={{ width: 18, height: 18, borderRadius: '50%', background: '#fff', position: 'absolute', top: 3, left: anual ? 23 : 3, transition: 'left 0.2s', boxShadow: '0 1px 4px rgba(0,0,0,0.2)' }} />
             </button>
             <span style={{ fontSize: 14, fontWeight: 600, color: anual ? '#111' : '#aaa' }}>
