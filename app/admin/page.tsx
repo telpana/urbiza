@@ -44,6 +44,7 @@ export default function Admin() {
   const [propiedades, setPropiedades] = useState<any[]>([])
   const [propLoading, setPropLoading] = useState(false)
   const [propQ, setPropQ] = useState('')
+  const [modalFotos, setModalFotos] = useState<{ id: string; fotos: string[] } | null>(null)
   const [usuarios, setUsuarios] = useState<any[]>([])
   const [usersLoading, setUsersLoading] = useState(false)
   const [usersQ, setUsersQ] = useState('')
@@ -645,6 +646,7 @@ export default function Admin() {
                             <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
                               <div style={{ display: 'flex', gap: 6 }}>
                                 <Btn onClick={() => toggleEstado(p.id, p.estado)} variant="ghost" small>{p.estado === 'activo' ? 'Desactivar' : 'Activar'}</Btn>
+                                <Btn onClick={() => setModalFotos({ id: p.id, fotos: p.fotos || [] })} variant="ghost" small>Fotos</Btn>
                                 <Btn onClick={() => eliminarPropiedad(p.id)} variant="danger" small>Eliminar</Btn>
                               </div>
                             </td>
@@ -1370,6 +1372,38 @@ export default function Admin() {
 
         </div>
       </div>
+
+      {/* Modal gestión de fotos */}
+      {modalFotos && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.6)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}
+          onClick={e => { if (e.target === e.currentTarget) setModalFotos(null) }}>
+          <div style={{ background: '#fff', borderRadius: 14, padding: 28, maxWidth: 680, width: '100%', maxHeight: '85vh', overflowY: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <div style={{ fontSize: 16, fontWeight: 700 }}>Gestionar fotos</div>
+              <button onClick={() => setModalFotos(null)} style={{ all: 'unset', fontSize: 20, color: '#aaa', cursor: 'pointer', lineHeight: 1 }}>✕</button>
+            </div>
+            {modalFotos.fotos.length === 0
+              ? <div style={{ color: '#aaa', fontSize: 13, textAlign: 'center', padding: '20px 0' }}>Sin fotos</div>
+              : <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
+                  {modalFotos.fotos.map((url, i) => (
+                    <div key={url} style={{ position: 'relative', borderRadius: 8, overflow: 'hidden', border: i === 0 ? '2.5px solid #006D77' : '1.5px solid #e8e8e8' }}>
+                      {i === 0 && <div style={{ position: 'absolute', top: 6, left: 6, background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>Portada</div>}
+                      <img src={url} alt="" style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', display: 'block' }} />
+                      <button onClick={async () => {
+                        const nuevas = modalFotos.fotos.filter((_, j) => j !== i)
+                        await fetch('/api/admin/propiedades', { method: 'PATCH', headers: { ...authHeader(), 'Content-Type': 'application/json' }, body: JSON.stringify({ id: modalFotos.id, fotos: nuevas }) })
+                        setModalFotos({ ...modalFotos, fotos: nuevas })
+                        setPropiedades(prev => prev.map(p => p.id === modalFotos.id ? { ...p, fotos: nuevas } : p))
+                      }} style={{ all: 'unset', position: 'absolute', top: 6, right: 6, background: 'rgba(220,38,38,0.9)', color: '#fff', width: 24, height: 24, borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 14, fontWeight: 700 }}>✕</button>
+                    </div>
+                  ))}
+                </div>
+            }
+            <div style={{ fontSize: 12, color: '#aaa', marginTop: 16 }}>La primera foto es la portada. Elimina las que no quieras.</div>
+          </div>
+        </div>
+      )}
+
     </main>
   )
 }

@@ -31,12 +31,16 @@ export async function DELETE(req: Request) {
   return NextResponse.json({ ok: true })
 }
 
-// PATCH: cambiar estado
+// PATCH: cambiar estado o fotos
 export async function PATCH(req: Request) {
   if (!verifyToken(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
-  const { id, estado } = await req.json()
-  if (!id || !estado) return NextResponse.json({ error: 'Faltan parámetros' }, { status: 400 })
-  const { error } = await sb.from('propiedades').update({ estado }).eq('id', id)
+  const { id, estado, fotos } = await req.json()
+  if (!id) return NextResponse.json({ error: 'Faltan parámetros' }, { status: 400 })
+  const update: Record<string, any> = {}
+  if (estado !== undefined) update.estado = estado
+  if (fotos !== undefined) update.fotos = fotos
+  if (Object.keys(update).length === 0) return NextResponse.json({ error: 'Nada que actualizar' }, { status: 400 })
+  const { error } = await sb.from('propiedades').update(update).eq('id', id)
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
   return NextResponse.json({ ok: true })
 }
