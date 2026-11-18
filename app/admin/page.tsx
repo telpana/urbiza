@@ -1387,7 +1387,15 @@ export default function Admin() {
               : <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
                   {modalFotos.fotos.map((url, i) => (
                     <div key={url} style={{ position: 'relative', borderRadius: 8, overflow: 'hidden', border: i === 0 ? '2.5px solid #006D77' : '1.5px solid #e8e8e8' }}>
-                      {i === 0 && <div style={{ position: 'absolute', top: 6, left: 6, background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>Portada</div>}
+                      {i === 0
+                        ? <div style={{ position: 'absolute', top: 6, left: 6, background: '#006D77', color: '#fff', fontSize: 10, fontWeight: 700, padding: '2px 8px', borderRadius: 10 }}>Portada</div>
+                        : <button onClick={async () => {
+                            const nuevas = [url, ...modalFotos.fotos.filter((_, j) => j !== i)]
+                            await fetch('/api/admin/propiedades', { method: 'PATCH', headers: { ...authHeader(), 'Content-Type': 'application/json' }, body: JSON.stringify({ id: modalFotos.id, fotos: nuevas }) })
+                            setModalFotos({ ...modalFotos, fotos: nuevas })
+                            setPropiedades(prev => prev.map(p => p.id === modalFotos.id ? { ...p, fotos: nuevas } : p))
+                          }} style={{ all: 'unset', position: 'absolute', top: 6, left: 6, background: 'rgba(0,109,119,0.9)', color: '#fff', fontSize: 10, fontWeight: 700, padding: '3px 8px', borderRadius: 10, cursor: 'pointer', whiteSpace: 'nowrap' }}>⭐ Portada</button>
+                      }
                       <img src={url} alt="" style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', display: 'block' }} />
                       <button onClick={async () => {
                         const nuevas = modalFotos.fotos.filter((_, j) => j !== i)
