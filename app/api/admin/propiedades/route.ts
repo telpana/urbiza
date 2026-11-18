@@ -15,7 +15,7 @@ export async function GET(req: Request) {
   let query = sb.from('propiedades')
     .select('id,titulo,zona,precio,tipo,operacion,estado,created_at,destacado,fotos,usuarios(nombre,email)')
     .order('created_at', { ascending: false })
-    .limit(100)
+    .limit(1000)
   if (q) query = query.ilike('titulo', `%${q}%`)
   const { data } = await query
   return NextResponse.json(data ?? [])
