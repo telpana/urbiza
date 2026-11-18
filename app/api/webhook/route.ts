@@ -94,6 +94,10 @@ export async function POST(req: Request) {
         else if (sub.current_period_end) planActivoHasta = new Date(sub.current_period_end * 1000)
       } catch (e) { console.error('[webhook] error leyendo trial_end:', e) }
 
+      // Leer ya_suscrito antes de actualizar para saber si es primera vez
+      const { data: usuarioActual } = await supabase.from('usuarios').select('ya_suscrito').eq('id', userId).single()
+      const esPrimeraVez = !usuarioActual?.ya_suscrito
+
       const { error } = await supabase.from('usuarios').update({
         plan: planNombre,
         tipo: planNombre === 'fundador' ? 'profesional' : planNombre,
@@ -102,6 +106,7 @@ export async function POST(req: Request) {
         plan_intervalo: intervalo,
         ya_suscrito: true,
         ...(codigoPromo ? { codigo_promo_usado: codigoPromo } : {}),
+        ...(esPrimeraVez && planNombre === 'oro' ? { destacados_gratis: 2 } : {}),
       }).eq('id', userId)
       if (error) console.error('[webhook] error actualizando plan:', error)
       // Contabilizar uso del código solo cuando Stripe confirma
