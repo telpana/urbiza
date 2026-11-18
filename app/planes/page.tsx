@@ -89,6 +89,21 @@ export default function Planes() {
           .then(({ data }) => { if (data?.plan) setPlanActual(data.plan) })
       }
     })
+
+    // Recuperar código promo guardado antes del registro
+    try {
+      const guardado = sessionStorage.getItem('hb_promo_pendiente')
+      if (guardado) {
+        sessionStorage.removeItem('hb_promo_pendiente')
+        setCodigoPromo(guardado)
+        setPromoExpanded(true)
+        setAnual(false)
+        fetch('/api/validar-promo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codigo: guardado }) })
+          .then(r => r.json())
+          .then(data => { if (data.ok) { setPromoValidado(true); setPromoDias(data.dias) } })
+          .catch(() => {})
+      }
+    } catch {}
   }, [])
 
   const aplicarCodigo = async () => {
@@ -105,7 +120,13 @@ export default function Planes() {
   }
 
   const irACheckout = async (tipo: string) => {
-    if (!sesionActiva) { (window.top || window).location.href = '/registro'; return }
+    if (!sesionActiva) {
+      if (promoValidado && codigoPromo.trim()) {
+        try { sessionStorage.setItem('hb_promo_pendiente', codigoPromo.trim().toUpperCase()) } catch {}
+      }
+      ;(window.top || window).location.href = '/registro'
+      return
+    }
     setCargando(true)
     try {
       const { data: { session } } = await supabase.auth.getSession()
