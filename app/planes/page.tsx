@@ -175,7 +175,7 @@ export default function Planes() {
       cta: 'Empezar con Plata',
       tipo: anual ? 'plata_anual' : 'plata_mensual',
       limite: '15 propiedades',
-      features: ['15 propiedades publicadas', 'Más fotos por propiedad', 'Chat con clientes', 'Estadísticas de visitas', 'Destacados disponibles', 'Soporte por email', 'Perfil de agente verificado'],
+      features: ['15 propiedades publicadas', 'Más fotos por propiedad', 'Chat con clientes', 'Estadísticas de visitas', '1 destacado gratis de 30 días', 'Soporte por email', 'Perfil de agente verificado'],
       noIncludes: [],
     },
     {
@@ -190,7 +190,7 @@ export default function Planes() {
       cta: 'Empezar con Oro',
       tipo: anual ? 'oro_anual' : 'oro_mensual',
       limite: '50 propiedades',
-      features: ['50 propiedades publicadas', 'Más fotos por propiedad', 'Chat con clientes', 'Estadísticas de visitas', 'Destacados disponibles', 'Soporte prioritario', 'Perfil de agente verificado', 'Acceso anticipado a funciones'],
+      features: ['50 propiedades publicadas', 'Más fotos por propiedad', 'Chat con clientes', 'Estadísticas de visitas', '2 destacados gratis de 30 días', 'Soporte prioritario', 'Perfil de agente verificado', 'Acceso anticipado a funciones'],
       noIncludes: [],
     },
   ]
