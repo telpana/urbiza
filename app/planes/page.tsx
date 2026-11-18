@@ -71,6 +71,12 @@ export default function Planes() {
   const [cargando, setCargando] = useState(false)
   const [planActual, setPlanActual] = useState<string | null>(null)
   const [iniciado, setIniciado] = useState(false)
+  const [codigoPromo, setCodigoPromo] = useState('')
+  const [promoExpanded, setPromoExpanded] = useState(false)
+  const [promoLoading, setPromoLoading] = useState(false)
+  const [promoError, setPromoError] = useState('')
+  const [promoValidado, setPromoValidado] = useState(false)
+  const [promoDias, setPromoDias] = useState(0)
 
   useEffect(() => { setIsEmbed(window.self !== window.top) }, [])
 
@@ -85,16 +91,31 @@ export default function Planes() {
     })
   }, [])
 
+  const aplicarCodigo = async () => {
+    if (!codigoPromo.trim()) return
+    setPromoError('')
+    setPromoLoading(true)
+    try {
+      const res = await fetch('/api/validar-promo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codigo: codigoPromo.trim() }) })
+      const data = await res.json()
+      if (data.ok) { setPromoValidado(true); setPromoDias(data.dias) }
+      else setPromoError(data.error || 'Código no válido')
+    } catch { setPromoError('Error de conexión') }
+    finally { setPromoLoading(false) }
+  }
+
   const irACheckout = async (tipo: string) => {
     if (!sesionActiva) { (window.top || window).location.href = '/registro'; return }
     setCargando(true)
     try {
       const { data: { session } } = await supabase.auth.getSession()
       const { data: { user } } = await supabase.auth.getUser()
+      const body: any = { userId: user?.id, email: user?.email, tipo }
+      if (promoValidado && codigoPromo.trim()) body.codigoPromo = codigoPromo.trim().toUpperCase()
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token ?? ''}` },
-        body: JSON.stringify({ userId: user?.id, email: user?.email, tipo })
+        body: JSON.stringify(body)
       })
       const data = await res.json()
       if (data.url) (window.top || window).location.href = data.url
@@ -339,8 +360,10 @@ export default function Planes() {
                 {esPlanActual
                   ? <div style={{ width: '100%', padding: '11px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: 'rgba(0,0,0,0.08)', color: plan.colorTexto, marginBottom: 20 }}>{Tp.planActual}</div>
                   : plan.tipo
-                    ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: '12px 0', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, background: esPopular ? '#fff' : BRAND, color: esPopular ? BRAND : '#fff', marginBottom: 20 }}>
-                        {plan.cta}
+                    ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: promoValidado ? '8px 0' : '12px 0', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, background: esPopular ? '#fff' : BRAND, color: esPopular ? BRAND : '#fff', marginBottom: 20 }}>
+                        {promoValidado
+                          ? <><div>{plan.cta}</div><div style={{ fontSize: 11, fontWeight: 500, opacity: 0.8 }}>{promoDias} días gratis</div></>
+                          : plan.cta}
                       </button>
                     : <a href={sesionActiva ? '/panel' : (plan.href || '/registro')} onClick={e => { e.preventDefault(); (window.top || window).location.href = sesionActiva ? '/panel' : (plan.href || '/registro') }} style={{ display: 'block', width: '100%', padding: '12px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: BRAND, color: '#fff', textDecoration: 'none', marginBottom: 20 }}>{plan.cta}</a>
                 }
@@ -361,6 +384,33 @@ export default function Planes() {
               </div>
             )
           })}
+        </div>
+
+        {/* Código promocional */}
+        <div style={{ marginTop: 24, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
+          {promoValidado ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span style={{ background: '#d1fae5', color: '#065f46', fontSize: 13, fontWeight: 700, padding: '6px 16px', borderRadius: 20 }}>✓ {promoDias} días gratis aplicados</span>
+              <button onClick={() => { setPromoValidado(false); setCodigoPromo(''); setPromoError(''); setPromoExpanded(false) }} style={{ all: 'unset', fontSize: 12, color: '#aaa', cursor: 'pointer', textDecoration: 'underline' }}>Quitar</button>
+            </div>
+          ) : promoExpanded ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, width: '100%', maxWidth: 360 }}>
+              <div style={{ display: 'flex', gap: 8, width: '100%' }}>
+                <input value={codigoPromo} onChange={e => { setCodigoPromo(e.target.value.toUpperCase()); setPromoError('') }}
+                  onKeyDown={async e => { if (e.key === 'Enter') { e.preventDefault(); await aplicarCodigo() } }}
+                  placeholder="CÓDIGO PROMOCIONAL" maxLength={32}
+                  style={{ flex: 1, border: '1.5px solid #83D4DB', borderRadius: 8, padding: '10px 14px', fontSize: 13, fontWeight: 600, letterSpacing: 1, color: '#006D77', outline: 'none', background: '#f0fafb' }} />
+                <button onClick={aplicarCodigo} disabled={promoLoading || !codigoPromo.trim()} style={{ all: 'unset', background: BRAND, color: '#fff', padding: '10px 18px', borderRadius: 8, fontSize: 13, fontWeight: 700, cursor: (!codigoPromo.trim() || promoLoading) ? 'default' : 'pointer', opacity: (!codigoPromo.trim() || promoLoading) ? 0.5 : 1, whiteSpace: 'nowrap' }}>
+                  {promoLoading ? '...' : 'Aplicar'}
+                </button>
+              </div>
+              {promoError && <div style={{ fontSize: 12, color: '#dc2626' }}>{promoError}</div>}
+            </div>
+          ) : (
+            <button onClick={() => setPromoExpanded(true)} style={{ all: 'unset', fontSize: 13, color: '#006D77', cursor: 'pointer', textDecoration: 'underline', opacity: 0.8 }}>
+              ¿Tienes un código promocional?
+            </button>
+          )}
         </div>
 
         {/* Platino */}
