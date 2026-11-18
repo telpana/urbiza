@@ -2120,9 +2120,6 @@ export default function Panel() {
                 const total = 2
                 if (restantes <= 0) return (
                   <div style={{ background: '#f8f9fa', border: '1.5px solid #e8e8e8', borderRadius: 12, padding: '16px 20px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 14 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#e8e8e8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                    </div>
                     <div>
                       <div style={{ fontSize: 13, fontWeight: 700, color: '#888' }}>Ya usaste tus {total} destacados gratuitos del Plan Oro</div>
                       <div style={{ fontSize: 12, color: '#aaa', marginTop: 2 }}>Puedes seguir destacando con los planes de abajo</div>
@@ -2133,9 +2130,6 @@ export default function Panel() {
                   <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 100%)', borderRadius: 12, padding: '18px 20px', marginBottom: 24 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                        <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(255,255,255,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        </div>
                         <div>
                           <div style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>
                             Bonus Plan Oro · Te {restantes === 1 ? 'queda' : 'quedan'} <span style={{ background: 'rgba(255,255,255,0.2)', padding: '1px 10px', borderRadius: 20 }}>{restantes}/{total}</span> destacados gratuitos
@@ -2164,7 +2158,7 @@ export default function Panel() {
                           } catch { setDestacarError('Error de conexión') }
                           finally { setDestacarLoading(false) }
                         }} disabled={destacarLoading} style={{ all: 'unset', background: '#fff', color: '#006D77', padding: '10px 20px', borderRadius: 20, fontSize: 13, fontWeight: 700, cursor: destacarLoading ? 'default' : 'pointer', whiteSpace: 'nowrap', opacity: destacarLoading ? 0.6 : 1, flexShrink: 0 }}>
-                          {destacarLoading ? 'Aplicando...' : '⭐ Usar destacado gratuito'}
+                          {destacarLoading ? 'Aplicando...' : 'Usar destacado gratuito'}
                         </button>
                       )}
                     </div>
