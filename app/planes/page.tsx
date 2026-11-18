@@ -332,9 +332,13 @@ export default function Planes() {
             const esPlanActual = sesionActiva && !esPlanEspecial && (planActual === plan.id || (plan.id === 'gratis' && (!planActual || planActual === 'gratis')))
             const esPopular = !!plan.badge
             const precio = anual ? plan.precioAnual : plan.precioMes
+            const bloqueadoPorPromo = promoValidado && plan.id === 'oro'
             return (
-              <div key={plan.id} style={{ background: plan.color, borderRadius: 16, padding: 28, border: esPopular ? `2px solid ${BRAND}` : '1.5px solid #e8e8e8', position: 'relative', display: 'flex', flexDirection: 'column', boxShadow: esPopular ? '0 8px 40px rgba(0,109,119,0.18)' : '0 2px 12px rgba(0,0,0,0.05)' }}>
-                {plan.badge && (
+              <div key={plan.id} style={{ background: plan.color, borderRadius: 16, padding: 28, border: promoValidado && plan.id === 'plata' ? `2px solid #10b981` : esPopular ? `2px solid ${BRAND}` : '1.5px solid #e8e8e8', position: 'relative', display: 'flex', flexDirection: 'column', boxShadow: esPopular ? '0 8px 40px rgba(0,109,119,0.18)' : '0 2px 12px rgba(0,0,0,0.05)', opacity: bloqueadoPorPromo ? 0.45 : 1, transition: 'opacity 0.2s' }}>
+                {promoValidado && plan.id === 'plata' && (
+                  <div style={{ position: 'absolute', top: -13, left: '50%', transform: 'translateX(-50%)', background: '#10b981', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 14px', borderRadius: 100, whiteSpace: 'nowrap' }}>✓ Código aplicado</div>
+                )}
+                {!promoValidado && plan.badge && (
                   <div style={{ position: 'absolute', top: -13, left: '50%', transform: 'translateX(-50%)', background: BRAND, color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 14px', borderRadius: 100, whiteSpace: 'nowrap' }}>{plan.badge}</div>
                 )}
                 <div style={{ marginBottom: 20 }}>
@@ -359,13 +363,15 @@ export default function Planes() {
                 </div>
                 {esPlanActual
                   ? <div style={{ width: '100%', padding: '11px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: 'rgba(0,0,0,0.08)', color: plan.colorTexto, marginBottom: 20 }}>{Tp.planActual}</div>
-                  : plan.tipo
-                    ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: promoValidado && plan.id === 'plata' ? '8px 0' : '12px 0', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, background: esPopular ? '#fff' : BRAND, color: esPopular ? BRAND : '#fff', marginBottom: 20 }}>
-                        {promoValidado && plan.id === 'plata'
-                          ? <><div>{plan.cta}</div><div style={{ fontSize: 11, fontWeight: 500, opacity: 0.8 }}>{promoDias} días gratis</div></>
-                          : plan.cta}
-                      </button>
-                    : <a href={sesionActiva ? '/panel' : (plan.href || '/registro')} onClick={e => { e.preventDefault(); (window.top || window).location.href = sesionActiva ? '/panel' : (plan.href || '/registro') }} style={{ display: 'block', width: '100%', padding: '12px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: BRAND, color: '#fff', textDecoration: 'none', marginBottom: 20 }}>{plan.cta}</a>
+                  : bloqueadoPorPromo
+                    ? <div style={{ width: '100%', padding: '11px 0', borderRadius: 8, textAlign: 'center', fontSize: 13, fontWeight: 600, background: 'rgba(255,255,255,0.15)', color: '#fff', marginBottom: 20 }}>Código no aplica</div>
+                    : plan.tipo
+                      ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: promoValidado && plan.id === 'plata' ? '8px 0' : '12px 0', borderRadius: 8, border: 'none', cursor: cargando ? 'default' : 'pointer', fontSize: 14, fontWeight: 700, background: promoValidado && plan.id === 'plata' ? '#10b981' : esPopular ? '#fff' : BRAND, color: promoValidado && plan.id === 'plata' ? '#fff' : esPopular ? BRAND : '#fff', marginBottom: 20 }}>
+                          {promoValidado && plan.id === 'plata'
+                            ? <><div>Continuar con Plan Plata →</div><div style={{ fontSize: 11, fontWeight: 500, opacity: 0.9 }}>{promoDias} días gratis incluidos</div></>
+                            : plan.cta}
+                        </button>
+                      : <a href={sesionActiva ? '/panel' : (plan.href || '/registro')} onClick={e => { e.preventDefault(); (window.top || window).location.href = sesionActiva ? '/panel' : (plan.href || '/registro') }} style={{ display: 'block', width: '100%', padding: '12px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: BRAND, color: '#fff', textDecoration: 'none', marginBottom: 20 }}>{plan.cta}</a>
                 }
                 <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {plan.features.map(f => (
