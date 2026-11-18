@@ -193,6 +193,21 @@ export default function Planes() {
       features: ['50 propiedades publicadas', 'Más fotos por propiedad', 'Chat con clientes', 'Estadísticas de visitas', '2 destacados gratis de 30 días', 'Soporte prioritario', 'Perfil de agente verificado', 'Acceso anticipado a funciones'],
       noIncludes: [],
     },
+    {
+      id: 'platino',
+      nombre: 'Platino',
+      desc: 'Para grandes equipos',
+      precioMes: 69.99,
+      precioAnual: 59.99,
+      color: '#1a1a2e',
+      colorTexto: '#fff',
+      badge: null,
+      cta: 'Empezar con Platino',
+      tipo: anual ? 'platino_anual' : 'platino_mensual',
+      limite: '100 propiedades',
+      features: ['100 propiedades publicadas', 'Más fotos por propiedad', 'Chat con clientes', 'Estadísticas de visitas', '5 destacados gratis de 30 días', 'Soporte prioritario', 'Perfil de agente verificado', 'Acceso anticipado a funciones'],
+      noIncludes: [],
+    },
   ]
 
   return (
@@ -341,7 +356,7 @@ export default function Planes() {
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
             <div>
               <div style={{ fontSize: 14, fontWeight: 700, color: '#fff' }}>
-                {planActual === 'fundador' ? 'Plan Fundador · Acceso ilimitado' : planActual === 'platino' ? 'Plan Platino · Acceso ilimitado' : 'Plan Profesional · Acceso ilimitado'}
+                {planActual === 'fundador' ? 'Plan Fundador · Acceso ilimitado' : planActual === 'platino' ? 'Plan Platino · 100 propiedades' : 'Plan Profesional · Acceso ilimitado'}
               </div>
               <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.75)', marginTop: 2 }}>Ya tienes acceso completo a todas las funciones de la plataforma.</div>
             </div>
@@ -349,7 +364,7 @@ export default function Planes() {
         )}
 
         {/* Cards */}
-        <div className="planes-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 20 }}>
+        <div className="planes-cards" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 20 }}>
           {planesData.map(plan => {
             const esPlanEspecial = ['fundador', 'profesional', 'platino'].includes(planActual || '')
             const esPlanActual = sesionActiva && !esPlanEspecial && (planActual === plan.id || (plan.id === 'gratis' && (!planActual || planActual === 'gratis')))
@@ -442,13 +457,13 @@ export default function Planes() {
           )}
         </div>
 
-        {/* Platino */}
+        {/* Flex */}
         <div style={{ marginTop: 40, textAlign: 'center', marginBottom: 16 }}>
           <p style={{ fontSize: 13, fontWeight: 600, color: '#999', textTransform: 'uppercase', letterSpacing: 1.2, margin: '0 0 6px' }}>{Tp.necesitasMedida}</p>
         </div>
         <div className="planes-platino" style={{ background: `linear-gradient(135deg, ${BRAND_DARK}, ${BRAND})`, borderRadius: 16, padding: '28px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 20 }}>
           <div>
-            <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Platino</div>
+            <div style={{ fontSize: 20, fontWeight: 800, color: '#fff', marginBottom: 4 }}>Flex</div>
             <div style={{ fontSize: 14, color: 'rgba(255,255,255,0.8)' }}>{Tp.platinoDesc}</div>
           </div>
           <a href="mailto:hola@habitade.com" style={{ background: '#fff', color: BRAND, padding: '12px 28px', borderRadius: 8, fontWeight: 700, fontSize: 14, textDecoration: 'none', whiteSpace: 'nowrap' }}>{Tp.contactar}</a>

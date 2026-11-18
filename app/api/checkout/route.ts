@@ -17,6 +17,8 @@ const PRECIOS: Record<string, string> = {
   'plata_anual': process.env.STRIPE_PRICE_PLATA_ANUAL!,
   'oro_mensual': process.env.STRIPE_PRICE_ORO_MENSUAL!,
   'oro_anual': process.env.STRIPE_PRICE_ORO_ANUAL!,
+  'platino_mensual': process.env.STRIPE_PRICE_PLATINO_MENSUAL!,
+  'platino_anual': process.env.STRIPE_PRICE_PLATINO_ANUAL!,
   // Plan legado (mantener compatibilidad con usuarios fundador)
   'fundador': 'price_1TyDBVFCPtfA6ME6yIOiNbaE',
   'profesional': 'price_1TyDBVFCPtfA6ME6yIOiNbaE',
@@ -32,6 +34,8 @@ function parseTipo(tipo: string): { planNombre: string; intervalo: string } {
   if (tipo === 'plata_anual') return { planNombre: 'plata', intervalo: 'anual' }
   if (tipo === 'oro_mensual') return { planNombre: 'oro', intervalo: 'mensual' }
   if (tipo === 'oro_anual') return { planNombre: 'oro', intervalo: 'anual' }
+  if (tipo === 'platino_mensual') return { planNombre: 'platino', intervalo: 'mensual' }
+  if (tipo === 'platino_anual') return { planNombre: 'platino', intervalo: 'anual' }
   return { planNombre: 'fundador', intervalo: 'mensual' }
 }
 

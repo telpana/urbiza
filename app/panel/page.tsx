@@ -916,7 +916,8 @@ export default function Panel() {
     const p = usuario?.plan
     if (p === 'plata') return 15
     if (p === 'oro') return 50
-    if (['fundador', 'profesional', 'platino'].includes(p)) return 999
+    if (p === 'platino') return 100
+    if (['fundador', 'profesional'].includes(p)) return 999
     return 2
   })()
   const anunciosGratis = limiteAnuncios
@@ -1153,9 +1154,9 @@ export default function Panel() {
               {/* Aviso límite de plan */}
               {anunciosUsados >= limiteAnuncios && (() => {
                 const plan = usuario?.plan
-                const esPlatino = ['fundador', 'profesional', 'platino'].includes(plan)
+                const esPlatino = ['fundador', 'profesional'].includes(plan)
                 if (esPlatino) return null
-                const ctaTexto = plan === 'plata' ? 'Subir a Plan Oro' : plan === 'oro' ? 'Ver Plan Platino' : (Tpanel.anuncios.haztePro || 'Ver planes')
+                const ctaTexto = plan === 'plata' ? 'Subir a Plan Oro' : plan === 'oro' ? 'Ver Plan Platino' : plan === 'platino' ? 'Ver Plan Flex' : (Tpanel.anuncios.haztePro || 'Ver planes')
                 return (
                   <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 60%, #17A6B4 100%)', borderRadius: 12, padding: '20px 24px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
                     <div>
@@ -2115,9 +2116,9 @@ export default function Panel() {
               </div>
 
               {/* Bonus destacados gratis Plan Oro */}
-              {['oro', 'plata'].includes(usuario?.plan) && (() => {
+              {['platino', 'oro', 'plata'].includes(usuario?.plan) && (() => {
                 const restantes = usuario?.destacados_gratis ?? 0
-                const total = usuario?.plan === 'oro' ? 2 : 1
+                const total = usuario?.plan === 'platino' ? 5 : usuario?.plan === 'oro' ? 2 : 1
                 if (restantes <= 0) return (
                   <div style={{ background: '#f8f9fa', border: '1.5px solid #e8e8e8', borderRadius: 12, padding: '16px 20px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 14 }}>
                     <div>
