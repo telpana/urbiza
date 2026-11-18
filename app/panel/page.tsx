@@ -2115,9 +2115,9 @@ export default function Panel() {
               </div>
 
               {/* Bonus destacados gratis Plan Oro */}
-              {usuario?.plan === 'oro' && (() => {
+              {['oro', 'plata'].includes(usuario?.plan) && (() => {
                 const restantes = usuario?.destacados_gratis ?? 0
-                const total = 2
+                const total = usuario?.plan === 'oro' ? 2 : 1
                 if (restantes <= 0) return (
                   <div style={{ background: '#f8f9fa', border: '1.5px solid #e8e8e8', borderRadius: 12, padding: '16px 20px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 14 }}>
                     <div>

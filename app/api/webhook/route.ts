@@ -106,7 +106,7 @@ export async function POST(req: Request) {
         plan_intervalo: intervalo,
         ya_suscrito: true,
         ...(codigoPromo ? { codigo_promo_usado: codigoPromo } : {}),
-        ...(esPrimeraVez && planNombre === 'oro' ? { destacados_gratis: 2 } : {}),
+        ...(esPrimeraVez && planNombre === 'oro' ? { destacados_gratis: 2 } : esPrimeraVez && planNombre === 'plata' ? { destacados_gratis: 1 } : {}),
       }).eq('id', userId)
       if (error) console.error('[webhook] error actualizando plan:', error)
       // Contabilizar uso del código solo cuando Stripe confirma
