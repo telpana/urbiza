@@ -111,7 +111,7 @@ export default function Planes() {
       const { data: { session } } = await supabase.auth.getSession()
       const { data: { user } } = await supabase.auth.getUser()
       const body: any = { userId: user?.id, email: user?.email, tipo }
-      if (promoValidado && codigoPromo.trim()) body.codigoPromo = codigoPromo.trim().toUpperCase()
+      if (promoValidado && codigoPromo.trim() && tipo.startsWith('plata')) body.codigoPromo = codigoPromo.trim().toUpperCase()
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token ?? ''}` },
@@ -360,8 +360,8 @@ export default function Planes() {
                 {esPlanActual
                   ? <div style={{ width: '100%', padding: '11px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: 'rgba(0,0,0,0.08)', color: plan.colorTexto, marginBottom: 20 }}>{Tp.planActual}</div>
                   : plan.tipo
-                    ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: promoValidado ? '8px 0' : '12px 0', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, background: esPopular ? '#fff' : BRAND, color: esPopular ? BRAND : '#fff', marginBottom: 20 }}>
-                        {promoValidado
+                    ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: promoValidado && plan.id === 'plata' ? '8px 0' : '12px 0', borderRadius: 8, border: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 700, background: esPopular ? '#fff' : BRAND, color: esPopular ? BRAND : '#fff', marginBottom: 20 }}>
+                        {promoValidado && plan.id === 'plata'
                           ? <><div>{plan.cta}</div><div style={{ fontSize: 11, fontWeight: 500, opacity: 0.8 }}>{promoDias} días gratis</div></>
                           : plan.cta}
                       </button>
