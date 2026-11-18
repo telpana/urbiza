@@ -123,8 +123,10 @@ export default function Planes() {
     if (!sesionActiva) {
       if (promoValidado && codigoPromo.trim()) {
         try { sessionStorage.setItem('hb_promo_pendiente', codigoPromo.trim().toUpperCase()) } catch {}
+        ;(window.top || window).location.href = '/registro?next=/unete'
+      } else {
+        ;(window.top || window).location.href = '/registro'
       }
-      ;(window.top || window).location.href = '/registro'
       return
     }
     setCargando(true)
