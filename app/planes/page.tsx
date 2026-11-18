@@ -391,7 +391,7 @@ export default function Planes() {
                     : plan.tipo
                       ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: promoValidado && plan.id === 'plata' ? '8px 0' : '12px 0', borderRadius: 8, border: 'none', cursor: cargando ? 'default' : 'pointer', fontSize: 14, fontWeight: 700, background: promoValidado && plan.id === 'plata' ? '#10b981' : esPopular ? '#fff' : BRAND, color: promoValidado && plan.id === 'plata' ? '#fff' : esPopular ? BRAND : '#fff', marginBottom: 20 }}>
                           {promoValidado && plan.id === 'plata'
-                            ? <><div>Continuar con Plan Plata →</div><div style={{ fontSize: 11, fontWeight: 500, opacity: 0.9 }}>{promoDias} días gratis incluidos</div></>
+                            ? <><div>Continuar con Plan Plata</div><div style={{ fontSize: 11, fontWeight: 500, opacity: 0.9 }}>{promoDias} días gratis incluidos</div></>
                             : plan.cta}
                         </button>
                       : <a href={sesionActiva ? '/panel' : (plan.href || '/registro')} onClick={e => { e.preventDefault(); (window.top || window).location.href = sesionActiva ? '/panel' : (plan.href || '/registro') }} style={{ display: 'block', width: '100%', padding: '12px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: BRAND, color: '#fff', textDecoration: 'none', marginBottom: 20 }}>{plan.cta}</a>
