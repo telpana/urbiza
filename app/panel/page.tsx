@@ -759,7 +759,7 @@ export default function Panel() {
   }
 
   const publicarAnuncio = async () => {
-    if (!anuncioEditando && tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis) { setSeccion('planes'); return }
+    if (!anuncioEditando && anunciosUsados >= limiteAnuncios) { setSeccion('planes'); return }
     if (!pubTitulo || !pubPrecio || !pubProvincia || !pubM2) { setPubError(Tpanel.publicar.err_campos); return }
     if (!pubDesc.trim()) { setPubError(Tpanel.publicar.err_desc); return }
     if (fotosLista.length === 0) { setPubError(Tpanel.publicar.err_fotos); return }
@@ -1147,21 +1147,27 @@ export default function Panel() {
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                 <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111' }}>{Tpanel.anuncios.titulo}</h1>
-                <button onClick={() => tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis ? setSeccion('planes') : setSeccion('publicar')} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>{Tpanel.anuncios.publicar}</button>
+                <button onClick={() => anunciosUsados >= limiteAnuncios ? setSeccion('planes') : setSeccion('publicar')} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>{Tpanel.anuncios.publicar}</button>
               </div>
 
-              {/* Aviso límite particular */}
-              {tipoUsuario === 'particular' && anunciosUsados >= anunciosGratis && (
-                <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 60%, #17A6B4 100%)', borderRadius: 12, padding: '20px 24px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
-                  <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 4 }}>{Tpanel.anuncios.limiteAlcanzado}</div>
-                    <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', lineHeight: 1.5 }}>{Tpanel.anuncios.limiteDesc.replace('{n}', String(anunciosGratis))}</div>
+              {/* Aviso límite de plan */}
+              {anunciosUsados >= limiteAnuncios && (() => {
+                const plan = usuario?.plan
+                const esPlatino = ['fundador', 'profesional', 'platino'].includes(plan)
+                if (esPlatino) return null
+                const ctaTexto = plan === 'plata' ? 'Subir a Plan Oro' : plan === 'oro' ? 'Ver Plan Platino' : (Tpanel.anuncios.haztePro || 'Ver planes')
+                return (
+                  <div style={{ background: 'linear-gradient(135deg, #004E57 0%, #006D77 60%, #17A6B4 100%)', borderRadius: 12, padding: '20px 24px', marginBottom: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}>
+                    <div>
+                      <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 4 }}>{Tpanel.anuncios.limiteAlcanzado}</div>
+                      <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', lineHeight: 1.5 }}>{Tpanel.anuncios.limiteDesc.replace('{n}', String(limiteAnuncios))}</div>
+                    </div>
+                    <button onClick={() => setSeccion('planes')} style={{ all: 'unset', background: '#fff', color: '#006D77', padding: '10px 20px', borderRadius: 20, fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                      {ctaTexto}
+                    </button>
                   </div>
-                  <button onClick={() => setSeccion('planes')} style={{ all: 'unset', background: '#fff', color: '#006D77', padding: '10px 20px', borderRadius: 20, fontSize: 13, fontWeight: 700, cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                    {Tpanel.anuncios.haztePro}
-                  </button>
-                </div>
-              )}
+                )
+              })()}
 
               {/* KPIs reales */}
               <div className="kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14, marginBottom: 20 }}>
