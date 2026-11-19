@@ -1419,7 +1419,7 @@ export default function Panel() {
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="1.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                   </div>
                   <h2 style={{ fontSize: 20, fontWeight: 700, color: '#111', marginBottom: 8 }}>Activa tu suscripción para publicar</h2>
-                  <ul style={{ listStyle: 'none', padding: 0, margin: '0 auto 24px', textAlign: 'left', display: 'inline-block' }}>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: '0 auto 16px', textAlign: 'left', display: 'inline-block' }}>
                     {Tpanel.planes.ventajas.map((v: string) => (
                       <li key={v} style={{ fontSize: 14, color: '#444', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 10 }}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -1427,6 +1427,19 @@ export default function Panel() {
                       </li>
                     ))}
                   </ul>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, maxWidth: 320, margin: '0 auto 20px' }}>
+                    {[
+                      { titulo: 'Sin molestos anuncios', desc: 'Experiencia limpia' },
+                      { titulo: 'Precios claros', desc: 'Sin sorpresas' },
+                      { titulo: 'Cambio de divisa', desc: 'USD, DOP y más' },
+                      { titulo: 'Cambio de medidas', desc: 'm², sq ft y tareas' },
+                    ].map((item, i) => (
+                      <div key={i} style={{ background: '#f0fafb', border: '1px solid #c8ecef', borderRadius: 10, padding: '10px 12px' }}>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: '#004E57', marginBottom: 2 }}>{item.titulo}</div>
+                        <div style={{ fontSize: 11, color: '#888' }}>{item.desc}</div>
+                      </div>
+                    ))}
+                  </div>
                   <div style={{ maxWidth: 320, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 10 }}>
                     <button onClick={handleSuscribirse} disabled={promoLoading} style={{ background: promoLoading ? '#aaa' : '#006D77', color: '#fff', padding: '11px 24px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: promoLoading ? 'default' : 'pointer', border: 'none', width: '100%', animation: promoValidado ? 'btn-pulse 2.5s ease-in-out infinite' : undefined }}>
                       {promoLoading ? 'Procesando...' : promoValidado
@@ -2389,11 +2402,24 @@ export default function Panel() {
                     <div className="plan-upgrade-title" style={{ fontSize: 22, fontWeight: 700, color: '#111', marginBottom: 8 }}>{Tpanel.plan.haztePro}</div>
                     <div className="plan-upgrade-price" style={{ fontSize: 40, fontWeight: 800, color: '#006D77', marginBottom: 24, letterSpacing: -1 }}>US$ 9.99<span style={{ fontSize: 16, fontWeight: 400, color: '#aaa' }}>/mes</span></div>
                   </div>
-                  <div className="plan-upgrade-features" style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 280, margin: '0 auto 28px', textAlign: 'left' }}>
+                  <div className="plan-upgrade-features" style={{ display: 'flex', flexDirection: 'column', gap: 10, maxWidth: 280, margin: '0 auto 16px', textAlign: 'left' }}>
                     {(Tpanel.planes.ventajas as string[]).map((f: string) => (
                       <div key={f} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 14, color: '#444' }}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#006D77" strokeWidth="2.5" style={{ flexShrink: 0 }}><polyline points="20 6 9 17 4 12"/></svg>
                         {f}
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, maxWidth: 280, margin: '0 auto 24px' }}>
+                    {[
+                      { titulo: 'Sin molestos anuncios', desc: 'Experiencia limpia' },
+                      { titulo: 'Precios claros', desc: 'Sin sorpresas' },
+                      { titulo: 'Cambio de divisa', desc: 'USD, DOP y más' },
+                      { titulo: 'Cambio de medidas', desc: 'm², sq ft y tareas' },
+                    ].map((item, i) => (
+                      <div key={i} style={{ background: '#f0fafb', border: '1px solid #c8ecef', borderRadius: 10, padding: '10px 12px' }}>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: '#004E57', marginBottom: 2 }}>{item.titulo}</div>
+                        <div style={{ fontSize: 11, color: '#888' }}>{item.desc}</div>
                       </div>
                     ))}
                   </div>

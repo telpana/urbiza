@@ -175,7 +175,7 @@ export default function Planes() {
       cta: 'Empezar con Plata',
       tipo: anual ? 'plata_anual' : 'plata_mensual',
       limite: '15 propiedades',
-      features: ['15 propiedades publicadas', 'Más fotos por propiedad', 'Chat con clientes', 'Estadísticas de visitas', '1 destacado gratis de 30 días', 'Soporte por email', 'Perfil de agente verificado', 'Sin molestos anuncios', 'Precios claros', 'Cambio de divisa', 'Cambio de medidas (m², sq ft y tareas)'],
+      features: ['15 propiedades publicadas', 'Más fotos por propiedad', 'Chat con clientes', 'Estadísticas de visitas', '1 destacado gratis de 30 días', 'Soporte por email', 'Perfil de agente verificado'],
       noIncludes: [],
     },
     {
@@ -190,7 +190,7 @@ export default function Planes() {
       cta: 'Empezar con Oro',
       tipo: anual ? 'oro_anual' : 'oro_mensual',
       limite: '50 propiedades',
-      features: ['50 propiedades publicadas', 'Más fotos por propiedad', 'Chat con clientes', 'Estadísticas de visitas', '2 destacados gratis de 30 días', 'Soporte prioritario', 'Perfil de agente verificado', 'Acceso anticipado a funciones', 'Sin molestos anuncios', 'Precios claros', 'Cambio de divisa', 'Cambio de medidas (m², sq ft y tareas)'],
+      features: ['50 propiedades publicadas', 'Más fotos por propiedad', 'Chat con clientes', 'Estadísticas de visitas', '2 destacados gratis de 30 días', 'Soporte prioritario', 'Perfil de agente verificado', 'Acceso anticipado a funciones'],
       noIncludes: [],
     },
     {
@@ -205,7 +205,7 @@ export default function Planes() {
       cta: 'Empezar con Platino',
       tipo: anual ? 'platino_anual' : 'platino_mensual',
       limite: '100 propiedades',
-      features: ['100 propiedades publicadas', 'Más fotos por propiedad', 'Chat con clientes', 'Estadísticas de visitas', '5 destacados gratis de 30 días', 'Soporte prioritario', 'Perfil de agente verificado', 'Acceso anticipado a funciones', 'Sin molestos anuncios', 'Precios claros', 'Cambio de divisa', 'Cambio de medidas (m², sq ft y tareas)'],
+      features: ['100 propiedades publicadas', 'Más fotos por propiedad', 'Chat con clientes', 'Estadísticas de visitas', '5 destacados gratis de 30 días', 'Soporte prioritario', 'Perfil de agente verificado', 'Acceso anticipado a funciones'],
       noIncludes: [],
     },
   ]
@@ -327,6 +327,20 @@ export default function Planes() {
                 ))}
               </div>
             </div>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 12, marginTop: 16 }}>
+            {[
+              { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={BRAND} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>, titulo: 'Sin molestos anuncios', desc: 'Experiencia limpia, sin interrupciones.' },
+              { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={BRAND} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>, titulo: 'Precios claros', desc: 'Sin sorpresas, sin letras pequeñas.' },
+              { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={BRAND} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>, titulo: 'Cambio de divisa', desc: 'Muestra precios en USD, DOP y más.' },
+              { icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={BRAND} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>, titulo: 'Cambio de medidas', desc: 'Convierte entre m², sq ft y tareas.' },
+            ].map((item, i) => (
+              <div key={i} style={{ background: '#fff', borderRadius: 14, padding: '18px 16px', border: '1px solid #e8f4f5', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: '#e8f4f5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{item.icon}</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: '#111' }}>{item.titulo}</div>
+                <div style={{ fontSize: 12, color: '#888', lineHeight: 1.5 }}>{item.desc}</div>
+              </div>
+            ))}
           </div>
         </div>
 
