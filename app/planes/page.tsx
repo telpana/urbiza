@@ -381,7 +381,6 @@ export default function Planes() {
                 )}
                 <div style={{ marginBottom: 20 }}>
                   <div style={{ fontSize: 20, fontWeight: 800, color: plan.colorTexto, marginBottom: 4 }}>{plan.nombre}</div>
-                  <div style={{ fontSize: 13, color: esPopular ? 'rgba(255,255,255,0.75)' : '#888' }}>{plan.desc}</div>
                 </div>
                 <div style={{ marginBottom: 24 }}>
                   {precio === 0
