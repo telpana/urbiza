@@ -134,7 +134,7 @@ export default function Planes() {
       const { data: { session } } = await supabase.auth.getSession()
       const { data: { user } } = await supabase.auth.getUser()
       const body: any = { userId: user?.id, email: user?.email, tipo }
-      if (promoValidado && codigoPromo.trim() && tipo === 'plata_mensual') body.codigoPromo = codigoPromo.trim().toUpperCase()
+      if (promoValidado && codigoPromo.trim() && (tipo === 'plata_mensual' || tipo === 'oro_mensual')) body.codigoPromo = codigoPromo.trim().toUpperCase()
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token ?? ''}` },
@@ -354,7 +354,7 @@ export default function Planes() {
           {/* Toggle */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 12, background: '#fff', border: '1.5px solid #e8e8e8', borderRadius: 100, padding: '6px 20px' }}>
             <span style={{ fontSize: 14, fontWeight: 600, color: anual ? '#aaa' : '#111' }}>{Tp.mensual}</span>
-            <button onClick={() => { if (!promoValidado) setAnual(v => !v) }} title={promoValidado ? 'El código aplica solo al plan mensual' : undefined} style={{ width: 44, height: 24, borderRadius: 100, border: 'none', cursor: promoValidado ? 'not-allowed' : 'pointer', background: anual ? BRAND : '#ccc', position: 'relative', transition: 'background 0.2s', padding: 0, opacity: promoValidado ? 0.6 : 1 }}>
+            <button onClick={() => { if (!promoValidado) setAnual(v => !v) }} title={promoValidado ? 'El código aplica solo a planes mensuales' : undefined} style={{ width: 44, height: 24, borderRadius: 100, border: 'none', cursor: promoValidado ? 'not-allowed' : 'pointer', background: anual ? BRAND : '#ccc', position: 'relative', transition: 'background 0.2s', padding: 0, opacity: promoValidado ? 0.6 : 1 }}>
               <div style={{ width: 18, height: 18, borderRadius: '50%', background: '#fff', position: 'absolute', top: 3, left: anual ? 23 : 3, transition: 'left 0.2s', boxShadow: '0 1px 4px rgba(0,0,0,0.2)' }} />
             </button>
             <span style={{ fontSize: 14, fontWeight: 600, color: anual ? '#111' : '#aaa' }}>
@@ -384,10 +384,10 @@ export default function Planes() {
             const esPlanActual = sesionActiva && !esPlanEspecial && (planActual === plan.id || (plan.id === 'gratis' && (!planActual || planActual === 'gratis')))
             const esPopular = !!plan.badge
             const precio = anual ? plan.precioAnual : plan.precioMes
-            const bloqueadoPorPromo = promoValidado && plan.id === 'oro'
+            const conPromo = promoValidado && (plan.id === 'plata' || plan.id === 'oro')
             return (
-              <div key={plan.id} style={{ background: plan.color, borderRadius: 16, padding: 28, border: promoValidado && plan.id === 'plata' ? `2px solid #10b981` : esPopular ? `2px solid ${BRAND}` : '1.5px solid #e8e8e8', position: 'relative', display: 'flex', flexDirection: 'column', boxShadow: esPopular ? '0 8px 40px rgba(0,109,119,0.18)' : '0 2px 12px rgba(0,0,0,0.05)', opacity: bloqueadoPorPromo ? 0.45 : 1, transition: 'opacity 0.2s' }}>
-                {promoValidado && plan.id === 'plata' && (
+              <div key={plan.id} style={{ background: plan.color, borderRadius: 16, padding: 28, border: conPromo ? `2px solid #10b981` : esPopular ? `2px solid ${BRAND}` : '1.5px solid #e8e8e8', position: 'relative', display: 'flex', flexDirection: 'column', boxShadow: esPopular ? '0 8px 40px rgba(0,109,119,0.18)' : '0 2px 12px rgba(0,0,0,0.05)', transition: 'opacity 0.2s' }}>
+                {conPromo && (
                   <div style={{ position: 'absolute', top: -13, left: '50%', transform: 'translateX(-50%)', background: '#10b981', color: '#fff', fontSize: 11, fontWeight: 700, padding: '4px 14px', borderRadius: 100, whiteSpace: 'nowrap' }}>✓ Código aplicado</div>
                 )}
                 {!promoValidado && plan.badge && (
@@ -414,12 +414,10 @@ export default function Planes() {
                 </div>
                 {esPlanActual
                   ? <div style={{ width: '100%', padding: '11px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: 'rgba(0,0,0,0.08)', color: plan.colorTexto, marginBottom: 20 }}>{Tp.planActual}</div>
-                  : bloqueadoPorPromo
-                    ? <div style={{ width: '100%', padding: '11px 0', borderRadius: 8, textAlign: 'center', fontSize: 13, fontWeight: 600, background: 'rgba(255,255,255,0.15)', color: '#fff', marginBottom: 20 }}>Código no aplica</div>
-                    : plan.tipo
-                      ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: promoValidado && plan.id === 'plata' ? '8px 0' : '12px 0', borderRadius: 8, border: 'none', cursor: cargando ? 'default' : 'pointer', fontSize: 14, fontWeight: 700, background: promoValidado && plan.id === 'plata' ? '#10b981' : esPopular ? '#fff' : BRAND, color: promoValidado && plan.id === 'plata' ? '#fff' : esPopular ? BRAND : '#fff', marginBottom: 20 }}>
-                          {promoValidado && plan.id === 'plata'
-                            ? <><div>Continuar con Plan Plata</div><div style={{ fontSize: 11, fontWeight: 500, opacity: 0.9 }}>{promoDias} días gratis incluidos</div></>
+                  : plan.tipo
+                      ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: conPromo ? '8px 0' : '12px 0', borderRadius: 8, border: 'none', cursor: cargando ? 'default' : 'pointer', fontSize: 14, fontWeight: 700, background: conPromo ? '#10b981' : esPopular ? '#fff' : BRAND, color: conPromo ? '#fff' : esPopular ? BRAND : '#fff', marginBottom: 20 }}>
+                          {conPromo
+                            ? <><div>Continuar con Plan {plan.nombre}</div><div style={{ fontSize: 11, fontWeight: 500, opacity: 0.9 }}>{promoDias} días gratis incluidos</div></>
                             : plan.cta}
                         </button>
                       : <a href={sesionActiva ? '/panel' : (plan.href || '/registro')} onClick={e => { e.preventDefault(); (window.top || window).location.href = sesionActiva ? '/panel' : (plan.href || '/registro') }} style={{ display: 'block', width: '100%', padding: '12px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: BRAND, color: '#fff', textDecoration: 'none', marginBottom: 20 }}>{plan.cta}</a>
