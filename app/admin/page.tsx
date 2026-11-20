@@ -672,7 +672,7 @@ export default function Admin() {
                   <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: 700 }}>
                     <thead>
                       <tr style={{ borderBottom: '1.5px solid #f0f0f0', background: '#fafafa' }}>
-                        {['Nombre','Email','Tipo','Plan','AEI','Código promo','Registro',''].map((h, i) => (
+                        {['Nombre','Email','Tipo','Plan','Props','AEI','Código promo','Registro',''].map((h, i) => (
                           <th key={i} style={{ textAlign: 'left', fontSize: 11, color: '#999', fontWeight: 600, padding: `12px 16px`, textTransform: 'uppercase', letterSpacing: 0.4 }}>{h}</th>
                         ))}
                       </tr>
@@ -697,6 +697,9 @@ export default function Admin() {
                           <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 12, color: '#666' }}>{u.email}</span></td>
                           <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><Badge txt={u.tipo || 'particular'} color="#555" bg="#f0f0f0" /></td>
                           <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><Badge txt={u.plan || 'gratis'} color={u.plan === 'profesional' ? '#065f46' : '#555'} bg={u.plan === 'profesional' ? '#d1fae5' : '#f0f0f0'} /></td>
+                          <td style={{ padding: '10px 16px', verticalAlign: 'middle', textAlign: 'center' }}>
+                            <span style={{ fontSize: 13, fontWeight: 700, color: u.num_propiedades > 0 ? '#006D77' : '#ccc' }}>{u.num_propiedades ?? 0}</span>
+                          </td>
                           <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
                             {u.numero_aei
                               ? u.aei_aprobado

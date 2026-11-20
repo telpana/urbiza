@@ -24,6 +24,13 @@ export async function GET(req: Request) {
     const fallback = await buildQuery('id,nombre,email,tipo,plan,numero_aei,inmobiliaria,foto_url,created_at,plan_activo_hasta,stripe_subscription_id')
     data = fallback.data
   }
+  if (data && data.length > 0) {
+    const ids = data.map((u: any) => u.id)
+    const { data: props } = await sb.from('propiedades').select('usuario_id').in('usuario_id', ids)
+    const counts: Record<string, number> = {}
+    if (props) props.forEach((p: any) => { counts[p.usuario_id] = (counts[p.usuario_id] || 0) + 1 })
+    data = data.map((u: any) => ({ ...u, num_propiedades: counts[u.id] || 0 }))
+  }
   return NextResponse.json(data ?? [])
 }
 
