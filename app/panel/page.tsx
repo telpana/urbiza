@@ -917,7 +917,8 @@ export default function Panel() {
     if (p === 'plata') return 15
     if (p === 'oro') return 50
     if (p === 'platino') return 100
-    if (['fundador', 'profesional'].includes(p)) return 999
+    if (p === 'fundador') return 262
+    if (p === 'profesional') return 999
     return 2
   })()
   const anunciosGratis = limiteAnuncios
