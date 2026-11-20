@@ -759,7 +759,7 @@ export default function Panel() {
   }
 
   const publicarAnuncio = async () => {
-    if (!anuncioEditando && anunciosUsados >= limiteAnuncios) { setSeccion('planes'); return }
+    if (!anuncioEditando && anunciosUsados >= limiteAnuncios) { if (usuario?.plan === 'fundador') { setPubError('Has llegado al límite del Plan Fundador.'); return } setSeccion('planes'); return }
     if (!pubTitulo || !pubPrecio || !pubProvincia || !pubM2) { setPubError(Tpanel.publicar.err_campos); return }
     if (!pubDesc.trim()) { setPubError(Tpanel.publicar.err_desc); return }
     if (fotosLista.length === 0) { setPubError(Tpanel.publicar.err_fotos); return }
@@ -1149,13 +1149,18 @@ export default function Panel() {
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 }}>
                 <h1 style={{ fontSize: 22, fontWeight: 700, color: '#111' }}>{Tpanel.anuncios.titulo}</h1>
-                <button onClick={() => anunciosUsados >= limiteAnuncios ? setSeccion('planes') : setSeccion('publicar')} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>{Tpanel.anuncios.publicar}</button>
+                <button onClick={() => anunciosUsados >= limiteAnuncios ? (usuario?.plan === 'fundador' ? setSeccion('publicar') : setSeccion('planes')) : setSeccion('publicar')} style={{ all: 'unset', background: '#006D77', color: '#fff', padding: '10px 20px', borderRadius: 6, fontSize: 13, fontWeight: 600, cursor: 'pointer' }}>{Tpanel.anuncios.publicar}</button>
               </div>
 
               {/* Aviso límite de plan */}
               {anunciosUsados >= limiteAnuncios && (() => {
                 const plan = usuario?.plan
-                const esPlatino = ['fundador', 'profesional'].includes(plan)
+                if (plan === 'fundador') return (
+                  <div style={{ background: '#f8f8f8', border: '1px solid #e0e0e0', borderRadius: 10, padding: '14px 18px', marginBottom: 20, fontSize: 13, color: '#555' }}>
+                    Has llegado al límite del Plan Fundador.
+                  </div>
+                )
+                const esPlatino = ['profesional'].includes(plan)
                 if (esPlatino) return null
                 const ctaTexto = plan === 'plata' ? 'Subir a Plan Oro' : plan === 'oro' ? 'Ver Plan Platino' : plan === 'platino' ? 'Ver Plan Flex' : (Tpanel.anuncios.haztePro || 'Ver planes')
                 return (
