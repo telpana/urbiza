@@ -380,7 +380,7 @@ export default function Propiedad({ params }: { params: Promise<{ id: string }> 
   const v = propiedad.usuarios || {}
   const amenidadesArray: string[] = Array.isArray(propiedad.amenidades) ? propiedad.amenidades : []
   const fotos: string[] = Array.isArray(propiedad.fotos) ? propiedad.fotos : []
-  const esProfesional = v.plan === 'profesional'
+  const esProfesional = ['profesional', 'fundador', 'plata', 'oro', 'platino'].includes(v.plan)
   const tituloVendedor = v.inmobiliaria || v.nombre || 'Propietario'
   const tituloMostrar = (idioma === 'en' && propiedad.titulo_en) ? propiedad.titulo_en : (idioma === 'fr' && propiedad.titulo_fr) ? propiedad.titulo_fr : propiedad.titulo
   const telVendedor = v.telefono || ''
