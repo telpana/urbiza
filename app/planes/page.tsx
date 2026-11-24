@@ -409,7 +409,6 @@ export default function Planes() {
                           <span style={{ fontSize: 36, fontWeight: 900, color: plan.colorTexto, lineHeight: 1 }}>{precio.toFixed(2)}</span>
                           <span style={{ fontSize: 13, color: esPopular ? 'rgba(255,255,255,0.75)' : '#888' }}>/mes</span>
                         </div>
-                        {conPromo && <div style={{ fontSize: 28, fontWeight: 900, color: '#10b981', lineHeight: 1, marginTop: 4 }}>Gratis</div>}
                         {!conPromo && anual && <div style={{ fontSize: 12, color: esPopular ? 'rgba(255,255,255,0.65)' : '#aaa', marginTop: 4 }}>{Tp.facturadoAnual}</div>}
                       </>
                   }
