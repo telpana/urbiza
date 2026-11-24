@@ -223,6 +223,8 @@ export default function Planes() {
           .planes-platino a { text-align: center !important; }
           .planes-hero-title { font-size: 32px !important; }
           .planes-section-title { font-size: 26px !important; }
+          .planes-ventajas { grid-template-columns: repeat(2,1fr) !important; gap: 16px !important; }
+          .planes-ventajas > div { padding: 0 !important; border-right: none !important; margin-right: 0 !important; }
         }
       `}</style>
 
@@ -330,7 +332,7 @@ export default function Planes() {
               </div>
             </div>
           </div>
-          <div style={{ marginTop: 24, borderTop: `2px solid ${BRAND}`, paddingTop: 20, display: 'grid', gridTemplateColumns: 'repeat(4,1fr)' }}>
+          <div className="planes-ventajas" style={{ marginTop: 24, borderTop: `2px solid ${BRAND}`, paddingTop: 20, display: 'grid', gridTemplateColumns: 'repeat(4,1fr)' }}>
             {[
               { num: '01', titulo: 'Sin molestos anuncios', desc: 'Experiencia limpia, sin interrupciones.' },
               { num: '02', titulo: 'Precios claros', desc: 'Sin sorpresas ni letras pequeñas.' },
