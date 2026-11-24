@@ -404,12 +404,13 @@ export default function Planes() {
                   {precio === 0
                     ? <div style={{ fontSize: 36, fontWeight: 900, color: plan.colorTexto }}>Gratis</div>
                     : <>
-                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
+                        <div style={{ display: 'flex', alignItems: 'baseline', gap: 4, opacity: conPromo ? 0.45 : 1, textDecoration: conPromo ? 'line-through' : 'none' }}>
                           <span style={{ fontSize: 13, fontWeight: 600, color: esPopular ? 'rgba(255,255,255,0.75)' : '#888' }}>US$</span>
                           <span style={{ fontSize: 36, fontWeight: 900, color: plan.colorTexto, lineHeight: 1 }}>{precio.toFixed(2)}</span>
                           <span style={{ fontSize: 13, color: esPopular ? 'rgba(255,255,255,0.75)' : '#888' }}>/mes</span>
                         </div>
-                        {anual && <div style={{ fontSize: 12, color: esPopular ? 'rgba(255,255,255,0.65)' : '#aaa', marginTop: 4 }}>{Tp.facturadoAnual}</div>}
+                        {conPromo && <div style={{ fontSize: 28, fontWeight: 900, color: '#10b981', lineHeight: 1, marginTop: 4 }}>Gratis</div>}
+                        {!conPromo && anual && <div style={{ fontSize: 12, color: esPopular ? 'rgba(255,255,255,0.65)' : '#aaa', marginTop: 4 }}>{Tp.facturadoAnual}</div>}
                       </>
                   }
                   <div style={{ fontSize: 13, fontWeight: 600, color: esPopular ? 'rgba(255,255,255,0.75)' : '#888', marginTop: 8 }}>
@@ -421,7 +422,7 @@ export default function Planes() {
                   : plan.tipo
                       ? <button disabled={cargando} onClick={() => irACheckout(plan.tipo!)} style={{ width: '100%', padding: conPromo ? '8px 0' : '12px 0', borderRadius: 8, border: 'none', cursor: cargando ? 'default' : 'pointer', fontSize: 14, fontWeight: 700, background: conPromo ? '#10b981' : esPopular ? '#fff' : BRAND, color: conPromo ? '#fff' : esPopular ? BRAND : '#fff', marginBottom: 20 }}>
                           {conPromo
-                            ? <><div>Continuar con Plan {plan.nombre}</div><div style={{ fontSize: 11, fontWeight: 500, opacity: 0.9 }}>{promoDias} días gratis incluidos</div></>
+                            ? <><div>Continuar gratis</div><div style={{ fontSize: 11, fontWeight: 500, opacity: 0.9 }}>{promoDias} días gratis incluidos</div></>
                             : plan.cta}
                         </button>
                       : <a href={sesionActiva ? '/panel' : (plan.href || '/registro')} onClick={e => { e.preventDefault(); (window.top || window).location.href = sesionActiva ? '/panel' : (plan.href || '/registro') }} style={{ display: 'block', width: '100%', padding: '12px 0', borderRadius: 8, textAlign: 'center', fontSize: 14, fontWeight: 700, background: BRAND, color: '#fff', textDecoration: 'none', marginBottom: 20 }}>{plan.cta}</a>
