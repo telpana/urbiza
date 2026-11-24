@@ -468,7 +468,7 @@ export default function Planes() {
               {promoError && <div style={{ fontSize: 12, color: '#dc2626' }}>{promoError}</div>}
             </div>
           ) : (
-            <button onClick={() => setPromoExpanded(true)} style={{ all: 'unset', fontSize: 13, color: '#006D77', cursor: 'pointer', textDecoration: 'underline', opacity: 0.8 }}>
+            <button onClick={() => setPromoExpanded(true)} style={{ all: 'unset', fontSize: 13, fontWeight: 700, color: BRAND, cursor: 'pointer', border: `1.5px solid ${BRAND}`, borderRadius: 8, padding: '8px 18px', letterSpacing: 0.2 }}>
               ¿Tienes un código promocional?
             </button>
           )}
