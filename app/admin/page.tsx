@@ -83,6 +83,7 @@ export default function Admin() {
   const refMaxUsos = useRef<HTMLInputElement>(null)
   const refDescripcion = useRef<HTMLInputElement>(null)
   const refDiasTrial = useRef<HTMLInputElement>(null)
+  const refPlanTarget = useRef<HTMLSelectElement>(null)
 
   const authHeader = useCallback((t?: string) => ({
     'Authorization': `Bearer ${t || token}`,
@@ -1143,23 +1144,32 @@ export default function Admin() {
                     <input ref={refMaxUsos} placeholder="ej: 50" type="number" min="1"
                       style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 14px', fontSize: 14, outline: 'none', width: 120 }} />
                   </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: '#555', marginBottom: 6 }}>PLAN</label>
+                    <select ref={refPlanTarget} defaultValue="" style={{ border: '1.5px solid #e0e0e0', borderRadius: 6, padding: '9px 14px', fontSize: 13, outline: 'none', width: 140 }}>
+                      <option value="">Plata y Oro</option>
+                      <option value="platino">Solo Platino</option>
+                    </select>
+                  </div>
                   <button disabled={codigoCreando} onClick={async () => {
                     const codigo = refCodigo.current?.value?.trim().toUpperCase()
                     const maxUsos = refMaxUsos.current?.value
                     const descripcion = refDescripcion.current?.value?.trim()
                     const diasTrial = refDiasTrial.current?.value
+                    const planTarget = refPlanTarget.current?.value || null
                     if (!codigo) { refCodigo.current?.focus(); return }
                     setCodigoCreando(true)
                     const res = await fetch('/api/admin/codigos-promo', {
                       method: 'POST',
                       headers: { ...authHeader(), 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ codigo, usos_maximos: maxUsos ? Number(maxUsos) : null, descripcion: descripcion || null, dias_trial: diasTrial ? Number(diasTrial) : 30 })
+                      body: JSON.stringify({ codigo, usos_maximos: maxUsos ? Number(maxUsos) : null, descripcion: descripcion || null, dias_trial: diasTrial ? Number(diasTrial) : 30, plan_target: planTarget })
                     })
                     if (res.ok) {
                       if (refCodigo.current) refCodigo.current.value = ''
                       if (refMaxUsos.current) refMaxUsos.current.value = ''
                       if (refDescripcion.current) refDescripcion.current.value = ''
                       if (refDiasTrial.current) refDiasTrial.current.value = '30'
+                      if (refPlanTarget.current) refPlanTarget.current.value = ''
                       cargarCodigos()
                     } else { const d = await res.json(); alert(d.error || 'Error') }
                     setCodigoCreando(false)

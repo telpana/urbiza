@@ -77,6 +77,7 @@ export default function Planes() {
   const [promoError, setPromoError] = useState('')
   const [promoValidado, setPromoValidado] = useState(false)
   const [promoDias, setPromoDias] = useState(0)
+  const [promoTarget, setPromoTarget] = useState<string | null>(null)
 
   useEffect(() => { setIsEmbed(window.self !== window.top) }, [])
 
@@ -100,7 +101,7 @@ export default function Planes() {
         setAnual(false)
         fetch('/api/validar-promo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codigo: guardado }) })
           .then(r => r.json())
-          .then(data => { if (data.ok) { setPromoValidado(true); setPromoDias(data.dias) } })
+          .then(data => { if (data.ok) { setPromoValidado(true); setPromoDias(data.dias); setPromoTarget(data.planTarget ?? null) } })
           .catch(() => {})
       }
     } catch {}
@@ -113,7 +114,7 @@ export default function Planes() {
     try {
       const res = await fetch('/api/validar-promo', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ codigo: codigoPromo.trim() }) })
       const data = await res.json()
-      if (data.ok) { setPromoValidado(true); setPromoDias(data.dias); setAnual(false) }
+      if (data.ok) { setPromoValidado(true); setPromoDias(data.dias); setPromoTarget(data.planTarget ?? null); setAnual(false) }
       else setPromoError(data.error || 'Código no válido')
     } catch { setPromoError('Error de conexión') }
     finally { setPromoLoading(false) }
@@ -134,7 +135,8 @@ export default function Planes() {
       const { data: { session } } = await supabase.auth.getSession()
       const { data: { user } } = await supabase.auth.getUser()
       const body: any = { userId: user?.id, email: user?.email, tipo }
-      if (promoValidado && codigoPromo.trim() && (tipo === 'plata_mensual' || tipo === 'oro_mensual')) body.codigoPromo = codigoPromo.trim().toUpperCase()
+      const tiposConPromo = promoTarget === 'platino' ? ['platino_mensual'] : ['plata_mensual', 'oro_mensual']
+      if (promoValidado && codigoPromo.trim() && tiposConPromo.includes(tipo)) body.codigoPromo = codigoPromo.trim().toUpperCase()
       const res = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token ?? ''}` },
@@ -384,7 +386,9 @@ export default function Planes() {
             const esPlanActual = sesionActiva && !esPlanEspecial && (planActual === plan.id || (plan.id === 'gratis' && (!planActual || planActual === 'gratis')))
             const esPopular = !!plan.badge
             const precio = anual ? plan.precioAnual : plan.precioMes
-            const conPromo = promoValidado && (plan.id === 'plata' || plan.id === 'oro')
+            const conPromo = promoValidado && (
+              promoTarget === 'platino' ? plan.id === 'platino' : (plan.id === 'plata' || plan.id === 'oro')
+            )
             return (
               <div key={plan.id} style={{ background: plan.color, borderRadius: 16, padding: 28, border: conPromo ? `2px solid #10b981` : esPopular ? `2px solid ${BRAND}` : '1.5px solid #e8e8e8', position: 'relative', display: 'flex', flexDirection: 'column', boxShadow: esPopular ? '0 8px 40px rgba(0,109,119,0.18)' : '0 2px 12px rgba(0,0,0,0.05)', transition: 'opacity 0.2s' }}>
                 {conPromo && (
@@ -446,7 +450,7 @@ export default function Planes() {
           {promoValidado ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ background: '#d1fae5', color: '#065f46', fontSize: 13, fontWeight: 700, padding: '6px 16px', borderRadius: 20 }}>✓ {promoDias} días gratis aplicados</span>
-              <button onClick={() => { setPromoValidado(false); setCodigoPromo(''); setPromoError(''); setPromoExpanded(false) }} style={{ all: 'unset', fontSize: 12, color: '#aaa', cursor: 'pointer', textDecoration: 'underline' }}>Quitar</button>
+              <button onClick={() => { setPromoValidado(false); setCodigoPromo(''); setPromoError(''); setPromoExpanded(false); setPromoTarget(null) }} style={{ all: 'unset', fontSize: 12, color: '#aaa', cursor: 'pointer', textDecoration: 'underline' }}>Quitar</button>
             </div>
           ) : promoExpanded ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, width: '100%', maxWidth: 360 }}>
