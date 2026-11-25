@@ -261,7 +261,7 @@ export default function Planes() {
           <h2 style={{ fontSize: 36, fontWeight: 900, color: '#111', margin: '0 0 14px', letterSpacing: '-0.5px', lineHeight: 1.15 }}>Únete a Habitade</h2>
           <p style={{ fontSize: 17, color: '#666', margin: '0 0 28px', maxWidth: 480, marginInline: 'auto' }}>Publica tus propiedades y llega a miles de compradores en República Dominicana.</p>
           <a href="/registro" style={{ display: 'inline-block', background: `linear-gradient(135deg, ${BRAND_DARK}, ${BRAND})`, color: '#fff', fontWeight: 700, fontSize: 15, padding: '14px 36px', borderRadius: 8, textDecoration: 'none', boxShadow: `0 6px 20px ${BRAND}44` }}>Crear cuenta gratis</a>
-          <div style={{ marginTop: 10, fontSize: 12, color: '#aaa' }}>Sin tarjeta de crédito · Cancela cuando quieras</div>
+          <div style={{ marginTop: 10, fontSize: 12, color: '#aaa' }}>Cancela cuando quieras</div>
         </div>}
 
         {/* Features */}
