@@ -55,7 +55,13 @@ export async function PATCH(req: Request) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
   if (plan === 'gratis') {
-    await sb.from('propiedades').update({ estado: 'pausado' }).eq('usuario_id', id).eq('estado', 'activo')
+    // Pausar todas primero
+    await sb.from('propiedades').update({ estado: 'pausado' }).eq('usuario_id', id)
+    // Reactivar solo las 2 más recientes (límite gratis)
+    const { data: recientes } = await sb.from('propiedades').select('id').eq('usuario_id', id).order('created_at', { ascending: false }).limit(2)
+    if (recientes && recientes.length > 0) {
+      await sb.from('propiedades').update({ estado: 'activo' }).in('id', recientes.map((p: any) => p.id))
+    }
   }
 
   return NextResponse.json({ ok: true })

@@ -21,8 +21,12 @@ async function pausarPorCancelacion(subscriptionId: string) {
 
   const limpiezaEn30dias = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
 
-  // Pausar propiedades activas (no borrar)
-  await supabase.from('propiedades').update({ estado: 'pausado' }).eq('usuario_id', usuario.id).eq('estado', 'activo')
+  // Pausar todas las propiedades y dejar solo 2 activas (límite gratis)
+  await supabase.from('propiedades').update({ estado: 'pausado' }).eq('usuario_id', usuario.id)
+  const { data: recientes } = await supabase.from('propiedades').select('id').eq('usuario_id', usuario.id).order('created_at', { ascending: false }).limit(2)
+  if (recientes && recientes.length > 0) {
+    await supabase.from('propiedades').update({ estado: 'activo' }).in('id', recientes.map((p: any) => p.id))
+  }
 
   await supabase.from('usuarios').update({
     plan: 'gratis',
