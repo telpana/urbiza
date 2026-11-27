@@ -183,6 +183,14 @@ export default function Admin() {
     fetch('/api/admin/stats', { headers: authHeader() }).then(r => r.json()).then(setStats)
   }
 
+  const bajarAGratis = async (id: string, nombre: string) => {
+    if (!confirm(`¿Bajar a "${nombre}" al plan Gratis?\n\nSus propiedades quedarán pausadas.`)) return
+    const r = await fetch('/api/admin/usuarios', { method: 'PATCH', headers: { ...authHeader(), 'Content-Type': 'application/json' }, body: JSON.stringify({ id, plan: 'gratis' }) })
+    const d = await r.json()
+    if (!r.ok) { alert(`Error: ${d.error || 'Error desconocido'}`); return }
+    cargarUsuarios(usersQ)
+  }
+
   const cargarCobros = useCallback(async () => {
     setCobrosLoading(true)
     const r = await fetch('/api/admin/usuarios?q=', { headers: authHeader() })
@@ -715,7 +723,8 @@ export default function Admin() {
                               : <span style={{ color: '#ccc', fontSize: 12 }}>—</span>}
                           </td>
                           <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}><span style={{ fontSize: 12, color: '#aaa', whiteSpace: 'nowrap' }}>{fmtFecha(u.created_at)}</span></td>
-                          <td style={{ padding: '10px 16px', verticalAlign: 'middle' }}>
+                          <td style={{ padding: '10px 16px', verticalAlign: 'middle', display: 'flex', gap: 6 }}>
+                            {u.plan !== 'gratis' && <Btn onClick={() => bajarAGratis(u.id, u.nombre || u.email)} variant="ghost" small>→ Gratis</Btn>}
                             <Btn onClick={() => eliminarUsuario(u.id, u.nombre || u.email)} variant="danger" small>Eliminar</Btn>
                           </td>
                         </tr>

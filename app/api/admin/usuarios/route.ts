@@ -34,6 +34,33 @@ export async function GET(req: Request) {
   return NextResponse.json(data ?? [])
 }
 
+export async function PATCH(req: Request) {
+  if (!verifyToken(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+  const { id, plan } = await req.json()
+  if (!id || !plan) return NextResponse.json({ error: 'Faltan campos' }, { status: 400 })
+
+  const planesValidos = ['gratis', 'plata', 'oro', 'platino', 'fundador', 'profesional']
+  if (!planesValidos.includes(plan)) return NextResponse.json({ error: 'Plan no válido' }, { status: 400 })
+
+  const updates: any = { plan }
+  if (plan === 'gratis') {
+    updates.tipo = 'particular'
+    updates.stripe_subscription_id = null
+    updates.plan_activo_hasta = null
+    updates.plan_intervalo = null
+    updates.codigo_promo_usado = null
+  }
+
+  const { error } = await sb.from('usuarios').update(updates).eq('id', id)
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+  if (plan === 'gratis') {
+    await sb.from('propiedades').update({ estado: 'pausado' }).eq('usuario_id', id).eq('estado', 'activo')
+  }
+
+  return NextResponse.json({ ok: true })
+}
+
 export async function DELETE(req: Request) {
   if (!verifyToken(req)) return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
   const { id } = await req.json()
