@@ -39,16 +39,20 @@ function parseTipo(tipo: string): { planNombre: string; intervalo: string } {
   return { planNombre: 'fundador', intervalo: 'mensual' }
 }
 
-async function validarCodigoPromo(codigo: string): Promise<{ ok: boolean; diasTrial?: number; error?: string }> {
+async function validarCodigoPromo(codigo: string, tipo: string): Promise<{ ok: boolean; diasTrial?: number; error?: string }> {
   const { data, error } = await supabase
     .from('codigos_promo')
-    .select('id, activo, usos_actuales, usos_maximos, dias_trial')
+    .select('id, activo, usos_actuales, usos_maximos, dias_trial, plan_target')
     .eq('codigo', codigo)
     .single()
 
   if (error || !data) return { ok: false, error: 'Código promocional no válido' }
   if (!data.activo) return { ok: false, error: 'Este código ya no está activo' }
   if (data.usos_maximos && data.usos_actuales >= data.usos_maximos) return { ok: false, error: 'Este código ha alcanzado el límite de usos' }
+
+  // Validar que el código aplica al plan seleccionado
+  if (data.plan_target === 'platino' && tipo !== 'platino_mensual') return { ok: false, error: 'Este código es exclusivo del Plan Platino' }
+  if (!data.plan_target && !['plata_mensual', 'oro_mensual'].includes(tipo)) return { ok: false, error: 'Este código solo aplica a Plan Plata o Plan Oro mensual' }
 
   // No incrementamos aquí — se hace en el webhook cuando Stripe confirma
   return { ok: true, diasTrial: data.dias_trial ?? 30 }
@@ -104,7 +108,7 @@ export async function POST(req: Request) {
           return NextResponse.json({ error: 'Este código ya fue usado' }, { status: 400 })
         }
       }
-      const validacion = await validarCodigoPromo(codigoPromo)
+      const validacion = await validarCodigoPromo(codigoPromo, tipoNorm)
       if (!validacion.ok) {
         return NextResponse.json({ error: validacion.error }, { status: 400 })
       }
